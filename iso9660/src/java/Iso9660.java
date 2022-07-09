@@ -111,7 +111,7 @@ public class Iso9660 extends KaitaiStruct {
             if (this.pathTable != null)
                 return this.pathTable;
             long _pos = this._io.pos();
-            this._io.seek((lbaPathTableLe() * _root.sectorSize()));
+            this._io.seek((lbaPathTableLe() * _root().sectorSize()));
             this._raw_pathTable = this._io.readBytes(pathTableSize().le());
             KaitaiStream _io__raw_pathTable = new ByteBufferKaitaiStream(_raw_pathTable);
             this.pathTable = new PathTableLe(_io__raw_pathTable, this, _root);
@@ -632,9 +632,9 @@ public class Iso9660 extends KaitaiStruct {
             if (this.extentAsDir != null)
                 return this.extentAsDir;
             if ((fileFlags() & 2) != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((lbaExtent().le() * _root.sectorSize()));
+                io.seek((lbaExtent().le() * _root().sectorSize()));
                 this._raw_extentAsDir = io.readBytes(sizeExtent().le());
                 KaitaiStream _io__raw_extentAsDir = new ByteBufferKaitaiStream(_raw_extentAsDir);
                 this.extentAsDir = new DirEntries(_io__raw_extentAsDir, this, _root);
@@ -647,9 +647,9 @@ public class Iso9660 extends KaitaiStruct {
             if (this.extentAsFile != null)
                 return this.extentAsFile;
             if ((fileFlags() & 2) == 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((lbaExtent().le() * _root.sectorSize()));
+                io.seek((lbaExtent().le() * _root().sectorSize()));
                 this.extentAsFile = io.readBytes(sizeExtent().le());
                 io.seek(_pos);
             }

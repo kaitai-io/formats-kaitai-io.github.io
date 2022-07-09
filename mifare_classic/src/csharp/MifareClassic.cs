@@ -131,12 +131,12 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _valuez = new List<uint>((int) (3));
+                        _valuez = new List<uint>();
                         for (var i = 0; i < 3; i++)
                         {
                             _valuez.Add(m_io.ReadU4le());
                         }
-                        _addrz = new List<byte>((int) (4));
+                        _addrz = new List<byte>();
                         for (var i = 0; i < 4; i++)
                         {
                             _addrz.Add(m_io.ReadU1());
@@ -426,7 +426,7 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _rawChunks = new List<ulong>((int) (M_Parent.AcCountOfChunks));
+                    _rawChunks = new List<ulong>();
                     for (var i = 0; i < M_Parent.AcCountOfChunks; i++)
                     {
                         _rawChunks.Add(m_io.ReadBitsIntBe(4));
@@ -750,7 +750,7 @@ namespace Kaitai
                                 return _bits;
                             long _pos = m_io.Pos;
                             m_io.Seek(0);
-                            _bits = new List<AcBit>((int) (M_Parent.M_Parent.AcBits));
+                            _bits = new List<AcBit>();
                             for (var i = 0; i < M_Parent.M_Parent.AcBits; i++)
                             {
                                 _bits.Add(new AcBit(Index, M_Parent.Chunks[i].Chunk, m_io, this, m_root));
@@ -847,7 +847,7 @@ namespace Kaitai
                             return _dataAcs;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
-                        _dataAcs = new List<DataAc>((int) ((M_Parent.AcsInSector - 1)));
+                        _dataAcs = new List<DataAc>();
                         for (var i = 0; i < (M_Parent.AcsInSector - 1); i++)
                         {
                             _dataAcs.Add(new DataAc(AcsRaw[i], m_io, this, m_root));
@@ -867,7 +867,7 @@ namespace Kaitai
                             return _remaps;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
-                        _remaps = new List<ChunkBitRemap>((int) (M_Parent.AcBits));
+                        _remaps = new List<ChunkBitRemap>();
                         for (var i = 0; i < M_Parent.AcBits; i++)
                         {
                             _remaps.Add(new ChunkBitRemap(i, m_io, this, m_root));
@@ -887,7 +887,7 @@ namespace Kaitai
                             return _acsRaw;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
-                        _acsRaw = new List<Ac>((int) (M_Parent.AcsInSector));
+                        _acsRaw = new List<Ac>();
                         for (var i = 0; i < M_Parent.AcsInSector; i++)
                         {
                             _acsRaw.Add(new Ac(i, m_io, this, m_root));
@@ -923,7 +923,7 @@ namespace Kaitai
                             return _chunks;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
-                        _chunks = new List<ValidChunk>((int) (M_Parent.AcBits));
+                        _chunks = new List<ValidChunk>();
                         for (var i = 0; i < M_Parent.AcBits; i++)
                         {
                             _chunks.Add(new ValidChunk(RawChunks[Remaps[i].InvChunkNo], RawChunks[Remaps[i].ChunkNo], m_io, this, m_root));

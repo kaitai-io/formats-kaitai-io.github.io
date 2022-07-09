@@ -550,9 +550,9 @@ class Bmp < Kaitai::Struct::Struct
     end
 
     def _read
-      @colors = Array.new(( ((num_colors > 0) && (num_colors < num_colors_present))  ? num_colors : num_colors_present))
+      @colors = []
       (( ((num_colors > 0) && (num_colors < num_colors_present))  ? num_colors : num_colors_present)).times { |i|
-        @colors[i] = RgbRecord.new(@_io, self, @_root, has_reserved_field)
+        @colors << RgbRecord.new(@_io, self, @_root, has_reserved_field)
       }
       self
     end

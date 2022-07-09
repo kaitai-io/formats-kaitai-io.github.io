@@ -231,7 +231,7 @@ public class Jpeg extends KaitaiStruct {
         }
         private void _read() {
             this.numComponents = this._io.readU1();
-            components = new ArrayList<Component>(((Number) (numComponents())).intValue());
+            this.components = new ArrayList<Component>();
             for (int i = 0; i < numComponents(); i++) {
                 this.components.add(new Component(this._io, this, _root));
             }
@@ -330,7 +330,7 @@ public class Jpeg extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.magic = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
             switch (magic()) {
             case "Exif": {
                 this.body = new ExifInJpeg(this._io, this, _root);
@@ -371,7 +371,7 @@ public class Jpeg extends KaitaiStruct {
             this.imageHeight = this._io.readU2be();
             this.imageWidth = this._io.readU2be();
             this.numComponents = this._io.readU1();
-            components = new ArrayList<Component>(((Number) (numComponents())).intValue());
+            this.components = new ArrayList<Component>();
             for (int i = 0; i < numComponents(); i++) {
                 this.components.add(new Component(this._io, this, _root));
             }

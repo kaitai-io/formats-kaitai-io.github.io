@@ -73,7 +73,7 @@ public class PcfFont extends KaitaiStruct {
             throw new KaitaiStream.ValidationNotEqualError(new byte[] { 1, 102, 99, 112 }, magic(), _io(), "/seq/0");
         }
         this.numTables = this._io.readU4le();
-        tables = new ArrayList<Table>(((Number) (numTables())).intValue());
+        this.tables = new ArrayList<Table>();
         for (int i = 0; i < numTables(); i++) {
             this.tables.add(new Table(this._io, this, _root));
         }
@@ -136,7 +136,7 @@ public class PcfFont extends KaitaiStruct {
             private void _read() {
                 this.format = new Format(this._io, this, _root);
                 this.numGlyphs = this._io.readU4le();
-                swidths = new ArrayList<Long>(((Number) (numGlyphs())).intValue());
+                this.swidths = new ArrayList<Long>();
                 for (int i = 0; i < numGlyphs(); i++) {
                     this.swidths.add(this._io.readU4le());
                 }
@@ -185,7 +185,7 @@ public class PcfFont extends KaitaiStruct {
             private void _read() {
                 this.format = new Format(this._io, this, _root);
                 this.numProps = this._io.readU4le();
-                props = new ArrayList<Prop>(((Number) (numProps())).intValue());
+                this.props = new ArrayList<Prop>();
                 for (int i = 0; i < numProps(); i++) {
                     this.props.add(new Prop(this._io, this, _root));
                 }
@@ -240,7 +240,7 @@ public class PcfFont extends KaitaiStruct {
                     KaitaiStream io = _parent().strings()._io();
                     long _pos = io.pos();
                     io.seek(ofsName());
-                    this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                    this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                     io.seek(_pos);
                     return this.name;
                 }
@@ -257,7 +257,7 @@ public class PcfFont extends KaitaiStruct {
                         KaitaiStream io = _parent().strings()._io();
                         long _pos = io.pos();
                         io.seek(valueOrOfsValue());
-                        this.strValue = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                        this.strValue = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                         io.seek(_pos);
                     }
                     return this.strValue;
@@ -364,7 +364,7 @@ public class PcfFont extends KaitaiStruct {
                 this.minByte1 = this._io.readU2le();
                 this.maxByte1 = this._io.readU2le();
                 this.defaultChar = this._io.readU2le();
-                glyphIndexes = new ArrayList<Integer>(((Number) ((((maxCharOrByte2() - minCharOrByte2()) + 1) * ((maxByte1() - minByte1()) + 1)))).intValue());
+                this.glyphIndexes = new ArrayList<Integer>();
                 for (int i = 0; i < (((maxCharOrByte2() - minCharOrByte2()) + 1) * ((maxByte1() - minByte1()) + 1)); i++) {
                     this.glyphIndexes.add(this._io.readU2le());
                 }
@@ -415,7 +415,7 @@ public class PcfFont extends KaitaiStruct {
             private void _read() {
                 this.format = new Format(this._io, this, _root);
                 this.numGlyphs = this._io.readU4le();
-                names = new ArrayList<StringRef>(((Number) (numGlyphs())).intValue());
+                this.names = new ArrayList<StringRef>();
                 for (int i = 0; i < numGlyphs(); i++) {
                     this.names.add(new StringRef(this._io, this, _root));
                 }
@@ -453,7 +453,7 @@ public class PcfFont extends KaitaiStruct {
                     KaitaiStream io = _parent().strings()._io();
                     long _pos = io.pos();
                     io.seek(ofsString());
-                    this.value = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                    this.value = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                     io.seek(_pos);
                     return this.value;
                 }
@@ -516,11 +516,11 @@ public class PcfFont extends KaitaiStruct {
             private void _read() {
                 this.format = new Format(this._io, this, _root);
                 this.numGlyphs = this._io.readU4le();
-                offsets = new ArrayList<Long>(((Number) (numGlyphs())).intValue());
+                this.offsets = new ArrayList<Long>();
                 for (int i = 0; i < numGlyphs(); i++) {
                     this.offsets.add(this._io.readU4le());
                 }
-                bitmapSizes = new ArrayList<Long>(((Number) (4)).intValue());
+                this.bitmapSizes = new ArrayList<Long>();
                 for (int i = 0; i < 4; i++) {
                     this.bitmapSizes.add(this._io.readU4le());
                 }

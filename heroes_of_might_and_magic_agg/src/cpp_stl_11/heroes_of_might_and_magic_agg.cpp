@@ -15,9 +15,8 @@ heroes_of_might_and_magic_agg_t::heroes_of_might_and_magic_agg_t(kaitai::kstream
 
 void heroes_of_might_and_magic_agg_t::_read() {
     m_num_files = m__io->read_u2le();
-    int l_entries = num_files();
     m_entries = std::unique_ptr<std::vector<std::unique_ptr<entry_t>>>(new std::vector<std::unique_ptr<entry_t>>());
-    m_entries->reserve(l_entries);
+    const int l_entries = num_files();
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(std::move(std::unique_ptr<entry_t>(new entry_t(m__io, this, m__root))));
     }
@@ -88,13 +87,10 @@ std::vector<std::unique_ptr<heroes_of_might_and_magic_agg_t::filename_t>>* heroe
         return m_filenames.get();
     std::streampos _pos = m__io->pos();
     m__io->seek((entries()->back()->offset() + entries()->back()->size()));
-    int l_filenames = num_files();
     m__raw_filenames = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m__raw_filenames->reserve(l_filenames);
     m__io__raw_filenames = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-    m__io__raw_filenames->reserve(l_filenames);
     m_filenames = std::unique_ptr<std::vector<std::unique_ptr<filename_t>>>(new std::vector<std::unique_ptr<filename_t>>());
-    m_filenames->reserve(l_filenames);
+    const int l_filenames = num_files();
     for (int i = 0; i < l_filenames; i++) {
         m__raw_filenames->push_back(std::move(m__io->read_bytes(15)));
         kaitai::kstream* io__raw_filenames = new kaitai::kstream(m__raw_filenames->at(m__raw_filenames->size() - 1));

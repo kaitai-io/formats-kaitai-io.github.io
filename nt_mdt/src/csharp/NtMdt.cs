@@ -229,7 +229,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _data = new List<byte>((int) (16));
+                _data = new List<byte>();
                 for (var i = 0; i < 16; i++)
                 {
                     _data.Add(m_io.ReadU1());
@@ -257,7 +257,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _frames = new List<Frame>((int) ((M_Root.LastFrame + 1)));
+                _frames = new List<Frame>();
                 for (var i = 0; i < (M_Root.LastFrame + 1); i++)
                 {
                     _frames.Add(new Frame(m_io, this, m_root));
@@ -321,12 +321,12 @@ namespace Kaitai
                     if (FmNdots > 0) {
                         _coordHeader = new DotsHeader(m_io, this, m_root);
                     }
-                    _coordinates = new List<DotsData>((int) (FmNdots));
+                    _coordinates = new List<DotsData>();
                     for (var i = 0; i < FmNdots; i++)
                     {
                         _coordinates.Add(new DotsData(m_io, this, m_root));
                     }
-                    _data = new List<DataLinez>((int) (FmNdots));
+                    _data = new List<DataLinez>();
                     for (var i = 0; i < FmNdots; i++)
                     {
                         _data.Add(new DataLinez(i, m_io, this, m_root));
@@ -437,12 +437,12 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _forward = new List<short>((int) (M_Parent.Coordinates[Index].ForwardSize));
+                        _forward = new List<short>();
                         for (var i = 0; i < M_Parent.Coordinates[Index].ForwardSize; i++)
                         {
                             _forward.Add(m_io.ReadS2le());
                         }
-                        _backward = new List<short>((int) (M_Parent.Coordinates[Index].BackwardSize));
+                        _backward = new List<short>();
                         for (var i = 0; i < M_Parent.Coordinates[Index].BackwardSize; i++)
                         {
                             _backward.Add(m_io.ReadS2le());
@@ -573,17 +573,17 @@ namespace Kaitai
                 private void _read()
                 {
                     _blockCount = m_io.ReadU4le();
-                    _blocksHeaders = new List<BlockDescr>((int) (BlockCount));
+                    _blocksHeaders = new List<BlockDescr>();
                     for (var i = 0; i < BlockCount; i++)
                     {
                         _blocksHeaders.Add(new BlockDescr(m_io, this, m_root));
                     }
-                    _blocksNames = new List<string>((int) (BlockCount));
+                    _blocksNames = new List<string>();
                     for (var i = 0; i < BlockCount; i++)
                     {
                         _blocksNames.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(BlocksHeaders[i].NameLen)));
                     }
-                    _blocksData = new List<byte[]>((int) (BlockCount));
+                    _blocksData = new List<byte[]>();
                     for (var i = 0; i < BlockCount; i++)
                     {
                         _blocksData.Add(m_io.ReadBytes(BlocksHeaders[i].Len));
@@ -647,7 +647,7 @@ namespace Kaitai
                 {
                     _headSize = m_io.ReadU4le();
                     _totLen = m_io.ReadU4le();
-                    _guids = new List<Uuid>((int) (2));
+                    _guids = new List<Uuid>();
                     for (var i = 0; i < 2; i++)
                     {
                         _guids.Add(new Uuid(m_io, this, m_root));
@@ -668,12 +668,12 @@ namespace Kaitai
                     _cellSize = m_io.ReadU4le();
                     _nDimensions = m_io.ReadU4le();
                     _nMesurands = m_io.ReadU4le();
-                    _dimensions = new List<Calibration>((int) (NDimensions));
+                    _dimensions = new List<Calibration>();
                     for (var i = 0; i < NDimensions; i++)
                     {
                         _dimensions.Add(new Calibration(m_io, this, m_root));
                     }
-                    _mesurands = new List<Calibration>((int) (NMesurands));
+                    _mesurands = new List<Calibration>();
                     for (var i = 0; i < NMesurands; i++)
                     {
                         _mesurands.Add(new Calibration(m_io, this, m_root));
@@ -718,7 +718,7 @@ namespace Kaitai
                         }
                         private void _read()
                         {
-                            _items = new List<double>((int) (M_Parent.M_Parent.NMesurands));
+                            _items = new List<double>();
                             for (var i = 0; i < M_Parent.M_Parent.NMesurands; i++)
                             {
                                 switch (M_Parent.M_Parent.Mesurands[i].DataType) {
@@ -957,7 +957,7 @@ namespace Kaitai
                     _fmXres = m_io.ReadU2le();
                     _fmYres = m_io.ReadU2le();
                     _dots = new Dots(m_io, this, m_root);
-                    _data = new List<short>((int) ((FmXres * FmYres)));
+                    _data = new List<short>();
                     for (var i = 0; i < (FmXres * FmYres); i++)
                     {
                         _data.Add(m_io.ReadS2le());
@@ -1285,7 +1285,7 @@ namespace Kaitai
                     _fmXres = m_io.ReadU2le();
                     _fmYres = m_io.ReadU2le();
                     _dots = new Dots(m_io, this, m_root);
-                    _image = new List<short>((int) ((FmXres * FmYres)));
+                    _image = new List<short>();
                     for (var i = 0; i < (FmXres * FmYres); i++)
                     {
                         _image.Add(m_io.ReadS2le());

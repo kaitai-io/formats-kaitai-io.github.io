@@ -61,27 +61,27 @@ class DnsPacket < Kaitai::Struct::Struct
       @arcount = @_io.read_u2be
     end
     if flags.is_opcode_valid
-      @queries = Array.new(qdcount)
+      @queries = []
       (qdcount).times { |i|
-        @queries[i] = Query.new(@_io, self, @_root)
+        @queries << Query.new(@_io, self, @_root)
       }
     end
     if flags.is_opcode_valid
-      @answers = Array.new(ancount)
+      @answers = []
       (ancount).times { |i|
-        @answers[i] = Answer.new(@_io, self, @_root)
+        @answers << Answer.new(@_io, self, @_root)
       }
     end
     if flags.is_opcode_valid
-      @authorities = Array.new(nscount)
+      @authorities = []
       (nscount).times { |i|
-        @authorities[i] = Answer.new(@_io, self, @_root)
+        @authorities << Answer.new(@_io, self, @_root)
       }
     end
     if flags.is_opcode_valid
-      @additionals = Array.new(arcount)
+      @additionals = []
       (arcount).times { |i|
-        @additionals[i] = Answer.new(@_io, self, @_root)
+        @additionals << Answer.new(@_io, self, @_root)
       }
     end
     self

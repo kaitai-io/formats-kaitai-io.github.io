@@ -66,9 +66,9 @@ class RubyMarshal < Kaitai::Struct::Struct
 
     def _read
       @num_elements = PackedInt.new(@_io, self, @_root)
-      @elements = Array.new(num_elements.value)
+      @elements = []
       (num_elements.value).times { |i|
-        @elements[i] = Record.new(@_io, self, @_root)
+        @elements << Record.new(@_io, self, @_root)
       }
       self
     end
@@ -115,9 +115,9 @@ class RubyMarshal < Kaitai::Struct::Struct
     def _read
       @name = Record.new(@_io, self, @_root)
       @num_members = PackedInt.new(@_io, self, @_root)
-      @members = Array.new(num_members.value)
+      @members = []
       (num_members.value).times { |i|
-        @members[i] = Pair.new(@_io, self, @_root)
+        @members << Pair.new(@_io, self, @_root)
       }
       self
     end
@@ -254,9 +254,9 @@ class RubyMarshal < Kaitai::Struct::Struct
     def _read
       @obj = Record.new(@_io, self, @_root)
       @num_vars = PackedInt.new(@_io, self, @_root)
-      @vars = Array.new(num_vars.value)
+      @vars = []
       (num_vars.value).times { |i|
-        @vars[i] = Pair.new(@_io, self, @_root)
+        @vars << Pair.new(@_io, self, @_root)
       }
       self
     end
@@ -315,9 +315,9 @@ class RubyMarshal < Kaitai::Struct::Struct
 
     def _read
       @num_pairs = PackedInt.new(@_io, self, @_root)
-      @pairs = Array.new(num_pairs.value)
+      @pairs = []
       (num_pairs.value).times { |i|
-        @pairs[i] = Pair.new(@_io, self, @_root)
+        @pairs << Pair.new(@_io, self, @_root)
       }
       self
     end

@@ -500,9 +500,8 @@ bmp_t::color_table_t::color_table_t(bool p_has_reserved_field, uint32_t p_num_co
 }
 
 void bmp_t::color_table_t::_read() {
-    int l_colors = (( ((num_colors() > 0) && (num_colors() < num_colors_present())) ) ? (num_colors()) : (num_colors_present()));
     m_colors = std::unique_ptr<std::vector<std::unique_ptr<rgb_record_t>>>(new std::vector<std::unique_ptr<rgb_record_t>>());
-    m_colors->reserve(l_colors);
+    const int l_colors = (( ((num_colors() > 0) && (num_colors() < num_colors_present())) ) ? (num_colors()) : (num_colors_present()));
     for (int i = 0; i < l_colors; i++) {
         m_colors->push_back(std::move(std::unique_ptr<rgb_record_t>(new rgb_record_t(has_reserved_field(), m__io, this, m__root))));
     }

@@ -8,7 +8,7 @@
   } else {
     root.CreativeVoiceFile = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Creative Voice File is a container file format for digital audio
  * wave data. Initial revisions were able to support only unsigned

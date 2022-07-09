@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Vp8Ivf(KaitaiStruct):
@@ -39,9 +38,9 @@ class Vp8Ivf(KaitaiStruct):
         self.timescale = self._io.read_u4le()
         self.num_frames = self._io.read_u4le()
         self.unused = self._io.read_u4le()
-        self.image_data = [None] * (self.num_frames)
+        self.image_data = []
         for i in range(self.num_frames):
-            self.image_data[i] = Vp8Ivf.Blocks(self._io, self, self._root)
+            self.image_data.append(Vp8Ivf.Blocks(self._io, self, self._root))
 
 
     class Blocks(KaitaiStruct):

@@ -176,7 +176,7 @@ public class Xar extends KaitaiStruct {
         public Boolean hasChecksumAlgName() {
             if (this.hasChecksumAlgName != null)
                 return this.hasChecksumAlgName;
-            boolean _tmp = (boolean) ( ((checksumAlgorithmInt() == _root.checksumAlgorithmOther()) && (lenHeader() >= 32) && (KaitaiStream.mod(lenHeader(), 4) == 0)) );
+            boolean _tmp = (boolean) ( ((checksumAlgorithmInt() == _root().checksumAlgorithmOther()) && (lenHeader() >= 32) && (KaitaiStream.mod(lenHeader(), 4) == 0)) );
             this.hasChecksumAlgName = _tmp;
             return this.hasChecksumAlgName;
         }
@@ -184,7 +184,7 @@ public class Xar extends KaitaiStruct {
         public Integer lenHeader() {
             if (this.lenHeader != null)
                 return this.lenHeader;
-            int _tmp = (int) (_root.headerPrefix().lenHeader());
+            int _tmp = (int) (_root().headerPrefix().lenHeader());
             this.lenHeader = _tmp;
             return this.lenHeader;
         }

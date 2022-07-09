@@ -320,7 +320,7 @@ namespace Kaitai
             private void _read()
             {
                 _numPoints = m_io.ReadS2le();
-                _points = new List<PointS>((int) (NumPoints));
+                _points = new List<PointS>();
                 for (var i = 0; i < NumPoints; i++)
                 {
                     _points.Add(new PointS(m_io, this, m_root));
@@ -504,7 +504,7 @@ namespace Kaitai
             private void _read()
             {
                 _numPoints = m_io.ReadS2le();
-                _points = new List<PointS>((int) (NumPoints));
+                _points = new List<PointS>();
                 for (var i = 0; i < NumPoints; i++)
                 {
                     _points.Add(new PointS(m_io, this, m_root));

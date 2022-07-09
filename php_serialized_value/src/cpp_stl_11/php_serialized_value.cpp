@@ -99,9 +99,8 @@ void php_serialized_value_t::count_prefixed_mapping_t::_read() {
     if (!(opening_brace() == std::string("\x7B", 1))) {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x7B", 1), opening_brace(), _io(), std::string("/types/count_prefixed_mapping/seq/1"));
     }
-    int l_entries = num_entries();
     m_entries = std::unique_ptr<std::vector<std::unique_ptr<mapping_entry_t>>>(new std::vector<std::unique_ptr<mapping_entry_t>>());
-    m_entries->reserve(l_entries);
+    const int l_entries = num_entries();
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(std::move(std::unique_ptr<mapping_entry_t>(new mapping_entry_t(m__io, this, m__root))));
     }

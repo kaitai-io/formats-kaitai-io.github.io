@@ -310,19 +310,27 @@ setting of the computer at the time it created the ZIP.</p>
     <span class="p">`</span><span class="n">minute</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">hour</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DosDatetime</span>
-    <span class="p">`</span><span class="n">secondInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">paddedSecondInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">paddedMinuteInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">paddedHourInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">secondInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">secondInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">paddedSecondInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">paddedSecondInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">paddedMinuteInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">paddedMinuteInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">paddedHourInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">paddedHourInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DosDatetime_Date</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">day</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">month</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">yearMinus1980</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DosDatetime</span>
-    <span class="p">`</span><span class="n">yearInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">paddedDayInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">paddedMonthInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">paddedYearInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">yearInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">yearInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">paddedDayInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">paddedDayInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">paddedMonthInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">paddedMonthInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">paddedYearInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">paddedYearInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DosDatetime], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DosDatetime</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DosDatetime_Time], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Time</span>
@@ -405,36 +413,36 @@ setting of the computer at the time it created the ZIP.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">hour</span> <span class="o">=</span> <span class="n">hourExpr</span>
 
 <span class="k">proc </span><span class="nf">second</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosDatetime_Time</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
   <span class="k">let</span> <span class="n">secondInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">secondDiv2</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">=</span> <span class="n">secondInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">secondInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
 
 <span class="k">proc </span><span class="nf">paddedSecond</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosDatetime_Time</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInst</span>
   <span class="k">let</span> <span class="n">paddedSecondInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">((</span><span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">second</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span> <span class="s">&quot;0&quot;</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">$</span><span class="n">intToStr</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">second</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInst</span> <span class="o">=</span> <span class="n">paddedSecondInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedSecondInst</span>
 
 <span class="k">proc </span><span class="nf">paddedMinute</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosDatetime_Time</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInst</span>
   <span class="k">let</span> <span class="n">paddedMinuteInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">((</span><span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">minute</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span> <span class="s">&quot;0&quot;</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">$</span><span class="n">intToStr</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">minute</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInst</span> <span class="o">=</span> <span class="n">paddedMinuteInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMinuteInst</span>
 
 <span class="k">proc </span><span class="nf">paddedHour</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosDatetime_Time</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInst</span>
   <span class="k">let</span> <span class="n">paddedHourInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">((</span><span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hour</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span> <span class="s">&quot;0&quot;</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">$</span><span class="n">intToStr</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">hour</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInst</span> <span class="o">=</span> <span class="n">paddedHourInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedHourInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DosDatetime_Time], filename: string): DosDatetime_Time =</span>
   <span class="n">DosDatetime_Time</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -459,36 +467,36 @@ setting of the computer at the time it created the ZIP.</p>
   <span class="sd">##[</span>
   <span class="n">only</span> <span class="n">years</span> <span class="kn">from</span> <span class="mi">1980</span> <span class="n">to</span> <span class="mi">2107</span> <span class="p">(</span><span class="mi">1980</span> <span class="o">+</span> <span class="mi">127</span><span class="p">)</span> <span class="n">can</span> <span class="n">be</span> <span class="n">represented</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span>
   <span class="k">let</span> <span class="n">yearInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="mi">1980</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">yearMinus1980</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span> <span class="o">=</span> <span class="n">yearInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">yearInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yearInst</span>
 
 <span class="k">proc </span><span class="nf">paddedDay</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosDatetime_Date</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInst</span>
   <span class="k">let</span> <span class="n">paddedDayInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">((</span><span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span> <span class="s">&quot;0&quot;</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">$</span><span class="n">intToStr</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">day</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInst</span> <span class="o">=</span> <span class="n">paddedDayInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedDayInst</span>
 
 <span class="k">proc </span><span class="nf">paddedMonth</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosDatetime_Date</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInst</span>
   <span class="k">let</span> <span class="n">paddedMonthInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">((</span><span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">month</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span> <span class="s">&quot;0&quot;</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">$</span><span class="n">intToStr</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">month</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInst</span> <span class="o">=</span> <span class="n">paddedMonthInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedMonthInst</span>
 
 <span class="k">proc </span><span class="nf">paddedYear</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosDatetime_Date</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInst</span>
   <span class="k">let</span> <span class="n">paddedYearInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">((</span><span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">year</span> <span class="o">&lt;=</span> <span class="mi">999</span><span class="p">:</span> <span class="p">(</span><span class="o">$</span><span class="s">&quot;0&quot;</span> <span class="o">&amp;</span> <span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">year</span> <span class="o">&lt;=</span> <span class="mi">99</span><span class="p">:</span> <span class="p">(</span><span class="o">$</span><span class="s">&quot;0&quot;</span> <span class="o">&amp;</span> <span class="o">$</span><span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">year</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span> <span class="s">&quot;0&quot;</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">))</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">))</span> <span class="k">else</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">$</span><span class="n">intToStr</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">year</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInst</span> <span class="o">=</span> <span class="n">paddedYearInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">paddedYearInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DosDatetime_Date], filename: string): DosDatetime_Date =</span>
   <span class="n">DosDatetime_Date</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

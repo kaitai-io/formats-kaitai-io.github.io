@@ -33,7 +33,7 @@ namespace Kaitai
             {
                 throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, Reserved, M_Io, "/seq/3");
             }
-            _offsets = new List<uint>((int) (NumFiles));
+            _offsets = new List<uint>();
             for (var i = 0; i < NumFiles; i++)
             {
                 _offsets.Add(m_io.ReadU4le());
@@ -156,7 +156,7 @@ namespace Kaitai
                     return _files;
                 long _pos = m_io.Pos;
                 m_io.Seek((OfsDir & 4294965248));
-                _files = new List<FileInfo>((int) (M_Root.NumEntries));
+                _files = new List<FileInfo>();
                 for (var i = 0; i < M_Root.NumEntries; i++)
                 {
                     _files.Add(new FileInfo(m_io, this, m_root));

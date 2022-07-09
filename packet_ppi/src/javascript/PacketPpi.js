@@ -8,7 +8,7 @@
   } else {
     root.PacketPpi = factory(root.KaitaiStream, root.EthernetFrame);
   }
-}(this, function (KaitaiStream, EthernetFrame) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, EthernetFrame) {
 /**
  * PPI is a standard for link layer packet encapsulation, proposed as
  * generic extensible container to store both captured in-band data and
@@ -479,23 +479,23 @@ var PacketPpi = (function() {
       this.mcs = this._io.readU1();
       this.numStreams = this._io.readU1();
       this.rssiCombined = this._io.readU1();
-      this.rssiAntCtl = new Array(4);
+      this.rssiAntCtl = [];
       for (var i = 0; i < 4; i++) {
-        this.rssiAntCtl[i] = this._io.readU1();
+        this.rssiAntCtl.push(this._io.readU1());
       }
-      this.rssiAntExt = new Array(4);
+      this.rssiAntExt = [];
       for (var i = 0; i < 4; i++) {
-        this.rssiAntExt[i] = this._io.readU1();
+        this.rssiAntExt.push(this._io.readU1());
       }
       this.extChannelFreq = this._io.readU2le();
       this.extChannelFlags = new ChannelFlags(this._io, this, this._root);
-      this.rfSignalNoise = new Array(4);
+      this.rfSignalNoise = [];
       for (var i = 0; i < 4; i++) {
-        this.rfSignalNoise[i] = new SignalNoise(this._io, this, this._root);
+        this.rfSignalNoise.push(new SignalNoise(this._io, this, this._root));
       }
-      this.evm = new Array(4);
+      this.evm = [];
       for (var i = 0; i < 4; i++) {
-        this.evm[i] = this._io.readU4le();
+        this.evm.push(this._io.readU4le());
       }
     }
 

@@ -8,7 +8,7 @@
   } else {
     root.Pcx = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * PCX is a bitmap image format originally used by PC Paintbrush from
  * ZSoft Corporation. Originally, it was a relatively simple 128-byte
@@ -123,9 +123,9 @@ var Pcx = (function() {
       if (!((KaitaiStream.byteArrayCompare(this.magic, [12]) == 0))) {
         throw new KaitaiStream.ValidationNotEqualError([12], this.magic, this._io, "/types/t_palette_256/seq/0");
       }
-      this.colors = new Array(256);
+      this.colors = [];
       for (var i = 0; i < 256; i++) {
-        this.colors[i] = new Rgb(this._io, this, this._root);
+        this.colors.push(new Rgb(this._io, this, this._root));
       }
     }
 

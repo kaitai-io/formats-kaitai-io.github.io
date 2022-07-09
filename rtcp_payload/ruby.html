@@ -395,9 +395,9 @@ section#format-index .row {
       <span class="vi">@br_exp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
       <span class="vi">@br_mantissa</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
       <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
-      <span class="vi">@ssrc_list</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_ssrc</span><span class="p">)</span>
+      <span class="vi">@ssrc_list</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_ssrc</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@ssrc_list</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+        <span class="vi">@ssrc_list</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -424,9 +424,9 @@ section#format-index .row {
       <span class="vi">@rtp_timestamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@sender_packet_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="vi">@sender_octet_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="vi">@report_block</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span>
+      <span class="vi">@report_block</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@report_block</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ReportBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@report_block</span> <span class="o">&lt;&lt;</span> <span class="no">ReportBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -451,9 +451,9 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@ssrc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="vi">@report_block</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span>
+      <span class="vi">@report_block</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@report_block</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ReportBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@report_block</span> <span class="o">&lt;&lt;</span> <span class="no">ReportBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -652,9 +652,9 @@ section#format-index .row {
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@source_chunk</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">source_count</span><span class="p">)</span>
+      <span class="vi">@source_chunk</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">source_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@source_chunk</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">SourceChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@source_chunk</span> <span class="o">&lt;&lt;</span> <span class="no">SourceChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>

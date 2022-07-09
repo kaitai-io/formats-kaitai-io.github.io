@@ -519,9 +519,9 @@ devices, however, these code names are the same.</p>
     <span class="vi">@num_images</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
     <span class="vi">@ofs_img_bodies</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
     <span class="vi">@bootloader_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-    <span class="vi">@img_headers</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_images</span><span class="p">)</span>
+    <span class="vi">@img_headers</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@img_headers</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ImgHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@img_headers</span> <span class="o">&lt;&lt;</span> <span class="no">ImgHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -562,9 +562,9 @@ devices, however, these code names are the same.</p>
     <span class="k">return</span> <span class="vi">@img_bodies</span> <span class="k">unless</span> <span class="vi">@img_bodies</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img_bodies</span><span class="p">)</span>
-    <span class="vi">@img_bodies</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_images</span><span class="p">)</span>
+    <span class="vi">@img_bodies</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@img_bodies</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ImgBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+      <span class="vi">@img_bodies</span> <span class="o">&lt;&lt;</span> <span class="no">ImgBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@img_bodies</span>

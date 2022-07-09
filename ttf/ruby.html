@@ -193,6 +193,11 @@ an outline font.</p>
                 
                 <li>
                 
+                <a href="go.html" title="TrueType Font File parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="TrueType Font File parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -326,9 +331,9 @@ an outline font.</p>
 
   <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@offset_table</span> <span class="o">=</span> <span class="no">OffsetTable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@directory_table</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">offset_table</span><span class="o">.</span><span class="n">num_tables</span><span class="p">)</span>
+    <span class="vi">@directory_table</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">offset_table</span><span class="o">.</span><span class="n">num_tables</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@directory_table</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">DirTableEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@directory_table</span> <span class="o">&lt;&lt;</span> <span class="no">DirTableEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -361,9 +366,9 @@ an outline font.</p>
 
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@number_of_glyphs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-        <span class="vi">@glyph_name_index</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">number_of_glyphs</span><span class="p">)</span>
+        <span class="vi">@glyph_name_index</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">number_of_glyphs</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@glyph_name_index</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+          <span class="vi">@glyph_name_index</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
         <span class="p">}</span>
         <span class="vi">@glyph_names</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -456,9 +461,9 @@ an outline font.</p>
       <span class="vi">@format_selector</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@num_name_records</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@ofs_strings</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-      <span class="vi">@name_records</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_name_records</span><span class="p">)</span>
+      <span class="vi">@name_records</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_name_records</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@name_records</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">NameRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@name_records</span> <span class="o">&lt;&lt;</span> <span class="no">NameRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -659,9 +664,9 @@ an outline font.</p>
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@subtable_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-      <span class="vi">@subtables</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">subtable_count</span><span class="p">)</span>
+      <span class="vi">@subtables</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">subtable_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@subtables</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Subtable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@subtables</span> <span class="o">&lt;&lt;</span> <span class="no">Subtable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -697,9 +702,9 @@ an outline font.</p>
           <span class="vi">@search_range</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="vi">@entry_selector</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="vi">@range_shift</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-          <span class="vi">@kerning_pairs</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">pair_count</span><span class="p">)</span>
+          <span class="vi">@kerning_pairs</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">pair_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@kerning_pairs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">KerningPair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+            <span class="vi">@kerning_pairs</span> <span class="o">&lt;&lt;</span> <span class="no">KerningPair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
           <span class="p">}</span>
           <span class="nb">self</span>
         <span class="k">end</span>
@@ -1465,15 +1470,15 @@ an outline font.</p>
       <span class="k">end</span>
 
       <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@end_pts_of_contours</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">number_of_contours</span><span class="p">)</span>
+        <span class="vi">@end_pts_of_contours</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">number_of_contours</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@end_pts_of_contours</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+          <span class="vi">@end_pts_of_contours</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
         <span class="p">}</span>
         <span class="vi">@instruction_length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
         <span class="vi">@instructions</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">instruction_length</span><span class="p">)</span>
-        <span class="vi">@flags</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">point_count</span><span class="p">)</span>
+        <span class="vi">@flags</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">point_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@flags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Flag</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@flags</span> <span class="o">&lt;&lt;</span> <span class="no">Flag</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -1679,9 +1684,9 @@ an outline font.</p>
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@version_number</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@number_of_encoding_tables</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-      <span class="vi">@tables</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">number_of_encoding_tables</span><span class="p">)</span>
+      <span class="vi">@tables</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">number_of_encoding_tables</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@tables</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">SubtableHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@tables</span> <span class="o">&lt;&lt;</span> <span class="no">SubtableHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1769,9 +1774,9 @@ an outline font.</p>
         <span class="k">end</span>
 
         <span class="k">def</span> <span class="n">_read</span>
-          <span class="vi">@sub_header_keys</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+          <span class="vi">@sub_header_keys</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="mi">256</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@sub_header_keys</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+            <span class="vi">@sub_header_keys</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="p">}</span>
           <span class="nb">self</span>
         <span class="k">end</span>
@@ -1788,22 +1793,22 @@ an outline font.</p>
           <span class="vi">@search_range</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="vi">@entry_selector</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="vi">@range_shift</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-          <span class="vi">@end_count</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">seg_count</span><span class="p">)</span>
+          <span class="vi">@end_count</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">seg_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@end_count</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+            <span class="vi">@end_count</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="p">}</span>
           <span class="vi">@reserved_pad</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-          <span class="vi">@start_count</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">seg_count</span><span class="p">)</span>
+          <span class="vi">@start_count</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">seg_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@start_count</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+            <span class="vi">@start_count</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="p">}</span>
-          <span class="vi">@id_delta</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">seg_count</span><span class="p">)</span>
+          <span class="vi">@id_delta</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">seg_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@id_delta</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+            <span class="vi">@id_delta</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="p">}</span>
-          <span class="vi">@id_range_offset</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">seg_count</span><span class="p">)</span>
+          <span class="vi">@id_range_offset</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">seg_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@id_range_offset</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+            <span class="vi">@id_range_offset</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="p">}</span>
           <span class="vi">@glyph_id_array</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1838,9 +1843,9 @@ an outline font.</p>
         <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@first_code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="vi">@entry_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-          <span class="vi">@glyph_id_array</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">entry_count</span><span class="p">)</span>
+          <span class="vi">@glyph_id_array</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">entry_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@glyph_id_array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+            <span class="vi">@glyph_id_array</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
           <span class="p">}</span>
           <span class="nb">self</span>
         <span class="k">end</span>

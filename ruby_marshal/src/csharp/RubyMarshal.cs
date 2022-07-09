@@ -85,7 +85,7 @@ namespace Kaitai
             private void _read()
             {
                 _numElements = new PackedInt(m_io, this, m_root);
-                _elements = new List<Record>((int) (NumElements.Value));
+                _elements = new List<Record>();
                 for (var i = 0; i < NumElements.Value; i++)
                 {
                     _elements.Add(new Record(m_io, this, m_root));
@@ -167,7 +167,7 @@ namespace Kaitai
             {
                 _name = new Record(m_io, this, m_root);
                 _numMembers = new PackedInt(m_io, this, m_root);
-                _members = new List<Pair>((int) (NumMembers.Value));
+                _members = new List<Pair>();
                 for (var i = 0; i < NumMembers.Value; i++)
                 {
                     _members.Add(new Pair(m_io, this, m_root));
@@ -407,7 +407,7 @@ namespace Kaitai
             {
                 _obj = new Record(m_io, this, m_root);
                 _numVars = new PackedInt(m_io, this, m_root);
-                _vars = new List<Pair>((int) (NumVars.Value));
+                _vars = new List<Pair>();
                 for (var i = 0; i < NumVars.Value; i++)
                 {
                     _vars.Add(new Pair(m_io, this, m_root));
@@ -518,7 +518,7 @@ namespace Kaitai
             private void _read()
             {
                 _numPairs = new PackedInt(m_io, this, m_root);
-                _pairs = new List<Pair>((int) (NumPairs.Value));
+                _pairs = new List<Pair>();
                 for (var i = 0; i < NumPairs.Value; i++)
                 {
                     _pairs.Add(new Pair(m_io, this, m_root));

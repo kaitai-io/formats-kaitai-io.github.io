@@ -8,7 +8,7 @@
   } else {
     root.PharWithoutStub = factory(root.KaitaiStream, root.PhpSerializedValue);
   }
-}(this, function (KaitaiStream, PhpSerializedValue) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, PhpSerializedValue) {
 /**
  * A phar (PHP archive) file. The phar format is a custom archive format
  * from the PHP ecosystem that is used to package a complete PHP library
@@ -79,9 +79,9 @@ var PharWithoutStub = (function() {
   }
   PharWithoutStub.prototype._read = function() {
     this.manifest = new Manifest(this._io, this, this._root);
-    this.files = new Array(this.manifest.numFiles);
+    this.files = [];
     for (var i = 0; i < this.manifest.numFiles; i++) {
-      this.files[i] = this._io.readBytes(this.manifest.fileEntries[i].lenDataCompressed);
+      this.files.push(this._io.readBytes(this.manifest.fileEntries[i].lenDataCompressed));
     }
     if (this.manifest.flags.hasSignature) {
       this._raw_signature = this._io.readBytesFull();
@@ -339,9 +339,9 @@ var PharWithoutStub = (function() {
         var _io__raw_metadata = new KaitaiStream(this._raw_metadata);
         this.metadata = new SerializedValue(_io__raw_metadata, this, this._root);
       }
-      this.fileEntries = new Array(this.numFiles);
+      this.fileEntries = [];
       for (var i = 0; i < this.numFiles; i++) {
-        this.fileEntries[i] = new FileEntry(this._io, this, this._root);
+        this.fileEntries.push(new FileEntry(this._io, this, this._root));
       }
     }
 

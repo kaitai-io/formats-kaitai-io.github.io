@@ -97,7 +97,7 @@ public class Grub2Font extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fontFamilyName = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.fontFamilyName = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
         }
         private String fontFamilyName;
         private Grub2Font _root;
@@ -126,7 +126,7 @@ public class Grub2Font extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fontWeight = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.fontWeight = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
         }
         private String fontWeight;
         private Grub2Font _root;
@@ -387,7 +387,7 @@ public class Grub2Font extends KaitaiStruct {
             public CharacterDefinition definition() {
                 if (this.definition != null)
                     return this.definition;
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsDefinition());
                 this.definition = new CharacterDefinition(io, this, _root);
@@ -524,7 +524,7 @@ public class Grub2Font extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fontName = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.fontName = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
         }
         private String fontName;
         private Grub2Font _root;
@@ -553,7 +553,7 @@ public class Grub2Font extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fontSlant = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.fontSlant = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
         }
         private String fontSlant;
         private Grub2Font _root;

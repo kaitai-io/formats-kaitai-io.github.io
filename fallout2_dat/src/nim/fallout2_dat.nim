@@ -4,8 +4,10 @@ import options
 type
   Fallout2Dat* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `footerInst`*: Fallout2Dat_Footer
-    `indexInst`*: Fallout2Dat_Index
+    `footerInst`: Fallout2Dat_Footer
+    `footerInstFlag`: bool
+    `indexInst`: Fallout2Dat_Index
+    `indexInstFlag`: bool
   Fallout2Dat_Compression* = enum
     none = 0
     zlib = 1
@@ -29,9 +31,12 @@ type
     `offset`*: uint32
     `parent`*: Fallout2Dat_Index
     `rawContentsZlibInst`*: seq[byte]
-    `contentsRawInst`*: seq[byte]
-    `contentsZlibInst`*: seq[byte]
-    `contentsInst`*: seq[byte]
+    `contentsRawInst`: seq[byte]
+    `contentsRawInstFlag`: bool
+    `contentsZlibInst`: seq[byte]
+    `contentsZlibInstFlag`: bool
+    `contentsInst`: seq[byte]
+    `contentsInstFlag`: bool
 
 proc read*(_: typedesc[Fallout2Dat], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Fallout2Dat
 proc read*(_: typedesc[Fallout2Dat_Pstr], io: KaitaiStream, root: KaitaiStruct, parent: Fallout2Dat_File): Fallout2Dat_Pstr
@@ -55,26 +60,26 @@ proc read*(_: typedesc[Fallout2Dat], io: KaitaiStream, root: KaitaiStruct, paren
 
 
 proc footer(this: Fallout2Dat): Fallout2Dat_Footer = 
-  if this.footerInst != nil:
+  if this.footerInstFlag:
     return this.footerInst
   let pos = this.io.pos()
   this.io.seek(int((this.io.size - 8)))
   let footerInstExpr = Fallout2Dat_Footer.read(this.io, this.root, this)
   this.footerInst = footerInstExpr
   this.io.seek(pos)
-  if this.footerInst != nil:
-    return this.footerInst
+  this.footerInstFlag = true
+  return this.footerInst
 
 proc index(this: Fallout2Dat): Fallout2Dat_Index = 
-  if this.indexInst != nil:
+  if this.indexInstFlag:
     return this.indexInst
   let pos = this.io.pos()
   this.io.seek(int(((this.io.size - 8) - this.footer.indexSize)))
   let indexInstExpr = Fallout2Dat_Index.read(this.io, this.root, this)
   this.indexInst = indexInstExpr
   this.io.seek(pos)
-  if this.indexInst != nil:
-    return this.indexInst
+  this.indexInstFlag = true
+  return this.indexInst
 
 proc fromFile*(_: typedesc[Fallout2Dat], filename: string): Fallout2Dat =
   Fallout2Dat.read(newKaitaiFileStream(filename), nil, nil)
@@ -148,7 +153,7 @@ proc read*(_: typedesc[Fallout2Dat_File], io: KaitaiStream, root: KaitaiStruct, 
   this.offset = offsetExpr
 
 proc contentsRaw(this: Fallout2Dat_File): seq[byte] = 
-  if this.contentsRawInst.len != 0:
+  if this.contentsRawInstFlag:
     return this.contentsRawInst
   if this.flags == fallout2_dat.none:
     let io = Fallout2Dat(this.root).io
@@ -157,11 +162,11 @@ proc contentsRaw(this: Fallout2Dat_File): seq[byte] =
     let contentsRawInstExpr = io.readBytes(int(this.sizeUnpacked))
     this.contentsRawInst = contentsRawInstExpr
     io.seek(pos)
-  if this.contentsRawInst.len != 0:
-    return this.contentsRawInst
+  this.contentsRawInstFlag = true
+  return this.contentsRawInst
 
 proc contentsZlib(this: Fallout2Dat_File): seq[byte] = 
-  if this.contentsZlibInst.len != 0:
+  if this.contentsZlibInstFlag:
     return this.contentsZlibInst
   if this.flags == fallout2_dat.zlib:
     let io = Fallout2Dat(this.root).io
@@ -172,17 +177,17 @@ proc contentsZlib(this: Fallout2Dat_File): seq[byte] =
     let contentsZlibInstExpr = this.rawContentsZlibInst.processZlib()
     this.contentsZlibInst = contentsZlibInstExpr
     io.seek(pos)
-  if this.contentsZlibInst.len != 0:
-    return this.contentsZlibInst
+  this.contentsZlibInstFlag = true
+  return this.contentsZlibInst
 
 proc contents(this: Fallout2Dat_File): seq[byte] = 
-  if this.contentsInst.len != 0:
+  if this.contentsInstFlag:
     return this.contentsInst
   if  ((this.flags == fallout2_dat.zlib) or (this.flags == fallout2_dat.none)) :
     let contentsInstExpr = seq[byte]((if this.flags == fallout2_dat.zlib: this.contentsZlib else: this.contentsRaw))
     this.contentsInst = contentsInstExpr
-  if this.contentsInst.len != 0:
-    return this.contentsInst
+  this.contentsInstFlag = true
+  return this.contentsInst
 
 proc fromFile*(_: typedesc[Fallout2Dat_File], filename: string): Fallout2Dat_File =
   Fallout2Dat_File.read(newKaitaiFileStream(filename), nil, nil)

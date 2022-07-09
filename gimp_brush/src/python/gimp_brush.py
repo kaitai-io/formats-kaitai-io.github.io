@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class GimpBrush(KaitaiStruct):
@@ -77,9 +76,9 @@ class GimpBrush(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.rows = [None] * (self._root.header.height)
+            self.rows = []
             for i in range(self._root.header.height):
-                self.rows[i] = GimpBrush.Row(self._io, self, self._root)
+                self.rows.append(GimpBrush.Row(self._io, self, self._root))
 
 
 
@@ -91,13 +90,13 @@ class GimpBrush(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.pixels = [None] * (self._root.header.width)
+            self.pixels = []
             for i in range(self._root.header.width):
                 _on = self._root.header.bytes_per_pixel
                 if _on == GimpBrush.ColorDepth.grayscale:
-                    self.pixels[i] = GimpBrush.Row.PixelGray(self._io, self, self._root)
+                    self.pixels.append(GimpBrush.Row.PixelGray(self._io, self, self._root))
                 elif _on == GimpBrush.ColorDepth.rgba:
-                    self.pixels[i] = GimpBrush.Row.PixelRgba(self._io, self, self._root)
+                    self.pixels.append(GimpBrush.Row.PixelRgba(self._io, self, self._root))
 
 
         class PixelGray(KaitaiStruct):
@@ -113,34 +112,34 @@ class GimpBrush(KaitaiStruct):
             @property
             def red(self):
                 if hasattr(self, '_m_red'):
-                    return self._m_red if hasattr(self, '_m_red') else None
+                    return self._m_red
 
                 self._m_red = 0
-                return self._m_red if hasattr(self, '_m_red') else None
+                return getattr(self, '_m_red', None)
 
             @property
             def green(self):
                 if hasattr(self, '_m_green'):
-                    return self._m_green if hasattr(self, '_m_green') else None
+                    return self._m_green
 
                 self._m_green = 0
-                return self._m_green if hasattr(self, '_m_green') else None
+                return getattr(self, '_m_green', None)
 
             @property
             def blue(self):
                 if hasattr(self, '_m_blue'):
-                    return self._m_blue if hasattr(self, '_m_blue') else None
+                    return self._m_blue
 
                 self._m_blue = 0
-                return self._m_blue if hasattr(self, '_m_blue') else None
+                return getattr(self, '_m_blue', None)
 
             @property
             def alpha(self):
                 if hasattr(self, '_m_alpha'):
-                    return self._m_alpha if hasattr(self, '_m_alpha') else None
+                    return self._m_alpha
 
                 self._m_alpha = self.gray
-                return self._m_alpha if hasattr(self, '_m_alpha') else None
+                return getattr(self, '_m_alpha', None)
 
 
         class PixelRgba(KaitaiStruct):
@@ -161,20 +160,20 @@ class GimpBrush(KaitaiStruct):
     @property
     def len_body(self):
         if hasattr(self, '_m_len_body'):
-            return self._m_len_body if hasattr(self, '_m_len_body') else None
+            return self._m_len_body
 
         self._m_len_body = ((self.header.width * self.header.height) * self.header.bytes_per_pixel.value)
-        return self._m_len_body if hasattr(self, '_m_len_body') else None
+        return getattr(self, '_m_len_body', None)
 
     @property
     def body(self):
         if hasattr(self, '_m_body'):
-            return self._m_body if hasattr(self, '_m_body') else None
+            return self._m_body
 
         _pos = self._io.pos()
         self._io.seek(self.len_header)
         self._m_body = self._io.read_bytes(self.len_body)
         self._io.seek(_pos)
-        return self._m_body if hasattr(self, '_m_body') else None
+        return getattr(self, '_m_body', None)
 
 

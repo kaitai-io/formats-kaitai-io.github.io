@@ -8,7 +8,7 @@
   } else {
     root.DnsPacket = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * (No support for Auth-Name + Add-Name for simplicity)
  */
@@ -89,27 +89,27 @@ var DnsPacket = (function() {
       this.arcount = this._io.readU2be();
     }
     if (this.flags.isOpcodeValid) {
-      this.queries = new Array(this.qdcount);
+      this.queries = [];
       for (var i = 0; i < this.qdcount; i++) {
-        this.queries[i] = new Query(this._io, this, this._root);
+        this.queries.push(new Query(this._io, this, this._root));
       }
     }
     if (this.flags.isOpcodeValid) {
-      this.answers = new Array(this.ancount);
+      this.answers = [];
       for (var i = 0; i < this.ancount; i++) {
-        this.answers[i] = new Answer(this._io, this, this._root);
+        this.answers.push(new Answer(this._io, this, this._root));
       }
     }
     if (this.flags.isOpcodeValid) {
-      this.authorities = new Array(this.nscount);
+      this.authorities = [];
       for (var i = 0; i < this.nscount; i++) {
-        this.authorities[i] = new Answer(this._io, this, this._root);
+        this.authorities.push(new Answer(this._io, this, this._root));
       }
     }
     if (this.flags.isOpcodeValid) {
-      this.additionals = new Array(this.arcount);
+      this.additionals = [];
       for (var i = 0; i < this.arcount; i++) {
-        this.additionals[i] = new Answer(this._io, this, this._root);
+        this.additionals.push(new Answer(this._io, this, this._root));
       }
     }
   }
@@ -224,7 +224,7 @@ var DnsPacket = (function() {
       this._read();
     }
     DomainName.prototype._read = function() {
-      this.name = []
+      this.name = [];
       var i = 0;
       do {
         var _ = new Label(this._io, this, this._root);

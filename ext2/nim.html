@@ -265,8 +265,10 @@ section#format-index .row {
 <span class="k">type</span>
   <span class="n">Ext2</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">bg1Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_BlockGroup</span>
-    <span class="p">`</span><span class="n">rootDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_Dir</span>
+    <span class="p">`</span><span class="n">bg1Inst</span><span class="p">`:</span> <span class="n">Ext2_BlockGroup</span>
+    <span class="p">`</span><span class="n">bg1InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">rootDirInst</span><span class="p">`:</span> <span class="n">Ext2_Dir</span>
+    <span class="p">`</span><span class="n">rootDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Ext2_SuperBlockStruct</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">inodesCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">blocksCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -313,8 +315,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">hashSeed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
     <span class="p">`</span><span class="n">defHashVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_BlockGroup</span>
-    <span class="p">`</span><span class="n">blockSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">blockGroupCountInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">blockSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">blockSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">blockGroupCountInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">blockGroupCountInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Ext2_SuperBlockStruct_StateEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">valid_fs</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">error_fs</span> <span class="o">=</span> <span class="mi">2</span>
@@ -330,7 +334,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_Dir</span>
-    <span class="p">`</span><span class="n">inodeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_Inode</span>
+    <span class="p">`</span><span class="n">inodeInst</span><span class="p">`:</span> <span class="n">Ext2_Inode</span>
+    <span class="p">`</span><span class="n">inodeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Ext2_DirEntry_FileTypeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">reg_file</span> <span class="o">=</span> <span class="mi">1</span>
@@ -360,12 +365,14 @@ section#format-index .row {
     <span class="p">`</span><span class="n">faddr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">osd2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_Bgd</span>
-    <span class="p">`</span><span class="n">asDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_Dir</span>
+    <span class="p">`</span><span class="n">asDirInst</span><span class="p">`:</span> <span class="n">Ext2_Dir</span>
+    <span class="p">`</span><span class="n">asDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Ext2_BlockPtr</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="k">ptr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_Inode</span>
     <span class="p">`</span><span class="n">rawBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_RawBlock</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="n">Ext2_RawBlock</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Ext2_Dir</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Ext2_DirEntry</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_Inode</span>
@@ -383,9 +390,12 @@ section#format-index .row {
     <span class="p">`</span><span class="n">usedDirsCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">padReserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_BlockGroup</span>
-    <span class="p">`</span><span class="n">blockBitmapInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">inodeBitmapInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">inodesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Ext2_Inode</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">blockBitmapInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">blockBitmapInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">inodeBitmapInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">inodeBitmapInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">inodesInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Ext2_Inode</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">inodesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Ext2_RawBlock</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ext2_BlockPtr</span>
@@ -421,23 +431,23 @@ section#format-index .row {
 
 
 <span class="k">proc </span><span class="nf">bg1</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2</span><span class="p">):</span> <span class="n">Ext2_BlockGroup</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bg1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bg1InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bg1Inst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1024</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">bg1InstExpr</span> <span class="o">=</span> <span class="n">Ext2_BlockGroup</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bg1Inst</span> <span class="o">=</span> <span class="n">bg1InstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bg1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bg1Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bg1InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bg1Inst</span>
 
 <span class="k">proc </span><span class="nf">rootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2</span><span class="p">):</span> <span class="n">Ext2_Dir</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span>
   <span class="k">let</span> <span class="n">rootDirInstExpr</span> <span class="o">=</span> <span class="n">Ext2_Dir</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bg1</span><span class="p">.</span><span class="n">blockGroups</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="n">inodes</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="n">asDir</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span> <span class="o">=</span> <span class="n">rootDirInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rootDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ext2], filename: string): Ext2 =</span>
   <span class="n">Ext2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -541,20 +551,20 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">defHashVersion</span> <span class="o">=</span> <span class="n">defHashVersionExpr</span>
 
 <span class="k">proc </span><span class="nf">blockSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_SuperBlockStruct</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span>
   <span class="k">let</span> <span class="n">blockSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="mi">1024</span> <span class="ow">shl</span> <span class="n">this</span><span class="p">.</span><span class="n">logBlockSize</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span> <span class="o">=</span> <span class="n">blockSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span>
 
 <span class="k">proc </span><span class="nf">blockGroupCount</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_SuperBlockStruct</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInst</span>
   <span class="k">let</span> <span class="n">blockGroupCountInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">blocksCount</span> <span class="ow">div</span> <span class="n">this</span><span class="p">.</span><span class="n">blocksPerGroup</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInst</span> <span class="o">=</span> <span class="n">blockGroupCountInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockGroupCountInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ext2_SuperBlockStruct], filename: string): Ext2_SuperBlockStruct =</span>
   <span class="n">Ext2_SuperBlockStruct</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -581,12 +591,12 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">paddingExpr</span>
 
 <span class="k">proc </span><span class="nf">inode</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_DirEntry</span><span class="p">):</span> <span class="n">Ext2_Inode</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeInst</span>
   <span class="k">let</span> <span class="n">inodeInstExpr</span> <span class="o">=</span> <span class="n">Ext2_Inode</span><span class="p">(</span><span class="n">Ext2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bg1</span><span class="p">.</span><span class="n">blockGroups</span><span class="o">[</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">inodePtr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">div</span> <span class="n">Ext2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bg1</span><span class="p">.</span><span class="n">superBlock</span><span class="p">.</span><span class="n">inodesPerGroup</span><span class="p">)</span><span class="o">]</span><span class="p">.</span><span class="n">inodes</span><span class="o">[</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">inodePtr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%%%</span> <span class="n">Ext2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bg1</span><span class="p">.</span><span class="n">superBlock</span><span class="p">.</span><span class="n">inodesPerGroup</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">inodeInst</span> <span class="o">=</span> <span class="n">inodeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">inodeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ext2_DirEntry], filename: string): Ext2_DirEntry =</span>
   <span class="n">Ext2_DirEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -638,7 +648,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">osd2</span> <span class="o">=</span> <span class="n">osd2Expr</span>
 
 <span class="k">proc </span><span class="nf">asDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_Inode</span><span class="p">):</span> <span class="n">Ext2_Dir</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">block</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="n">body</span><span class="p">.</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -646,8 +656,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">asDirInstExpr</span> <span class="o">=</span> <span class="n">Ext2_Dir</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span> <span class="o">=</span> <span class="n">asDirInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">asDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ext2_Inode], filename: string): Ext2_Inode =</span>
   <span class="n">Ext2_Inode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -664,7 +674,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="k">ptr</span> <span class="o">=</span> <span class="n">ptrExpr</span>
 
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_BlockPtr</span><span class="p">):</span> <span class="n">Ext2_RawBlock</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="k">ptr</span> <span class="o">*</span> <span class="n">Ext2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bg1</span><span class="p">.</span><span class="n">superBlock</span><span class="p">.</span><span class="n">blockSize</span><span class="p">)))</span>
@@ -674,8 +684,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Ext2_RawBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ext2_BlockPtr], filename: string): Ext2_BlockPtr =</span>
   <span class="n">Ext2_BlockPtr</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -742,29 +752,29 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">padReserved</span> <span class="o">=</span> <span class="n">padReservedExpr</span>
 
 <span class="k">proc </span><span class="nf">blockBitmap</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_Bgd</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">blockBitmapBlock</span> <span class="o">*</span> <span class="n">Ext2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bg1</span><span class="p">.</span><span class="n">superBlock</span><span class="p">.</span><span class="n">blockSize</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">blockBitmapInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1024</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInst</span> <span class="o">=</span> <span class="n">blockBitmapInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockBitmapInst</span>
 
 <span class="k">proc </span><span class="nf">inodeBitmap</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_Bgd</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapBlock</span> <span class="o">*</span> <span class="n">Ext2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bg1</span><span class="p">.</span><span class="n">superBlock</span><span class="p">.</span><span class="n">blockSize</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">inodeBitmapInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1024</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInst</span> <span class="o">=</span> <span class="n">inodeBitmapInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodeBitmapInst</span>
 
 <span class="k">proc </span><span class="nf">inodes</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ext2_Bgd</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Ext2_Inode</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodesInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">inodeTableBlock</span> <span class="o">*</span> <span class="n">Ext2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bg1</span><span class="p">.</span><span class="n">superBlock</span><span class="p">.</span><span class="n">blockSize</span><span class="p">)))</span>
@@ -772,8 +782,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Ext2_Inode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">inodesInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">inodesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">inodesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">inodesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ext2_Bgd], filename: string): Ext2_Bgd =</span>
   <span class="n">Ext2_Bgd</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

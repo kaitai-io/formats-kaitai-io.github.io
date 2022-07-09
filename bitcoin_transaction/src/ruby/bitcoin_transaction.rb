@@ -20,14 +20,14 @@ class BitcoinTransaction < Kaitai::Struct::Struct
   def _read
     @version = @_io.read_u4le
     @num_vins = @_io.read_u1
-    @vins = Array.new(num_vins)
+    @vins = []
     (num_vins).times { |i|
-      @vins[i] = Vin.new(@_io, self, @_root)
+      @vins << Vin.new(@_io, self, @_root)
     }
     @num_vouts = @_io.read_u1
-    @vouts = Array.new(num_vouts)
+    @vouts = []
     (num_vouts).times { |i|
-      @vouts[i] = Vout.new(@_io, self, @_root)
+      @vouts << Vout.new(@_io, self, @_root)
     }
     @locktime = @_io.read_u4le
     self

@@ -145,13 +145,10 @@ std::vector<std::unique_ptr<apm_partition_table_t::partition_entry_t>>* apm_part
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek(_root()->sector_size());
-    int l_partition_entries = _root()->partition_lookup()->number_of_partitions();
     m__raw_partition_entries = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m__raw_partition_entries->reserve(l_partition_entries);
     m__io__raw_partition_entries = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-    m__io__raw_partition_entries->reserve(l_partition_entries);
     m_partition_entries = std::unique_ptr<std::vector<std::unique_ptr<partition_entry_t>>>(new std::vector<std::unique_ptr<partition_entry_t>>());
-    m_partition_entries->reserve(l_partition_entries);
+    const int l_partition_entries = _root()->partition_lookup()->number_of_partitions();
     for (int i = 0; i < l_partition_entries; i++) {
         m__raw_partition_entries->push_back(std::move(io->read_bytes(sector_size())));
         kaitai::kstream* io__raw_partition_entries = new kaitai::kstream(m__raw_partition_entries->at(m__raw_partition_entries->size() - 1));

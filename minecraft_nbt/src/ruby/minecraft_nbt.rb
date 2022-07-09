@@ -117,9 +117,9 @@ class MinecraftNbt < Kaitai::Struct::Struct
 
     def _read
       @num_tags = @_io.read_s4be
-      @tags = Array.new(num_tags)
+      @tags = []
       (num_tags).times { |i|
-        @tags[i] = @_io.read_s8be
+        @tags << @_io.read_s8be
       }
       self
     end
@@ -153,9 +153,9 @@ class MinecraftNbt < Kaitai::Struct::Struct
 
     def _read
       @num_tags = @_io.read_s4be
-      @tags = Array.new(num_tags)
+      @tags = []
       (num_tags).times { |i|
-        @tags[i] = @_io.read_s4be
+        @tags << @_io.read_s4be
       }
       self
     end
@@ -176,33 +176,33 @@ class MinecraftNbt < Kaitai::Struct::Struct
     def _read
       @tags_type = Kaitai::Struct::Stream::resolve_enum(MinecraftNbt::TAG, @_io.read_u1)
       @num_tags = @_io.read_s4be
-      @tags = Array.new(num_tags)
+      @tags = []
       (num_tags).times { |i|
         case tags_type
         when :tag_long_array
-          @tags[i] = TagLongArray.new(@_io, self, @_root)
+          @tags << TagLongArray.new(@_io, self, @_root)
         when :tag_compound
-          @tags[i] = TagCompound.new(@_io, self, @_root)
+          @tags << TagCompound.new(@_io, self, @_root)
         when :tag_double
-          @tags[i] = @_io.read_f8be
+          @tags << @_io.read_f8be
         when :tag_list
-          @tags[i] = TagList.new(@_io, self, @_root)
+          @tags << TagList.new(@_io, self, @_root)
         when :tag_float
-          @tags[i] = @_io.read_f4be
+          @tags << @_io.read_f4be
         when :tag_short
-          @tags[i] = @_io.read_s2be
+          @tags << @_io.read_s2be
         when :tag_int
-          @tags[i] = @_io.read_s4be
+          @tags << @_io.read_s4be
         when :tag_byte_array
-          @tags[i] = TagByteArray.new(@_io, self, @_root)
+          @tags << TagByteArray.new(@_io, self, @_root)
         when :tag_byte
-          @tags[i] = @_io.read_s1
+          @tags << @_io.read_s1
         when :tag_int_array
-          @tags[i] = TagIntArray.new(@_io, self, @_root)
+          @tags << TagIntArray.new(@_io, self, @_root)
         when :tag_string
-          @tags[i] = TagString.new(@_io, self, @_root)
+          @tags << TagString.new(@_io, self, @_root)
         when :tag_long
-          @tags[i] = @_io.read_s8be
+          @tags << @_io.read_s8be
         end
       }
       self

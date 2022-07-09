@@ -8,7 +8,7 @@
   } else {
     root.Dcmp1 = factory(root.KaitaiStream, root.DcmpVariableLengthInteger);
   }
-}(this, function (KaitaiStream, DcmpVariableLengthInteger) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DcmpVariableLengthInteger) {
 /**
  * Compressed resource data in `'dcmp' (1)` format,
  * as stored in compressed resources with header type `8` and decompressor ID `1`.
@@ -45,7 +45,7 @@ var Dcmp1 = (function() {
     this._read();
   }
   Dcmp1.prototype._read = function() {
-    this.chunks = []
+    this.chunks = [];
     var i = 0;
     do {
       var _ = new Chunk(this._io, this, this._root);

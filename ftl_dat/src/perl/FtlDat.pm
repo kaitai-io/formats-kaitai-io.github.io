@@ -39,7 +39,7 @@ sub _read {
     $self->{files} = ();
     my $n_files = $self->num_files();
     for (my $i = 0; $i < $n_files; $i++) {
-        $self->{files}[$i] = FtlDat::File->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{files}}, FtlDat::File->new($self->{_io}, $self, $self->{_root});
     }
 }
 

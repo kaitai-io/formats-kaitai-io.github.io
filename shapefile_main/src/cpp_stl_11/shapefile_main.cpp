@@ -43,16 +43,14 @@ shapefile_main_t::multi_point_m_t::multi_point_m_t(kaitai::kstream* p__io, shape
 void shapefile_main_t::multi_point_m_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_points = m__io->read_s4le();
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
     m_m_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_m_values = number_of_points();
     m_m_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_m_values->reserve(l_m_values);
+    const int l_m_values = number_of_points();
     for (int i = 0; i < l_m_values; i++) {
         m_m_values->push_back(std::move(m__io->read_f8le()));
     }
@@ -120,15 +118,13 @@ void shapefile_main_t::polygon_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_parts = m__io->read_s4le();
     m_number_of_points = m__io->read_s4le();
-    int l_parts = number_of_parts();
     m_parts = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_parts->reserve(l_parts);
+    const int l_parts = number_of_parts();
     for (int i = 0; i < l_parts; i++) {
         m_parts->push_back(std::move(m__io->read_s4le()));
     }
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
@@ -172,15 +168,13 @@ void shapefile_main_t::poly_line_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_parts = m__io->read_s4le();
     m_number_of_points = m__io->read_s4le();
-    int l_parts = number_of_parts();
     m_parts = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_parts->reserve(l_parts);
+    const int l_parts = number_of_parts();
     for (int i = 0; i < l_parts; i++) {
         m_parts->push_back(std::move(m__io->read_s4le()));
     }
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
@@ -208,23 +202,20 @@ shapefile_main_t::multi_point_z_t::multi_point_z_t(kaitai::kstream* p__io, shape
 void shapefile_main_t::multi_point_z_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_points = m__io->read_s4le();
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
     m_z_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_z_values = number_of_points();
     m_z_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_z_values->reserve(l_z_values);
+    const int l_z_values = number_of_points();
     for (int i = 0; i < l_z_values; i++) {
         m_z_values->push_back(std::move(m__io->read_f8le()));
     }
     m_m_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_m_values = number_of_points();
     m_m_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_m_values->reserve(l_m_values);
+    const int l_m_values = number_of_points();
     for (int i = 0; i < l_m_values; i++) {
         m_m_values->push_back(std::move(m__io->read_f8le()));
     }
@@ -254,29 +245,25 @@ void shapefile_main_t::poly_line_z_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_parts = m__io->read_s4le();
     m_number_of_points = m__io->read_s4le();
-    int l_parts = number_of_parts();
     m_parts = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_parts->reserve(l_parts);
+    const int l_parts = number_of_parts();
     for (int i = 0; i < l_parts; i++) {
         m_parts->push_back(std::move(m__io->read_s4le()));
     }
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
     m_z_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_z_values = number_of_points();
     m_z_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_z_values->reserve(l_z_values);
+    const int l_z_values = number_of_points();
     for (int i = 0; i < l_z_values; i++) {
         m_z_values->push_back(std::move(m__io->read_f8le()));
     }
     m_m_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_m_values = number_of_points();
     m_m_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_m_values->reserve(l_m_values);
+    const int l_m_values = number_of_points();
     for (int i = 0; i < l_m_values; i++) {
         m_m_values->push_back(std::move(m__io->read_f8le()));
     }
@@ -306,29 +293,25 @@ void shapefile_main_t::polygon_z_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_parts = m__io->read_s4le();
     m_number_of_points = m__io->read_s4le();
-    int l_parts = number_of_parts();
     m_parts = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_parts->reserve(l_parts);
+    const int l_parts = number_of_parts();
     for (int i = 0; i < l_parts; i++) {
         m_parts->push_back(std::move(m__io->read_s4le()));
     }
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
     m_z_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_z_values = number_of_points();
     m_z_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_z_values->reserve(l_z_values);
+    const int l_z_values = number_of_points();
     for (int i = 0; i < l_z_values; i++) {
         m_z_values->push_back(std::move(m__io->read_f8le()));
     }
     m_m_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_m_values = number_of_points();
     m_m_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_m_values->reserve(l_m_values);
+    const int l_m_values = number_of_points();
     for (int i = 0; i < l_m_values; i++) {
         m_m_values->push_back(std::move(m__io->read_f8le()));
     }
@@ -395,22 +378,19 @@ void shapefile_main_t::polygon_m_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_parts = m__io->read_s4le();
     m_number_of_points = m__io->read_s4le();
-    int l_parts = number_of_parts();
     m_parts = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_parts->reserve(l_parts);
+    const int l_parts = number_of_parts();
     for (int i = 0; i < l_parts; i++) {
         m_parts->push_back(std::move(m__io->read_s4le()));
     }
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
     m_m_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_m_values = number_of_points();
     m_m_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_m_values->reserve(l_m_values);
+    const int l_m_values = number_of_points();
     for (int i = 0; i < l_m_values; i++) {
         m_m_values->push_back(std::move(m__io->read_f8le()));
     }
@@ -452,9 +432,8 @@ shapefile_main_t::multi_point_t::multi_point_t(kaitai::kstream* p__io, shapefile
 void shapefile_main_t::multi_point_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_points = m__io->read_s4le();
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
@@ -664,35 +643,30 @@ void shapefile_main_t::multi_patch_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_parts = m__io->read_s4le();
     m_number_of_points = m__io->read_s4le();
-    int l_parts = number_of_parts();
     m_parts = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_parts->reserve(l_parts);
+    const int l_parts = number_of_parts();
     for (int i = 0; i < l_parts; i++) {
         m_parts->push_back(std::move(m__io->read_s4le()));
     }
-    int l_part_types = number_of_parts();
     m_part_types = std::unique_ptr<std::vector<part_type_t>>(new std::vector<part_type_t>());
-    m_part_types->reserve(l_part_types);
+    const int l_part_types = number_of_parts();
     for (int i = 0; i < l_part_types; i++) {
         m_part_types->push_back(std::move(static_cast<shapefile_main_t::part_type_t>(m__io->read_s4le())));
     }
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
     m_z_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_z_values = number_of_points();
     m_z_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_z_values->reserve(l_z_values);
+    const int l_z_values = number_of_points();
     for (int i = 0; i < l_z_values; i++) {
         m_z_values->push_back(std::move(m__io->read_f8le()));
     }
     m_m_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_m_values = number_of_points();
     m_m_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_m_values->reserve(l_m_values);
+    const int l_m_values = number_of_points();
     for (int i = 0; i < l_m_values; i++) {
         m_m_values->push_back(std::move(m__io->read_f8le()));
     }
@@ -720,22 +694,19 @@ void shapefile_main_t::poly_line_m_t::_read() {
     m_bounding_box = std::unique_ptr<bounding_box_x_y_t>(new bounding_box_x_y_t(m__io, this, m__root));
     m_number_of_parts = m__io->read_s4le();
     m_number_of_points = m__io->read_s4le();
-    int l_parts = number_of_parts();
     m_parts = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_parts->reserve(l_parts);
+    const int l_parts = number_of_parts();
     for (int i = 0; i < l_parts; i++) {
         m_parts->push_back(std::move(m__io->read_s4le()));
     }
-    int l_points = number_of_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_t>>>(new std::vector<std::unique_ptr<point_t>>());
-    m_points->reserve(l_points);
+    const int l_points = number_of_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_t>(new point_t(m__io, this, m__root))));
     }
     m_m_range = std::unique_ptr<bounds_min_max_t>(new bounds_min_max_t(m__io, this, m__root));
-    int l_m_values = number_of_points();
     m_m_values = std::unique_ptr<std::vector<double>>(new std::vector<double>());
-    m_m_values->reserve(l_m_values);
+    const int l_m_values = number_of_points();
     for (int i = 0; i < l_m_values; i++) {
         m_m_values->push_back(std::move(m__io->read_f8le()));
     }

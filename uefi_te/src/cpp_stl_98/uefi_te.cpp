@@ -22,9 +22,8 @@ void uefi_te_t::_read() {
     m__raw_te_hdr = m__io->read_bytes(40);
     m__io__raw_te_hdr = new kaitai::kstream(m__raw_te_hdr);
     m_te_hdr = new te_header_t(m__io__raw_te_hdr, this, m__root);
-    int l_sections = te_hdr()->num_sections();
     m_sections = new std::vector<section_t*>();
-    m_sections->reserve(l_sections);
+    const int l_sections = te_hdr()->num_sections();
     for (int i = 0; i < l_sections; i++) {
         m_sections->push_back(new section_t(m__io, this, m__root));
     }

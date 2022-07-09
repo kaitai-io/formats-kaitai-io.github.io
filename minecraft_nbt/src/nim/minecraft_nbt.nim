@@ -6,7 +6,8 @@ type
     `rootCheck`*: seq[byte]
     `root`*: MinecraftNbt_NamedTag
     `parent`*: KaitaiStruct
-    `rootTypeInst`*: MinecraftNbt_Tag
+    `rootTypeInst`: MinecraftNbt_Tag
+    `rootTypeInstFlag`: bool
   MinecraftNbt_Tag* = enum
     end = 0
     byte = 1
@@ -25,7 +26,8 @@ type
     `numTags`*: int32
     `tags`*: seq[int64]
     `parent`*: KaitaiStruct
-    `tagsTypeInst`*: MinecraftNbt_Tag
+    `tagsTypeInst`: MinecraftNbt_Tag
+    `tagsTypeInstFlag`: bool
   MinecraftNbt_TagByteArray* = ref object of KaitaiStruct
     `lenData`*: int32
     `data`*: seq[byte]
@@ -34,7 +36,8 @@ type
     `numTags`*: int32
     `tags`*: seq[int32]
     `parent`*: KaitaiStruct
-    `tagsTypeInst`*: MinecraftNbt_Tag
+    `tagsTypeInst`: MinecraftNbt_Tag
+    `tagsTypeInstFlag`: bool
   MinecraftNbt_TagList* = ref object of KaitaiStruct
     `tagsType`*: MinecraftNbt_Tag
     `numTags`*: int32
@@ -47,13 +50,15 @@ type
   MinecraftNbt_TagCompound* = ref object of KaitaiStruct
     `tags`*: seq[MinecraftNbt_NamedTag]
     `parent`*: KaitaiStruct
-    `dumpNumTagsInst`*: int
+    `dumpNumTagsInst`: int
+    `dumpNumTagsInstFlag`: bool
   MinecraftNbt_NamedTag* = ref object of KaitaiStruct
     `type`*: MinecraftNbt_Tag
     `name`*: MinecraftNbt_TagString
     `payload`*: KaitaiStruct
     `parent`*: KaitaiStruct
-    `isTagEndInst`*: bool
+    `isTagEndInst`: bool
+    `isTagEndInstFlag`: bool
 
 proc read*(_: typedesc[MinecraftNbt], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt
 proc read*(_: typedesc[MinecraftNbt_TagLongArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagLongArray
@@ -160,15 +165,15 @@ proc read*(_: typedesc[MinecraftNbt], io: KaitaiStream, root: KaitaiStruct, pare
   this.root = rootExpr
 
 proc rootType(this: MinecraftNbt): MinecraftNbt_Tag = 
-  if this.rootTypeInst != nil:
+  if this.rootTypeInstFlag:
     return this.rootTypeInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let rootTypeInstExpr = MinecraftNbt_Tag(this.io.readU1())
   this.rootTypeInst = rootTypeInstExpr
   this.io.seek(pos)
-  if this.rootTypeInst != nil:
-    return this.rootTypeInst
+  this.rootTypeInstFlag = true
+  return this.rootTypeInst
 
 proc fromFile*(_: typedesc[MinecraftNbt], filename: string): MinecraftNbt =
   MinecraftNbt.read(newKaitaiFileStream(filename), nil, nil)
@@ -188,12 +193,12 @@ proc read*(_: typedesc[MinecraftNbt_TagLongArray], io: KaitaiStream, root: Kaita
     this.tags.add(it)
 
 proc tagsType(this: MinecraftNbt_TagLongArray): MinecraftNbt_Tag = 
-  if this.tagsTypeInst != nil:
+  if this.tagsTypeInstFlag:
     return this.tagsTypeInst
   let tagsTypeInstExpr = MinecraftNbt_Tag(minecraft_nbt.long)
   this.tagsTypeInst = tagsTypeInstExpr
-  if this.tagsTypeInst != nil:
-    return this.tagsTypeInst
+  this.tagsTypeInstFlag = true
+  return this.tagsTypeInst
 
 proc fromFile*(_: typedesc[MinecraftNbt_TagLongArray], filename: string): MinecraftNbt_TagLongArray =
   MinecraftNbt_TagLongArray.read(newKaitaiFileStream(filename), nil, nil)
@@ -229,12 +234,12 @@ proc read*(_: typedesc[MinecraftNbt_TagIntArray], io: KaitaiStream, root: Kaitai
     this.tags.add(it)
 
 proc tagsType(this: MinecraftNbt_TagIntArray): MinecraftNbt_Tag = 
-  if this.tagsTypeInst != nil:
+  if this.tagsTypeInstFlag:
     return this.tagsTypeInst
   let tagsTypeInstExpr = MinecraftNbt_Tag(minecraft_nbt.int)
   this.tagsTypeInst = tagsTypeInstExpr
-  if this.tagsTypeInst != nil:
-    return this.tagsTypeInst
+  this.tagsTypeInstFlag = true
+  return this.tagsTypeInst
 
 proc fromFile*(_: typedesc[MinecraftNbt_TagIntArray], filename: string): MinecraftNbt_TagIntArray =
   MinecraftNbt_TagIntArray.read(newKaitaiFileStream(filename), nil, nil)
@@ -332,12 +337,12 @@ proc read*(_: typedesc[MinecraftNbt_TagCompound], io: KaitaiStream, root: Kaitai
       inc i
 
 proc dumpNumTags(this: MinecraftNbt_TagCompound): int = 
-  if this.dumpNumTagsInst != nil:
+  if this.dumpNumTagsInstFlag:
     return this.dumpNumTagsInst
   let dumpNumTagsInstExpr = int((len(this.tags) - (if  ((len(this.tags) >= 1) and (this.tags[^1].isTagEnd)) : 1 else: 0)))
   this.dumpNumTagsInst = dumpNumTagsInstExpr
-  if this.dumpNumTagsInst != nil:
-    return this.dumpNumTagsInst
+  this.dumpNumTagsInstFlag = true
+  return this.dumpNumTagsInst
 
 proc fromFile*(_: typedesc[MinecraftNbt_TagCompound], filename: string): MinecraftNbt_TagCompound =
   MinecraftNbt_TagCompound.read(newKaitaiFileStream(filename), nil, nil)
@@ -396,12 +401,12 @@ proc read*(_: typedesc[MinecraftNbt_NamedTag], io: KaitaiStream, root: KaitaiStr
         this.payload = payloadExpr
 
 proc isTagEnd(this: MinecraftNbt_NamedTag): bool = 
-  if this.isTagEndInst != nil:
+  if this.isTagEndInstFlag:
     return this.isTagEndInst
   let isTagEndInstExpr = bool(this.type == minecraft_nbt.end)
   this.isTagEndInst = isTagEndInstExpr
-  if this.isTagEndInst != nil:
-    return this.isTagEndInst
+  this.isTagEndInstFlag = true
+  return this.isTagEndInst
 
 proc fromFile*(_: typedesc[MinecraftNbt_NamedTag], filename: string): MinecraftNbt_NamedTag =
   MinecraftNbt_NamedTag.read(newKaitaiFileStream(filename), nil, nil)

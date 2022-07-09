@@ -289,8 +289,10 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
     <span class="p">`</span><span class="n">b2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">b3</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MbrPartitionTable_PartitionEntry</span>
-    <span class="p">`</span><span class="n">sectorInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">cylinderInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">cylinderInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">cylinderInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MbrPartitionTable], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MbrPartitionTable</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MbrPartitionTable_PartitionEntry], io: KaitaiStream, root: KaitaiStruct, parent: MbrPartitionTable): MbrPartitionTable_PartitionEntry</span>
@@ -371,20 +373,20 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">b3</span> <span class="o">=</span> <span class="n">b3Expr</span>
 
 <span class="k">proc </span><span class="nf">sector</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MbrPartitionTable_Chs</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorInst</span>
   <span class="k">let</span> <span class="n">sectorInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b2</span> <span class="ow">and</span> <span class="mi">63</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sectorInst</span> <span class="o">=</span> <span class="n">sectorInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sectorInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorInst</span>
 
 <span class="k">proc </span><span class="nf">cylinder</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MbrPartitionTable_Chs</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cylinderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cylinderInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cylinderInst</span>
   <span class="k">let</span> <span class="n">cylinderInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b3</span> <span class="o">+</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b2</span> <span class="ow">and</span> <span class="mi">192</span><span class="p">)</span> <span class="ow">shl</span> <span class="mi">2</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">cylinderInst</span> <span class="o">=</span> <span class="n">cylinderInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cylinderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cylinderInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">cylinderInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cylinderInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MbrPartitionTable_Chs], filename: string): MbrPartitionTable_Chs =</span>
   <span class="n">MbrPartitionTable_Chs</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

@@ -1497,14 +1497,14 @@ function MachO.VmProt:_init(io, parent, root)
 end
 
 function MachO.VmProt:_read()
-  self.strip_read = self._io:read_bits_int_be(1)
-  self.is_mask = self._io:read_bits_int_be(1)
-  self.reserved0 = self._io:read_bits_int_be(1)
-  self.copy = self._io:read_bits_int_be(1)
-  self.no_change = self._io:read_bits_int_be(1)
-  self.execute = self._io:read_bits_int_be(1)
-  self.write = self._io:read_bits_int_be(1)
-  self.read = self._io:read_bits_int_be(1)
+  self.strip_read = self._io:read_bits_int_be(1) ~= 0
+  self.is_mask = self._io:read_bits_int_be(1) ~= 0
+  self.reserved0 = self._io:read_bits_int_be(1) ~= 0
+  self.copy = self._io:read_bits_int_be(1) ~= 0
+  self.no_change = self._io:read_bits_int_be(1) ~= 0
+  self.execute = self._io:read_bits_int_be(1) ~= 0
+  self.write = self._io:read_bits_int_be(1) ~= 0
+  self.read = self._io:read_bits_int_be(1) ~= 0
   self.reserved1 = self._io:read_bits_int_be(24)
 end
 
@@ -1889,7 +1889,7 @@ function MachO.DyldInfoCommand.RebaseData:_read()
   self.items = {}
   local i = 0
   while true do
-    _ = MachO.DyldInfoCommand.RebaseData.RebaseItem(self._io, self, self._root)
+    local _ = MachO.DyldInfoCommand.RebaseData.RebaseItem(self._io, self, self._root)
     self.items[i + 1] = _
     if _.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.done then
       break
@@ -1902,613 +1902,613 @@ end
 MachO.DyldInfoCommand.RebaseData.RebaseItem = class.class(KaitaiStruct)
 
 function MachO.DyldInfoCommand.RebaseData.RebaseItem:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.DyldInfoCommand.RebaseData.RebaseItem:_read()
-self.opcode_and_immediate = self._io:read_u1()
-if  ((self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.set_segment_and_offset_uleb) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_uleb_times) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_uleb_times_skipping_uleb))  then
-  self.uleb = MachO.Uleb128(self._io, self, self._root)
-end
-if self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_uleb_times_skipping_uleb then
-  self.skip = MachO.Uleb128(self._io, self, self._root)
-end
+  self.opcode_and_immediate = self._io:read_u1()
+  if  ((self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.set_segment_and_offset_uleb) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_uleb_times) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_uleb_times_skipping_uleb))  then
+    self.uleb = MachO.Uleb128(self._io, self, self._root)
+  end
+  if self.opcode == MachO.DyldInfoCommand.RebaseData.Opcode.do_rebase_uleb_times_skipping_uleb then
+    self.skip = MachO.Uleb128(self._io, self, self._root)
+  end
 end
 
 MachO.DyldInfoCommand.RebaseData.RebaseItem.property.opcode = {}
 function MachO.DyldInfoCommand.RebaseData.RebaseItem.property.opcode:get()
-if self._m_opcode ~= nil then
-  return self._m_opcode
-end
+  if self._m_opcode ~= nil then
+    return self._m_opcode
+  end
 
-self._m_opcode = MachO.DyldInfoCommand.RebaseData.Opcode((self.opcode_and_immediate & 240))
-return self._m_opcode
+  self._m_opcode = MachO.DyldInfoCommand.RebaseData.Opcode((self.opcode_and_immediate & 240))
+  return self._m_opcode
 end
 
 MachO.DyldInfoCommand.RebaseData.RebaseItem.property.immediate = {}
 function MachO.DyldInfoCommand.RebaseData.RebaseItem.property.immediate:get()
-if self._m_immediate ~= nil then
-  return self._m_immediate
-end
+  if self._m_immediate ~= nil then
+    return self._m_immediate
+  end
 
-self._m_immediate = (self.opcode_and_immediate & 15)
-return self._m_immediate
+  self._m_immediate = (self.opcode_and_immediate & 15)
+  return self._m_immediate
 end
 
 
 MachO.DyldInfoCommand.ExportNode = class.class(KaitaiStruct)
 
 function MachO.DyldInfoCommand.ExportNode:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.DyldInfoCommand.ExportNode:_read()
-self.terminal_size = MachO.Uleb128(self._io, self, self._root)
-self.children_count = self._io:read_u1()
-self.children = {}
-for i = 0, self.children_count - 1 do
-  self.children[i + 1] = MachO.DyldInfoCommand.ExportNode.Child(self._io, self, self._root)
-end
-self.terminal = self._io:read_bytes(self.terminal_size.value)
+  self.terminal_size = MachO.Uleb128(self._io, self, self._root)
+  self.children_count = self._io:read_u1()
+  self.children = {}
+  for i = 0, self.children_count - 1 do
+    self.children[i + 1] = MachO.DyldInfoCommand.ExportNode.Child(self._io, self, self._root)
+  end
+  self.terminal = self._io:read_bytes(self.terminal_size.value)
 end
 
 
 MachO.DyldInfoCommand.ExportNode.Child = class.class(KaitaiStruct)
 
 function MachO.DyldInfoCommand.ExportNode.Child:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.DyldInfoCommand.ExportNode.Child:_read()
-self.name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ascii")
-self.node_offset = MachO.Uleb128(self._io, self, self._root)
+  self.name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ascii")
+  self.node_offset = MachO.Uleb128(self._io, self, self._root)
 end
 
 MachO.DyldInfoCommand.ExportNode.Child.property.value = {}
 function MachO.DyldInfoCommand.ExportNode.Child.property.value:get()
-if self._m_value ~= nil then
-  return self._m_value
-end
+  if self._m_value ~= nil then
+    return self._m_value
+  end
 
-local _pos = self._io:pos()
-self._io:seek(self.node_offset.value)
-self._m_value = MachO.DyldInfoCommand.ExportNode(self._io, self, self._root)
-self._io:seek(_pos)
-return self._m_value
+  local _pos = self._io:pos()
+  self._io:seek(self.node_offset.value)
+  self._m_value = MachO.DyldInfoCommand.ExportNode(self._io, self, self._root)
+  self._io:seek(_pos)
+  return self._m_value
 end
 
 
 MachO.DyldInfoCommand.BindData = class.class(KaitaiStruct)
 
 function MachO.DyldInfoCommand.BindData:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.DyldInfoCommand.BindData:_read()
-self.items = {}
-local i = 0
-while true do
-  _ = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
-  self.items[i + 1] = _
-  if _.opcode == MachO.DyldInfoCommand.BindOpcode.done then
-    break
+  self.items = {}
+  local i = 0
+  while true do
+    local _ = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
+    self.items[i + 1] = _
+    if _.opcode == MachO.DyldInfoCommand.BindOpcode.done then
+      break
+    end
+    i = i + 1
   end
-  i = i + 1
-end
 end
 
 
 MachO.DyldInfoCommand.LazyBindData = class.class(KaitaiStruct)
 
 function MachO.DyldInfoCommand.LazyBindData:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.DyldInfoCommand.LazyBindData:_read()
-self.items = {}
-local i = 0
-while not self._io:is_eof() do
-self.items[i + 1] = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
-i = i + 1
-end
+  self.items = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.items[i + 1] = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 
 MachO.DylinkerCommand = class.class(KaitaiStruct)
 
 function MachO.DylinkerCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.DylinkerCommand:_read()
-self.name = MachO.LcStr(self._io, self, self._root)
+  self.name = MachO.LcStr(self._io, self, self._root)
 end
 
 
 MachO.DylibCommand = class.class(KaitaiStruct)
 
 function MachO.DylibCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.DylibCommand:_read()
-self.name_offset = self._io:read_u4le()
-self.timestamp = self._io:read_u4le()
-self.current_version = self._io:read_u4le()
-self.compatibility_version = self._io:read_u4le()
-self.name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "utf-8")
+  self.name_offset = self._io:read_u4le()
+  self.timestamp = self._io:read_u4le()
+  self.current_version = self._io:read_u4le()
+  self.compatibility_version = self._io:read_u4le()
+  self.name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "utf-8")
 end
 
 
 MachO.SegmentCommand = class.class(KaitaiStruct)
 
 function MachO.SegmentCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.SegmentCommand:_read()
-self.segname = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(16), 0), "ascii")
-self.vmaddr = self._io:read_u4le()
-self.vmsize = self._io:read_u4le()
-self.fileoff = self._io:read_u4le()
-self.filesize = self._io:read_u4le()
-self.maxprot = MachO.VmProt(self._io, self, self._root)
-self.initprot = MachO.VmProt(self._io, self, self._root)
-self.nsects = self._io:read_u4le()
-self.flags = self._io:read_u4le()
-self.sections = {}
-for i = 0, self.nsects - 1 do
-self.sections[i + 1] = MachO.SegmentCommand.Section(self._io, self, self._root)
-end
+  self.segname = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(16), 0), "ascii")
+  self.vmaddr = self._io:read_u4le()
+  self.vmsize = self._io:read_u4le()
+  self.fileoff = self._io:read_u4le()
+  self.filesize = self._io:read_u4le()
+  self.maxprot = MachO.VmProt(self._io, self, self._root)
+  self.initprot = MachO.VmProt(self._io, self, self._root)
+  self.nsects = self._io:read_u4le()
+  self.flags = self._io:read_u4le()
+  self.sections = {}
+  for i = 0, self.nsects - 1 do
+    self.sections[i + 1] = MachO.SegmentCommand.Section(self._io, self, self._root)
+  end
 end
 
 
 MachO.SegmentCommand.Section = class.class(KaitaiStruct)
 
 function MachO.SegmentCommand.Section:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.SegmentCommand.Section:_read()
-self.sect_name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(16), 0), "ascii")
-self.seg_name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(16), 0), "ascii")
-self.addr = self._io:read_u4le()
-self.size = self._io:read_u4le()
-self.offset = self._io:read_u4le()
-self.align = self._io:read_u4le()
-self.reloff = self._io:read_u4le()
-self.nreloc = self._io:read_u4le()
-self.flags = self._io:read_u4le()
-self.reserved1 = self._io:read_u4le()
-self.reserved2 = self._io:read_u4le()
+  self.sect_name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(16), 0), "ascii")
+  self.seg_name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(16), 0), "ascii")
+  self.addr = self._io:read_u4le()
+  self.size = self._io:read_u4le()
+  self.offset = self._io:read_u4le()
+  self.align = self._io:read_u4le()
+  self.reloff = self._io:read_u4le()
+  self.nreloc = self._io:read_u4le()
+  self.flags = self._io:read_u4le()
+  self.reserved1 = self._io:read_u4le()
+  self.reserved2 = self._io:read_u4le()
 end
 
 MachO.SegmentCommand.Section.property.data = {}
 function MachO.SegmentCommand.Section.property.data:get()
-if self._m_data ~= nil then
-return self._m_data
-end
+  if self._m_data ~= nil then
+    return self._m_data
+  end
 
-local _io = self._root._io
-local _pos = _io:pos()
-_io:seek(self.offset)
-self._m_data = _io:read_bytes(self.size)
-_io:seek(_pos)
-return self._m_data
+  local _io = self._root._io
+  local _pos = _io:pos()
+  _io:seek(self.offset)
+  self._m_data = _io:read_bytes(self.size)
+  _io:seek(_pos)
+  return self._m_data
 end
 
 
 MachO.LcStr = class.class(KaitaiStruct)
 
 function MachO.LcStr:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.LcStr:_read()
-self.length = self._io:read_u4le()
-self.value = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  self.length = self._io:read_u4le()
+  self.value = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
 end
 
 
 MachO.LoadCommand = class.class(KaitaiStruct)
 
 function MachO.LoadCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.LoadCommand:_read()
-self.type = MachO.LoadCommandType(self._io:read_u4le())
-self.size = self._io:read_u4le()
-local _on = self.type
-if _on == MachO.LoadCommandType.id_dylinker then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylinkerCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.reexport_dylib then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylibCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.build_version then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.BuildVersionCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.source_version then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SourceVersionCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.function_starts then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.LinkeditDataCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.rpath then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.RpathCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.sub_framework then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SubCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.routines then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.RoutinesCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.sub_library then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SubCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.dyld_info_only then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DyldInfoCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.dyld_environment then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylinkerCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.load_dylinker then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylinkerCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.segment_split_info then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.LinkeditDataCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.main then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.EntryPointCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.load_dylib then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylibCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.encryption_info then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.EncryptionInfoCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.dysymtab then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DysymtabCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.twolevel_hints then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.TwolevelHintsCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.encryption_info_64 then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.EncryptionInfoCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.linker_option then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.LinkerOptionCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.dyld_info then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DyldInfoCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.version_min_tvos then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.VersionMinCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.load_upward_dylib then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylibCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.segment_64 then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SegmentCommand64(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.segment then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SegmentCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.sub_umbrella then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SubCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.version_min_watchos then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.VersionMinCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.routines_64 then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.RoutinesCommand64(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.id_dylib then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylibCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.sub_client then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SubCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.dylib_code_sign_drs then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.LinkeditDataCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.symtab then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.SymtabCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.linker_optimization_hint then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.LinkeditDataCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.data_in_code then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.LinkeditDataCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.code_signature then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.CodeSignatureCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.version_min_iphoneos then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.VersionMinCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.load_weak_dylib then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylibCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.lazy_load_dylib then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.DylibCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.uuid then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.UuidCommand(_io, self, self._root)
-elseif _on == MachO.LoadCommandType.version_min_macosx then
-self._raw_body = self._io:read_bytes((self.size - 8))
-local _io = KaitaiStream(stringstream(self._raw_body))
-self.body = MachO.VersionMinCommand(_io, self, self._root)
-else
-self.body = self._io:read_bytes((self.size - 8))
-end
+  self.type = MachO.LoadCommandType(self._io:read_u4le())
+  self.size = self._io:read_u4le()
+  local _on = self.type
+  if _on == MachO.LoadCommandType.id_dylinker then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylinkerCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.reexport_dylib then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylibCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.build_version then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.BuildVersionCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.source_version then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SourceVersionCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.function_starts then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.LinkeditDataCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.rpath then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.RpathCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.sub_framework then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SubCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.routines then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.RoutinesCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.sub_library then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SubCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.dyld_info_only then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DyldInfoCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.dyld_environment then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylinkerCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.load_dylinker then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylinkerCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.segment_split_info then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.LinkeditDataCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.main then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.EntryPointCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.load_dylib then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylibCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.encryption_info then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.EncryptionInfoCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.dysymtab then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DysymtabCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.twolevel_hints then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.TwolevelHintsCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.encryption_info_64 then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.EncryptionInfoCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.linker_option then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.LinkerOptionCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.dyld_info then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DyldInfoCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.version_min_tvos then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.VersionMinCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.load_upward_dylib then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylibCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.segment_64 then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SegmentCommand64(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.segment then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SegmentCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.sub_umbrella then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SubCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.version_min_watchos then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.VersionMinCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.routines_64 then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.RoutinesCommand64(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.id_dylib then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylibCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.sub_client then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SubCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.dylib_code_sign_drs then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.LinkeditDataCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.symtab then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.SymtabCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.linker_optimization_hint then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.LinkeditDataCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.data_in_code then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.LinkeditDataCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.code_signature then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.CodeSignatureCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.version_min_iphoneos then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.VersionMinCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.load_weak_dylib then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylibCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.lazy_load_dylib then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.DylibCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.uuid then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.UuidCommand(_io, self, self._root)
+  elseif _on == MachO.LoadCommandType.version_min_macosx then
+    self._raw_body = self._io:read_bytes((self.size - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.VersionMinCommand(_io, self, self._root)
+  else
+    self.body = self._io:read_bytes((self.size - 8))
+  end
 end
 
 
 MachO.UuidCommand = class.class(KaitaiStruct)
 
 function MachO.UuidCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.UuidCommand:_read()
-self.uuid = self._io:read_bytes(16)
+  self.uuid = self._io:read_bytes(16)
 end
 
 
 MachO.SymtabCommand = class.class(KaitaiStruct)
 
 function MachO.SymtabCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.SymtabCommand:_read()
-self.sym_off = self._io:read_u4le()
-self.n_syms = self._io:read_u4le()
-self.str_off = self._io:read_u4le()
-self.str_size = self._io:read_u4le()
+  self.sym_off = self._io:read_u4le()
+  self.n_syms = self._io:read_u4le()
+  self.str_off = self._io:read_u4le()
+  self.str_size = self._io:read_u4le()
 end
 
 MachO.SymtabCommand.property.symbols = {}
 function MachO.SymtabCommand.property.symbols:get()
-if self._m_symbols ~= nil then
-return self._m_symbols
-end
+  if self._m_symbols ~= nil then
+    return self._m_symbols
+  end
 
-local _io = self._root._io
-local _pos = _io:pos()
-_io:seek(self.sym_off)
-self._m_symbols = {}
-for i = 0, self.n_syms - 1 do
-local _on = self._root.magic
-if _on == MachO.MagicType.macho_le_x64 then
-  self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist64(_io, self, self._root)
-elseif _on == MachO.MagicType.macho_be_x64 then
-  self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist64(_io, self, self._root)
-elseif _on == MachO.MagicType.macho_le_x86 then
-  self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist(_io, self, self._root)
-elseif _on == MachO.MagicType.macho_be_x86 then
-  self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist(_io, self, self._root)
-end
-end
-_io:seek(_pos)
-return self._m_symbols
+  local _io = self._root._io
+  local _pos = _io:pos()
+  _io:seek(self.sym_off)
+  self._m_symbols = {}
+  for i = 0, self.n_syms - 1 do
+    local _on = self._root.magic
+    if _on == MachO.MagicType.macho_le_x64 then
+      self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist64(_io, self, self._root)
+    elseif _on == MachO.MagicType.macho_be_x64 then
+      self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist64(_io, self, self._root)
+    elseif _on == MachO.MagicType.macho_le_x86 then
+      self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist(_io, self, self._root)
+    elseif _on == MachO.MagicType.macho_be_x86 then
+      self._m_symbols[i + 1] = MachO.SymtabCommand.Nlist(_io, self, self._root)
+    end
+  end
+  _io:seek(_pos)
+  return self._m_symbols
 end
 
 MachO.SymtabCommand.property.strs = {}
 function MachO.SymtabCommand.property.strs:get()
-if self._m_strs ~= nil then
-return self._m_strs
-end
+  if self._m_strs ~= nil then
+    return self._m_strs
+  end
 
-local _io = self._root._io
-local _pos = _io:pos()
-_io:seek(self.str_off)
-self._raw__m_strs = _io:read_bytes(self.str_size)
-local _io = KaitaiStream(stringstream(self._raw__m_strs))
-self._m_strs = MachO.SymtabCommand.StrTable(_io, self, self._root)
-_io:seek(_pos)
-return self._m_strs
+  local _io = self._root._io
+  local _pos = _io:pos()
+  _io:seek(self.str_off)
+  self._raw__m_strs = _io:read_bytes(self.str_size)
+  local _io = KaitaiStream(stringstream(self._raw__m_strs))
+  self._m_strs = MachO.SymtabCommand.StrTable(_io, self, self._root)
+  _io:seek(_pos)
+  return self._m_strs
 end
 
 
 MachO.SymtabCommand.StrTable = class.class(KaitaiStruct)
 
 function MachO.SymtabCommand.StrTable:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.SymtabCommand.StrTable:_read()
-self.unknown = self._io:read_u4le()
-self.items = {}
-local i = 0
-while true do
-_ = str_decode.decode(self._io:read_bytes_term(0, false, true, false), "utf-8")
-self.items[i + 1] = _
-if _ == "" then
-  break
-end
-i = i + 1
-end
+  self.unknown = self._io:read_u4le()
+  self.items = {}
+  local i = 0
+  while true do
+    local _ = str_decode.decode(self._io:read_bytes_term(0, false, true, false), "utf-8")
+    self.items[i + 1] = _
+    if _ == "" then
+      break
+    end
+    i = i + 1
+  end
 end
 
 
 MachO.SymtabCommand.Nlist64 = class.class(KaitaiStruct)
 
 function MachO.SymtabCommand.Nlist64:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.SymtabCommand.Nlist64:_read()
-self.un = self._io:read_u4le()
-self.type = self._io:read_u1()
-self.sect = self._io:read_u1()
-self.desc = self._io:read_u2le()
-self.value = self._io:read_u8le()
+  self.un = self._io:read_u4le()
+  self.type = self._io:read_u1()
+  self.sect = self._io:read_u1()
+  self.desc = self._io:read_u2le()
+  self.value = self._io:read_u8le()
 end
 
 MachO.SymtabCommand.Nlist64.property.name = {}
 function MachO.SymtabCommand.Nlist64.property.name:get()
-if self._m_name ~= nil then
-return self._m_name
-end
+  if self._m_name ~= nil then
+    return self._m_name
+  end
 
-if self.un ~= 0 then
-local _pos = self._io:pos()
-self._io:seek((self._parent.str_off + self.un))
-self._m_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "utf-8")
-self._io:seek(_pos)
-end
-return self._m_name
+  if self.un ~= 0 then
+    local _pos = self._io:pos()
+    self._io:seek((self._parent.str_off + self.un))
+    self._m_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "utf-8")
+    self._io:seek(_pos)
+  end
+  return self._m_name
 end
 
 
 MachO.SymtabCommand.Nlist = class.class(KaitaiStruct)
 
 function MachO.SymtabCommand.Nlist:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.SymtabCommand.Nlist:_read()
-self.un = self._io:read_u4le()
-self.type = self._io:read_u1()
-self.sect = self._io:read_u1()
-self.desc = self._io:read_u2le()
-self.value = self._io:read_u4le()
+  self.un = self._io:read_u4le()
+  self.type = self._io:read_u1()
+  self.sect = self._io:read_u1()
+  self.desc = self._io:read_u2le()
+  self.value = self._io:read_u4le()
 end
 
 MachO.SymtabCommand.Nlist.property.name = {}
 function MachO.SymtabCommand.Nlist.property.name:get()
-if self._m_name ~= nil then
-return self._m_name
-end
+  if self._m_name ~= nil then
+    return self._m_name
+  end
 
-if self.un ~= 0 then
-local _pos = self._io:pos()
-self._io:seek((self._parent.str_off + self.un))
-self._m_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "utf-8")
-self._io:seek(_pos)
-end
-return self._m_name
+  if self.un ~= 0 then
+    local _pos = self._io:pos()
+    self._io:seek((self._parent.str_off + self.un))
+    self._m_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "utf-8")
+    self._io:seek(_pos)
+  end
+  return self._m_name
 end
 
 
 MachO.VersionMinCommand = class.class(KaitaiStruct)
 
 function MachO.VersionMinCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.VersionMinCommand:_read()
-self.version = MachO.Version(self._io, self, self._root)
-self.sdk = MachO.Version(self._io, self, self._root)
+  self.version = MachO.Version(self._io, self, self._root)
+  self.sdk = MachO.Version(self._io, self, self._root)
 end
 
 
 MachO.EntryPointCommand = class.class(KaitaiStruct)
 
 function MachO.EntryPointCommand:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function MachO.EntryPointCommand:_read()
-self.entry_off = self._io:read_u8le()
-self.stack_size = self._io:read_u8le()
+  self.entry_off = self._io:read_u8le()
+  self.stack_size = self._io:read_u8le()
 end
 
 

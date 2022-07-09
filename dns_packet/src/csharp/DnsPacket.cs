@@ -68,28 +68,28 @@ namespace Kaitai
                 _arcount = m_io.ReadU2be();
             }
             if (Flags.IsOpcodeValid) {
-                _queries = new List<Query>((int) (Qdcount));
+                _queries = new List<Query>();
                 for (var i = 0; i < Qdcount; i++)
                 {
                     _queries.Add(new Query(m_io, this, m_root));
                 }
             }
             if (Flags.IsOpcodeValid) {
-                _answers = new List<Answer>((int) (Ancount));
+                _answers = new List<Answer>();
                 for (var i = 0; i < Ancount; i++)
                 {
                     _answers.Add(new Answer(m_io, this, m_root));
                 }
             }
             if (Flags.IsOpcodeValid) {
-                _authorities = new List<Answer>((int) (Nscount));
+                _authorities = new List<Answer>();
                 for (var i = 0; i < Nscount; i++)
                 {
                     _authorities.Add(new Answer(m_io, this, m_root));
                 }
             }
             if (Flags.IsOpcodeValid) {
-                _additionals = new List<Answer>((int) (Arcount));
+                _additionals = new List<Answer>();
                 for (var i = 0; i < Arcount; i++)
                 {
                     _additionals.Add(new Answer(m_io, this, m_root));

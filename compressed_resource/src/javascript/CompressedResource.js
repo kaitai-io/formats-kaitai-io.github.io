@@ -8,7 +8,7 @@
   } else {
     root.CompressedResource = factory(root.KaitaiStream, root.BytesWithIo);
   }
-}(this, function (KaitaiStream, BytesWithIo) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, BytesWithIo) {
 /**
  * Compressed Macintosh resource data,
  * as stored in resources with the "compressed" attribute.

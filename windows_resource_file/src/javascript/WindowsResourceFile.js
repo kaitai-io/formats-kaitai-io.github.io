@@ -8,7 +8,7 @@
   } else {
     root.WindowsResourceFile = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Windows resource file (.res) are binary bundles of
  * "resources". Resource has some sort of ID (numerical or string),
@@ -190,7 +190,7 @@ var WindowsResourceFile = (function() {
         this.asNumeric = this._io.readU2le();
       }
       if (this.isString) {
-        this.rest = []
+        this.rest = [];
         var i = 0;
         do {
           var _ = this._io.readU2le();

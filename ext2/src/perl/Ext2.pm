@@ -136,7 +136,7 @@ sub _read {
     $self->{hash_seed} = ();
     my $n_hash_seed = 4;
     for (my $i = 0; $i < $n_hash_seed; $i++) {
-        $self->{hash_seed}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{hash_seed}}, $self->{_io}->read_u4le();
     }
     $self->{def_hash_version} = $self->{_io}->read_u1();
 }
@@ -504,7 +504,7 @@ sub _read {
     $self->{block} = ();
     my $n_block = 15;
     for (my $i = 0; $i < $n_block; $i++) {
-        $self->{block}[$i] = Ext2::BlockPtr->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{block}}, Ext2::BlockPtr->new($self->{_io}, $self, $self->{_root});
     }
     $self->{generation} = $self->{_io}->read_u4le();
     $self->{file_acl} = $self->{_io}->read_u4le();
@@ -746,7 +746,7 @@ sub _read {
     $self->{block_groups} = ();
     my $n_block_groups = $self->super_block()->block_group_count();
     for (my $i = 0; $i < $n_block_groups; $i++) {
-        $self->{block_groups}[$i] = Ext2::Bgd->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{block_groups}}, Ext2::Bgd->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -832,7 +832,7 @@ sub inodes {
     $self->{inodes} = ();
     my $n_inodes = $self->_root()->bg1()->super_block()->inodes_per_group();
     for (my $i = 0; $i < $n_inodes; $i++) {
-        $self->{inodes}[$i] = Ext2::Inode->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{inodes}}, Ext2::Inode->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{inodes};

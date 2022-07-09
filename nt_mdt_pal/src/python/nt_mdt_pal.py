@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class NtMdtPal(KaitaiStruct):
@@ -21,14 +20,14 @@ class NtMdtPal(KaitaiStruct):
         if not self.signature == b"\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21":
             raise kaitaistruct.ValidationNotEqualError(b"\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21", self.signature, self._io, u"/seq/0")
         self.count = self._io.read_u4be()
-        self.meta = [None] * (self.count)
+        self.meta = []
         for i in range(self.count):
-            self.meta[i] = NtMdtPal.Meta(self._io, self, self._root)
+            self.meta.append(NtMdtPal.Meta(self._io, self, self._root))
 
         self.something2 = self._io.read_bytes(1)
-        self.tables = [None] * (self.count)
+        self.tables = []
         for i in range(self.count):
-            self.tables[i] = NtMdtPal.ColTable(i, self._io, self, self._root)
+            self.tables.append(NtMdtPal.ColTable(i, self._io, self, self._root))
 
 
     class Meta(KaitaiStruct):
@@ -77,9 +76,9 @@ class NtMdtPal(KaitaiStruct):
             self.unkn = self._io.read_u1()
             self.title = (self._io.read_bytes(self._root.meta[self.index].name_size)).decode(u"UTF-16LE")
             self.unkn1 = self._io.read_u2be()
-            self.colors = [None] * ((self._root.meta[self.index].colors_count - 1))
+            self.colors = []
             for i in range((self._root.meta[self.index].colors_count - 1)):
-                self.colors[i] = NtMdtPal.Color(self._io, self, self._root)
+                self.colors.append(NtMdtPal.Color(self._io, self, self._root))
 
 
 

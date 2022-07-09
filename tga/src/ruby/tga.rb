@@ -48,9 +48,9 @@ class Tga < Kaitai::Struct::Struct
     @img_descriptor = @_io.read_u1
     @image_id = @_io.read_bytes(image_id_len)
     if color_map_type == :color_map_enum_has_color_map
-      @color_map = Array.new(num_color_map)
+      @color_map = []
       (num_color_map).times { |i|
-        @color_map[i] = @_io.read_bytes(((color_map_depth + 7) / 8))
+        @color_map << @_io.read_bytes(((color_map_depth + 7) / 8))
       }
     end
     self
@@ -101,9 +101,9 @@ class Tga < Kaitai::Struct::Struct
     def _read
       @ext_area_size = @_io.read_u2le
       @author_name = (@_io.read_bytes(41)).force_encoding("ASCII")
-      @comments = Array.new(4)
+      @comments = []
       (4).times { |i|
-        @comments[i] = (@_io.read_bytes(81)).force_encoding("ASCII")
+        @comments << (@_io.read_bytes(81)).force_encoding("ASCII")
       }
       @timestamp = @_io.read_bytes(12)
       @job_id = (@_io.read_bytes(41)).force_encoding("ASCII")

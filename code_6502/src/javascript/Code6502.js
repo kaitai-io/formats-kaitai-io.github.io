@@ -8,7 +8,7 @@
   } else {
     root.Code6502 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * This spec can be used to disassemble raw stream of 6502 CPU machine
  * code into individual operations. Each operation includes an opcode

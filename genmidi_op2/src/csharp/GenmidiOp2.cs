@@ -45,12 +45,12 @@ namespace Kaitai
             {
                 throw new ValidationNotEqualError(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }, Magic, M_Io, "/seq/0");
             }
-            _instruments = new List<InstrumentEntry>((int) (175));
+            _instruments = new List<InstrumentEntry>();
             for (var i = 0; i < 175; i++)
             {
                 _instruments.Add(new InstrumentEntry(m_io, this, m_root));
             }
-            _instrumentNames = new List<string>((int) (175));
+            _instrumentNames = new List<string>();
             for (var i = 0; i < 175; i++)
             {
                 _instrumentNames.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(32), 0), 0, false)));
@@ -74,7 +74,7 @@ namespace Kaitai
                 _flags = m_io.ReadU2le();
                 _finetune = m_io.ReadU1();
                 _note = m_io.ReadU1();
-                _instruments = new List<Instrument>((int) (2));
+                _instruments = new List<Instrument>();
                 for (var i = 0; i < 2; i++)
                 {
                     _instruments.Add(new Instrument(m_io, this, m_root));

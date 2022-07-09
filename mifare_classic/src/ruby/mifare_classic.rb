@@ -81,13 +81,13 @@ class MifareClassic < Kaitai::Struct::Struct
         end
 
         def _read
-          @valuez = Array.new(3)
+          @valuez = []
           (3).times { |i|
-            @valuez[i] = @_io.read_u4le
+            @valuez << @_io.read_u4le
           }
-          @addrz = Array.new(4)
+          @addrz = []
           (4).times { |i|
-            @addrz[i] = @_io.read_u1
+            @addrz << @_io.read_u1
           }
           self
         end
@@ -227,9 +227,9 @@ class MifareClassic < Kaitai::Struct::Struct
       end
 
       def _read
-        @raw_chunks = Array.new(_parent.ac_count_of_chunks)
+        @raw_chunks = []
         (_parent.ac_count_of_chunks).times { |i|
-          @raw_chunks[i] = @_io.read_bits_int_be(4)
+          @raw_chunks << @_io.read_bits_int_be(4)
         }
         self
       end
@@ -375,9 +375,9 @@ class MifareClassic < Kaitai::Struct::Struct
           return @bits unless @bits.nil?
           _pos = @_io.pos
           @_io.seek(0)
-          @bits = Array.new(_parent._parent.ac_bits)
+          @bits = []
           (_parent._parent.ac_bits).times { |i|
-            @bits[i] = AcBit.new(@_io, self, @_root, index, _parent.chunks[i].chunk)
+            @bits << AcBit.new(@_io, self, @_root, index, _parent.chunks[i].chunk)
           }
           @_io.seek(_pos)
           @bits
@@ -423,9 +423,9 @@ class MifareClassic < Kaitai::Struct::Struct
         return @data_acs unless @data_acs.nil?
         _pos = @_io.pos
         @_io.seek(0)
-        @data_acs = Array.new((_parent.acs_in_sector - 1))
+        @data_acs = []
         ((_parent.acs_in_sector - 1)).times { |i|
-          @data_acs[i] = DataAc.new(@_io, self, @_root, acs_raw[i])
+          @data_acs << DataAc.new(@_io, self, @_root, acs_raw[i])
         }
         @_io.seek(_pos)
         @data_acs
@@ -434,9 +434,9 @@ class MifareClassic < Kaitai::Struct::Struct
         return @remaps unless @remaps.nil?
         _pos = @_io.pos
         @_io.seek(0)
-        @remaps = Array.new(_parent.ac_bits)
+        @remaps = []
         (_parent.ac_bits).times { |i|
-          @remaps[i] = ChunkBitRemap.new(@_io, self, @_root, i)
+          @remaps << ChunkBitRemap.new(@_io, self, @_root, i)
         }
         @_io.seek(_pos)
         @remaps
@@ -445,9 +445,9 @@ class MifareClassic < Kaitai::Struct::Struct
         return @acs_raw unless @acs_raw.nil?
         _pos = @_io.pos
         @_io.seek(0)
-        @acs_raw = Array.new(_parent.acs_in_sector)
+        @acs_raw = []
         (_parent.acs_in_sector).times { |i|
-          @acs_raw[i] = Ac.new(@_io, self, @_root, i)
+          @acs_raw << Ac.new(@_io, self, @_root, i)
         }
         @_io.seek(_pos)
         @acs_raw
@@ -464,9 +464,9 @@ class MifareClassic < Kaitai::Struct::Struct
         return @chunks unless @chunks.nil?
         _pos = @_io.pos
         @_io.seek(0)
-        @chunks = Array.new(_parent.ac_bits)
+        @chunks = []
         (_parent.ac_bits).times { |i|
-          @chunks[i] = ValidChunk.new(@_io, self, @_root, raw_chunks[remaps[i].inv_chunk_no], raw_chunks[remaps[i].chunk_no])
+          @chunks << ValidChunk.new(@_io, self, @_root, raw_chunks[remaps[i].inv_chunk_no], raw_chunks[remaps[i].chunk_no])
         }
         @_io.seek(_pos)
         @chunks

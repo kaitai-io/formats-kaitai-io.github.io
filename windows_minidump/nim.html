@@ -167,6 +167,11 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Windows MiniDump parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Windows MiniDump parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -251,7 +256,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">streamsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">WindowsMinidump_Dir</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">streamsInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">WindowsMinidump_Dir</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">streamsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">WindowsMinidump_StreamTypes</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">unused</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">reserved_0</span> <span class="o">=</span> <span class="mi">1</span>
@@ -310,7 +316,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">ofsData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">dataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">WindowsMinidump_MinidumpString</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lenStr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">str</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
@@ -329,7 +336,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="p">`</span><span class="n">osSuiteMask</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">reserved2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsMinidump_Dir</span>
-    <span class="p">`</span><span class="n">servicePackInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsMinidump_MinidumpString</span>
+    <span class="p">`</span><span class="n">servicePackInst</span><span class="p">`:</span> <span class="n">WindowsMinidump_MinidumpString</span>
+    <span class="p">`</span><span class="n">servicePackInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">WindowsMinidump_SystemInfo_CpuArchs</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">intel</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">arm</span> <span class="o">=</span> <span class="mi">5</span>
@@ -364,7 +372,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="p">`</span><span class="n">ofsData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsMinidump</span>
     <span class="p">`</span><span class="n">rawDataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">dataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">WindowsMinidump_Thread</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">threadId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">suspendCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -446,7 +455,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">flagsExpr</span>
 
 <span class="k">proc </span><span class="nf">streams</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsMinidump</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">WindowsMinidump_Dir</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">streamsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">streamsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">streamsInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsStreams</span><span class="p">))</span>
@@ -454,8 +463,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">WindowsMinidump_Dir</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">streamsInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">streamsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">streamsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">streamsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">streamsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsMinidump], filename: string): WindowsMinidump =</span>
   <span class="n">WindowsMinidump</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -499,7 +508,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">ofsData</span> <span class="o">=</span> <span class="n">ofsDataExpr</span>
 
 <span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsMinidump_LocationDescriptor</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -507,8 +516,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsMinidump_LocationDescriptor], filename: string): WindowsMinidump_LocationDescriptor =</span>
   <span class="n">WindowsMinidump_LocationDescriptor</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -577,7 +586,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">reserved2</span> <span class="o">=</span> <span class="n">reserved2Expr</span>
 
 <span class="k">proc </span><span class="nf">servicePack</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsMinidump_SystemInfo</span><span class="p">):</span> <span class="n">WindowsMinidump_MinidumpString</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">servicePackInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">servicePackInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">servicePackInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsServicePack</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -586,8 +595,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="k">let</span> <span class="n">servicePackInstExpr</span> <span class="o">=</span> <span class="n">WindowsMinidump_MinidumpString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">servicePackInst</span> <span class="o">=</span> <span class="n">servicePackInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">servicePackInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">servicePackInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">servicePackInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">servicePackInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsMinidump_SystemInfo], filename: string): WindowsMinidump_SystemInfo =</span>
   <span class="n">WindowsMinidump_SystemInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -699,7 +708,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">ofsData</span> <span class="o">=</span> <span class="n">ofsDataExpr</span>
 
 <span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsMinidump_Dir</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="p">))</span>
@@ -739,8 +748,8 @@ used for that purpose in Windows and Google Chrome projects.</p>
       <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
       <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsMinidump_Dir], filename: string): WindowsMinidump_Dir =</span>
   <span class="n">WindowsMinidump_Dir</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

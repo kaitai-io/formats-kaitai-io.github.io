@@ -303,7 +303,8 @@ particular hardware samplers or synths.</p>
     <span class="p">`</span><span class="n">minor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">major</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">FasttrackerXmModule_Preheader</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">FasttrackerXmModule_Pattern</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">FasttrackerXmModule_Pattern_Header</span>
     <span class="p">`</span><span class="n">packedData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -318,7 +319,8 @@ particular hardware samplers or synths.</p>
     <span class="p">`</span><span class="n">numRowsRaw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">lenPackedPattern</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">FasttrackerXmModule_Pattern_Header</span>
-    <span class="p">`</span><span class="n">numRowsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numRowsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numRowsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">FasttrackerXmModule_Flags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">freqTableType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
@@ -524,12 +526,12 @@ particular hardware samplers or synths.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="n">majorExpr</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">FasttrackerXmModule_Preheader_Version</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">major</span> <span class="ow">shl</span> <span class="mi">8</span><span class="p">)</span> <span class="ow">or</span> <span class="n">this</span><span class="p">.</span><span class="n">minor</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[FasttrackerXmModule_Preheader_Version], filename: string): FasttrackerXmModule_Preheader_Version =</span>
   <span class="n">FasttrackerXmModule_Preheader_Version</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -607,12 +609,12 @@ particular hardware samplers or synths.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">lenPackedPattern</span> <span class="o">=</span> <span class="n">lenPackedPatternExpr</span>
 
 <span class="k">proc </span><span class="nf">numRows</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">FasttrackerXmModule_Pattern_Header_HeaderMain</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numRowsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numRowsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numRowsInst</span>
   <span class="k">let</span> <span class="n">numRowsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">numRowsRaw</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">FasttrackerXmModule</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">preheader</span><span class="p">.</span><span class="n">versionNumber</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">258</span><span class="p">:</span> <span class="mi">1</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numRowsInst</span> <span class="o">=</span> <span class="n">numRowsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numRowsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numRowsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numRowsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numRowsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[FasttrackerXmModule_Pattern_Header_HeaderMain], filename: string): FasttrackerXmModule_Pattern_Header_HeaderMain =</span>
   <span class="n">FasttrackerXmModule_Pattern_Header_HeaderMain</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

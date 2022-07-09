@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class GranTurismoVol(KaitaiStruct):
@@ -24,9 +23,9 @@ class GranTurismoVol(KaitaiStruct):
         self.reserved = self._io.read_bytes(4)
         if not self.reserved == b"\x00\x00\x00\x00":
             raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.reserved, self._io, u"/seq/3")
-        self.offsets = [None] * (self.num_files)
+        self.offsets = []
         for i in range(self.num_files):
-            self.offsets[i] = self._io.read_u4le()
+            self.offsets.append(self._io.read_u4le())
 
 
     class FileInfo(KaitaiStruct):
@@ -45,15 +44,15 @@ class GranTurismoVol(KaitaiStruct):
         @property
         def size(self):
             if hasattr(self, '_m_size'):
-                return self._m_size if hasattr(self, '_m_size') else None
+                return self._m_size
 
             self._m_size = ((self._root.offsets[(self.offset_idx + 1)] & 4294965248) - self._root.offsets[self.offset_idx])
-            return self._m_size if hasattr(self, '_m_size') else None
+            return getattr(self, '_m_size', None)
 
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             if not (self.is_dir):
                 _pos = self._io.pos()
@@ -61,45 +60,45 @@ class GranTurismoVol(KaitaiStruct):
                 self._m_body = self._io.read_bytes(self.size)
                 self._io.seek(_pos)
 
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
         @property
         def is_dir(self):
             if hasattr(self, '_m_is_dir'):
-                return self._m_is_dir if hasattr(self, '_m_is_dir') else None
+                return self._m_is_dir
 
             self._m_is_dir = (self.flags & 1) != 0
-            return self._m_is_dir if hasattr(self, '_m_is_dir') else None
+            return getattr(self, '_m_is_dir', None)
 
         @property
         def is_last_entry(self):
             if hasattr(self, '_m_is_last_entry'):
-                return self._m_is_last_entry if hasattr(self, '_m_is_last_entry') else None
+                return self._m_is_last_entry
 
             self._m_is_last_entry = (self.flags & 128) != 0
-            return self._m_is_last_entry if hasattr(self, '_m_is_last_entry') else None
+            return getattr(self, '_m_is_last_entry', None)
 
 
     @property
     def ofs_dir(self):
         if hasattr(self, '_m_ofs_dir'):
-            return self._m_ofs_dir if hasattr(self, '_m_ofs_dir') else None
+            return self._m_ofs_dir
 
         self._m_ofs_dir = self.offsets[1]
-        return self._m_ofs_dir if hasattr(self, '_m_ofs_dir') else None
+        return getattr(self, '_m_ofs_dir', None)
 
     @property
     def files(self):
         if hasattr(self, '_m_files'):
-            return self._m_files if hasattr(self, '_m_files') else None
+            return self._m_files
 
         _pos = self._io.pos()
         self._io.seek((self.ofs_dir & 4294965248))
-        self._m_files = [None] * (self._root.num_entries)
+        self._m_files = []
         for i in range(self._root.num_entries):
-            self._m_files[i] = GranTurismoVol.FileInfo(self._io, self, self._root)
+            self._m_files.append(GranTurismoVol.FileInfo(self._io, self, self._root))
 
         self._io.seek(_pos)
-        return self._m_files if hasattr(self, '_m_files') else None
+        return getattr(self, '_m_files', None)
 
 

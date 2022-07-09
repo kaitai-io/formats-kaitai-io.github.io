@@ -288,7 +288,8 @@ a machine-readable schema of all other structures used in this file.</p>
     <span class="p">`</span><span class="n">hdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BlenderBlend_Header</span>
     <span class="p">`</span><span class="n">blocks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BlenderBlend_FileBlock</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">sdnaStructsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BlenderBlend_DnaStruct</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">sdnaStructsInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BlenderBlend_DnaStruct</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">sdnaStructsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">BlenderBlend_PtrSize</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">bits_64</span> <span class="o">=</span> <span class="mi">45</span>
     <span class="n">bits_32</span> <span class="o">=</span> <span class="mi">95</span>
@@ -300,7 +301,8 @@ a machine-readable schema of all other structures used in this file.</p>
     <span class="p">`</span><span class="n">numFields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">fields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BlenderBlend_DnaField</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BlenderBlend_Dna1Body</span>
-    <span class="p">`</span><span class="n">typeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">typeInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">typeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">BlenderBlend_FileBlock</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">code</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">lenBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -310,7 +312,8 @@ a machine-readable schema of all other structures used in this file.</p>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BlenderBlend</span>
     <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">sdnaStructInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BlenderBlend_DnaStruct</span>
+    <span class="p">`</span><span class="n">sdnaStructInst</span><span class="p">`:</span> <span class="n">BlenderBlend_DnaStruct</span>
+    <span class="p">`</span><span class="n">sdnaStructInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">BlenderBlend_Dna1Body</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">nameMagic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -334,13 +337,16 @@ a machine-readable schema of all other structures used in this file.</p>
     <span class="p">`</span><span class="n">endian</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BlenderBlend_Endian</span>
     <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BlenderBlend</span>
-    <span class="p">`</span><span class="n">psizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">psizeInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">psizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">BlenderBlend_DnaField</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">idxType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">idxName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BlenderBlend_DnaStruct</span>
-    <span class="p">`</span><span class="n">typeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">nameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">typeInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">typeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">nameInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BlenderBlend], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BlenderBlend</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BlenderBlend_DnaStruct], io: KaitaiStream, root: KaitaiStruct, parent: BlenderBlend_Dna1Body): BlenderBlend_DnaStruct</span>
@@ -390,12 +396,12 @@ a machine-readable schema of all other structures used in this file.</p>
       <span class="n">inc</span> <span class="n">i</span>
 
 <span class="k">proc </span><span class="nf">sdnaStructs</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BlenderBlend</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BlenderBlend_DnaStruct</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInst</span>
   <span class="k">let</span> <span class="n">sdnaStructsInstExpr</span> <span class="o">=</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BlenderBlend_DnaStruct</span><span class="o">]</span><span class="p">((</span><span class="n">BlenderBlend_Dna1Body</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">blocks</span><span class="o">[</span><span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">blocks</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span><span class="o">]</span><span class="p">.</span><span class="n">body</span><span class="p">)).</span><span class="n">structs</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInst</span> <span class="o">=</span> <span class="n">sdnaStructsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BlenderBlend], filename: string): BlenderBlend =</span>
   <span class="n">BlenderBlend</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -423,12 +429,12 @@ a machine-readable schema of all other structures used in this file.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">fields</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">type</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BlenderBlend_DnaStruct</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
   <span class="k">let</span> <span class="n">typeInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">types</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">idxType</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span> <span class="o">=</span> <span class="n">typeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BlenderBlend_DnaStruct], filename: string): BlenderBlend_DnaStruct =</span>
   <span class="n">BlenderBlend_DnaStruct</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -484,13 +490,13 @@ a machine-readable schema of all other structures used in this file.</p>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">sdnaStruct</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BlenderBlend_FileBlock</span><span class="p">):</span> <span class="n">BlenderBlend_DnaStruct</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaIndex</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">sdnaStructInstExpr</span> <span class="o">=</span> <span class="n">BlenderBlend_DnaStruct</span><span class="p">(</span><span class="n">BlenderBlend</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">sdnaStructs</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">sdnaIndex</span><span class="o">]</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInst</span> <span class="o">=</span> <span class="n">sdnaStructInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sdnaStructInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BlenderBlend_FileBlock], filename: string): BlenderBlend_FileBlock =</span>
   <span class="n">BlenderBlend_FileBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -591,12 +597,12 @@ a machine-readable schema of all other structures used in this file.</p>
   <span class="sd">##[</span>
   <span class="n">Number</span> <span class="k">of</span> <span class="n">bytes</span> <span class="n">that</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">occupies</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">psizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">psizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">psizeInst</span>
   <span class="k">let</span> <span class="n">psizeInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ptrSizeId</span> <span class="o">==</span> <span class="n">blender_blend</span><span class="p">.</span><span class="n">bits_64</span><span class="p">:</span> <span class="mi">8</span> <span class="k">else</span><span class="p">:</span> <span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">psizeInst</span> <span class="o">=</span> <span class="n">psizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">psizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">psizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">psizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">psizeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BlenderBlend_Header], filename: string): BlenderBlend_Header =</span>
   <span class="n">BlenderBlend_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -615,20 +621,20 @@ a machine-readable schema of all other structures used in this file.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">idxName</span> <span class="o">=</span> <span class="n">idxNameExpr</span>
 
 <span class="k">proc </span><span class="nf">type</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BlenderBlend_DnaField</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
   <span class="k">let</span> <span class="n">typeInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">types</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">idxType</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span> <span class="o">=</span> <span class="n">typeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
 
 <span class="k">proc </span><span class="nf">name</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BlenderBlend_DnaField</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
   <span class="k">let</span> <span class="n">nameInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">names</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">idxName</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span> <span class="o">=</span> <span class="n">nameInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BlenderBlend_DnaField], filename: string): BlenderBlend_DnaField =</span>
   <span class="n">BlenderBlend_DnaField</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

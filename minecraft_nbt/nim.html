@@ -329,7 +329,8 @@ are replaced or ignored.</p>
     <span class="p">`</span><span class="n">rootCheck</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">root</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_NamedTag</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">rootTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_Tag</span>
+    <span class="p">`</span><span class="n">rootTypeInst</span><span class="p">`:</span> <span class="n">MinecraftNbt_Tag</span>
+    <span class="p">`</span><span class="n">rootTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MinecraftNbt_Tag</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="k">end</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">byte</span> <span class="o">=</span> <span class="mi">1</span>
@@ -348,7 +349,8 @@ are replaced or ignored.</p>
     <span class="p">`</span><span class="n">numTags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">tags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">int64</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">tagsTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_Tag</span>
+    <span class="p">`</span><span class="n">tagsTypeInst</span><span class="p">`:</span> <span class="n">MinecraftNbt_Tag</span>
+    <span class="p">`</span><span class="n">tagsTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MinecraftNbt_TagByteArray</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -357,7 +359,8 @@ are replaced or ignored.</p>
     <span class="p">`</span><span class="n">numTags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">tags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">int32</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">tagsTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_Tag</span>
+    <span class="p">`</span><span class="n">tagsTypeInst</span><span class="p">`:</span> <span class="n">MinecraftNbt_Tag</span>
+    <span class="p">`</span><span class="n">tagsTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MinecraftNbt_TagList</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">tagsType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_Tag</span>
     <span class="p">`</span><span class="n">numTags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
@@ -370,13 +373,15 @@ are replaced or ignored.</p>
   <span class="n">MinecraftNbt_TagCompound</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">tags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">MinecraftNbt_NamedTag</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">dumpNumTagsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">dumpNumTagsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">dumpNumTagsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MinecraftNbt_NamedTag</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_Tag</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_TagString</span>
     <span class="p">`</span><span class="n">payload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">isTagEndInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isTagEndInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isTagEndInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MinecraftNbt], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MinecraftNbt_TagLongArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagLongArray</span>
@@ -483,15 +488,15 @@ are replaced or ignored.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">rootExpr</span>
 
 <span class="k">proc </span><span class="nf">rootType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MinecraftNbt</span><span class="p">):</span> <span class="n">MinecraftNbt_Tag</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">rootTypeInstExpr</span> <span class="o">=</span> <span class="n">MinecraftNbt_Tag</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInst</span> <span class="o">=</span> <span class="n">rootTypeInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootTypeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MinecraftNbt], filename: string): MinecraftNbt =</span>
   <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -511,12 +516,12 @@ are replaced or ignored.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">tags</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">tagsType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MinecraftNbt_TagLongArray</span><span class="p">):</span> <span class="n">MinecraftNbt_Tag</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span>
   <span class="k">let</span> <span class="n">tagsTypeInstExpr</span> <span class="o">=</span> <span class="n">MinecraftNbt_Tag</span><span class="p">(</span><span class="n">minecraft_nbt</span><span class="p">.</span><span class="n">long</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span> <span class="o">=</span> <span class="n">tagsTypeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MinecraftNbt_TagLongArray], filename: string): MinecraftNbt_TagLongArray =</span>
   <span class="n">MinecraftNbt_TagLongArray</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -552,12 +557,12 @@ are replaced or ignored.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">tags</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">tagsType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MinecraftNbt_TagIntArray</span><span class="p">):</span> <span class="n">MinecraftNbt_Tag</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span>
   <span class="k">let</span> <span class="n">tagsTypeInstExpr</span> <span class="o">=</span> <span class="n">MinecraftNbt_Tag</span><span class="p">(</span><span class="n">minecraft_nbt</span><span class="p">.</span><span class="kt">int</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span> <span class="o">=</span> <span class="n">tagsTypeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagsTypeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MinecraftNbt_TagIntArray], filename: string): MinecraftNbt_TagIntArray =</span>
   <span class="n">MinecraftNbt_TagIntArray</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -655,12 +660,12 @@ are replaced or ignored.</p>
       <span class="n">inc</span> <span class="n">i</span>
 
 <span class="k">proc </span><span class="nf">dumpNumTags</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MinecraftNbt_TagCompound</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInst</span>
   <span class="k">let</span> <span class="n">dumpNumTagsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">len</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">tags</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="k">if</span>  <span class="p">((</span><span class="n">len</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">tags</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">tags</span><span class="o">[</span><span class="p">^</span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="n">isTagEnd</span><span class="p">))</span> <span class="p">:</span> <span class="mi">1</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInst</span> <span class="o">=</span> <span class="n">dumpNumTagsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dumpNumTagsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MinecraftNbt_TagCompound], filename: string): MinecraftNbt_TagCompound =</span>
   <span class="n">MinecraftNbt_TagCompound</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -719,12 +724,12 @@ are replaced or ignored.</p>
         <span class="n">this</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">payloadExpr</span>
 
 <span class="k">proc </span><span class="nf">isTagEnd</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MinecraftNbt_NamedTag</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInst</span>
   <span class="k">let</span> <span class="n">isTagEndInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">==</span> <span class="n">minecraft_nbt</span><span class="p">.</span><span class="k">end</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInst</span> <span class="o">=</span> <span class="n">isTagEndInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTagEndInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MinecraftNbt_NamedTag], filename: string): MinecraftNbt_NamedTag =</span>
   <span class="n">MinecraftNbt_NamedTag</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

@@ -91,7 +91,7 @@ public class Dune2Pak extends KaitaiStruct {
         private void _read() {
             this.ofs = this._io.readU4le();
             if (ofs() != 0) {
-                this.fileName = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                this.fileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
             }
         }
         private Long nextOfs0;
@@ -99,7 +99,7 @@ public class Dune2Pak extends KaitaiStruct {
             if (this.nextOfs0 != null)
                 return this.nextOfs0;
             if (ofs() != 0) {
-                long _tmp = (long) (_root.dir().files().get((int) (idx() + 1)).ofs());
+                long _tmp = (long) (_root().dir().files().get((int) (idx() + 1)).ofs());
                 this.nextOfs0 = _tmp;
             }
             return this.nextOfs0;
@@ -109,7 +109,7 @@ public class Dune2Pak extends KaitaiStruct {
             if (this.nextOfs != null)
                 return this.nextOfs;
             if (ofs() != 0) {
-                int _tmp = (int) ((nextOfs0() == 0 ? _root._io().size() : nextOfs0()));
+                int _tmp = (int) ((nextOfs0() == 0 ? _root()._io().size() : nextOfs0()));
                 this.nextOfs = _tmp;
             }
             return this.nextOfs;
@@ -119,7 +119,7 @@ public class Dune2Pak extends KaitaiStruct {
             if (this.body != null)
                 return this.body;
             if (ofs() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofs());
                 this.body = io.readBytes((nextOfs() - ofs()));

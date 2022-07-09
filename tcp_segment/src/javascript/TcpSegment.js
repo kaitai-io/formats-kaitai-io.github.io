@@ -8,7 +8,7 @@
   } else {
     root.TcpSegment = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * TCP is one of the core Internet protocols on transport layer (AKA
  * OSI layer 4), providing stateful connections with error checking,

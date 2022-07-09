@@ -111,7 +111,7 @@ namespace Kaitai
                 _numDataFormats = m_io.ReadU2be();
             }
             if (Format == 1) {
-                _dataFormats = new List<DataFormat>((int) (NumDataFormats));
+                _dataFormats = new List<DataFormat>();
                 for (var i = 0; i < NumDataFormats; i++)
                 {
                     _dataFormats.Add(new DataFormat(m_io, this, m_root));
@@ -121,7 +121,7 @@ namespace Kaitai
                 _referenceCount = m_io.ReadU2be();
             }
             _numSoundCommands = m_io.ReadU2be();
-            _soundCommands = new List<SoundCommand>((int) (NumSoundCommands));
+            _soundCommands = new List<SoundCommand>();
             for (var i = 0; i < NumSoundCommands; i++)
             {
                 _soundCommands.Add(new SoundCommand(m_io, this, m_root));

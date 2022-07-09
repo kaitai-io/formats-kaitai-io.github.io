@@ -58,24 +58,24 @@ sub _read {
     $self->{channels} = ();
     my $n_channels = 32;
     for (my $i = 0; $i < $n_channels; $i++) {
-        $self->{channels}[$i] = S3m::Channel->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{channels}}, S3m::Channel->new($self->{_io}, $self, $self->{_root});
     }
     $self->{orders} = $self->{_io}->read_bytes($self->num_orders());
     $self->{instruments} = ();
     my $n_instruments = $self->num_instruments();
     for (my $i = 0; $i < $n_instruments; $i++) {
-        $self->{instruments}[$i] = S3m::InstrumentPtr->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{instruments}}, S3m::InstrumentPtr->new($self->{_io}, $self, $self->{_root});
     }
     $self->{patterns} = ();
     my $n_patterns = $self->num_patterns();
     for (my $i = 0; $i < $n_patterns; $i++) {
-        $self->{patterns}[$i] = S3m::PatternPtr->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{patterns}}, S3m::PatternPtr->new($self->{_io}, $self, $self->{_root});
     }
     if ($self->has_custom_pan() == 252) {
         $self->{channel_pans} = ();
         my $n_channel_pans = 32;
         for (my $i = 0; $i < $n_channel_pans; $i++) {
-            $self->{channel_pans}[$i] = S3m::ChannelPan->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{channel_pans}}, S3m::ChannelPan->new($self->{_io}, $self, $self->{_root});
         }
     }
 }

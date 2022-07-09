@@ -116,9 +116,9 @@ end
 
 function DimeMessage.Record:_read()
   self.version = self._io:read_bits_int_be(5)
-  self.is_first_record = self._io:read_bits_int_be(1)
-  self.is_last_record = self._io:read_bits_int_be(1)
-  self.is_chunk_record = self._io:read_bits_int_be(1)
+  self.is_first_record = self._io:read_bits_int_be(1) ~= 0
+  self.is_last_record = self._io:read_bits_int_be(1) ~= 0
+  self.is_chunk_record = self._io:read_bits_int_be(1) ~= 0
   self.type_format = DimeMessage.TypeFormats(self._io:read_bits_int_be(4))
   self.reserved = self._io:read_bits_int_be(4)
   self._io:align_to_byte()

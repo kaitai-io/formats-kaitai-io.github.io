@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndroidSuper(KaitaiStruct):
@@ -46,19 +45,19 @@ class AndroidSuper(KaitaiStruct):
             self._raw_backup_geometry = self._io.read_bytes(4096)
             _io__raw_backup_geometry = KaitaiStream(BytesIO(self._raw_backup_geometry))
             self.backup_geometry = AndroidSuper.Geometry(_io__raw_backup_geometry, self, self._root)
-            self._raw_primary_metadata = [None] * (self.primary_geometry.metadata_slot_count)
-            self.primary_metadata = [None] * (self.primary_geometry.metadata_slot_count)
+            self._raw_primary_metadata = []
+            self.primary_metadata = []
             for i in range(self.primary_geometry.metadata_slot_count):
-                self._raw_primary_metadata[i] = self._io.read_bytes(self.primary_geometry.metadata_max_size)
+                self._raw_primary_metadata.append(self._io.read_bytes(self.primary_geometry.metadata_max_size))
                 _io__raw_primary_metadata = KaitaiStream(BytesIO(self._raw_primary_metadata[i]))
-                self.primary_metadata[i] = AndroidSuper.Metadata(_io__raw_primary_metadata, self, self._root)
+                self.primary_metadata.append(AndroidSuper.Metadata(_io__raw_primary_metadata, self, self._root))
 
-            self._raw_backup_metadata = [None] * (self.primary_geometry.metadata_slot_count)
-            self.backup_metadata = [None] * (self.primary_geometry.metadata_slot_count)
+            self._raw_backup_metadata = []
+            self.backup_metadata = []
             for i in range(self.primary_geometry.metadata_slot_count):
-                self._raw_backup_metadata[i] = self._io.read_bytes(self.primary_geometry.metadata_max_size)
+                self._raw_backup_metadata.append(self._io.read_bytes(self.primary_geometry.metadata_max_size))
                 _io__raw_backup_metadata = KaitaiStream(BytesIO(self._raw_backup_metadata[i]))
-                self.backup_metadata[i] = AndroidSuper.Metadata(_io__raw_backup_metadata, self, self._root)
+                self.backup_metadata.append(AndroidSuper.Metadata(_io__raw_backup_metadata, self, self._root))
 
 
 
@@ -159,35 +158,35 @@ class AndroidSuper(KaitaiStruct):
             @property
             def table(self):
                 if hasattr(self, '_m_table'):
-                    return self._m_table if hasattr(self, '_m_table') else None
+                    return self._m_table
 
                 _pos = self._io.pos()
                 self._io.seek((self._parent.header_size + self.offset))
-                self._raw__m_table = [None] * (self.num_entries)
-                self._m_table = [None] * (self.num_entries)
+                self._raw__m_table = []
+                self._m_table = []
                 for i in range(self.num_entries):
                     _on = self.kind
                     if _on == AndroidSuper.Metadata.TableKind.partitions:
-                        self._raw__m_table[i] = self._io.read_bytes(self.entry_size)
+                        self._raw__m_table.append(self._io.read_bytes(self.entry_size))
                         _io__raw__m_table = KaitaiStream(BytesIO(self._raw__m_table[i]))
-                        self._m_table[i] = AndroidSuper.Metadata.Partition(_io__raw__m_table, self, self._root)
+                        self._m_table.append(AndroidSuper.Metadata.Partition(_io__raw__m_table, self, self._root))
                     elif _on == AndroidSuper.Metadata.TableKind.extents:
-                        self._raw__m_table[i] = self._io.read_bytes(self.entry_size)
+                        self._raw__m_table.append(self._io.read_bytes(self.entry_size))
                         _io__raw__m_table = KaitaiStream(BytesIO(self._raw__m_table[i]))
-                        self._m_table[i] = AndroidSuper.Metadata.Extent(_io__raw__m_table, self, self._root)
+                        self._m_table.append(AndroidSuper.Metadata.Extent(_io__raw__m_table, self, self._root))
                     elif _on == AndroidSuper.Metadata.TableKind.groups:
-                        self._raw__m_table[i] = self._io.read_bytes(self.entry_size)
+                        self._raw__m_table.append(self._io.read_bytes(self.entry_size))
                         _io__raw__m_table = KaitaiStream(BytesIO(self._raw__m_table[i]))
-                        self._m_table[i] = AndroidSuper.Metadata.Group(_io__raw__m_table, self, self._root)
+                        self._m_table.append(AndroidSuper.Metadata.Group(_io__raw__m_table, self, self._root))
                     elif _on == AndroidSuper.Metadata.TableKind.block_devices:
-                        self._raw__m_table[i] = self._io.read_bytes(self.entry_size)
+                        self._raw__m_table.append(self._io.read_bytes(self.entry_size))
                         _io__raw__m_table = KaitaiStream(BytesIO(self._raw__m_table[i]))
-                        self._m_table[i] = AndroidSuper.Metadata.BlockDevice(_io__raw__m_table, self, self._root)
+                        self._m_table.append(AndroidSuper.Metadata.BlockDevice(_io__raw__m_table, self, self._root))
                     else:
-                        self._m_table[i] = self._io.read_bytes(self.entry_size)
+                        self._m_table.append(self._io.read_bytes(self.entry_size))
 
                 self._io.seek(_pos)
-                return self._m_table if hasattr(self, '_m_table') else None
+                return getattr(self, '_m_table', None)
 
 
         class Partition(KaitaiStruct):
@@ -229,12 +228,12 @@ class AndroidSuper(KaitaiStruct):
     @property
     def root(self):
         if hasattr(self, '_m_root'):
-            return self._m_root if hasattr(self, '_m_root') else None
+            return self._m_root
 
         _pos = self._io.pos()
         self._io.seek(4096)
         self._m_root = AndroidSuper.Root(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_root if hasattr(self, '_m_root') else None
+        return getattr(self, '_m_root', None)
 
 

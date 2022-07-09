@@ -117,7 +117,8 @@ type
     `b9`*: uint8
     `b10`*: uint8
     `parent`*: KaitaiStruct
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
   MachO_SourceVersionCommand* = ref object of KaitaiStruct
     `version`*: uint64
     `parent`*: MachO_LoadCommand
@@ -152,9 +153,12 @@ type
     `scatterOffset`*: uint32
     `teamIdOffset`*: uint32
     `parent`*: MachO_CsBlob
-    `identInst`*: string
-    `teamIdInst`*: string
-    `hashesInst`*: seq[seq[byte]]
+    `identInst`: string
+    `identInstFlag`: bool
+    `teamIdInst`: string
+    `teamIdInstFlag`: bool
+    `hashesInst`: seq[seq[byte]]
+    `hashesInstFlag`: bool
   MachO_CsBlob_Data* = ref object of KaitaiStruct
     `length`*: uint32
     `value`*: seq[byte]
@@ -215,7 +219,8 @@ type
     `parent`*: MachO_CsBlob_Expr
   MachO_CsBlob_Expr_AppleGenericAnchorExpr* = ref object of KaitaiStruct
     `parent`*: MachO_CsBlob_Expr
-    `valueInst`*: string
+    `valueInst`: string
+    `valueInstFlag`: bool
   MachO_CsBlob_Expr_EntitlementFieldExpr* = ref object of KaitaiStruct
     `data`*: MachO_CsBlob_Data
     `match`*: MachO_CsBlob_Match
@@ -233,7 +238,8 @@ type
     `offset`*: uint32
     `parent`*: MachO_CsBlob_SuperBlob
     `rawBlobInst`*: seq[byte]
-    `blobInst`*: MachO_CsBlob
+    `blobInst`: MachO_CsBlob
+    `blobInstFlag`: bool
   MachO_CsBlob_BlobIndex_CsslotType* = enum
     code_directory = 0
     info_slot = 1
@@ -276,7 +282,8 @@ type
     `type`*: MachO_CsBlob_RequirementsBlobIndex_RequirementType
     `offset`*: uint32
     `parent`*: MachO_CsBlob_Requirements
-    `valueInst`*: MachO_CsBlob
+    `valueInst`: MachO_CsBlob
+    `valueInstFlag`: bool
   MachO_CsBlob_RequirementsBlobIndex_RequirementType* = enum
     host = 1
     guest = 2
@@ -301,32 +308,58 @@ type
   MachO_MachoFlags* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: MachO_MachHeader
-    `subsectionsViaSymbolsInst`*: bool
-    `deadStrippableDylibInst`*: bool
-    `weakDefinesInst`*: bool
-    `preboundInst`*: bool
-    `allModsBoundInst`*: bool
-    `hasTlvDescriptorsInst`*: bool
-    `forceFlatInst`*: bool
-    `rootSafeInst`*: bool
-    `noUndefsInst`*: bool
-    `setuidSafeInst`*: bool
-    `noHeapExecutionInst`*: bool
-    `noReexportedDylibsInst`*: bool
-    `noMultiDefsInst`*: bool
-    `appExtensionSafeInst`*: bool
-    `prebindableInst`*: bool
-    `incrLinkInst`*: bool
-    `bindAtLoadInst`*: bool
-    `canonicalInst`*: bool
-    `twoLevelInst`*: bool
-    `splitSegsInst`*: bool
-    `lazyInitInst`*: bool
-    `allowStackExecutionInst`*: bool
-    `bindsToWeakInst`*: bool
-    `noFixPrebindingInst`*: bool
-    `dyldLinkInst`*: bool
-    `pieInst`*: bool
+    `subsectionsViaSymbolsInst`: bool
+    `subsectionsViaSymbolsInstFlag`: bool
+    `deadStrippableDylibInst`: bool
+    `deadStrippableDylibInstFlag`: bool
+    `weakDefinesInst`: bool
+    `weakDefinesInstFlag`: bool
+    `preboundInst`: bool
+    `preboundInstFlag`: bool
+    `allModsBoundInst`: bool
+    `allModsBoundInstFlag`: bool
+    `hasTlvDescriptorsInst`: bool
+    `hasTlvDescriptorsInstFlag`: bool
+    `forceFlatInst`: bool
+    `forceFlatInstFlag`: bool
+    `rootSafeInst`: bool
+    `rootSafeInstFlag`: bool
+    `noUndefsInst`: bool
+    `noUndefsInstFlag`: bool
+    `setuidSafeInst`: bool
+    `setuidSafeInstFlag`: bool
+    `noHeapExecutionInst`: bool
+    `noHeapExecutionInstFlag`: bool
+    `noReexportedDylibsInst`: bool
+    `noReexportedDylibsInstFlag`: bool
+    `noMultiDefsInst`: bool
+    `noMultiDefsInstFlag`: bool
+    `appExtensionSafeInst`: bool
+    `appExtensionSafeInstFlag`: bool
+    `prebindableInst`: bool
+    `prebindableInstFlag`: bool
+    `incrLinkInst`: bool
+    `incrLinkInstFlag`: bool
+    `bindAtLoadInst`: bool
+    `bindAtLoadInstFlag`: bool
+    `canonicalInst`: bool
+    `canonicalInstFlag`: bool
+    `twoLevelInst`: bool
+    `twoLevelInstFlag`: bool
+    `splitSegsInst`: bool
+    `splitSegsInstFlag`: bool
+    `lazyInitInst`: bool
+    `lazyInitInstFlag`: bool
+    `allowStackExecutionInst`: bool
+    `allowStackExecutionInstFlag`: bool
+    `bindsToWeakInst`: bool
+    `bindsToWeakInstFlag`: bool
+    `noFixPrebindingInst`: bool
+    `noFixPrebindingInstFlag`: bool
+    `dyldLinkInst`: bool
+    `dyldLinkInstFlag`: bool
+    `pieInst`: bool
+    `pieInstFlag`: bool
   MachO_RoutinesCommand64* = ref object of KaitaiStruct
     `initAddress`*: uint64
     `initModule`*: uint64
@@ -363,7 +396,8 @@ type
     `reserved3`*: uint32
     `parent`*: MachO_SegmentCommand64
     `rawDataInst`*: seq[byte]
-    `dataInst`*: KaitaiStruct
+    `dataInst`: KaitaiStruct
+    `dataInstFlag`: bool
   MachO_SegmentCommand64_Section64_CfStringList* = ref object of KaitaiStruct
     `items`*: seq[MachO_SegmentCommand64_Section64_CfString]
     `parent`*: MachO_SegmentCommand64_Section64
@@ -436,7 +470,8 @@ type
     `locRelOff`*: uint32
     `nLocRel`*: uint32
     `parent`*: MachO_LoadCommand
-    `indirectSymbolsInst`*: seq[uint32]
+    `indirectSymbolsInst`: seq[uint32]
+    `indirectSymbolsInstFlag`: bool
   MachO_MachHeader* = ref object of KaitaiStruct
     `cputype`*: MachO_CpuType
     `cpusubtype`*: uint32
@@ -446,7 +481,8 @@ type
     `flags`*: uint32
     `reserved`*: uint32
     `parent`*: MachO
-    `flagsObjInst`*: MachO_MachoFlags
+    `flagsObjInst`: MachO_MachoFlags
+    `flagsObjInstFlag`: bool
   MachO_LinkeditDataCommand* = ref object of KaitaiStruct
     `dataOff`*: uint32
     `dataSize`*: uint32
@@ -475,7 +511,8 @@ type
     `dataSize`*: uint32
     `parent`*: MachO_LoadCommand
     `rawCodeSignatureInst`*: seq[byte]
-    `codeSignatureInst`*: MachO_CsBlob
+    `codeSignatureInst`: MachO_CsBlob
+    `codeSignatureInstFlag`: bool
   MachO_DyldInfoCommand* = ref object of KaitaiStruct
     `rebaseOff`*: uint32
     `rebaseSize`*: uint32
@@ -492,10 +529,14 @@ type
     `rawBindInst`*: seq[byte]
     `rawLazyBindInst`*: seq[byte]
     `rawExportsInst`*: seq[byte]
-    `rebaseInst`*: MachO_DyldInfoCommand_RebaseData
-    `bindInst`*: MachO_DyldInfoCommand_BindData
-    `lazyBindInst`*: MachO_DyldInfoCommand_LazyBindData
-    `exportsInst`*: MachO_DyldInfoCommand_ExportNode
+    `rebaseInst`: MachO_DyldInfoCommand_RebaseData
+    `rebaseInstFlag`: bool
+    `bindInst`: MachO_DyldInfoCommand_BindData
+    `bindInstFlag`: bool
+    `lazyBindInst`: MachO_DyldInfoCommand_LazyBindData
+    `lazyBindInstFlag`: bool
+    `exportsInst`: MachO_DyldInfoCommand_ExportNode
+    `exportsInstFlag`: bool
   MachO_DyldInfoCommand_BindOpcode* = enum
     done = 0
     set_dylib_ordinal_immediate = 16
@@ -516,8 +557,10 @@ type
     `skip`*: MachO_Uleb128
     `symbol`*: string
     `parent`*: KaitaiStruct
-    `opcodeInst`*: MachO_DyldInfoCommand_BindOpcode
-    `immediateInst`*: int
+    `opcodeInst`: MachO_DyldInfoCommand_BindOpcode
+    `opcodeInstFlag`: bool
+    `immediateInst`: int
+    `immediateInstFlag`: bool
   MachO_DyldInfoCommand_RebaseData* = ref object of KaitaiStruct
     `items`*: seq[MachO_DyldInfoCommand_RebaseData_RebaseItem]
     `parent`*: MachO_DyldInfoCommand
@@ -536,8 +579,10 @@ type
     `uleb`*: MachO_Uleb128
     `skip`*: MachO_Uleb128
     `parent`*: MachO_DyldInfoCommand_RebaseData
-    `opcodeInst`*: MachO_DyldInfoCommand_RebaseData_Opcode
-    `immediateInst`*: int
+    `opcodeInst`: MachO_DyldInfoCommand_RebaseData_Opcode
+    `opcodeInstFlag`: bool
+    `immediateInst`: int
+    `immediateInstFlag`: bool
   MachO_DyldInfoCommand_ExportNode* = ref object of KaitaiStruct
     `terminalSize`*: MachO_Uleb128
     `childrenCount`*: uint8
@@ -548,7 +593,8 @@ type
     `name`*: string
     `nodeOffset`*: MachO_Uleb128
     `parent`*: MachO_DyldInfoCommand_ExportNode
-    `valueInst`*: MachO_DyldInfoCommand_ExportNode
+    `valueInst`: MachO_DyldInfoCommand_ExportNode
+    `valueInstFlag`: bool
   MachO_DyldInfoCommand_BindData* = ref object of KaitaiStruct
     `items`*: seq[MachO_DyldInfoCommand_BindItem]
     `parent`*: MachO_DyldInfoCommand
@@ -590,7 +636,8 @@ type
     `reserved1`*: uint32
     `reserved2`*: uint32
     `parent`*: MachO_SegmentCommand
-    `dataInst`*: seq[byte]
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
   MachO_LcStr* = ref object of KaitaiStruct
     `length`*: uint32
     `value`*: string
@@ -611,8 +658,10 @@ type
     `strSize`*: uint32
     `parent`*: MachO_LoadCommand
     `rawStrsInst`*: seq[byte]
-    `symbolsInst`*: seq[KaitaiStruct]
-    `strsInst`*: MachO_SymtabCommand_StrTable
+    `symbolsInst`: seq[KaitaiStruct]
+    `symbolsInstFlag`: bool
+    `strsInst`: MachO_SymtabCommand_StrTable
+    `strsInstFlag`: bool
   MachO_SymtabCommand_StrTable* = ref object of KaitaiStruct
     `unknown`*: uint32
     `items`*: seq[string]
@@ -624,7 +673,8 @@ type
     `desc`*: uint16
     `value`*: uint64
     `parent`*: MachO_SymtabCommand
-    `nameInst`*: string
+    `nameInst`: string
+    `nameInstFlag`: bool
   MachO_SymtabCommand_Nlist* = ref object of KaitaiStruct
     `un`*: uint32
     `type`*: uint8
@@ -632,7 +682,8 @@ type
     `desc`*: uint16
     `value`*: uint32
     `parent`*: MachO_SymtabCommand
-    `nameInst`*: string
+    `nameInst`: string
+    `nameInstFlag`: bool
   MachO_VersionMinCommand* = ref object of KaitaiStruct
     `version`*: MachO_Version
     `sdk`*: MachO_Version
@@ -842,12 +893,12 @@ proc read*(_: typedesc[MachO_Uleb128], io: KaitaiStream, root: KaitaiStruct, par
     this.b10 = b10Expr
 
 proc value(this: MachO_Uleb128): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((((this.b1 %%% 128) shl 0) + (if (this.b1 and 128) == 0: 0 else: (((this.b2 %%% 128) shl 7) + (if (this.b2 and 128) == 0: 0 else: (((this.b3 %%% 128) shl 14) + (if (this.b3 and 128) == 0: 0 else: (((this.b4 %%% 128) shl 21) + (if (this.b4 and 128) == 0: 0 else: (((this.b5 %%% 128) shl 28) + (if (this.b5 and 128) == 0: 0 else: (((this.b6 %%% 128) shl 35) + (if (this.b6 and 128) == 0: 0 else: (((this.b7 %%% 128) shl 42) + (if (this.b7 and 128) == 0: 0 else: (((this.b8 %%% 128) shl 49) + (if (this.b8 and 128) == 0: 0 else: (((this.b9 %%% 128) shl 56) + (if (this.b8 and 128) == 0: 0 else: ((this.b10 %%% 128) shl 63))))))))))))))))))))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[MachO_Uleb128], filename: string): MachO_Uleb128 =
   MachO_Uleb128.read(newKaitaiFileStream(filename), nil, nil)
@@ -975,29 +1026,29 @@ proc read*(_: typedesc[MachO_CsBlob_CodeDirectory], io: KaitaiStream, root: Kait
     this.teamIdOffset = teamIdOffsetExpr
 
 proc ident(this: MachO_CsBlob_CodeDirectory): string = 
-  if this.identInst.len != 0:
+  if this.identInstFlag:
     return this.identInst
   let pos = this.io.pos()
   this.io.seek(int((this.identOffset - 8)))
   let identInstExpr = encode(this.io.readBytesTerm(0, false, true, true), "utf-8")
   this.identInst = identInstExpr
   this.io.seek(pos)
-  if this.identInst.len != 0:
-    return this.identInst
+  this.identInstFlag = true
+  return this.identInst
 
 proc teamId(this: MachO_CsBlob_CodeDirectory): string = 
-  if this.teamIdInst.len != 0:
+  if this.teamIdInstFlag:
     return this.teamIdInst
   let pos = this.io.pos()
   this.io.seek(int((this.teamIdOffset - 8)))
   let teamIdInstExpr = encode(this.io.readBytesTerm(0, false, true, true), "utf-8")
   this.teamIdInst = teamIdInstExpr
   this.io.seek(pos)
-  if this.teamIdInst.len != 0:
-    return this.teamIdInst
+  this.teamIdInstFlag = true
+  return this.teamIdInst
 
 proc hashes(this: MachO_CsBlob_CodeDirectory): seq[seq[byte]] = 
-  if this.hashesInst.len != 0:
+  if this.hashesInstFlag:
     return this.hashesInst
   let pos = this.io.pos()
   this.io.seek(int(((this.hashOffset - 8) - (this.hashSize * this.nSpecialSlots))))
@@ -1005,8 +1056,8 @@ proc hashes(this: MachO_CsBlob_CodeDirectory): seq[seq[byte]] =
     let it = this.io.readBytes(int(this.hashSize))
     this.hashesInst.add(it)
   this.io.seek(pos)
-  if this.hashesInst.len != 0:
-    return this.hashesInst
+  this.hashesInstFlag = true
+  return this.hashesInst
 
 proc fromFile*(_: typedesc[MachO_CsBlob_CodeDirectory], filename: string): MachO_CsBlob_CodeDirectory =
   MachO_CsBlob_CodeDirectory.read(newKaitaiFileStream(filename), nil, nil)
@@ -1207,12 +1258,12 @@ proc read*(_: typedesc[MachO_CsBlob_Expr_AppleGenericAnchorExpr], io: KaitaiStre
 
 
 proc value(this: MachO_CsBlob_Expr_AppleGenericAnchorExpr): string = 
-  if this.valueInst.len != 0:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = string("anchor apple generic")
   this.valueInst = valueInstExpr
-  if this.valueInst.len != 0:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[MachO_CsBlob_Expr_AppleGenericAnchorExpr], filename: string): MachO_CsBlob_Expr_AppleGenericAnchorExpr =
   MachO_CsBlob_Expr_AppleGenericAnchorExpr.read(newKaitaiFileStream(filename), nil, nil)
@@ -1279,7 +1330,7 @@ proc read*(_: typedesc[MachO_CsBlob_BlobIndex], io: KaitaiStream, root: KaitaiSt
   this.offset = offsetExpr
 
 proc blob(this: MachO_CsBlob_BlobIndex): MachO_CsBlob = 
-  if this.blobInst != nil:
+  if this.blobInstFlag:
     return this.blobInst
   let io = this.parent.io
   let pos = io.pos()
@@ -1290,8 +1341,8 @@ proc blob(this: MachO_CsBlob_BlobIndex): MachO_CsBlob =
   let blobInstExpr = MachO_CsBlob.read(rawBlobInstIo, this.root, this)
   this.blobInst = blobInstExpr
   io.seek(pos)
-  if this.blobInst != nil:
-    return this.blobInst
+  this.blobInstFlag = true
+  return this.blobInst
 
 proc fromFile*(_: typedesc[MachO_CsBlob_BlobIndex], filename: string): MachO_CsBlob_BlobIndex =
   MachO_CsBlob_BlobIndex.read(newKaitaiFileStream(filename), nil, nil)
@@ -1388,15 +1439,15 @@ proc read*(_: typedesc[MachO_CsBlob_RequirementsBlobIndex], io: KaitaiStream, ro
   this.offset = offsetExpr
 
 proc value(this: MachO_CsBlob_RequirementsBlobIndex): MachO_CsBlob = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let pos = this.io.pos()
   this.io.seek(int((this.offset - 8)))
   let valueInstExpr = MachO_CsBlob.read(this.io, this.root, this)
   this.valueInst = valueInstExpr
   this.io.seek(pos)
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[MachO_CsBlob_RequirementsBlobIndex], filename: string): MachO_CsBlob_RequirementsBlobIndex =
   MachO_CsBlob_RequirementsBlobIndex.read(newKaitaiFileStream(filename), nil, nil)
@@ -1474,296 +1525,296 @@ proc subsectionsViaSymbols(this: MachO_MachoFlags): bool =
   ##[
   safe to divide up the sections into sub-sections via symbols for dead code stripping
   ]##
-  if this.subsectionsViaSymbolsInst != nil:
+  if this.subsectionsViaSymbolsInstFlag:
     return this.subsectionsViaSymbolsInst
   let subsectionsViaSymbolsInstExpr = bool((this.value and 8192) != 0)
   this.subsectionsViaSymbolsInst = subsectionsViaSymbolsInstExpr
-  if this.subsectionsViaSymbolsInst != nil:
-    return this.subsectionsViaSymbolsInst
+  this.subsectionsViaSymbolsInstFlag = true
+  return this.subsectionsViaSymbolsInst
 
 proc deadStrippableDylib(this: MachO_MachoFlags): bool = 
-  if this.deadStrippableDylibInst != nil:
+  if this.deadStrippableDylibInstFlag:
     return this.deadStrippableDylibInst
   let deadStrippableDylibInstExpr = bool((this.value and 4194304) != 0)
   this.deadStrippableDylibInst = deadStrippableDylibInstExpr
-  if this.deadStrippableDylibInst != nil:
-    return this.deadStrippableDylibInst
+  this.deadStrippableDylibInstFlag = true
+  return this.deadStrippableDylibInst
 
 proc weakDefines(this: MachO_MachoFlags): bool = 
 
   ##[
   the final linked image contains external weak symbols
   ]##
-  if this.weakDefinesInst != nil:
+  if this.weakDefinesInstFlag:
     return this.weakDefinesInst
   let weakDefinesInstExpr = bool((this.value and 32768) != 0)
   this.weakDefinesInst = weakDefinesInstExpr
-  if this.weakDefinesInst != nil:
-    return this.weakDefinesInst
+  this.weakDefinesInstFlag = true
+  return this.weakDefinesInst
 
 proc prebound(this: MachO_MachoFlags): bool = 
 
   ##[
   the file has its dynamic undefined references prebound.
   ]##
-  if this.preboundInst != nil:
+  if this.preboundInstFlag:
     return this.preboundInst
   let preboundInstExpr = bool((this.value and 16) != 0)
   this.preboundInst = preboundInstExpr
-  if this.preboundInst != nil:
-    return this.preboundInst
+  this.preboundInstFlag = true
+  return this.preboundInst
 
 proc allModsBound(this: MachO_MachoFlags): bool = 
 
   ##[
   indicates that this binary binds to all two-level namespace modules of its dependent libraries. only used when MH_PREBINDABLE and MH_TWOLEVEL are both set.
   ]##
-  if this.allModsBoundInst != nil:
+  if this.allModsBoundInstFlag:
     return this.allModsBoundInst
   let allModsBoundInstExpr = bool((this.value and 4096) != 0)
   this.allModsBoundInst = allModsBoundInstExpr
-  if this.allModsBoundInst != nil:
-    return this.allModsBoundInst
+  this.allModsBoundInstFlag = true
+  return this.allModsBoundInst
 
 proc hasTlvDescriptors(this: MachO_MachoFlags): bool = 
-  if this.hasTlvDescriptorsInst != nil:
+  if this.hasTlvDescriptorsInstFlag:
     return this.hasTlvDescriptorsInst
   let hasTlvDescriptorsInstExpr = bool((this.value and 8388608) != 0)
   this.hasTlvDescriptorsInst = hasTlvDescriptorsInstExpr
-  if this.hasTlvDescriptorsInst != nil:
-    return this.hasTlvDescriptorsInst
+  this.hasTlvDescriptorsInstFlag = true
+  return this.hasTlvDescriptorsInst
 
 proc forceFlat(this: MachO_MachoFlags): bool = 
 
   ##[
   the executable is forcing all images to use flat name space bindings
   ]##
-  if this.forceFlatInst != nil:
+  if this.forceFlatInstFlag:
     return this.forceFlatInst
   let forceFlatInstExpr = bool((this.value and 256) != 0)
   this.forceFlatInst = forceFlatInstExpr
-  if this.forceFlatInst != nil:
-    return this.forceFlatInst
+  this.forceFlatInstFlag = true
+  return this.forceFlatInst
 
 proc rootSafe(this: MachO_MachoFlags): bool = 
 
   ##[
   When this bit is set, the binary declares it is safe for use in processes with uid zero
   ]##
-  if this.rootSafeInst != nil:
+  if this.rootSafeInstFlag:
     return this.rootSafeInst
   let rootSafeInstExpr = bool((this.value and 262144) != 0)
   this.rootSafeInst = rootSafeInstExpr
-  if this.rootSafeInst != nil:
-    return this.rootSafeInst
+  this.rootSafeInstFlag = true
+  return this.rootSafeInst
 
 proc noUndefs(this: MachO_MachoFlags): bool = 
 
   ##[
   the object file has no undefined references
   ]##
-  if this.noUndefsInst != nil:
+  if this.noUndefsInstFlag:
     return this.noUndefsInst
   let noUndefsInstExpr = bool((this.value and 1) != 0)
   this.noUndefsInst = noUndefsInstExpr
-  if this.noUndefsInst != nil:
-    return this.noUndefsInst
+  this.noUndefsInstFlag = true
+  return this.noUndefsInst
 
 proc setuidSafe(this: MachO_MachoFlags): bool = 
 
   ##[
   When this bit is set, the binary declares it is safe for use in processes when issetugid() is true
   ]##
-  if this.setuidSafeInst != nil:
+  if this.setuidSafeInstFlag:
     return this.setuidSafeInst
   let setuidSafeInstExpr = bool((this.value and 524288) != 0)
   this.setuidSafeInst = setuidSafeInstExpr
-  if this.setuidSafeInst != nil:
-    return this.setuidSafeInst
+  this.setuidSafeInstFlag = true
+  return this.setuidSafeInst
 
 proc noHeapExecution(this: MachO_MachoFlags): bool = 
-  if this.noHeapExecutionInst != nil:
+  if this.noHeapExecutionInstFlag:
     return this.noHeapExecutionInst
   let noHeapExecutionInstExpr = bool((this.value and 16777216) != 0)
   this.noHeapExecutionInst = noHeapExecutionInstExpr
-  if this.noHeapExecutionInst != nil:
-    return this.noHeapExecutionInst
+  this.noHeapExecutionInstFlag = true
+  return this.noHeapExecutionInst
 
 proc noReexportedDylibs(this: MachO_MachoFlags): bool = 
 
   ##[
   When this bit is set on a dylib, the static linker does not need to examine dependent dylibs to see if any are re-exported
   ]##
-  if this.noReexportedDylibsInst != nil:
+  if this.noReexportedDylibsInstFlag:
     return this.noReexportedDylibsInst
   let noReexportedDylibsInstExpr = bool((this.value and 1048576) != 0)
   this.noReexportedDylibsInst = noReexportedDylibsInstExpr
-  if this.noReexportedDylibsInst != nil:
-    return this.noReexportedDylibsInst
+  this.noReexportedDylibsInstFlag = true
+  return this.noReexportedDylibsInst
 
 proc noMultiDefs(this: MachO_MachoFlags): bool = 
 
   ##[
   this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
   ]##
-  if this.noMultiDefsInst != nil:
+  if this.noMultiDefsInstFlag:
     return this.noMultiDefsInst
   let noMultiDefsInstExpr = bool((this.value and 512) != 0)
   this.noMultiDefsInst = noMultiDefsInstExpr
-  if this.noMultiDefsInst != nil:
-    return this.noMultiDefsInst
+  this.noMultiDefsInstFlag = true
+  return this.noMultiDefsInst
 
 proc appExtensionSafe(this: MachO_MachoFlags): bool = 
-  if this.appExtensionSafeInst != nil:
+  if this.appExtensionSafeInstFlag:
     return this.appExtensionSafeInst
   let appExtensionSafeInstExpr = bool((this.value and 33554432) != 0)
   this.appExtensionSafeInst = appExtensionSafeInstExpr
-  if this.appExtensionSafeInst != nil:
-    return this.appExtensionSafeInst
+  this.appExtensionSafeInstFlag = true
+  return this.appExtensionSafeInst
 
 proc prebindable(this: MachO_MachoFlags): bool = 
 
   ##[
   the binary is not prebound but can have its prebinding redone. only used when MH_PREBOUND is not set.
   ]##
-  if this.prebindableInst != nil:
+  if this.prebindableInstFlag:
     return this.prebindableInst
   let prebindableInstExpr = bool((this.value and 2048) != 0)
   this.prebindableInst = prebindableInstExpr
-  if this.prebindableInst != nil:
-    return this.prebindableInst
+  this.prebindableInstFlag = true
+  return this.prebindableInst
 
 proc incrLink(this: MachO_MachoFlags): bool = 
 
   ##[
   the object file is the output of an incremental link against a base file and can't be link edited again
   ]##
-  if this.incrLinkInst != nil:
+  if this.incrLinkInstFlag:
     return this.incrLinkInst
   let incrLinkInstExpr = bool((this.value and 2) != 0)
   this.incrLinkInst = incrLinkInstExpr
-  if this.incrLinkInst != nil:
-    return this.incrLinkInst
+  this.incrLinkInstFlag = true
+  return this.incrLinkInst
 
 proc bindAtLoad(this: MachO_MachoFlags): bool = 
 
   ##[
   the object file's undefined references are bound by the dynamic linker when loaded.
   ]##
-  if this.bindAtLoadInst != nil:
+  if this.bindAtLoadInstFlag:
     return this.bindAtLoadInst
   let bindAtLoadInstExpr = bool((this.value and 8) != 0)
   this.bindAtLoadInst = bindAtLoadInstExpr
-  if this.bindAtLoadInst != nil:
-    return this.bindAtLoadInst
+  this.bindAtLoadInstFlag = true
+  return this.bindAtLoadInst
 
 proc canonical(this: MachO_MachoFlags): bool = 
 
   ##[
   the binary has been canonicalized via the unprebind operation
   ]##
-  if this.canonicalInst != nil:
+  if this.canonicalInstFlag:
     return this.canonicalInst
   let canonicalInstExpr = bool((this.value and 16384) != 0)
   this.canonicalInst = canonicalInstExpr
-  if this.canonicalInst != nil:
-    return this.canonicalInst
+  this.canonicalInstFlag = true
+  return this.canonicalInst
 
 proc twoLevel(this: MachO_MachoFlags): bool = 
 
   ##[
   the image is using two-level name space bindings
   ]##
-  if this.twoLevelInst != nil:
+  if this.twoLevelInstFlag:
     return this.twoLevelInst
   let twoLevelInstExpr = bool((this.value and 128) != 0)
   this.twoLevelInst = twoLevelInstExpr
-  if this.twoLevelInst != nil:
-    return this.twoLevelInst
+  this.twoLevelInstFlag = true
+  return this.twoLevelInst
 
 proc splitSegs(this: MachO_MachoFlags): bool = 
 
   ##[
   the file has its read-only and read-write segments split
   ]##
-  if this.splitSegsInst != nil:
+  if this.splitSegsInstFlag:
     return this.splitSegsInst
   let splitSegsInstExpr = bool((this.value and 32) != 0)
   this.splitSegsInst = splitSegsInstExpr
-  if this.splitSegsInst != nil:
-    return this.splitSegsInst
+  this.splitSegsInstFlag = true
+  return this.splitSegsInst
 
 proc lazyInit(this: MachO_MachoFlags): bool = 
 
   ##[
   the shared library init routine is to be run lazily via catching memory faults to its writeable segments (obsolete)
   ]##
-  if this.lazyInitInst != nil:
+  if this.lazyInitInstFlag:
     return this.lazyInitInst
   let lazyInitInstExpr = bool((this.value and 64) != 0)
   this.lazyInitInst = lazyInitInstExpr
-  if this.lazyInitInst != nil:
-    return this.lazyInitInst
+  this.lazyInitInstFlag = true
+  return this.lazyInitInst
 
 proc allowStackExecution(this: MachO_MachoFlags): bool = 
 
   ##[
   When this bit is set, all stacks in the task will be given stack execution privilege.  Only used in MH_EXECUTE filetypes.
   ]##
-  if this.allowStackExecutionInst != nil:
+  if this.allowStackExecutionInstFlag:
     return this.allowStackExecutionInst
   let allowStackExecutionInstExpr = bool((this.value and 131072) != 0)
   this.allowStackExecutionInst = allowStackExecutionInstExpr
-  if this.allowStackExecutionInst != nil:
-    return this.allowStackExecutionInst
+  this.allowStackExecutionInstFlag = true
+  return this.allowStackExecutionInst
 
 proc bindsToWeak(this: MachO_MachoFlags): bool = 
 
   ##[
   the final linked image uses weak symbols
   ]##
-  if this.bindsToWeakInst != nil:
+  if this.bindsToWeakInstFlag:
     return this.bindsToWeakInst
   let bindsToWeakInstExpr = bool((this.value and 65536) != 0)
   this.bindsToWeakInst = bindsToWeakInstExpr
-  if this.bindsToWeakInst != nil:
-    return this.bindsToWeakInst
+  this.bindsToWeakInstFlag = true
+  return this.bindsToWeakInst
 
 proc noFixPrebinding(this: MachO_MachoFlags): bool = 
 
   ##[
   do not have dyld notify the prebinding agent about this executable
   ]##
-  if this.noFixPrebindingInst != nil:
+  if this.noFixPrebindingInstFlag:
     return this.noFixPrebindingInst
   let noFixPrebindingInstExpr = bool((this.value and 1024) != 0)
   this.noFixPrebindingInst = noFixPrebindingInstExpr
-  if this.noFixPrebindingInst != nil:
-    return this.noFixPrebindingInst
+  this.noFixPrebindingInstFlag = true
+  return this.noFixPrebindingInst
 
 proc dyldLink(this: MachO_MachoFlags): bool = 
 
   ##[
   the object file is input for the dynamic linker and can't be staticly link edited again
   ]##
-  if this.dyldLinkInst != nil:
+  if this.dyldLinkInstFlag:
     return this.dyldLinkInst
   let dyldLinkInstExpr = bool((this.value and 4) != 0)
   this.dyldLinkInst = dyldLinkInstExpr
-  if this.dyldLinkInst != nil:
-    return this.dyldLinkInst
+  this.dyldLinkInstFlag = true
+  return this.dyldLinkInst
 
 proc pie(this: MachO_MachoFlags): bool = 
 
   ##[
   When this bit is set, the OS will load the main executable at a random address. Only used in MH_EXECUTE filetypes.
   ]##
-  if this.pieInst != nil:
+  if this.pieInstFlag:
     return this.pieInst
   let pieInstExpr = bool((this.value and 2097152) != 0)
   this.pieInst = pieInstExpr
-  if this.pieInst != nil:
-    return this.pieInst
+  this.pieInstFlag = true
+  return this.pieInst
 
 proc fromFile*(_: typedesc[MachO_MachoFlags], filename: string): MachO_MachoFlags =
   MachO_MachoFlags.read(newKaitaiFileStream(filename), nil, nil)
@@ -1870,7 +1921,7 @@ proc read*(_: typedesc[MachO_SegmentCommand64_Section64], io: KaitaiStream, root
   this.reserved3 = reserved3Expr
 
 proc data(this: MachO_SegmentCommand64_Section64): KaitaiStruct = 
-  if this.dataInst != nil:
+  if this.dataInstFlag:
     return this.dataInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -1983,8 +2034,8 @@ proc data(this: MachO_SegmentCommand64_Section64): KaitaiStruct =
       let dataInstExpr = io.readBytes(int(this.size))
       this.dataInst = dataInstExpr
   io.seek(pos)
-  if this.dataInst != nil:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[MachO_SegmentCommand64_Section64], filename: string): MachO_SegmentCommand64_Section64 =
   MachO_SegmentCommand64_Section64.read(newKaitaiFileStream(filename), nil, nil)
@@ -2283,7 +2334,7 @@ proc read*(_: typedesc[MachO_DysymtabCommand], io: KaitaiStream, root: KaitaiStr
   this.nLocRel = nLocRelExpr
 
 proc indirectSymbols(this: MachO_DysymtabCommand): seq[uint32] = 
-  if this.indirectSymbolsInst.len != 0:
+  if this.indirectSymbolsInstFlag:
     return this.indirectSymbolsInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -2292,8 +2343,8 @@ proc indirectSymbols(this: MachO_DysymtabCommand): seq[uint32] =
     let it = io.readU4le()
     this.indirectSymbolsInst.add(it)
   io.seek(pos)
-  if this.indirectSymbolsInst.len != 0:
-    return this.indirectSymbolsInst
+  this.indirectSymbolsInstFlag = true
+  return this.indirectSymbolsInst
 
 proc fromFile*(_: typedesc[MachO_DysymtabCommand], filename: string): MachO_DysymtabCommand =
   MachO_DysymtabCommand.read(newKaitaiFileStream(filename), nil, nil)
@@ -2323,12 +2374,12 @@ proc read*(_: typedesc[MachO_MachHeader], io: KaitaiStream, root: KaitaiStruct, 
     this.reserved = reservedExpr
 
 proc flagsObj(this: MachO_MachHeader): MachO_MachoFlags = 
-  if this.flagsObjInst != nil:
+  if this.flagsObjInstFlag:
     return this.flagsObjInst
   let flagsObjInstExpr = MachO_MachoFlags.read(this.io, this.root, this, this.flags)
   this.flagsObjInst = flagsObjInstExpr
-  if this.flagsObjInst != nil:
-    return this.flagsObjInst
+  this.flagsObjInstFlag = true
+  return this.flagsObjInst
 
 proc fromFile*(_: typedesc[MachO_MachHeader], filename: string): MachO_MachHeader =
   MachO_MachHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -2434,7 +2485,7 @@ proc read*(_: typedesc[MachO_CodeSignatureCommand], io: KaitaiStream, root: Kait
   this.dataSize = dataSizeExpr
 
 proc codeSignature(this: MachO_CodeSignatureCommand): MachO_CsBlob = 
-  if this.codeSignatureInst != nil:
+  if this.codeSignatureInstFlag:
     return this.codeSignatureInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -2445,8 +2496,8 @@ proc codeSignature(this: MachO_CodeSignatureCommand): MachO_CsBlob =
   let codeSignatureInstExpr = MachO_CsBlob.read(rawCodeSignatureInstIo, this.root, this)
   this.codeSignatureInst = codeSignatureInstExpr
   io.seek(pos)
-  if this.codeSignatureInst != nil:
-    return this.codeSignatureInst
+  this.codeSignatureInstFlag = true
+  return this.codeSignatureInst
 
 proc fromFile*(_: typedesc[MachO_CodeSignatureCommand], filename: string): MachO_CodeSignatureCommand =
   MachO_CodeSignatureCommand.read(newKaitaiFileStream(filename), nil, nil)
@@ -2481,7 +2532,7 @@ proc read*(_: typedesc[MachO_DyldInfoCommand], io: KaitaiStream, root: KaitaiStr
   this.exportSize = exportSizeExpr
 
 proc rebase(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData = 
-  if this.rebaseInst != nil:
+  if this.rebaseInstFlag:
     return this.rebaseInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -2492,11 +2543,11 @@ proc rebase(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData =
   let rebaseInstExpr = MachO_DyldInfoCommand_RebaseData.read(rawRebaseInstIo, this.root, this)
   this.rebaseInst = rebaseInstExpr
   io.seek(pos)
-  if this.rebaseInst != nil:
-    return this.rebaseInst
+  this.rebaseInstFlag = true
+  return this.rebaseInst
 
 proc bind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData = 
-  if this.bindInst != nil:
+  if this.bindInstFlag:
     return this.bindInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -2507,11 +2558,11 @@ proc bind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData =
   let bindInstExpr = MachO_DyldInfoCommand_BindData.read(rawBindInstIo, this.root, this)
   this.bindInst = bindInstExpr
   io.seek(pos)
-  if this.bindInst != nil:
-    return this.bindInst
+  this.bindInstFlag = true
+  return this.bindInst
 
 proc lazyBind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_LazyBindData = 
-  if this.lazyBindInst != nil:
+  if this.lazyBindInstFlag:
     return this.lazyBindInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -2522,11 +2573,11 @@ proc lazyBind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_LazyBindData =
   let lazyBindInstExpr = MachO_DyldInfoCommand_LazyBindData.read(rawLazyBindInstIo, this.root, this)
   this.lazyBindInst = lazyBindInstExpr
   io.seek(pos)
-  if this.lazyBindInst != nil:
-    return this.lazyBindInst
+  this.lazyBindInstFlag = true
+  return this.lazyBindInst
 
 proc exports(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_ExportNode = 
-  if this.exportsInst != nil:
+  if this.exportsInstFlag:
     return this.exportsInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -2537,8 +2588,8 @@ proc exports(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_ExportNode =
   let exportsInstExpr = MachO_DyldInfoCommand_ExportNode.read(rawExportsInstIo, this.root, this)
   this.exportsInst = exportsInstExpr
   io.seek(pos)
-  if this.exportsInst != nil:
-    return this.exportsInst
+  this.exportsInstFlag = true
+  return this.exportsInst
 
 proc fromFile*(_: typedesc[MachO_DyldInfoCommand], filename: string): MachO_DyldInfoCommand =
   MachO_DyldInfoCommand.read(newKaitaiFileStream(filename), nil, nil)
@@ -2564,20 +2615,20 @@ proc read*(_: typedesc[MachO_DyldInfoCommand_BindItem], io: KaitaiStream, root: 
     this.symbol = symbolExpr
 
 proc opcode(this: MachO_DyldInfoCommand_BindItem): MachO_DyldInfoCommand_BindOpcode = 
-  if this.opcodeInst != nil:
+  if this.opcodeInstFlag:
     return this.opcodeInst
   let opcodeInstExpr = MachO_DyldInfoCommand_BindOpcode(MachO_DyldInfoCommand_BindOpcode((this.opcodeAndImmediate and 240)))
   this.opcodeInst = opcodeInstExpr
-  if this.opcodeInst != nil:
-    return this.opcodeInst
+  this.opcodeInstFlag = true
+  return this.opcodeInst
 
 proc immediate(this: MachO_DyldInfoCommand_BindItem): int = 
-  if this.immediateInst != nil:
+  if this.immediateInstFlag:
     return this.immediateInst
   let immediateInstExpr = int((this.opcodeAndImmediate and 15))
   this.immediateInst = immediateInstExpr
-  if this.immediateInst != nil:
-    return this.immediateInst
+  this.immediateInstFlag = true
+  return this.immediateInst
 
 proc fromFile*(_: typedesc[MachO_DyldInfoCommand_BindItem], filename: string): MachO_DyldInfoCommand_BindItem =
   MachO_DyldInfoCommand_BindItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -2620,20 +2671,20 @@ proc read*(_: typedesc[MachO_DyldInfoCommand_RebaseData_RebaseItem], io: KaitaiS
     this.skip = skipExpr
 
 proc opcode(this: MachO_DyldInfoCommand_RebaseData_RebaseItem): MachO_DyldInfoCommand_RebaseData_Opcode = 
-  if this.opcodeInst != nil:
+  if this.opcodeInstFlag:
     return this.opcodeInst
   let opcodeInstExpr = MachO_DyldInfoCommand_RebaseData_Opcode(MachO_DyldInfoCommand_RebaseData_Opcode((this.opcodeAndImmediate and 240)))
   this.opcodeInst = opcodeInstExpr
-  if this.opcodeInst != nil:
-    return this.opcodeInst
+  this.opcodeInstFlag = true
+  return this.opcodeInst
 
 proc immediate(this: MachO_DyldInfoCommand_RebaseData_RebaseItem): int = 
-  if this.immediateInst != nil:
+  if this.immediateInstFlag:
     return this.immediateInst
   let immediateInstExpr = int((this.opcodeAndImmediate and 15))
   this.immediateInst = immediateInstExpr
-  if this.immediateInst != nil:
-    return this.immediateInst
+  this.immediateInstFlag = true
+  return this.immediateInst
 
 proc fromFile*(_: typedesc[MachO_DyldInfoCommand_RebaseData_RebaseItem], filename: string): MachO_DyldInfoCommand_RebaseData_RebaseItem =
   MachO_DyldInfoCommand_RebaseData_RebaseItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -2673,15 +2724,15 @@ proc read*(_: typedesc[MachO_DyldInfoCommand_ExportNode_Child], io: KaitaiStream
   this.nodeOffset = nodeOffsetExpr
 
 proc value(this: MachO_DyldInfoCommand_ExportNode_Child): MachO_DyldInfoCommand_ExportNode = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let pos = this.io.pos()
   this.io.seek(int(this.nodeOffset.value))
   let valueInstExpr = MachO_DyldInfoCommand_ExportNode.read(this.io, this.root, this)
   this.valueInst = valueInstExpr
   this.io.seek(pos)
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[MachO_DyldInfoCommand_ExportNode_Child], filename: string): MachO_DyldInfoCommand_ExportNode_Child =
   MachO_DyldInfoCommand_ExportNode_Child.read(newKaitaiFileStream(filename), nil, nil)
@@ -2825,7 +2876,7 @@ proc read*(_: typedesc[MachO_SegmentCommand_Section], io: KaitaiStream, root: Ka
   this.reserved2 = reserved2Expr
 
 proc data(this: MachO_SegmentCommand_Section): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -2833,8 +2884,8 @@ proc data(this: MachO_SegmentCommand_Section): seq[byte] =
   let dataInstExpr = io.readBytes(int(this.size))
   this.dataInst = dataInstExpr
   io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[MachO_SegmentCommand_Section], filename: string): MachO_SegmentCommand_Section =
   MachO_SegmentCommand_Section.read(newKaitaiFileStream(filename), nil, nil)
@@ -3148,7 +3199,7 @@ proc read*(_: typedesc[MachO_SymtabCommand], io: KaitaiStream, root: KaitaiStruc
   this.strSize = strSizeExpr
 
 proc symbols(this: MachO_SymtabCommand): seq[KaitaiStruct] = 
-  if this.symbolsInst.len != 0:
+  if this.symbolsInstFlag:
     return this.symbolsInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -3169,11 +3220,11 @@ proc symbols(this: MachO_SymtabCommand): seq[KaitaiStruct] =
         let it = MachO_SymtabCommand_Nlist.read(io, this.root, this)
         this.symbolsInst.add(it)
   io.seek(pos)
-  if this.symbolsInst.len != 0:
-    return this.symbolsInst
+  this.symbolsInstFlag = true
+  return this.symbolsInst
 
 proc strs(this: MachO_SymtabCommand): MachO_SymtabCommand_StrTable = 
-  if this.strsInst != nil:
+  if this.strsInstFlag:
     return this.strsInst
   let io = MachO(this.root).io
   let pos = io.pos()
@@ -3184,8 +3235,8 @@ proc strs(this: MachO_SymtabCommand): MachO_SymtabCommand_StrTable =
   let strsInstExpr = MachO_SymtabCommand_StrTable.read(rawStrsInstIo, this.root, this)
   this.strsInst = strsInstExpr
   io.seek(pos)
-  if this.strsInst != nil:
-    return this.strsInst
+  this.strsInstFlag = true
+  return this.strsInst
 
 proc fromFile*(_: typedesc[MachO_SymtabCommand], filename: string): MachO_SymtabCommand =
   MachO_SymtabCommand.read(newKaitaiFileStream(filename), nil, nil)
@@ -3232,7 +3283,7 @@ proc read*(_: typedesc[MachO_SymtabCommand_Nlist64], io: KaitaiStream, root: Kai
   this.value = valueExpr
 
 proc name(this: MachO_SymtabCommand_Nlist64): string = 
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   if this.un != 0:
     let pos = this.io.pos()
@@ -3240,8 +3291,8 @@ proc name(this: MachO_SymtabCommand_Nlist64): string =
     let nameInstExpr = encode(this.io.readBytesTerm(0, false, true, true), "utf-8")
     this.nameInst = nameInstExpr
     this.io.seek(pos)
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc fromFile*(_: typedesc[MachO_SymtabCommand_Nlist64], filename: string): MachO_SymtabCommand_Nlist64 =
   MachO_SymtabCommand_Nlist64.read(newKaitaiFileStream(filename), nil, nil)
@@ -3266,7 +3317,7 @@ proc read*(_: typedesc[MachO_SymtabCommand_Nlist], io: KaitaiStream, root: Kaita
   this.value = valueExpr
 
 proc name(this: MachO_SymtabCommand_Nlist): string = 
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   if this.un != 0:
     let pos = this.io.pos()
@@ -3274,8 +3325,8 @@ proc name(this: MachO_SymtabCommand_Nlist): string =
     let nameInstExpr = encode(this.io.readBytesTerm(0, false, true, true), "utf-8")
     this.nameInst = nameInstExpr
     this.io.seek(pos)
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc fromFile*(_: typedesc[MachO_SymtabCommand_Nlist], filename: string): MachO_SymtabCommand_Nlist =
   MachO_SymtabCommand_Nlist.read(newKaitaiFileStream(filename), nil, nil)

@@ -29,13 +29,13 @@ class GenmidiOp2 < Kaitai::Struct::Struct
   def _read
     @magic = @_io.read_bytes(8)
     raise Kaitai::Struct::ValidationNotEqualError.new([35, 79, 80, 76, 95, 73, 73, 35].pack('C*'), magic, _io, "/seq/0") if not magic == [35, 79, 80, 76, 95, 73, 73, 35].pack('C*')
-    @instruments = Array.new(175)
+    @instruments = []
     (175).times { |i|
-      @instruments[i] = InstrumentEntry.new(@_io, self, @_root)
+      @instruments << InstrumentEntry.new(@_io, self, @_root)
     }
-    @instrument_names = Array.new(175)
+    @instrument_names = []
     (175).times { |i|
-      @instrument_names[i] = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(32), 0), 0, false)).force_encoding("ASCII")
+      @instrument_names << (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(32), 0), 0, false)).force_encoding("ASCII")
     }
     self
   end
@@ -49,9 +49,9 @@ class GenmidiOp2 < Kaitai::Struct::Struct
       @flags = @_io.read_u2le
       @finetune = @_io.read_u1
       @note = @_io.read_u1
-      @instruments = Array.new(2)
+      @instruments = []
       (2).times { |i|
-        @instruments[i] = Instrument.new(@_io, self, @_root)
+        @instruments << Instrument.new(@_io, self, @_root)
       }
       self
     end

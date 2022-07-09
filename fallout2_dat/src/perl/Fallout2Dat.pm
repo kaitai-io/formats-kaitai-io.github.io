@@ -183,7 +183,7 @@ sub _read {
     $self->{files} = ();
     my $n_files = $self->file_count();
     for (my $i = 0; $i < $n_files; $i++) {
-        $self->{files}[$i] = Fallout2Dat::File->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{files}}, Fallout2Dat::File->new($self->{_io}, $self, $self->{_root});
     }
 }
 

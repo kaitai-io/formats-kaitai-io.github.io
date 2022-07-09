@@ -21,7 +21,7 @@ function TlsClientHello:_read()
   self.session_id = TlsClientHello.SessionId(self._io, self, self._root)
   self.cipher_suites = TlsClientHello.CipherSuites(self._io, self, self._root)
   self.compression_methods = TlsClientHello.CompressionMethods(self._io, self, self._root)
-  if self._io:is_eof() == 0 then
+  if self._io:is_eof() == false then
     self.extensions = TlsClientHello.Extensions(self._io, self, self._root)
   end
 end

@@ -146,7 +146,7 @@ function Dtb.FdtBlock:_read()
   self.nodes = {}
   local i = 0
   while true do
-    _ = Dtb.FdtNode(self._io, self, self._root)
+    local _ = Dtb.FdtNode(self._io, self, self._root)
     self.nodes[i + 1] = _
     if _.type == Dtb.Fdt.end then
       break
@@ -159,15 +159,15 @@ end
 Dtb.MemoryBlockEntry = class.class(KaitaiStruct)
 
 function Dtb.MemoryBlockEntry:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dtb.MemoryBlockEntry:_read()
-self.address = self._io:read_u8be()
-self.size = self._io:read_u8be()
+  self.address = self._io:read_u8be()
+  self.size = self._io:read_u8be()
 end
 
 -- 
@@ -178,85 +178,85 @@ end
 Dtb.Strings = class.class(KaitaiStruct)
 
 function Dtb.Strings:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dtb.Strings:_read()
-self.strings = {}
-local i = 0
-while not self._io:is_eof() do
-  self.strings[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
-  i = i + 1
-end
+  self.strings = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.strings[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+    i = i + 1
+  end
 end
 
 
 Dtb.FdtProp = class.class(KaitaiStruct)
 
 function Dtb.FdtProp:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dtb.FdtProp:_read()
-self.len_property = self._io:read_u4be()
-self.ofs_name = self._io:read_u4be()
-self.property = self._io:read_bytes(self.len_property)
-self.padding = self._io:read_bytes((-(self._io:pos()) % 4))
+  self.len_property = self._io:read_u4be()
+  self.ofs_name = self._io:read_u4be()
+  self.property = self._io:read_bytes(self.len_property)
+  self.padding = self._io:read_bytes((-(self._io:pos()) % 4))
 end
 
 Dtb.FdtProp.property.name = {}
 function Dtb.FdtProp.property.name:get()
-if self._m_name ~= nil then
-  return self._m_name
-end
+  if self._m_name ~= nil then
+    return self._m_name
+  end
 
-local _io = self._root.strings_block._io
-local _pos = _io:pos()
-_io:seek(self.ofs_name)
-self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
-_io:seek(_pos)
-return self._m_name
+  local _io = self._root.strings_block._io
+  local _pos = _io:pos()
+  _io:seek(self.ofs_name)
+  self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
+  _io:seek(_pos)
+  return self._m_name
 end
 
 
 Dtb.FdtNode = class.class(KaitaiStruct)
 
 function Dtb.FdtNode:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dtb.FdtNode:_read()
-self.type = Dtb.Fdt(self._io:read_u4be())
-local _on = self.type
-if _on == Dtb.Fdt.begin_node then
-  self.body = Dtb.FdtBeginNode(self._io, self, self._root)
-elseif _on == Dtb.Fdt.prop then
-  self.body = Dtb.FdtProp(self._io, self, self._root)
-end
+  self.type = Dtb.Fdt(self._io:read_u4be())
+  local _on = self.type
+  if _on == Dtb.Fdt.begin_node then
+    self.body = Dtb.FdtBeginNode(self._io, self, self._root)
+  elseif _on == Dtb.Fdt.prop then
+    self.body = Dtb.FdtProp(self._io, self, self._root)
+  end
 end
 
 
 Dtb.FdtBeginNode = class.class(KaitaiStruct)
 
 function Dtb.FdtBeginNode:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dtb.FdtBeginNode:_read()
-self.name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
-self.padding = self._io:read_bytes((-(self._io:pos()) % 4))
+  self.name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+  self.padding = self._io:read_bytes((-(self._io:pos()) % 4))
 end
 
 

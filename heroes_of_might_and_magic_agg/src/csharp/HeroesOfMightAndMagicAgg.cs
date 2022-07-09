@@ -25,7 +25,7 @@ namespace Kaitai
         private void _read()
         {
             _numFiles = m_io.ReadU2le();
-            _entries = new List<Entry>((int) (NumFiles));
+            _entries = new List<Entry>();
             for (var i = 0; i < NumFiles; i++)
             {
                 _entries.Add(new Entry(m_io, this, m_root));
@@ -115,8 +115,8 @@ namespace Kaitai
                     return _filenames;
                 long _pos = m_io.Pos;
                 m_io.Seek((Entries[Entries.Count - 1].Offset + Entries[Entries.Count - 1].Size));
-                __raw_filenames = new List<byte[]>((int) (NumFiles));
-                _filenames = new List<Filename>((int) (NumFiles));
+                __raw_filenames = new List<byte[]>();
+                _filenames = new List<Filename>();
                 for (var i = 0; i < NumFiles; i++)
                 {
                     __raw_filenames.Add(m_io.ReadBytes(15));

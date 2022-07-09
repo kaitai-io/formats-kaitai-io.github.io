@@ -509,9 +509,9 @@ fields, annotations, etc.</p>
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@list</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+      <span class="vi">@list</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@list</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MapItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@list</span> <span class="o">&lt;&lt;</span> <span class="no">MapItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -768,21 +768,21 @@ fields, annotations, etc.</p>
       <span class="vi">@instance_fields_size</span> <span class="o">=</span> <span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
       <span class="vi">@direct_methods_size</span> <span class="o">=</span> <span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
       <span class="vi">@virtual_methods_size</span> <span class="o">=</span> <span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
-      <span class="vi">@static_fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">static_fields_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@static_fields</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">static_fields_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@static_fields</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">EncodedField</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@static_fields</span> <span class="o">&lt;&lt;</span> <span class="no">EncodedField</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
-      <span class="vi">@instance_fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">instance_fields_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@instance_fields</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">instance_fields_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@instance_fields</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">EncodedField</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@instance_fields</span> <span class="o">&lt;&lt;</span> <span class="no">EncodedField</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
-      <span class="vi">@direct_methods</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">direct_methods_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@direct_methods</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">direct_methods_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@direct_methods</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">EncodedMethod</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@direct_methods</span> <span class="o">&lt;&lt;</span> <span class="no">EncodedMethod</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
-      <span class="vi">@virtual_methods</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">virtual_methods_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@virtual_methods</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">virtual_methods_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@virtual_methods</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">EncodedMethod</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@virtual_methods</span> <span class="o">&lt;&lt;</span> <span class="no">EncodedMethod</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -894,9 +894,9 @@ fields, annotations, etc.</p>
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@type_idx</span> <span class="o">=</span> <span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
       <span class="vi">@size</span> <span class="o">=</span> <span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
-      <span class="vi">@elements</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@elements</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@elements</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">AnnotationElement</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@elements</span> <span class="o">&lt;&lt;</span> <span class="no">AnnotationElement</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1045,9 +1045,9 @@ fields, annotations, etc.</p>
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@list</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+      <span class="vi">@list</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@list</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TypeItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@list</span> <span class="o">&lt;&lt;</span> <span class="no">TypeItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1253,9 +1253,9 @@ fields, annotations, etc.</p>
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@size</span> <span class="o">=</span> <span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">EncodedValue</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="no">EncodedValue</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1275,9 +1275,9 @@ fields, annotations, etc.</p>
     <span class="k">return</span> <span class="vi">@string_ids</span> <span class="k">unless</span> <span class="vi">@string_ids</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">string_ids_off</span><span class="p">)</span>
-    <span class="vi">@string_ids</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">string_ids_size</span><span class="p">)</span>
+    <span class="vi">@string_ids</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">string_ids_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@string_ids</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@string_ids</span> <span class="o">&lt;&lt;</span> <span class="no">StringIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@string_ids</span>
@@ -1298,9 +1298,9 @@ fields, annotations, etc.</p>
     <span class="k">return</span> <span class="vi">@method_ids</span> <span class="k">unless</span> <span class="vi">@method_ids</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">method_ids_off</span><span class="p">)</span>
-    <span class="vi">@method_ids</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">method_ids_size</span><span class="p">)</span>
+    <span class="vi">@method_ids</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">method_ids_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@method_ids</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MethodIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@method_ids</span> <span class="o">&lt;&lt;</span> <span class="no">MethodIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@method_ids</span>
@@ -1342,9 +1342,9 @@ fields, annotations, etc.</p>
     <span class="k">return</span> <span class="vi">@class_defs</span> <span class="k">unless</span> <span class="vi">@class_defs</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">class_defs_off</span><span class="p">)</span>
-    <span class="vi">@class_defs</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">class_defs_size</span><span class="p">)</span>
+    <span class="vi">@class_defs</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">class_defs_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@class_defs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ClassDefItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@class_defs</span> <span class="o">&lt;&lt;</span> <span class="no">ClassDefItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@class_defs</span>
@@ -1375,9 +1375,9 @@ fields, annotations, etc.</p>
     <span class="k">return</span> <span class="vi">@type_ids</span> <span class="k">unless</span> <span class="vi">@type_ids</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">type_ids_off</span><span class="p">)</span>
-    <span class="vi">@type_ids</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">type_ids_size</span><span class="p">)</span>
+    <span class="vi">@type_ids</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">type_ids_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@type_ids</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TypeIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@type_ids</span> <span class="o">&lt;&lt;</span> <span class="no">TypeIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@type_ids</span>
@@ -1395,9 +1395,9 @@ fields, annotations, etc.</p>
     <span class="k">return</span> <span class="vi">@proto_ids</span> <span class="k">unless</span> <span class="vi">@proto_ids</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">proto_ids_off</span><span class="p">)</span>
-    <span class="vi">@proto_ids</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">proto_ids_size</span><span class="p">)</span>
+    <span class="vi">@proto_ids</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">proto_ids_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@proto_ids</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ProtoIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@proto_ids</span> <span class="o">&lt;&lt;</span> <span class="no">ProtoIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@proto_ids</span>
@@ -1417,9 +1417,9 @@ fields, annotations, etc.</p>
     <span class="k">return</span> <span class="vi">@field_ids</span> <span class="k">unless</span> <span class="vi">@field_ids</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">field_ids_off</span><span class="p">)</span>
-    <span class="vi">@field_ids</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">field_ids_size</span><span class="p">)</span>
+    <span class="vi">@field_ids</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">field_ids_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@field_ids</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">FieldIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@field_ids</span> <span class="o">&lt;&lt;</span> <span class="no">FieldIdItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@field_ids</span>

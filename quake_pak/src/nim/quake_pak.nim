@@ -8,7 +8,8 @@ type
     `lenIndex`*: uint32
     `parent`*: KaitaiStruct
     `rawIndexInst`*: seq[byte]
-    `indexInst`*: QuakePak_IndexStruct
+    `indexInst`: QuakePak_IndexStruct
+    `indexInstFlag`: bool
   QuakePak_IndexStruct* = ref object of KaitaiStruct
     `entries`*: seq[QuakePak_IndexEntry]
     `parent`*: QuakePak
@@ -17,7 +18,8 @@ type
     `ofs`*: uint32
     `size`*: uint32
     `parent`*: QuakePak_IndexStruct
-    `bodyInst`*: seq[byte]
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[QuakePak], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakePak
 proc read*(_: typedesc[QuakePak_IndexStruct], io: KaitaiStream, root: KaitaiStruct, parent: QuakePak): QuakePak_IndexStruct
@@ -46,7 +48,7 @@ proc read*(_: typedesc[QuakePak], io: KaitaiStream, root: KaitaiStruct, parent: 
   this.lenIndex = lenIndexExpr
 
 proc index(this: QuakePak): QuakePak_IndexStruct = 
-  if this.indexInst != nil:
+  if this.indexInstFlag:
     return this.indexInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsIndex))
@@ -56,8 +58,8 @@ proc index(this: QuakePak): QuakePak_IndexStruct =
   let indexInstExpr = QuakePak_IndexStruct.read(rawIndexInstIo, this.root, this)
   this.indexInst = indexInstExpr
   this.io.seek(pos)
-  if this.indexInst != nil:
-    return this.indexInst
+  this.indexInstFlag = true
+  return this.indexInst
 
 proc fromFile*(_: typedesc[QuakePak], filename: string): QuakePak =
   QuakePak.read(newKaitaiFileStream(filename), nil, nil)
@@ -96,7 +98,7 @@ proc read*(_: typedesc[QuakePak_IndexEntry], io: KaitaiStream, root: KaitaiStruc
   this.size = sizeExpr
 
 proc body(this: QuakePak_IndexEntry): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let io = QuakePak(this.root).io
   let pos = io.pos()
@@ -104,8 +106,8 @@ proc body(this: QuakePak_IndexEntry): seq[byte] =
   let bodyInstExpr = io.readBytes(int(this.size))
   this.bodyInst = bodyInstExpr
   io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[QuakePak_IndexEntry], filename: string): QuakePak_IndexEntry =
   QuakePak_IndexEntry.read(newKaitaiFileStream(filename), nil, nil)

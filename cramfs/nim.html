@@ -266,7 +266,8 @@ section#format-index .row {
   <span class="n">Cramfs</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">superBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Cramfs_SuperBlockStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">pageSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">pageSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">pageSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Cramfs_SuperBlockStruct</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -277,11 +278,16 @@ section#format-index .row {
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">root</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Cramfs_Inode</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Cramfs</span>
-    <span class="p">`</span><span class="n">flagFsidV2Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">flagHolesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">flagWrongSignatureInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">flagSortedDirsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">flagShiftedRootOffsetInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">flagFsidV2Inst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">flagFsidV2InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">flagHolesInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">flagHolesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">flagWrongSignatureInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">flagWrongSignatureInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">flagSortedDirsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">flagSortedDirsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">flagShiftedRootOffsetInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">flagShiftedRootOffsetInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Cramfs_ChunkedDataInode</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">blockEndIndex</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawBlocks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -294,18 +300,30 @@ section#format-index .row {
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawAsDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">attrInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">asRegFileInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Cramfs_ChunkedDataInode</span>
-    <span class="p">`</span><span class="n">permUInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">asSymlinkInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Cramfs_ChunkedDataInode</span>
-    <span class="p">`</span><span class="n">permOInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">sizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">gidInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">permGInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">namelenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">asDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Cramfs_DirInode</span>
-    <span class="p">`</span><span class="n">typeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Cramfs_Inode_FileType</span>
-    <span class="p">`</span><span class="n">offsetInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">attrInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">attrInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">asRegFileInst</span><span class="p">`:</span> <span class="n">Cramfs_ChunkedDataInode</span>
+    <span class="p">`</span><span class="n">asRegFileInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">permUInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">permUInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">asSymlinkInst</span><span class="p">`:</span> <span class="n">Cramfs_ChunkedDataInode</span>
+    <span class="p">`</span><span class="n">asSymlinkInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">permOInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">permOInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">sizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">gidInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">gidInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">permGInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">permGInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">namelenInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">namelenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">asDirInst</span><span class="p">`:</span> <span class="n">Cramfs_DirInode</span>
+    <span class="p">`</span><span class="n">asDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">typeInst</span><span class="p">`:</span> <span class="n">Cramfs_Inode_FileType</span>
+    <span class="p">`</span><span class="n">typeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">offsetInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">offsetInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Cramfs_Inode_FileType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">fifo</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">chrdev</span> <span class="o">=</span> <span class="mi">2</span>
@@ -362,12 +380,12 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">superBlock</span> <span class="o">=</span> <span class="n">superBlockExpr</span>
 
 <span class="k">proc </span><span class="nf">pageSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInst</span>
   <span class="k">let</span> <span class="n">pageSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInst</span> <span class="o">=</span> <span class="n">pageSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pageSizeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Cramfs], filename: string): Cramfs =</span>
   <span class="n">Cramfs</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -398,44 +416,44 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">rootExpr</span>
 
 <span class="k">proc </span><span class="nf">flagFsidV2</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_SuperBlockStruct</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2Inst</span>
   <span class="k">let</span> <span class="n">flagFsidV2InstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">shr</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2Inst</span> <span class="o">=</span> <span class="n">flagFsidV2InstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagFsidV2Inst</span>
 
 <span class="k">proc </span><span class="nf">flagHoles</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_SuperBlockStruct</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInst</span>
   <span class="k">let</span> <span class="n">flagHolesInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">shr</span> <span class="mi">8</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInst</span> <span class="o">=</span> <span class="n">flagHolesInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagHolesInst</span>
 
 <span class="k">proc </span><span class="nf">flagWrongSignature</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_SuperBlockStruct</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInst</span>
   <span class="k">let</span> <span class="n">flagWrongSignatureInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">shr</span> <span class="mi">9</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInst</span> <span class="o">=</span> <span class="n">flagWrongSignatureInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagWrongSignatureInst</span>
 
 <span class="k">proc </span><span class="nf">flagSortedDirs</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_SuperBlockStruct</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInst</span>
   <span class="k">let</span> <span class="n">flagSortedDirsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">shr</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInst</span> <span class="o">=</span> <span class="n">flagSortedDirsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagSortedDirsInst</span>
 
 <span class="k">proc </span><span class="nf">flagShiftedRootOffset</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_SuperBlockStruct</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInst</span>
   <span class="k">let</span> <span class="n">flagShiftedRootOffsetInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">shr</span> <span class="mi">10</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInst</span> <span class="o">=</span> <span class="n">flagShiftedRootOffsetInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagShiftedRootOffsetInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Cramfs_SuperBlockStruct], filename: string): Cramfs_SuperBlockStruct =</span>
   <span class="n">Cramfs_SuperBlockStruct</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -477,15 +495,15 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
 
 <span class="k">proc </span><span class="nf">attr</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">attrInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">attrInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">attrInst</span>
   <span class="k">let</span> <span class="n">attrInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">mode</span> <span class="ow">shr</span> <span class="mi">9</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">attrInst</span> <span class="o">=</span> <span class="n">attrInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">attrInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">attrInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">attrInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">attrInst</span>
 
 <span class="k">proc </span><span class="nf">asRegFile</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="n">Cramfs_ChunkedDataInode</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -493,19 +511,19 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">asRegFileInstExpr</span> <span class="o">=</span> <span class="n">Cramfs_ChunkedDataInode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInst</span> <span class="o">=</span> <span class="n">asRegFileInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asRegFileInst</span>
 
 <span class="k">proc </span><span class="nf">permU</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permUInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permUInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permUInst</span>
   <span class="k">let</span> <span class="n">permUInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">mode</span> <span class="ow">shr</span> <span class="mi">6</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">permUInst</span> <span class="o">=</span> <span class="n">permUInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permUInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permUInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">permUInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permUInst</span>
 
 <span class="k">proc </span><span class="nf">asSymlink</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="n">Cramfs_ChunkedDataInode</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -513,51 +531,51 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">asSymlinkInstExpr</span> <span class="o">=</span> <span class="n">Cramfs_ChunkedDataInode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInst</span> <span class="o">=</span> <span class="n">asSymlinkInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asSymlinkInst</span>
 
 <span class="k">proc </span><span class="nf">permO</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permOInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permOInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permOInst</span>
   <span class="k">let</span> <span class="n">permOInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">mode</span> <span class="ow">and</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">permOInst</span> <span class="o">=</span> <span class="n">permOInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permOInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permOInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">permOInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permOInst</span>
 
 <span class="k">proc </span><span class="nf">size</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span>
   <span class="k">let</span> <span class="n">sizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">sizeGid</span> <span class="ow">and</span> <span class="mi">16777215</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span> <span class="o">=</span> <span class="n">sizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span>
 
 <span class="k">proc </span><span class="nf">gid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">gidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">gidInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">gidInst</span>
   <span class="k">let</span> <span class="n">gidInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">sizeGid</span> <span class="ow">shr</span> <span class="mi">24</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">gidInst</span> <span class="o">=</span> <span class="n">gidInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">gidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">gidInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">gidInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">gidInst</span>
 
 <span class="k">proc </span><span class="nf">permG</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permGInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permGInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permGInst</span>
   <span class="k">let</span> <span class="n">permGInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">mode</span> <span class="ow">shr</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">permGInst</span> <span class="o">=</span> <span class="n">permGInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permGInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permGInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">permGInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permGInst</span>
 
 <span class="k">proc </span><span class="nf">namelen</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">namelenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">namelenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">namelenInst</span>
   <span class="k">let</span> <span class="n">namelenInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">namelenOffset</span> <span class="ow">and</span> <span class="mi">63</span><span class="p">)</span> <span class="ow">shl</span> <span class="mi">2</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">namelenInst</span> <span class="o">=</span> <span class="n">namelenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">namelenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">namelenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">namelenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">namelenInst</span>
 
 <span class="k">proc </span><span class="nf">asDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="n">Cramfs_DirInode</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Cramfs</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -568,24 +586,24 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">asDirInstExpr</span> <span class="o">=</span> <span class="n">Cramfs_DirInode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawAsDirInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span> <span class="o">=</span> <span class="n">asDirInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">asDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asDirInst</span>
 
 <span class="k">proc </span><span class="nf">type</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="n">Cramfs_Inode_FileType</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
   <span class="k">let</span> <span class="n">typeInstExpr</span> <span class="o">=</span> <span class="n">Cramfs_Inode_FileType</span><span class="p">(</span><span class="n">Cramfs_Inode_FileType</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">mode</span> <span class="ow">shr</span> <span class="mi">12</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">15</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span> <span class="o">=</span> <span class="n">typeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
 
 <span class="k">proc </span><span class="nf">offset</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Cramfs_Inode</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span>
   <span class="k">let</span> <span class="n">offsetInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((((</span><span class="n">this</span><span class="p">.</span><span class="n">namelenOffset</span> <span class="ow">shr</span> <span class="mi">6</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">67108863</span><span class="p">)</span> <span class="ow">shl</span> <span class="mi">2</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span> <span class="o">=</span> <span class="n">offsetInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">offsetInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Cramfs_Inode], filename: string): Cramfs_Inode =</span>
   <span class="n">Cramfs_Inode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

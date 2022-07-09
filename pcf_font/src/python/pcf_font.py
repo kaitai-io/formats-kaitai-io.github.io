@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 import bytes_with_io
@@ -49,9 +48,9 @@ class PcfFont(KaitaiStruct):
         if not self.magic == b"\x01\x66\x63\x70":
             raise kaitaistruct.ValidationNotEqualError(b"\x01\x66\x63\x70", self.magic, self._io, u"/seq/0")
         self.num_tables = self._io.read_u4le()
-        self.tables = [None] * (self.num_tables)
+        self.tables = []
         for i in range(self.num_tables):
-            self.tables[i] = PcfFont.Table(self._io, self, self._root)
+            self.tables.append(PcfFont.Table(self._io, self, self._root))
 
 
     class Table(KaitaiStruct):
@@ -86,9 +85,9 @@ class PcfFont(KaitaiStruct):
             def _read(self):
                 self.format = PcfFont.Format(self._io, self, self._root)
                 self.num_glyphs = self._io.read_u4le()
-                self.swidths = [None] * (self.num_glyphs)
+                self.swidths = []
                 for i in range(self.num_glyphs):
-                    self.swidths[i] = self._io.read_u4le()
+                    self.swidths.append(self._io.read_u4le())
 
 
 
@@ -108,9 +107,9 @@ class PcfFont(KaitaiStruct):
             def _read(self):
                 self.format = PcfFont.Format(self._io, self, self._root)
                 self.num_props = self._io.read_u4le()
-                self.props = [None] * (self.num_props)
+                self.props = []
                 for i in range(self.num_props):
-                    self.props[i] = PcfFont.Table.Properties.Prop(self._io, self, self._root)
+                    self.props.append(PcfFont.Table.Properties.Prop(self._io, self, self._root))
 
                 self.padding = self._io.read_bytes((0 if (self.num_props & 3) == 0 else (4 - (self.num_props & 3))))
                 self.len_strings = self._io.read_u4le()
@@ -143,14 +142,14 @@ class PcfFont(KaitaiStruct):
                     """Name of the property addressed in the strings buffer.
                     """
                     if hasattr(self, '_m_name'):
-                        return self._m_name if hasattr(self, '_m_name') else None
+                        return self._m_name
 
                     io = self._parent.strings._io
                     _pos = io.pos()
                     io.seek(self.ofs_name)
                     self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
                     io.seek(_pos)
-                    return self._m_name if hasattr(self, '_m_name') else None
+                    return getattr(self, '_m_name', None)
 
                 @property
                 def str_value(self):
@@ -158,7 +157,7 @@ class PcfFont(KaitaiStruct):
                     buffer, if this is a string value.
                     """
                     if hasattr(self, '_m_str_value'):
-                        return self._m_str_value if hasattr(self, '_m_str_value') else None
+                        return self._m_str_value
 
                     if self.is_string != 0:
                         io = self._parent.strings._io
@@ -167,19 +166,19 @@ class PcfFont(KaitaiStruct):
                         self._m_str_value = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
                         io.seek(_pos)
 
-                    return self._m_str_value if hasattr(self, '_m_str_value') else None
+                    return getattr(self, '_m_str_value', None)
 
                 @property
                 def int_value(self):
                     """Value of the property, if this is an integer value.
                     """
                     if hasattr(self, '_m_int_value'):
-                        return self._m_int_value if hasattr(self, '_m_int_value') else None
+                        return self._m_int_value
 
                     if self.is_string == 0:
                         self._m_int_value = self.value_or_ofs_value
 
-                    return self._m_int_value if hasattr(self, '_m_int_value') else None
+                    return getattr(self, '_m_int_value', None)
 
 
 
@@ -209,9 +208,9 @@ class PcfFont(KaitaiStruct):
                 self.min_byte1 = self._io.read_u2le()
                 self.max_byte1 = self._io.read_u2le()
                 self.default_char = self._io.read_u2le()
-                self.glyph_indexes = [None] * ((((self.max_char_or_byte2 - self.min_char_or_byte2) + 1) * ((self.max_byte1 - self.min_byte1) + 1)))
+                self.glyph_indexes = []
                 for i in range((((self.max_char_or_byte2 - self.min_char_or_byte2) + 1) * ((self.max_byte1 - self.min_byte1) + 1))):
-                    self.glyph_indexes[i] = self._io.read_u2le()
+                    self.glyph_indexes.append(self._io.read_u2le())
 
 
 
@@ -230,9 +229,9 @@ class PcfFont(KaitaiStruct):
             def _read(self):
                 self.format = PcfFont.Format(self._io, self, self._root)
                 self.num_glyphs = self._io.read_u4le()
-                self.names = [None] * (self.num_glyphs)
+                self.names = []
                 for i in range(self.num_glyphs):
-                    self.names[i] = PcfFont.Table.GlyphNames.StringRef(self._io, self, self._root)
+                    self.names.append(PcfFont.Table.GlyphNames.StringRef(self._io, self, self._root))
 
                 self.len_strings = self._io.read_u4le()
                 self._raw_strings = self._io.read_bytes(self.len_strings)
@@ -252,14 +251,14 @@ class PcfFont(KaitaiStruct):
                 @property
                 def value(self):
                     if hasattr(self, '_m_value'):
-                        return self._m_value if hasattr(self, '_m_value') else None
+                        return self._m_value
 
                     io = self._parent.strings._io
                     _pos = io.pos()
                     io.seek(self.ofs_string)
                     self._m_value = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
                     io.seek(_pos)
-                    return self._m_value if hasattr(self, '_m_value') else None
+                    return getattr(self, '_m_value', None)
 
 
 
@@ -278,20 +277,20 @@ class PcfFont(KaitaiStruct):
             def _read(self):
                 self.format = PcfFont.Format(self._io, self, self._root)
                 self.num_glyphs = self._io.read_u4le()
-                self.offsets = [None] * (self.num_glyphs)
+                self.offsets = []
                 for i in range(self.num_glyphs):
-                    self.offsets[i] = self._io.read_u4le()
+                    self.offsets.append(self._io.read_u4le())
 
-                self.bitmap_sizes = [None] * (4)
+                self.bitmap_sizes = []
                 for i in range(4):
-                    self.bitmap_sizes[i] = self._io.read_u4le()
+                    self.bitmap_sizes.append(self._io.read_u4le())
 
 
 
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_body)
@@ -319,7 +318,7 @@ class PcfFont(KaitaiStruct):
             else:
                 self._m_body = self._io.read_bytes(self.len_body)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     class Format(KaitaiStruct):

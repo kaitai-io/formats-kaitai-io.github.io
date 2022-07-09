@@ -274,7 +274,7 @@ function MacOsResourceSnd.SoundCommand:_init(io, parent, root)
 end
 
 function MacOsResourceSnd.SoundCommand:_read()
-  self.is_data_offset = self._io:read_bits_int_be(1)
+  self.is_data_offset = self._io:read_bits_int_be(1) ~= 0
   self.cmd = MacOsResourceSnd.CmdType(self._io:read_bits_int_be(15))
   self._io:align_to_byte()
   self.param1 = self._io:read_u2be()

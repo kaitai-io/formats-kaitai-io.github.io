@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Xwd(KaitaiStruct):
@@ -48,12 +47,12 @@ class Xwd(KaitaiStruct):
         self._raw_hdr = self._io.read_bytes((self.len_header - 4))
         _io__raw_hdr = KaitaiStream(BytesIO(self._raw_hdr))
         self.hdr = Xwd.Header(_io__raw_hdr, self, self._root)
-        self._raw_color_map = [None] * (self.hdr.color_map_entries)
-        self.color_map = [None] * (self.hdr.color_map_entries)
+        self._raw_color_map = []
+        self.color_map = []
         for i in range(self.hdr.color_map_entries):
-            self._raw_color_map[i] = self._io.read_bytes(12)
+            self._raw_color_map.append(self._io.read_bytes(12))
             _io__raw_color_map = KaitaiStream(BytesIO(self._raw_color_map[i]))
-            self.color_map[i] = Xwd.ColorMapEntry(_io__raw_color_map, self, self._root)
+            self.color_map.append(Xwd.ColorMapEntry(_io__raw_color_map, self, self._root))
 
 
     class Header(KaitaiStruct):

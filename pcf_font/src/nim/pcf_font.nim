@@ -26,7 +26,8 @@ type
     `ofsBody`*: uint32
     `parent`*: PcfFont
     `rawBodyInst`*: seq[byte]
-    `bodyInst`*: KaitaiStruct
+    `bodyInst`: KaitaiStruct
+    `bodyInstFlag`: bool
   PcfFont_Table_Swidths* = ref object of KaitaiStruct
     `format`*: PcfFont_Format
     `numGlyphs`*: uint32
@@ -46,9 +47,12 @@ type
     `isString`*: uint8
     `valueOrOfsValue`*: uint32
     `parent`*: PcfFont_Table_Properties
-    `nameInst`*: string
-    `strValueInst`*: string
-    `intValueInst`*: uint32
+    `nameInst`: string
+    `nameInstFlag`: bool
+    `strValueInst`: string
+    `strValueInstFlag`: bool
+    `intValueInst`: uint32
+    `intValueInstFlag`: bool
   PcfFont_Table_BdfEncodings* = ref object of KaitaiStruct
     `format`*: PcfFont_Format
     `minCharOrByte2`*: uint16
@@ -69,7 +73,8 @@ type
   PcfFont_Table_GlyphNames_StringRef* = ref object of KaitaiStruct
     `ofsString`*: uint32
     `parent`*: PcfFont_Table_GlyphNames
-    `valueInst`*: string
+    `valueInst`: string
+    `valueInstFlag`: bool
   PcfFont_Table_Bitmaps* = ref object of KaitaiStruct
     `format`*: PcfFont_Format
     `numGlyphs`*: uint32
@@ -164,7 +169,7 @@ proc read*(_: typedesc[PcfFont_Table], io: KaitaiStream, root: KaitaiStruct, par
   this.ofsBody = ofsBodyExpr
 
 proc body(this: PcfFont_Table): KaitaiStruct = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsBody))
@@ -204,8 +209,8 @@ proc body(this: PcfFont_Table): KaitaiStruct =
       let bodyInstExpr = this.io.readBytes(int(this.lenBody))
       this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[PcfFont_Table], filename: string): PcfFont_Table =
   PcfFont_Table.read(newKaitaiFileStream(filename), nil, nil)
@@ -331,7 +336,7 @@ proc name(this: PcfFont_Table_Properties_Prop): string =
   Name of the property addressed in the strings buffer.
 
   ]##
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   let io = this.parent.strings.io
   let pos = io.pos()
@@ -339,8 +344,8 @@ proc name(this: PcfFont_Table_Properties_Prop): string =
   let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
   this.nameInst = nameInstExpr
   io.seek(pos)
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc strValue(this: PcfFont_Table_Properties_Prop): string = 
 
@@ -349,7 +354,7 @@ proc strValue(this: PcfFont_Table_Properties_Prop): string =
 buffer, if this is a string value.
 
   ]##
-  if this.strValueInst.len != 0:
+  if this.strValueInstFlag:
     return this.strValueInst
   if this.isString != 0:
     let io = this.parent.strings.io
@@ -358,8 +363,8 @@ buffer, if this is a string value.
     let strValueInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
     this.strValueInst = strValueInstExpr
     io.seek(pos)
-  if this.strValueInst.len != 0:
-    return this.strValueInst
+  this.strValueInstFlag = true
+  return this.strValueInst
 
 proc intValue(this: PcfFont_Table_Properties_Prop): uint32 = 
 
@@ -367,13 +372,13 @@ proc intValue(this: PcfFont_Table_Properties_Prop): uint32 =
   Value of the property, if this is an integer value.
 
   ]##
-  if this.intValueInst != nil:
+  if this.intValueInstFlag:
     return this.intValueInst
   if this.isString == 0:
     let intValueInstExpr = uint32(this.valueOrOfsValue)
     this.intValueInst = intValueInstExpr
-  if this.intValueInst != nil:
-    return this.intValueInst
+  this.intValueInstFlag = true
+  return this.intValueInst
 
 proc fromFile*(_: typedesc[PcfFont_Table_Properties_Prop], filename: string): PcfFont_Table_Properties_Prop =
   PcfFont_Table_Properties_Prop.read(newKaitaiFileStream(filename), nil, nil)
@@ -472,7 +477,7 @@ proc read*(_: typedesc[PcfFont_Table_GlyphNames_StringRef], io: KaitaiStream, ro
   this.ofsString = ofsStringExpr
 
 proc value(this: PcfFont_Table_GlyphNames_StringRef): string = 
-  if this.valueInst.len != 0:
+  if this.valueInstFlag:
     return this.valueInst
   let io = this.parent.strings.io
   let pos = io.pos()
@@ -480,8 +485,8 @@ proc value(this: PcfFont_Table_GlyphNames_StringRef): string =
   let valueInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
   this.valueInst = valueInstExpr
   io.seek(pos)
-  if this.valueInst.len != 0:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[PcfFont_Table_GlyphNames_StringRef], filename: string): PcfFont_Table_GlyphNames_StringRef =
   PcfFont_Table_GlyphNames_StringRef.read(newKaitaiFileStream(filename), nil, nil)

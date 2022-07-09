@@ -64,7 +64,7 @@ public class AndroidSparse extends KaitaiStruct {
         this._raw_header = this._io.readBytes((headerPrefix().lenHeader() - 10));
         KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
         this.header = new FileHeader(_io__raw_header, this, _root);
-        chunks = new ArrayList<Chunk>(((Number) (header().numChunks())).intValue());
+        this.chunks = new ArrayList<Chunk>();
         for (int i = 0; i < header().numChunks(); i++) {
             this.chunks.add(new Chunk(this._io, this, _root));
         }
@@ -151,7 +151,7 @@ public class AndroidSparse extends KaitaiStruct {
         public Version version() {
             if (this.version != null)
                 return this.version;
-            this.version = _root.headerPrefix().version();
+            this.version = _root().headerPrefix().version();
             return this.version;
         }
         private Integer lenHeader;
@@ -162,7 +162,7 @@ public class AndroidSparse extends KaitaiStruct {
         public Integer lenHeader() {
             if (this.lenHeader != null)
                 return this.lenHeader;
-            int _tmp = (int) (_root.headerPrefix().lenHeader());
+            int _tmp = (int) (_root().headerPrefix().lenHeader());
             this.lenHeader = _tmp;
             return this.lenHeader;
         }
@@ -222,7 +222,7 @@ public class AndroidSparse extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this._raw_header = this._io.readBytes(_root.header().lenChunkHeader());
+            this._raw_header = this._io.readBytes(_root().header().lenChunkHeader());
             KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
             this.header = new ChunkHeader(_io__raw_header, this, _root);
             {
@@ -267,15 +267,15 @@ public class AndroidSparse extends KaitaiStruct {
                 this.reserved1 = this._io.readU2le();
                 this.numBodyBlocks = this._io.readU4le();
                 this.lenChunk = this._io.readU4le();
-                if (!(lenChunk() == (lenBodyExpected() != -1 ? (_root.header().lenChunkHeader() + lenBodyExpected()) : lenChunk()))) {
-                    throw new KaitaiStream.ValidationNotEqualError((lenBodyExpected() != -1 ? (_root.header().lenChunkHeader() + lenBodyExpected()) : lenChunk()), lenChunk(), _io(), "/types/chunk/types/chunk_header/seq/3");
+                if (!(lenChunk() == (lenBodyExpected() != -1 ? (_root().header().lenChunkHeader() + lenBodyExpected()) : lenChunk()))) {
+                    throw new KaitaiStream.ValidationNotEqualError((lenBodyExpected() != -1 ? (_root().header().lenChunkHeader() + lenBodyExpected()) : lenChunk()), lenChunk(), _io(), "/types/chunk/types/chunk_header/seq/3");
                 }
             }
             private Integer lenBody;
             public Integer lenBody() {
                 if (this.lenBody != null)
                     return this.lenBody;
-                int _tmp = (int) ((lenChunk() - _root.header().lenChunkHeader()));
+                int _tmp = (int) ((lenChunk() - _root().header().lenChunkHeader()));
                 this.lenBody = _tmp;
                 return this.lenBody;
             }
@@ -290,7 +290,7 @@ public class AndroidSparse extends KaitaiStruct {
             public Integer lenBodyExpected() {
                 if (this.lenBodyExpected != null)
                     return this.lenBodyExpected;
-                int _tmp = (int) ((chunkType() == AndroidSparse.ChunkTypes.RAW ? (_root.header().blockSize() * numBodyBlocks()) : (chunkType() == AndroidSparse.ChunkTypes.FILL ? 4 : (chunkType() == AndroidSparse.ChunkTypes.DONT_CARE ? 0 : (chunkType() == AndroidSparse.ChunkTypes.CRC32 ? 4 : -1)))));
+                int _tmp = (int) ((chunkType() == AndroidSparse.ChunkTypes.RAW ? (_root().header().blockSize() * numBodyBlocks()) : (chunkType() == AndroidSparse.ChunkTypes.FILL ? 4 : (chunkType() == AndroidSparse.ChunkTypes.DONT_CARE ? 0 : (chunkType() == AndroidSparse.ChunkTypes.CRC32 ? 4 : -1)))));
                 this.lenBodyExpected = _tmp;
                 return this.lenBodyExpected;
             }

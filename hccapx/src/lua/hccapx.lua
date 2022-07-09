@@ -42,7 +42,7 @@ function Hccapx.HccapxRecord:_read()
     error("not equal, expected " ..  "\072\067\080\088" .. ", but got " .. self.magic)
   end
   self.version = self._io:read_u4le()
-  self.ignore_replay_counter = self._io:read_bits_int_be(1)
+  self.ignore_replay_counter = self._io:read_bits_int_be(1) ~= 0
   self.message_pair = self._io:read_bits_int_be(7)
   self._io:align_to_byte()
   self.len_essid = self._io:read_u1()

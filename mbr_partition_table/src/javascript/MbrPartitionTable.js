@@ -8,7 +8,7 @@
   } else {
     root.MbrPartitionTable = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * MBR (Master Boot Record) partition table is a traditional way of
  * MS-DOS to partition larger hard disc drives into distinct
@@ -31,9 +31,9 @@ var MbrPartitionTable = (function() {
   }
   MbrPartitionTable.prototype._read = function() {
     this.bootstrapCode = this._io.readBytes(446);
-    this.partitions = new Array(4);
+    this.partitions = [];
     for (var i = 0; i < 4; i++) {
-      this.partitions[i] = new PartitionEntry(this._io, this, this._root);
+      this.partitions.push(new PartitionEntry(this._io, this, this._root));
     }
     this.bootSignature = this._io.readBytes(2);
     if (!((KaitaiStream.byteArrayCompare(this.bootSignature, [85, 170]) == 0))) {

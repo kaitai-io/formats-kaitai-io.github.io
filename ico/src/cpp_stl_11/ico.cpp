@@ -16,9 +16,8 @@ void ico_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x01\x00", 4), magic(), _io(), std::string("/seq/0"));
     }
     m_num_images = m__io->read_u2le();
-    int l_images = num_images();
     m_images = std::unique_ptr<std::vector<std::unique_ptr<icon_dir_entry_t>>>(new std::vector<std::unique_ptr<icon_dir_entry_t>>());
-    m_images->reserve(l_images);
+    const int l_images = num_images();
     for (int i = 0; i < l_images; i++) {
         m_images->push_back(std::move(std::unique_ptr<icon_dir_entry_t>(new icon_dir_entry_t(m__io, this, m__root))));
     }

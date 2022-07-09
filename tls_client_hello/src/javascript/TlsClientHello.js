@@ -8,7 +8,7 @@
   } else {
     root.TlsClientHello = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var TlsClientHello = (function() {
   function TlsClientHello(_io, _parent, _root) {
     this._io = _io;
@@ -108,9 +108,9 @@ var TlsClientHello = (function() {
     }
     CipherSuites.prototype._read = function() {
       this.len = this._io.readU2be();
-      this.cipherSuites = new Array(Math.floor(this.len / 2));
+      this.cipherSuites = [];
       for (var i = 0; i < Math.floor(this.len / 2); i++) {
-        this.cipherSuites[i] = this._io.readU2be();
+        this.cipherSuites.push(this._io.readU2be());
       }
     }
 

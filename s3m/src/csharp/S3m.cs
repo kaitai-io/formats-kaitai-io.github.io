@@ -69,24 +69,24 @@ namespace Kaitai
             _hasCustomPan = m_io.ReadU1();
             _reserved2 = m_io.ReadBytes(8);
             _ofsSpecial = m_io.ReadU2le();
-            _channels = new List<Channel>((int) (32));
+            _channels = new List<Channel>();
             for (var i = 0; i < 32; i++)
             {
                 _channels.Add(new Channel(m_io, this, m_root));
             }
             _orders = m_io.ReadBytes(NumOrders);
-            _instruments = new List<InstrumentPtr>((int) (NumInstruments));
+            _instruments = new List<InstrumentPtr>();
             for (var i = 0; i < NumInstruments; i++)
             {
                 _instruments.Add(new InstrumentPtr(m_io, this, m_root));
             }
-            _patterns = new List<PatternPtr>((int) (NumPatterns));
+            _patterns = new List<PatternPtr>();
             for (var i = 0; i < NumPatterns; i++)
             {
                 _patterns.Add(new PatternPtr(m_io, this, m_root));
             }
             if (HasCustomPan == 252) {
-                _channelPans = new List<ChannelPan>((int) (32));
+                _channelPans = new List<ChannelPan>();
                 for (var i = 0; i < 32; i++)
                 {
                     _channelPans.Add(new ChannelPan(m_io, this, m_root));

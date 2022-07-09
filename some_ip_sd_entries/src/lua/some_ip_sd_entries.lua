@@ -109,7 +109,7 @@ end
 
 function SomeIpSdEntries.SdEntry.SdEventgroupEntry:_read()
   self.reserved = self._io:read_u1()
-  self.initial_data_requested = self._io:read_bits_int_be(1)
+  self.initial_data_requested = self._io:read_bits_int_be(1) ~= 0
   self.reserved2 = self._io:read_bits_int_be(3)
   self.counter = self._io:read_bits_int_be(4)
   self._io:align_to_byte()

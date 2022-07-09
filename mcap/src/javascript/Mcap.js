@@ -8,7 +8,7 @@
   } else {
     root.Mcap = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * MCAP is a modular container format and logging library for pub/sub messages with
  * arbitrary message serialization. It is primarily intended for use in robotics
@@ -65,7 +65,7 @@ var Mcap = (function() {
   }
   Mcap.prototype._read = function() {
     this.headerMagic = new Magic(this._io, this, this._root);
-    this.records = []
+    this.records = [];
     var i = 0;
     do {
       var _ = new Record(this._io, this, this._root);

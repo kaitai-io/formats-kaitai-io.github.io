@@ -8,7 +8,7 @@
   } else {
     root.Elf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532|Source}
  * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html|Source}
@@ -2166,20 +2166,20 @@ var Elf = (function() {
         var _pos = this._io.pos;
         this._io.seek(this.programHeaderOffset);
         if (this._is_le) {
-          this._raw__m_programHeaders = new Array(this.qtyProgramHeader);
-          this._m_programHeaders = new Array(this.qtyProgramHeader);
+          this._raw__m_programHeaders = [];
+          this._m_programHeaders = [];
           for (var i = 0; i < this.qtyProgramHeader; i++) {
-            this._raw__m_programHeaders[i] = this._io.readBytes(this.programHeaderEntrySize);
+            this._raw__m_programHeaders.push(this._io.readBytes(this.programHeaderEntrySize));
             var _io__raw__m_programHeaders = new KaitaiStream(this._raw__m_programHeaders[i]);
-            this._m_programHeaders[i] = new ProgramHeader(_io__raw__m_programHeaders, this, this._root, this._is_le);
+            this._m_programHeaders.push(new ProgramHeader(_io__raw__m_programHeaders, this, this._root, this._is_le));
           }
         } else {
-          this._raw__m_programHeaders = new Array(this.qtyProgramHeader);
-          this._m_programHeaders = new Array(this.qtyProgramHeader);
+          this._raw__m_programHeaders = [];
+          this._m_programHeaders = [];
           for (var i = 0; i < this.qtyProgramHeader; i++) {
-            this._raw__m_programHeaders[i] = this._io.readBytes(this.programHeaderEntrySize);
+            this._raw__m_programHeaders.push(this._io.readBytes(this.programHeaderEntrySize));
             var _io__raw__m_programHeaders = new KaitaiStream(this._raw__m_programHeaders[i]);
-            this._m_programHeaders[i] = new ProgramHeader(_io__raw__m_programHeaders, this, this._root, this._is_le);
+            this._m_programHeaders.push(new ProgramHeader(_io__raw__m_programHeaders, this, this._root, this._is_le));
           }
         }
         this._io.seek(_pos);
@@ -2193,20 +2193,20 @@ var Elf = (function() {
         var _pos = this._io.pos;
         this._io.seek(this.sectionHeaderOffset);
         if (this._is_le) {
-          this._raw__m_sectionHeaders = new Array(this.qtySectionHeader);
-          this._m_sectionHeaders = new Array(this.qtySectionHeader);
+          this._raw__m_sectionHeaders = [];
+          this._m_sectionHeaders = [];
           for (var i = 0; i < this.qtySectionHeader; i++) {
-            this._raw__m_sectionHeaders[i] = this._io.readBytes(this.sectionHeaderEntrySize);
+            this._raw__m_sectionHeaders.push(this._io.readBytes(this.sectionHeaderEntrySize));
             var _io__raw__m_sectionHeaders = new KaitaiStream(this._raw__m_sectionHeaders[i]);
-            this._m_sectionHeaders[i] = new SectionHeader(_io__raw__m_sectionHeaders, this, this._root, this._is_le);
+            this._m_sectionHeaders.push(new SectionHeader(_io__raw__m_sectionHeaders, this, this._root, this._is_le));
           }
         } else {
-          this._raw__m_sectionHeaders = new Array(this.qtySectionHeader);
-          this._m_sectionHeaders = new Array(this.qtySectionHeader);
+          this._raw__m_sectionHeaders = [];
+          this._m_sectionHeaders = [];
           for (var i = 0; i < this.qtySectionHeader; i++) {
-            this._raw__m_sectionHeaders[i] = this._io.readBytes(this.sectionHeaderEntrySize);
+            this._raw__m_sectionHeaders.push(this._io.readBytes(this.sectionHeaderEntrySize));
             var _io__raw__m_sectionHeaders = new KaitaiStream(this._raw__m_sectionHeaders[i]);
-            this._m_sectionHeaders[i] = new SectionHeader(_io__raw__m_sectionHeaders, this, this._root, this._is_le);
+            this._m_sectionHeaders.push(new SectionHeader(_io__raw__m_sectionHeaders, this, this._root, this._is_le));
           }
         }
         this._io.seek(_pos);

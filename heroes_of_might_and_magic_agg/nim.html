@@ -258,14 +258,16 @@ section#format-index .row {
     <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">HeroesOfMightAndMagicAgg_Entry</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawFilenamesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
-    <span class="p">`</span><span class="n">filenamesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">HeroesOfMightAndMagicAgg_Filename</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">filenamesInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">HeroesOfMightAndMagicAgg_Filename</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">filenamesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">HeroesOfMightAndMagicAgg_Entry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">hash</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">offset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">size2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">HeroesOfMightAndMagicAgg</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">HeroesOfMightAndMagicAgg_Filename</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">str</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">HeroesOfMightAndMagicAgg</span>
@@ -296,7 +298,7 @@ section#format-index .row {
     <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">filenames</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">HeroesOfMightAndMagicAgg</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">HeroesOfMightAndMagicAgg_Filename</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">filenamesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">filenamesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">filenamesInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="o">[</span><span class="p">^</span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="o">[</span><span class="p">^</span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="n">size</span><span class="p">)))</span>
@@ -307,8 +309,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">HeroesOfMightAndMagicAgg_Filename</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawFilenamesInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">filenamesInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">filenamesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">filenamesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">filenamesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">filenamesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[HeroesOfMightAndMagicAgg], filename: string): HeroesOfMightAndMagicAgg =</span>
   <span class="n">HeroesOfMightAndMagicAgg</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -331,15 +333,15 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">size2</span> <span class="o">=</span> <span class="n">size2Expr</span>
 
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">HeroesOfMightAndMagicAgg_Entry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">offset</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[HeroesOfMightAndMagicAgg_Entry], filename: string): HeroesOfMightAndMagicAgg_Entry =</span>
   <span class="n">HeroesOfMightAndMagicAgg_Entry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

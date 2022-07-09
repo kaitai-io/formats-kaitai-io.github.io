@@ -57,13 +57,13 @@ class Ogg < Kaitai::Struct::Struct
       @page_seq_num = @_io.read_u4le
       @crc32 = @_io.read_u4le
       @num_segments = @_io.read_u1
-      @len_segments = Array.new(num_segments)
+      @len_segments = []
       (num_segments).times { |i|
-        @len_segments[i] = @_io.read_u1
+        @len_segments << @_io.read_u1
       }
-      @segments = Array.new(num_segments)
+      @segments = []
       (num_segments).times { |i|
-        @segments[i] = @_io.read_bytes(len_segments[i])
+        @segments << @_io.read_bytes(len_segments[i])
       }
       self
     end

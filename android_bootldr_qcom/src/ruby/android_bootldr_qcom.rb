@@ -124,9 +124,9 @@ class AndroidBootldrQcom < Kaitai::Struct::Struct
     @num_images = @_io.read_u4le
     @ofs_img_bodies = @_io.read_u4le
     @bootloader_size = @_io.read_u4le
-    @img_headers = Array.new(num_images)
+    @img_headers = []
     (num_images).times { |i|
-      @img_headers[i] = ImgHeader.new(@_io, self, @_root)
+      @img_headers << ImgHeader.new(@_io, self, @_root)
     }
     self
   end
@@ -167,9 +167,9 @@ class AndroidBootldrQcom < Kaitai::Struct::Struct
     return @img_bodies unless @img_bodies.nil?
     _pos = @_io.pos
     @_io.seek(ofs_img_bodies)
-    @img_bodies = Array.new(num_images)
+    @img_bodies = []
     (num_images).times { |i|
-      @img_bodies[i] = ImgBody.new(@_io, self, @_root, i)
+      @img_bodies << ImgBody.new(@_io, self, @_root, i)
     }
     @_io.seek(_pos)
     @img_bodies

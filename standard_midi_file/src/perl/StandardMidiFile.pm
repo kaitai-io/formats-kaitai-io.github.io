@@ -39,7 +39,7 @@ sub _read {
     $self->{tracks} = ();
     my $n_tracks = $self->hdr()->num_tracks();
     for (my $i = 0; $i < $n_tracks; $i++) {
-        $self->{tracks}[$i] = StandardMidiFile::Track->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{tracks}}, StandardMidiFile::Track->new($self->{_io}, $self, $self->{_root});
     }
 }
 

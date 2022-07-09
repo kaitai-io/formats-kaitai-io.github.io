@@ -27,25 +27,25 @@ class Nitf < Kaitai::Struct::Struct
 
   def _read
     @header = Header.new(@_io, self, @_root)
-    @image_segments = Array.new(header.num_image_segments.to_i)
+    @image_segments = []
     (header.num_image_segments.to_i).times { |i|
-      @image_segments[i] = ImageSegment.new(@_io, self, @_root, i)
+      @image_segments << ImageSegment.new(@_io, self, @_root, i)
     }
-    @graphics_segments = Array.new(header.num_graphics_segments.to_i)
+    @graphics_segments = []
     (header.num_graphics_segments.to_i).times { |i|
-      @graphics_segments[i] = GraphicsSegment.new(@_io, self, @_root, i)
+      @graphics_segments << GraphicsSegment.new(@_io, self, @_root, i)
     }
-    @text_segments = Array.new(header.num_text_files.to_i)
+    @text_segments = []
     (header.num_text_files.to_i).times { |i|
-      @text_segments[i] = TextSegment.new(@_io, self, @_root, i)
+      @text_segments << TextSegment.new(@_io, self, @_root, i)
     }
-    @data_extension_segments = Array.new(header.num_data_extension.to_i)
+    @data_extension_segments = []
     (header.num_data_extension.to_i).times { |i|
-      @data_extension_segments[i] = DataExtensionSegment.new(@_io, self, @_root, i)
+      @data_extension_segments << DataExtensionSegment.new(@_io, self, @_root, i)
     }
-    @reserved_extension_segments = Array.new(header.num_reserved_extension.to_i)
+    @reserved_extension_segments = []
     (header.num_reserved_extension.to_i).times { |i|
-      @reserved_extension_segments[i] = ReservedExtensionSegment.new(@_io, self, @_root, i)
+      @reserved_extension_segments << ReservedExtensionSegment.new(@_io, self, @_root, i)
     }
     self
   end
@@ -135,9 +135,9 @@ class Nitf < Kaitai::Struct::Struct
       if num_luts.to_i != 0
         @num_lut_entries = (@_io.read_bytes(5)).force_encoding("UTF-8")
       end
-      @luts = Array.new(num_luts.to_i)
+      @luts = []
       (num_luts.to_i).times { |i|
-        @luts[i] = @_io.read_bytes(num_lut_entries.to_i)
+        @luts << @_io.read_bytes(num_lut_entries.to_i)
       }
       self
     end
@@ -330,15 +330,15 @@ class Nitf < Kaitai::Struct::Struct
       @tpxcdlnth = @_io.read_u2be
       @tpxcd = @_io.read_bytes(tpxcd_size)
       if has_bmr
-        @bmrbnd = Array.new(bmrtmr_count)
+        @bmrbnd = []
         (bmrtmr_count).times { |i|
-          @bmrbnd[i] = @_io.read_u4be
+          @bmrbnd << @_io.read_u4be
         }
       end
       if has_tmr
-        @tmrbnd = Array.new(bmrtmr_count)
+        @tmrbnd = []
         (bmrtmr_count).times { |i|
-          @tmrbnd[i] = @_io.read_u4be
+          @tmrbnd << @_io.read_u4be
         }
       end
       self
@@ -520,9 +520,9 @@ class Nitf < Kaitai::Struct::Struct
       @image_coordinate_rep = (@_io.read_bytes(1)).force_encoding("UTF-8")
       @image_geo_loc = (@_io.read_bytes(60)).force_encoding("UTF-8")
       @num_img_comments = (@_io.read_bytes(1)).force_encoding("UTF-8")
-      @img_comments = Array.new(num_img_comments.to_i)
+      @img_comments = []
       (num_img_comments.to_i).times { |i|
-        @img_comments[i] = ImageComment.new(@_io, self, @_root)
+        @img_comments << ImageComment.new(@_io, self, @_root)
       }
       @img_compression = (@_io.read_bytes(2)).force_encoding("UTF-8")
       @compression_rate_code = (@_io.read_bytes(4)).force_encoding("UTF-8")
@@ -530,9 +530,9 @@ class Nitf < Kaitai::Struct::Struct
       if num_bands.to_i == 0
         @num_multispectral_bands = (@_io.read_bytes(5)).force_encoding("UTF-8")
       end
-      @bands = Array.new((num_bands.to_i != 0 ? num_bands.to_i : num_multispectral_bands.to_i))
+      @bands = []
       ((num_bands.to_i != 0 ? num_bands.to_i : num_multispectral_bands.to_i)).times { |i|
-        @bands[i] = BandInfo.new(@_io, self, @_root)
+        @bands << BandInfo.new(@_io, self, @_root)
       }
       @img_sync_code = (@_io.read_bytes(1)).force_encoding("UTF-8")
       @img_mode = (@_io.read_bytes(1)).force_encoding("UTF-8")
@@ -550,9 +550,9 @@ class Nitf < Kaitai::Struct::Struct
         @user_def_overflow = (@_io.read_bytes(3)).force_encoding("UTF-8")
       end
       if user_def_img_data_len.to_i > 2
-        @user_def_img_data = Array.new((user_def_img_data_len.to_i - 3))
+        @user_def_img_data = []
         ((user_def_img_data_len.to_i - 3)).times { |i|
-          @user_def_img_data[i] = @_io.read_u1
+          @user_def_img_data << @_io.read_u1
         }
       end
       @image_extended_sub_header = TreHeader.new(@_io, self, @_root)
@@ -727,30 +727,30 @@ class Nitf < Kaitai::Struct::Struct
       @file_length = (@_io.read_bytes(12)).force_encoding("UTF-8")
       @file_header_length = (@_io.read_bytes(6)).force_encoding("UTF-8")
       @num_image_segments = (@_io.read_bytes(3)).force_encoding("UTF-8")
-      @linfo = Array.new(num_image_segments.to_i)
+      @linfo = []
       (num_image_segments.to_i).times { |i|
-        @linfo[i] = LengthImageInfo.new(@_io, self, @_root)
+        @linfo << LengthImageInfo.new(@_io, self, @_root)
       }
       @num_graphics_segments = (@_io.read_bytes(3)).force_encoding("UTF-8")
-      @lnnfo = Array.new(num_graphics_segments.to_i)
+      @lnnfo = []
       (num_graphics_segments.to_i).times { |i|
-        @lnnfo[i] = LengthGraphicInfo.new(@_io, self, @_root)
+        @lnnfo << LengthGraphicInfo.new(@_io, self, @_root)
       }
       @reserved_numx = (@_io.read_bytes(3)).force_encoding("UTF-8")
       @num_text_files = (@_io.read_bytes(3)).force_encoding("UTF-8")
-      @ltnfo = Array.new(num_text_files.to_i)
+      @ltnfo = []
       (num_text_files.to_i).times { |i|
-        @ltnfo[i] = LengthTextInfo.new(@_io, self, @_root)
+        @ltnfo << LengthTextInfo.new(@_io, self, @_root)
       }
       @num_data_extension = (@_io.read_bytes(3)).force_encoding("UTF-8")
-      @ldnfo = Array.new(num_data_extension.to_i)
+      @ldnfo = []
       (num_data_extension.to_i).times { |i|
-        @ldnfo[i] = LengthDataInfo.new(@_io, self, @_root)
+        @ldnfo << LengthDataInfo.new(@_io, self, @_root)
       }
       @num_reserved_extension = (@_io.read_bytes(3)).force_encoding("UTF-8")
-      @lrnfo = Array.new(num_reserved_extension.to_i)
+      @lrnfo = []
       (num_reserved_extension.to_i).times { |i|
-        @lrnfo[i] = LengthReservedInfo.new(@_io, self, @_root)
+        @lrnfo << LengthReservedInfo.new(@_io, self, @_root)
       }
       @user_defined_header = TreHeader.new(@_io, self, @_root)
       @extended_header = TreHeader.new(@_io, self, @_root)
@@ -803,9 +803,9 @@ class Nitf < Kaitai::Struct::Struct
       @des_defined_subheader_fields_len = (@_io.read_bytes(4)).force_encoding("UTF-8")
       @sfh_l1 = (@_io.read_bytes(7)).force_encoding("UTF-8")
       @sfh_delim1 = @_io.read_u4be
-      @sfh_dr = Array.new(sfh_l1.to_i)
+      @sfh_dr = []
       (sfh_l1.to_i).times { |i|
-        @sfh_dr[i] = @_io.read_u1
+        @sfh_dr << @_io.read_u1
       }
       @sfh_delim2 = @_io.read_u4be
       @sfh_l2 = (@_io.read_bytes(7)).force_encoding("UTF-8")
@@ -843,9 +843,9 @@ class Nitf < Kaitai::Struct::Struct
         @header_overflow = (@_io.read_bytes(3)).force_encoding("UTF-8")
       end
       if header_data_length.to_i > 2
-        @header_data = Array.new((header_data_length.to_i - 3))
+        @header_data = []
         ((header_data_length.to_i - 3)).times { |i|
-          @header_data[i] = @_io.read_u1
+          @header_data << @_io.read_u1
         }
       end
       self

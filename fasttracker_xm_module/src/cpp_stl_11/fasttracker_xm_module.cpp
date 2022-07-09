@@ -19,15 +19,13 @@ void fasttracker_xm_module_t::_read() {
     m__raw_header = m__io->read_bytes((preheader()->header_size() - 4));
     m__io__raw_header = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_header));
     m_header = std::unique_ptr<header_t>(new header_t(m__io__raw_header.get(), this, m__root));
-    int l_patterns = header()->num_patterns();
     m_patterns = std::unique_ptr<std::vector<std::unique_ptr<pattern_t>>>(new std::vector<std::unique_ptr<pattern_t>>());
-    m_patterns->reserve(l_patterns);
+    const int l_patterns = header()->num_patterns();
     for (int i = 0; i < l_patterns; i++) {
         m_patterns->push_back(std::move(std::unique_ptr<pattern_t>(new pattern_t(m__io, this, m__root))));
     }
-    int l_instruments = header()->num_instruments();
     m_instruments = std::unique_ptr<std::vector<std::unique_ptr<instrument_t>>>(new std::vector<std::unique_ptr<instrument_t>>());
-    m_instruments->reserve(l_instruments);
+    const int l_instruments = header()->num_instruments();
     for (int i = 0; i < l_instruments; i++) {
         m_instruments->push_back(std::move(std::unique_ptr<instrument_t>(new instrument_t(m__io, this, m__root))));
     }
@@ -209,9 +207,8 @@ void fasttracker_xm_module_t::header_t::_read() {
     m_flags = std::unique_ptr<flags_t>(new flags_t(m__io, this, m__root));
     m_default_tempo = m__io->read_u2le();
     m_default_bpm = m__io->read_u2le();
-    int l_pattern_order_table = 256;
     m_pattern_order_table = std::unique_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>());
-    m_pattern_order_table->reserve(l_pattern_order_table);
+    const int l_pattern_order_table = 256;
     for (int i = 0; i < l_pattern_order_table; i++) {
         m_pattern_order_table->push_back(std::move(m__io->read_u1()));
     }
@@ -239,15 +236,13 @@ void fasttracker_xm_module_t::instrument_t::_read() {
     m__raw_header = m__io->read_bytes((header_size() - 4));
     m__io__raw_header = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_header));
     m_header = std::unique_ptr<header_t>(new header_t(m__io__raw_header.get(), this, m__root));
-    int l_samples_headers = header()->num_samples();
     m_samples_headers = std::unique_ptr<std::vector<std::unique_ptr<sample_header_t>>>(new std::vector<std::unique_ptr<sample_header_t>>());
-    m_samples_headers->reserve(l_samples_headers);
+    const int l_samples_headers = header()->num_samples();
     for (int i = 0; i < l_samples_headers; i++) {
         m_samples_headers->push_back(std::move(std::unique_ptr<sample_header_t>(new sample_header_t(m__io, this, m__root))));
     }
-    int l_samples = header()->num_samples();
     m_samples = std::unique_ptr<std::vector<std::unique_ptr<samples_data_t>>>(new std::vector<std::unique_ptr<samples_data_t>>());
-    m_samples->reserve(l_samples);
+    const int l_samples = header()->num_samples();
     for (int i = 0; i < l_samples; i++) {
         m_samples->push_back(std::move(std::unique_ptr<samples_data_t>(new samples_data_t(samples_headers()->at(i), m__io, this, m__root))));
     }
@@ -298,21 +293,18 @@ fasttracker_xm_module_t::instrument_t::extra_header_t::extra_header_t(kaitai::ks
 
 void fasttracker_xm_module_t::instrument_t::extra_header_t::_read() {
     m_len_sample_header = m__io->read_u4le();
-    int l_idx_sample_per_note = 96;
     m_idx_sample_per_note = std::unique_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>());
-    m_idx_sample_per_note->reserve(l_idx_sample_per_note);
+    const int l_idx_sample_per_note = 96;
     for (int i = 0; i < l_idx_sample_per_note; i++) {
         m_idx_sample_per_note->push_back(std::move(m__io->read_u1()));
     }
-    int l_volume_points = 12;
     m_volume_points = std::unique_ptr<std::vector<std::unique_ptr<envelope_point_t>>>(new std::vector<std::unique_ptr<envelope_point_t>>());
-    m_volume_points->reserve(l_volume_points);
+    const int l_volume_points = 12;
     for (int i = 0; i < l_volume_points; i++) {
         m_volume_points->push_back(std::move(std::unique_ptr<envelope_point_t>(new envelope_point_t(m__io, this, m__root))));
     }
-    int l_panning_points = 12;
     m_panning_points = std::unique_ptr<std::vector<std::unique_ptr<envelope_point_t>>>(new std::vector<std::unique_ptr<envelope_point_t>>());
-    m_panning_points->reserve(l_panning_points);
+    const int l_panning_points = 12;
     for (int i = 0; i < l_panning_points; i++) {
         m_panning_points->push_back(std::move(std::unique_ptr<envelope_point_t>(new envelope_point_t(m__io, this, m__root))));
     }

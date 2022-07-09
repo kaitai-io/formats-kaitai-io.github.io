@@ -34,9 +34,9 @@ class SystemdJournal < Kaitai::Struct::Struct
     @_raw_header = @_io.read_bytes(len_header)
     _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
     @header = Header.new(_io__raw_header, self, @_root)
-    @objects = Array.new(header.num_objects)
+    @objects = []
     (header.num_objects).times { |i|
-      @objects[i] = JournalObject.new(@_io, self, @_root)
+      @objects << JournalObject.new(@_io, self, @_root)
     }
     self
   end

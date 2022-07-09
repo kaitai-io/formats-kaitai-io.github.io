@@ -8,7 +8,7 @@
   } else {
     root.UefiTe = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * This type of executables could be found inside the UEFI firmware. The UEFI
  * firmware is stored in SPI flash memory, which is a chip soldered on a
@@ -43,9 +43,9 @@ var UefiTe = (function() {
     this._raw_teHdr = this._io.readBytes(40);
     var _io__raw_teHdr = new KaitaiStream(this._raw_teHdr);
     this.teHdr = new TeHeader(_io__raw_teHdr, this, this._root);
-    this.sections = new Array(this.teHdr.numSections);
+    this.sections = [];
     for (var i = 0; i < this.teHdr.numSections; i++) {
-      this.sections[i] = new Section(this._io, this, this._root);
+      this.sections.push(new Section(this._io, this, this._root));
     }
   }
 

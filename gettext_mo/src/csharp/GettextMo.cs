@@ -604,13 +604,13 @@ namespace Kaitai
                     long _pos = io.Pos;
                     io.Seek(OfsOriginals);
                     if (m_isLe == true) {
-                        _originals = new List<Descriptor>((int) (NumTranslations));
+                        _originals = new List<Descriptor>();
                         for (var i = 0; i < NumTranslations; i++)
                         {
                             _originals.Add(new Descriptor(io, this, m_root, m_isLe));
                         }
                     } else {
-                        _originals = new List<Descriptor>((int) (NumTranslations));
+                        _originals = new List<Descriptor>();
                         for (var i = 0; i < NumTranslations; i++)
                         {
                             _originals.Add(new Descriptor(io, this, m_root, m_isLe));
@@ -633,13 +633,13 @@ namespace Kaitai
                     long _pos = io.Pos;
                     io.Seek(OfsTranslations);
                     if (m_isLe == true) {
-                        _translations = new List<Descriptor>((int) (NumTranslations));
+                        _translations = new List<Descriptor>();
                         for (var i = 0; i < NumTranslations; i++)
                         {
                             _translations.Add(new Descriptor(io, this, m_root, m_isLe));
                         }
                     } else {
-                        _translations = new List<Descriptor>((int) (NumTranslations));
+                        _translations = new List<Descriptor>();
                         for (var i = 0; i < NumTranslations; i++)
                         {
                             _translations.Add(new Descriptor(io, this, m_root, m_isLe));
@@ -663,13 +663,13 @@ namespace Kaitai
                         long _pos = io.Pos;
                         io.Seek(OfsHashtableItems);
                         if (m_isLe == true) {
-                            _hashtableItems = new List<HashtableItem>((int) (NumHashtableItems));
+                            _hashtableItems = new List<HashtableItem>();
                             for (var i = 0; i < NumHashtableItems; i++)
                             {
                                 _hashtableItems.Add(new HashtableItem(io, this, m_root, m_isLe));
                             }
                         } else {
-                            _hashtableItems = new List<HashtableItem>((int) (NumHashtableItems));
+                            _hashtableItems = new List<HashtableItem>();
                             for (var i = 0; i < NumHashtableItems; i++)
                             {
                                 _hashtableItems.Add(new HashtableItem(io, this, m_root, m_isLe));

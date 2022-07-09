@@ -8,7 +8,7 @@
   } else {
     root.RenderwareBinaryStream = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://gtamods.com/wiki/RenderWare_binary_stream_file|Source}
  */
@@ -448,9 +448,9 @@ var RenderwareBinaryStream = (function() {
       if (!(this.isNative)) {
         this.geometry = new GeometryNonNative(this._io, this, this._root);
       }
-      this.morphTargets = new Array(this.numMorphTargets);
+      this.morphTargets = [];
       for (var i = 0; i < this.numMorphTargets; i++) {
-        this.morphTargets[i] = new MorphTarget(this._io, this, this._root);
+        this.morphTargets.push(new MorphTarget(this._io, this, this._root));
       }
     }
     Object.defineProperty(StructGeometry.prototype, 'isTextured', {
@@ -499,20 +499,20 @@ var RenderwareBinaryStream = (function() {
     }
     GeometryNonNative.prototype._read = function() {
       if (this._parent.isPrelit) {
-        this.prelitColors = new Array(this._parent.numVertices);
+        this.prelitColors = [];
         for (var i = 0; i < this._parent.numVertices; i++) {
-          this.prelitColors[i] = new Rgba(this._io, this, this._root);
+          this.prelitColors.push(new Rgba(this._io, this, this._root));
         }
       }
       if ( ((this._parent.isTextured) || (this._parent.isTextured2)) ) {
-        this.texCoords = new Array(this._parent.numVertices);
+        this.texCoords = [];
         for (var i = 0; i < this._parent.numVertices; i++) {
-          this.texCoords[i] = new TexCoord(this._io, this, this._root);
+          this.texCoords.push(new TexCoord(this._io, this, this._root));
         }
       }
-      this.triangles = new Array(this._parent.numTriangles);
+      this.triangles = [];
       for (var i = 0; i < this._parent.numTriangles; i++) {
-        this.triangles[i] = new Triangle(this._io, this, this._root);
+        this.triangles.push(new Triangle(this._io, this, this._root));
       }
     }
 
@@ -587,15 +587,15 @@ var RenderwareBinaryStream = (function() {
       this.hasVertices = this._io.readU4le();
       this.hasNormals = this._io.readU4le();
       if (this.hasVertices != 0) {
-        this.vertices = new Array(this._parent.numVertices);
+        this.vertices = [];
         for (var i = 0; i < this._parent.numVertices; i++) {
-          this.vertices[i] = new Vector3d(this._io, this, this._root);
+          this.vertices.push(new Vector3d(this._io, this, this._root));
         }
       }
       if (this.hasNormals != 0) {
-        this.normals = new Array(this._parent.numVertices);
+        this.normals = [];
         for (var i = 0; i < this._parent.numVertices; i++) {
-          this.normals[i] = new Vector3d(this._io, this, this._root);
+          this.normals.push(new Vector3d(this._io, this, this._root));
         }
       }
     }
@@ -638,9 +638,9 @@ var RenderwareBinaryStream = (function() {
     }
     StructFrameList.prototype._read = function() {
       this.numFrames = this._io.readU4le();
-      this.frames = new Array(this.numFrames);
+      this.frames = [];
       for (var i = 0; i < this.numFrames; i++) {
-        this.frames[i] = new Frame(this._io, this, this._root);
+        this.frames.push(new Frame(this._io, this, this._root));
       }
     }
 
@@ -660,9 +660,9 @@ var RenderwareBinaryStream = (function() {
       this._read();
     }
     Matrix.prototype._read = function() {
-      this.entries = new Array(3);
+      this.entries = [];
       for (var i = 0; i < 3; i++) {
-        this.entries[i] = new Vector3d(this._io, this, this._root);
+        this.entries.push(new Vector3d(this._io, this, this._root));
       }
     }
 

@@ -189,7 +189,7 @@ end
 
 function FasttrackerXmModule.Flags:_read()
   self.reserved = self._io:read_bits_int_be(15)
-  self.freq_table_type = self._io:read_bits_int_be(1)
+  self.freq_table_type = self._io:read_bits_int_be(1) ~= 0
 end
 
 -- 
@@ -437,7 +437,7 @@ end
 
 function FasttrackerXmModule.Instrument.SampleHeader.LoopType:_read()
   self.reserved0 = self._io:read_bits_int_be(3)
-  self.is_sample_data_16_bit = self._io:read_bits_int_be(1)
+  self.is_sample_data_16_bit = self._io:read_bits_int_be(1) ~= 0
   self.reserved1 = self._io:read_bits_int_be(2)
   self.loop_type = FasttrackerXmModule.Instrument.SampleHeader.LoopType.LoopType(self._io:read_bits_int_be(2))
 end

@@ -75,21 +75,21 @@ public class S3m extends KaitaiStruct {
         this.hasCustomPan = this._io.readU1();
         this.reserved2 = this._io.readBytes(8);
         this.ofsSpecial = this._io.readU2le();
-        channels = new ArrayList<Channel>(((Number) (32)).intValue());
+        this.channels = new ArrayList<Channel>();
         for (int i = 0; i < 32; i++) {
             this.channels.add(new Channel(this._io, this, _root));
         }
         this.orders = this._io.readBytes(numOrders());
-        instruments = new ArrayList<InstrumentPtr>(((Number) (numInstruments())).intValue());
+        this.instruments = new ArrayList<InstrumentPtr>();
         for (int i = 0; i < numInstruments(); i++) {
             this.instruments.add(new InstrumentPtr(this._io, this, _root));
         }
-        patterns = new ArrayList<PatternPtr>(((Number) (numPatterns())).intValue());
+        this.patterns = new ArrayList<PatternPtr>();
         for (int i = 0; i < numPatterns(); i++) {
             this.patterns.add(new PatternPtr(this._io, this, _root));
         }
         if (hasCustomPan() == 252) {
-            channelPans = new ArrayList<ChannelPan>(((Number) (32)).intValue());
+            this.channelPans = new ArrayList<ChannelPan>();
             for (int i = 0; i < 32; i++) {
                 this.channelPans.add(new ChannelPan(this._io, this, _root));
             }

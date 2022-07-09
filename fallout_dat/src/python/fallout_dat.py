@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class FalloutDat(KaitaiStruct):
@@ -25,13 +24,13 @@ class FalloutDat(KaitaiStruct):
         self.unknown1 = self._io.read_u4be()
         self.unknown2 = self._io.read_u4be()
         self.timestamp = self._io.read_u4be()
-        self.folder_names = [None] * (self.folder_count)
+        self.folder_names = []
         for i in range(self.folder_count):
-            self.folder_names[i] = FalloutDat.Pstr(self._io, self, self._root)
+            self.folder_names.append(FalloutDat.Pstr(self._io, self, self._root))
 
-        self.folders = [None] * (self.folder_count)
+        self.folders = []
         for i in range(self.folder_count):
-            self.folders[i] = FalloutDat.Folder(self._io, self, self._root)
+            self.folders.append(FalloutDat.Folder(self._io, self, self._root))
 
 
     class Pstr(KaitaiStruct):
@@ -58,9 +57,9 @@ class FalloutDat(KaitaiStruct):
             self.unknown = self._io.read_u4be()
             self.flags = self._io.read_u4be()
             self.timestamp = self._io.read_u4be()
-            self.files = [None] * (self.file_count)
+            self.files = []
             for i in range(self.file_count):
-                self.files[i] = FalloutDat.File(self._io, self, self._root)
+                self.files.append(FalloutDat.File(self._io, self, self._root))
 
 
 
@@ -81,14 +80,14 @@ class FalloutDat(KaitaiStruct):
         @property
         def contents(self):
             if hasattr(self, '_m_contents'):
-                return self._m_contents if hasattr(self, '_m_contents') else None
+                return self._m_contents
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.offset)
             self._m_contents = io.read_bytes((self.size_unpacked if self.flags == FalloutDat.Compression.none else self.size_packed))
             io.seek(_pos)
-            return self._m_contents if hasattr(self, '_m_contents') else None
+            return getattr(self, '_m_contents', None)
 
 
 

@@ -39,13 +39,13 @@ sub _read {
     $self->{vins} = ();
     my $n_vins = $self->num_vins();
     for (my $i = 0; $i < $n_vins; $i++) {
-        $self->{vins}[$i] = BitcoinTransaction::Vin->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{vins}}, BitcoinTransaction::Vin->new($self->{_io}, $self, $self->{_root});
     }
     $self->{num_vouts} = $self->{_io}->read_u1();
     $self->{vouts} = ();
     my $n_vouts = $self->num_vouts();
     for (my $i = 0; $i < $n_vouts; $i++) {
-        $self->{vouts}[$i] = BitcoinTransaction::Vout->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{vouts}}, BitcoinTransaction::Vout->new($self->{_io}, $self, $self->{_root});
     }
     $self->{locktime} = $self->{_io}->read_u4le();
 }

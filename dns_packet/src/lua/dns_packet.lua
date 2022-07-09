@@ -207,7 +207,7 @@ function DnsPacket.DomainName:_read()
   self.name = {}
   local i = 0
   while true do
-    _ = DnsPacket.Label(self._io, self, self._root)
+    local _ = DnsPacket.Label(self._io, self, self._root)
     self.name[i + 1] = _
     if  ((_.length == 0) or (_.length >= 192))  then
       break
@@ -222,137 +222,137 @@ end
 DnsPacket.AddressV6 = class.class(KaitaiStruct)
 
 function DnsPacket.AddressV6:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.AddressV6:_read()
-self.ip_v6 = self._io:read_bytes(16)
+  self.ip_v6 = self._io:read_bytes(16)
 end
 
 
 DnsPacket.Service = class.class(KaitaiStruct)
 
 function DnsPacket.Service:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.Service:_read()
-self.priority = self._io:read_u2be()
-self.weight = self._io:read_u2be()
-self.port = self._io:read_u2be()
-self.target = DnsPacket.DomainName(self._io, self, self._root)
+  self.priority = self._io:read_u2be()
+  self.weight = self._io:read_u2be()
+  self.port = self._io:read_u2be()
+  self.target = DnsPacket.DomainName(self._io, self, self._root)
 end
 
 
 DnsPacket.Txt = class.class(KaitaiStruct)
 
 function DnsPacket.Txt:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.Txt:_read()
-self.length = self._io:read_u1()
-self.text = str_decode.decode(self._io:read_bytes(self.length), "utf-8")
+  self.length = self._io:read_u1()
+  self.text = str_decode.decode(self._io:read_bytes(self.length), "utf-8")
 end
 
 
 DnsPacket.TxtBody = class.class(KaitaiStruct)
 
 function DnsPacket.TxtBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.TxtBody:_read()
-self.data = {}
-local i = 0
-while not self._io:is_eof() do
-  self.data[i + 1] = DnsPacket.Txt(self._io, self, self._root)
-  i = i + 1
-end
+  self.data = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.data[i + 1] = DnsPacket.Txt(self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 
 DnsPacket.Address = class.class(KaitaiStruct)
 
 function DnsPacket.Address:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.Address:_read()
-self.ip = self._io:read_bytes(4)
+  self.ip = self._io:read_bytes(4)
 end
 
 
 DnsPacket.Answer = class.class(KaitaiStruct)
 
 function DnsPacket.Answer:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.Answer:_read()
-self.name = DnsPacket.DomainName(self._io, self, self._root)
-self.type = DnsPacket.TypeType(self._io:read_u2be())
-self.answer_class = DnsPacket.ClassType(self._io:read_u2be())
-self.ttl = self._io:read_s4be()
-self.rdlength = self._io:read_u2be()
-local _on = self.type
-if _on == DnsPacket.TypeType.srv then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.Service(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.a then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.Address(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.cname then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.DomainName(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.ns then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.DomainName(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.soa then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.AuthorityInfo(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.mx then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.MxInfo(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.txt then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.TxtBody(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.ptr then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.DomainName(_io, self, self._root)
-elseif _on == DnsPacket.TypeType.aaaa then
-  self._raw_payload = self._io:read_bytes(self.rdlength)
-  local _io = KaitaiStream(stringstream(self._raw_payload))
-  self.payload = DnsPacket.AddressV6(_io, self, self._root)
-else
-  self.payload = self._io:read_bytes(self.rdlength)
-end
+  self.name = DnsPacket.DomainName(self._io, self, self._root)
+  self.type = DnsPacket.TypeType(self._io:read_u2be())
+  self.answer_class = DnsPacket.ClassType(self._io:read_u2be())
+  self.ttl = self._io:read_s4be()
+  self.rdlength = self._io:read_u2be()
+  local _on = self.type
+  if _on == DnsPacket.TypeType.srv then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.Service(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.a then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.Address(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.cname then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.DomainName(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.ns then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.DomainName(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.soa then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.AuthorityInfo(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.mx then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.MxInfo(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.txt then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.TxtBody(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.ptr then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.DomainName(_io, self, self._root)
+  elseif _on == DnsPacket.TypeType.aaaa then
+    self._raw_payload = self._io:read_bytes(self.rdlength)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = DnsPacket.AddressV6(_io, self, self._root)
+  else
+    self.payload = self._io:read_bytes(self.rdlength)
+  end
 end
 
 -- 
@@ -363,144 +363,144 @@ end
 DnsPacket.PacketFlags = class.class(KaitaiStruct)
 
 function DnsPacket.PacketFlags:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.PacketFlags:_read()
-self.flag = self._io:read_u2be()
+  self.flag = self._io:read_u2be()
 end
 
 DnsPacket.PacketFlags.property.qr = {}
 function DnsPacket.PacketFlags.property.qr:get()
-if self._m_qr ~= nil then
-  return self._m_qr
-end
+  if self._m_qr ~= nil then
+    return self._m_qr
+  end
 
-self._m_qr = ((self.flag & 32768) >> 15)
-return self._m_qr
+  self._m_qr = ((self.flag & 32768) >> 15)
+  return self._m_qr
 end
 
 DnsPacket.PacketFlags.property.ra = {}
 function DnsPacket.PacketFlags.property.ra:get()
-if self._m_ra ~= nil then
-  return self._m_ra
-end
+  if self._m_ra ~= nil then
+    return self._m_ra
+  end
 
-self._m_ra = ((self.flag & 128) >> 7)
-return self._m_ra
+  self._m_ra = ((self.flag & 128) >> 7)
+  return self._m_ra
 end
 
 DnsPacket.PacketFlags.property.tc = {}
 function DnsPacket.PacketFlags.property.tc:get()
-if self._m_tc ~= nil then
-  return self._m_tc
-end
+  if self._m_tc ~= nil then
+    return self._m_tc
+  end
 
-self._m_tc = ((self.flag & 512) >> 9)
-return self._m_tc
+  self._m_tc = ((self.flag & 512) >> 9)
+  return self._m_tc
 end
 
 DnsPacket.PacketFlags.property.is_opcode_valid = {}
 function DnsPacket.PacketFlags.property.is_opcode_valid:get()
-if self._m_is_opcode_valid ~= nil then
-  return self._m_is_opcode_valid
-end
+  if self._m_is_opcode_valid ~= nil then
+    return self._m_is_opcode_valid
+  end
 
-self._m_is_opcode_valid =  ((self.opcode == 0) or (self.opcode == 1) or (self.opcode == 2)) 
-return self._m_is_opcode_valid
+  self._m_is_opcode_valid =  ((self.opcode == 0) or (self.opcode == 1) or (self.opcode == 2)) 
+  return self._m_is_opcode_valid
 end
 
 DnsPacket.PacketFlags.property.rcode = {}
 function DnsPacket.PacketFlags.property.rcode:get()
-if self._m_rcode ~= nil then
-  return self._m_rcode
-end
+  if self._m_rcode ~= nil then
+    return self._m_rcode
+  end
 
-self._m_rcode = ((self.flag & 15) >> 0)
-return self._m_rcode
+  self._m_rcode = ((self.flag & 15) >> 0)
+  return self._m_rcode
 end
 
 DnsPacket.PacketFlags.property.opcode = {}
 function DnsPacket.PacketFlags.property.opcode:get()
-if self._m_opcode ~= nil then
-  return self._m_opcode
-end
+  if self._m_opcode ~= nil then
+    return self._m_opcode
+  end
 
-self._m_opcode = ((self.flag & 30720) >> 11)
-return self._m_opcode
+  self._m_opcode = ((self.flag & 30720) >> 11)
+  return self._m_opcode
 end
 
 DnsPacket.PacketFlags.property.aa = {}
 function DnsPacket.PacketFlags.property.aa:get()
-if self._m_aa ~= nil then
-  return self._m_aa
-end
+  if self._m_aa ~= nil then
+    return self._m_aa
+  end
 
-self._m_aa = ((self.flag & 1024) >> 10)
-return self._m_aa
+  self._m_aa = ((self.flag & 1024) >> 10)
+  return self._m_aa
 end
 
 DnsPacket.PacketFlags.property.z = {}
 function DnsPacket.PacketFlags.property.z:get()
-if self._m_z ~= nil then
-  return self._m_z
-end
+  if self._m_z ~= nil then
+    return self._m_z
+  end
 
-self._m_z = ((self.flag & 64) >> 6)
-return self._m_z
+  self._m_z = ((self.flag & 64) >> 6)
+  return self._m_z
 end
 
 DnsPacket.PacketFlags.property.rd = {}
 function DnsPacket.PacketFlags.property.rd:get()
-if self._m_rd ~= nil then
-  return self._m_rd
-end
+  if self._m_rd ~= nil then
+    return self._m_rd
+  end
 
-self._m_rd = ((self.flag & 256) >> 8)
-return self._m_rd
+  self._m_rd = ((self.flag & 256) >> 8)
+  return self._m_rd
 end
 
 DnsPacket.PacketFlags.property.cd = {}
 function DnsPacket.PacketFlags.property.cd:get()
-if self._m_cd ~= nil then
-  return self._m_cd
-end
+  if self._m_cd ~= nil then
+    return self._m_cd
+  end
 
-self._m_cd = ((self.flag & 16) >> 4)
-return self._m_cd
+  self._m_cd = ((self.flag & 16) >> 4)
+  return self._m_cd
 end
 
 DnsPacket.PacketFlags.property.ad = {}
 function DnsPacket.PacketFlags.property.ad:get()
-if self._m_ad ~= nil then
-  return self._m_ad
-end
+  if self._m_ad ~= nil then
+    return self._m_ad
+  end
 
-self._m_ad = ((self.flag & 32) >> 5)
-return self._m_ad
+  self._m_ad = ((self.flag & 32) >> 5)
+  return self._m_ad
 end
 
 
 DnsPacket.AuthorityInfo = class.class(KaitaiStruct)
 
 function DnsPacket.AuthorityInfo:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function DnsPacket.AuthorityInfo:_read()
-self.primary_ns = DnsPacket.DomainName(self._io, self, self._root)
-self.resoponsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
-self.serial = self._io:read_u4be()
-self.refresh_interval = self._io:read_u4be()
-self.retry_interval = self._io:read_u4be()
-self.expire_limit = self._io:read_u4be()
-self.min_ttl = self._io:read_u4be()
+  self.primary_ns = DnsPacket.DomainName(self._io, self, self._root)
+  self.resoponsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
+  self.serial = self._io:read_u4be()
+  self.refresh_interval = self._io:read_u4be()
+  self.retry_interval = self._io:read_u4be()
+  self.expire_limit = self._io:read_u4be()
+  self.min_ttl = self._io:read_u4be()
 end
 
 

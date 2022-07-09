@@ -8,7 +8,7 @@
   } else {
     root.WindowsMinidump = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Windows MiniDump (MDMP) file provides a concise way to store process
  * core dumps, which is useful for debugging. Given its small size,
@@ -162,9 +162,9 @@ var WindowsMinidump = (function() {
     }
     ThreadList.prototype._read = function() {
       this.numThreads = this._io.readU4le();
-      this.threads = new Array(this.numThreads);
+      this.threads = [];
       for (var i = 0; i < this.numThreads; i++) {
-        this.threads[i] = new Thread(this._io, this, this._root);
+        this.threads.push(new Thread(this._io, this, this._root));
       }
     }
 
@@ -304,9 +304,9 @@ var WindowsMinidump = (function() {
       this.addr = this._io.readU8le();
       this.numParams = this._io.readU4le();
       this.reserved = this._io.readU4le();
-      this.params = new Array(15);
+      this.params = [];
       for (var i = 0; i < 15; i++) {
-        this.params[i] = this._io.readU8le();
+        this.params.push(this._io.readU8le());
       }
     }
 
@@ -463,9 +463,9 @@ var WindowsMinidump = (function() {
     }
     MemoryList.prototype._read = function() {
       this.numMemRanges = this._io.readU4le();
-      this.memRanges = new Array(this.numMemRanges);
+      this.memRanges = [];
       for (var i = 0; i < this.numMemRanges; i++) {
-        this.memRanges[i] = new MemoryDescriptor(this._io, this, this._root);
+        this.memRanges.push(new MemoryDescriptor(this._io, this, this._root));
       }
     }
 
@@ -519,9 +519,9 @@ var WindowsMinidump = (function() {
         return this._m_streams;
       var _pos = this._io.pos;
       this._io.seek(this.ofsStreams);
-      this._m_streams = new Array(this.numStreams);
+      this._m_streams = [];
       for (var i = 0; i < this.numStreams; i++) {
-        this._m_streams[i] = new Dir(this._io, this, this._root);
+        this._m_streams.push(new Dir(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_streams;

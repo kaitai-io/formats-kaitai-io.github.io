@@ -322,32 +322,32 @@ section#format-index .row {
     <span class="vi">@version_major</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">43</span><span class="p">,</span> <span class="n">version_major</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">version_major</span> <span class="o">&gt;=</span> <span class="mi">43</span>
     <span class="vi">@constant_pool_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-    <span class="vi">@constant_pool</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">constant_pool_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="vi">@constant_pool</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">((</span><span class="n">constant_pool_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@constant_pool</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ConstantPoolEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">constant_pool</span><span class="o">[</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">].</span><span class="n">is_two_entries</span> <span class="p">:</span> <span class="kp">false</span><span class="p">))</span>
+      <span class="vi">@constant_pool</span> <span class="o">&lt;&lt;</span> <span class="no">ConstantPoolEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">constant_pool</span><span class="o">[</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">].</span><span class="n">is_two_entries</span> <span class="p">:</span> <span class="kp">false</span><span class="p">))</span>
     <span class="p">}</span>
     <span class="vi">@access_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@this_class</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@super_class</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@interfaces_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-    <span class="vi">@interfaces</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">interfaces_count</span><span class="p">)</span>
+    <span class="vi">@interfaces</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">interfaces_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@interfaces</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@interfaces</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="p">}</span>
     <span class="vi">@fields_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-    <span class="vi">@fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">fields_count</span><span class="p">)</span>
+    <span class="vi">@fields</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">fields_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@fields</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">FieldInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@fields</span> <span class="o">&lt;&lt;</span> <span class="no">FieldInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@methods_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-    <span class="vi">@methods</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">methods_count</span><span class="p">)</span>
+    <span class="vi">@methods</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">methods_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@methods</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MethodInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@methods</span> <span class="o">&lt;&lt;</span> <span class="no">MethodInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@attributes_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-    <span class="vi">@attributes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span>
+    <span class="vi">@attributes</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@attributes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@attributes</span> <span class="o">&lt;&lt;</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -415,14 +415,14 @@ section#format-index .row {
         <span class="vi">@code_length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
         <span class="vi">@code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">code_length</span><span class="p">)</span>
         <span class="vi">@exception_table_length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-        <span class="vi">@exception_table</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">exception_table_length</span><span class="p">)</span>
+        <span class="vi">@exception_table</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">exception_table_length</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@exception_table</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ExceptionEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@exception_table</span> <span class="o">&lt;&lt;</span> <span class="no">ExceptionEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="vi">@attributes_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-        <span class="vi">@attributes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span>
+        <span class="vi">@attributes</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@attributes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@attributes</span> <span class="o">&lt;&lt;</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -490,9 +490,9 @@ section#format-index .row {
 
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@number_of_exceptions</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-        <span class="vi">@exceptions</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">number_of_exceptions</span><span class="p">)</span>
+        <span class="vi">@exceptions</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">number_of_exceptions</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@exceptions</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ExceptionTableEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@exceptions</span> <span class="o">&lt;&lt;</span> <span class="no">ExceptionTableEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -552,9 +552,9 @@ section#format-index .row {
 
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@line_number_table_length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-        <span class="vi">@line_number_table</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">line_number_table_length</span><span class="p">)</span>
+        <span class="vi">@line_number_table</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">line_number_table_length</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@line_number_table</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">LineNumberTableEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@line_number_table</span> <span class="o">&lt;&lt;</span> <span class="no">LineNumberTableEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -626,9 +626,9 @@ section#format-index .row {
       <span class="vi">@name_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@descriptor_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@attributes_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-      <span class="vi">@attributes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span>
+      <span class="vi">@attributes</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@attributes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@attributes</span> <span class="o">&lt;&lt;</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -945,9 +945,9 @@ section#format-index .row {
       <span class="vi">@name_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@descriptor_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@attributes_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-      <span class="vi">@attributes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span>
+      <span class="vi">@attributes</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">attributes_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@attributes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@attributes</span> <span class="o">&lt;&lt;</span> <span class="no">AttributeInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>

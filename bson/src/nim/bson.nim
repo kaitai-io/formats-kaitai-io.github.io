@@ -78,7 +78,8 @@ type
     `b2`*: uint8
     `b3`*: uint8
     `parent`*: Bson_ObjectId
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
   Bson_CodeWithScope* = ref object of KaitaiStruct
     `id`*: int32
     `source`*: Bson_String
@@ -382,12 +383,12 @@ proc read*(_: typedesc[Bson_U3], io: KaitaiStream, root: KaitaiStruct, parent: B
   this.b3 = b3Expr
 
 proc value(this: Bson_U3): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int(((this.b1 or (this.b2 shl 8)) or (this.b3 shl 16)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Bson_U3], filename: string): Bson_U3 =
   Bson_U3.read(newKaitaiFileStream(filename), nil, nil)

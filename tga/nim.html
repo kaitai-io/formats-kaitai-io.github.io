@@ -287,7 +287,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">imageId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">colorMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">footerInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span>
+    <span class="p">`</span><span class="n">footerInst</span><span class="p">`:</span> <span class="n">Tga_TgaFooter</span>
+    <span class="p">`</span><span class="n">footerInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Tga_ColorMapEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">no_color_map</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">has_color_map</span> <span class="o">=</span> <span class="mi">1</span>
@@ -304,8 +305,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">devDirOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">versionMagic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tga</span>
-    <span class="p">`</span><span class="n">isValidInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">extAreaInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tga_TgaExtArea</span>
+    <span class="p">`</span><span class="n">isValidInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isValidInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extAreaInst</span><span class="p">`:</span> <span class="n">Tga_TgaExtArea</span>
+    <span class="p">`</span><span class="n">extAreaInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Tga_TgaExtArea</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">extAreaSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">authorName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
@@ -403,15 +406,15 @@ section#format-index .row {
       <span class="n">this</span><span class="p">.</span><span class="n">colorMap</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">footer</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga</span><span class="p">):</span> <span class="n">Tga_TgaFooter</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">26</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">footerInstExpr</span> <span class="o">=</span> <span class="n">Tga_TgaFooter</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span> <span class="o">=</span> <span class="n">footerInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga], filename: string): Tga =</span>
   <span class="n">Tga</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -440,15 +443,15 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">versionMagic</span> <span class="o">=</span> <span class="n">versionMagicExpr</span>
 
 <span class="k">proc </span><span class="nf">isValid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
   <span class="k">let</span> <span class="n">isValidInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">versionMagic</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">84</span><span class="sc">&#39;u8, 82&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">85</span><span class="sc">&#39;u8, 69&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">86</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">83</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">79</span><span class="sc">&#39;u8, 78&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">45</span><span class="sc">&#39;u8, 88&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">70</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">76</span><span class="sc">&#39;u8, 69&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">46</span><span class="sc">&#39;u8, 0&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span> <span class="o">=</span> <span class="n">isValidInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
 
 <span class="k">proc </span><span class="nf">extArea</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span><span class="p">):</span> <span class="n">Tga_TgaExtArea</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValid</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -456,8 +459,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">extAreaInstExpr</span> <span class="o">=</span> <span class="n">Tga_TgaExtArea</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span> <span class="o">=</span> <span class="n">extAreaInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">extAreaInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaFooter], filename: string): Tga_TgaFooter =</span>
   <span class="n">Tga_TgaFooter</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

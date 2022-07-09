@@ -46,15 +46,19 @@ type
     `ofsVolumeLabel`*: uint32
     `ofsVolumeLabelUnicode`*: uint32
     `parent`*: WindowsLnkFile_LinkInfo_VolumeIdSpec
-    `isUnicodeInst`*: bool
-    `volumeLabelAnsiInst`*: string
+    `isUnicodeInst`: bool
+    `isUnicodeInstFlag`: bool
+    `volumeLabelAnsiInst`: string
+    `volumeLabelAnsiInstFlag`: bool
   WindowsLnkFile_LinkInfo_All* = ref object of KaitaiStruct
     `lenHeader`*: uint32
     `header`*: WindowsLnkFile_LinkInfo_Header
     `parent`*: WindowsLnkFile_LinkInfo
     `rawHeader`*: seq[byte]
-    `volumeIdInst`*: WindowsLnkFile_LinkInfo_VolumeIdSpec
-    `localBasePathInst`*: seq[byte]
+    `volumeIdInst`: WindowsLnkFile_LinkInfo_VolumeIdSpec
+    `volumeIdInstFlag`: bool
+    `localBasePathInst`: seq[byte]
+    `localBasePathInstFlag`: bool
   WindowsLnkFile_LinkInfo_VolumeIdSpec* = ref object of KaitaiStruct
     `lenAll`*: uint32
     `body`*: WindowsLnkFile_LinkInfo_VolumeIdBody
@@ -251,15 +255,15 @@ proc read*(_: typedesc[WindowsLnkFile_LinkInfo_VolumeIdBody], io: KaitaiStream, 
     this.ofsVolumeLabelUnicode = ofsVolumeLabelUnicodeExpr
 
 proc isUnicode(this: WindowsLnkFile_LinkInfo_VolumeIdBody): bool = 
-  if this.isUnicodeInst != nil:
+  if this.isUnicodeInstFlag:
     return this.isUnicodeInst
   let isUnicodeInstExpr = bool(this.ofsVolumeLabel == 20)
   this.isUnicodeInst = isUnicodeInstExpr
-  if this.isUnicodeInst != nil:
-    return this.isUnicodeInst
+  this.isUnicodeInstFlag = true
+  return this.isUnicodeInst
 
 proc volumeLabelAnsi(this: WindowsLnkFile_LinkInfo_VolumeIdBody): string = 
-  if this.volumeLabelAnsiInst.len != 0:
+  if this.volumeLabelAnsiInstFlag:
     return this.volumeLabelAnsiInst
   if not(this.isUnicode):
     let pos = this.io.pos()
@@ -267,8 +271,8 @@ proc volumeLabelAnsi(this: WindowsLnkFile_LinkInfo_VolumeIdBody): string =
     let volumeLabelAnsiInstExpr = encode(this.io.readBytesTerm(0, false, true, true), "cp437")
     this.volumeLabelAnsiInst = volumeLabelAnsiInstExpr
     this.io.seek(pos)
-  if this.volumeLabelAnsiInst.len != 0:
-    return this.volumeLabelAnsiInst
+  this.volumeLabelAnsiInstFlag = true
+  return this.volumeLabelAnsiInst
 
 proc fromFile*(_: typedesc[WindowsLnkFile_LinkInfo_VolumeIdBody], filename: string): WindowsLnkFile_LinkInfo_VolumeIdBody =
   WindowsLnkFile_LinkInfo_VolumeIdBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -294,7 +298,7 @@ proc read*(_: typedesc[WindowsLnkFile_LinkInfo_All], io: KaitaiStream, root: Kai
   this.header = headerExpr
 
 proc volumeId(this: WindowsLnkFile_LinkInfo_All): WindowsLnkFile_LinkInfo_VolumeIdSpec = 
-  if this.volumeIdInst != nil:
+  if this.volumeIdInstFlag:
     return this.volumeIdInst
   if this.header.flags.hasVolumeIdAndLocalBasePath:
     let pos = this.io.pos()
@@ -302,11 +306,11 @@ proc volumeId(this: WindowsLnkFile_LinkInfo_All): WindowsLnkFile_LinkInfo_Volume
     let volumeIdInstExpr = WindowsLnkFile_LinkInfo_VolumeIdSpec.read(this.io, this.root, this)
     this.volumeIdInst = volumeIdInstExpr
     this.io.seek(pos)
-  if this.volumeIdInst != nil:
-    return this.volumeIdInst
+  this.volumeIdInstFlag = true
+  return this.volumeIdInst
 
 proc localBasePath(this: WindowsLnkFile_LinkInfo_All): seq[byte] = 
-  if this.localBasePathInst.len != 0:
+  if this.localBasePathInstFlag:
     return this.localBasePathInst
   if this.header.flags.hasVolumeIdAndLocalBasePath:
     let pos = this.io.pos()
@@ -314,8 +318,8 @@ proc localBasePath(this: WindowsLnkFile_LinkInfo_All): seq[byte] =
     let localBasePathInstExpr = this.io.readBytesTerm(0, false, true, true)
     this.localBasePathInst = localBasePathInstExpr
     this.io.seek(pos)
-  if this.localBasePathInst.len != 0:
-    return this.localBasePathInst
+  this.localBasePathInstFlag = true
+  return this.localBasePathInst
 
 proc fromFile*(_: typedesc[WindowsLnkFile_LinkInfo_All], filename: string): WindowsLnkFile_LinkInfo_All =
   WindowsLnkFile_LinkInfo_All.read(newKaitaiFileStream(filename), nil, nil)

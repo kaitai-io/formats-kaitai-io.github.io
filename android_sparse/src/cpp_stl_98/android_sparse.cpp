@@ -24,9 +24,8 @@ void android_sparse_t::_read() {
     m__raw_header = m__io->read_bytes((header_prefix()->len_header() - 10));
     m__io__raw_header = new kaitai::kstream(m__raw_header);
     m_header = new file_header_t(m__io__raw_header, this, m__root);
-    int l_chunks = header()->num_chunks();
     m_chunks = new std::vector<chunk_t*>();
-    m_chunks->reserve(l_chunks);
+    const int l_chunks = header()->num_chunks();
     for (int i = 0; i < l_chunks; i++) {
         m_chunks->push_back(new chunk_t(m__io, this, m__root));
     }

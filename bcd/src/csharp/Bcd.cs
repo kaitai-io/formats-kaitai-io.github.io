@@ -51,7 +51,7 @@ namespace Kaitai
         }
         private void _read()
         {
-            _digits = new List<int>((int) (NumDigits));
+            _digits = new List<int>();
             for (var i = 0; i < NumDigits; i++)
             {
                 switch (BitsPerDigit) {

@@ -100,7 +100,7 @@ sub _read {
     $self->{fields} = ();
     my $n_fields = $self->num_fields();
     for (my $i = 0; $i < $n_fields; $i++) {
-        $self->{fields}[$i] = BlenderBlend::DnaField->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{fields}}, BlenderBlend::DnaField->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -252,7 +252,7 @@ sub _read {
     $self->{names} = ();
     my $n_names = $self->num_names();
     for (my $i = 0; $i < $n_names; $i++) {
-        $self->{names}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+        push @{$self->{names}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
     $self->{padding_1} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
     $self->{type_magic} = $self->{_io}->read_bytes(4);
@@ -260,14 +260,14 @@ sub _read {
     $self->{types} = ();
     my $n_types = $self->num_types();
     for (my $i = 0; $i < $n_types; $i++) {
-        $self->{types}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+        push @{$self->{types}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
     $self->{padding_2} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
     $self->{tlen_magic} = $self->{_io}->read_bytes(4);
     $self->{lengths} = ();
     my $n_lengths = $self->num_types();
     for (my $i = 0; $i < $n_lengths; $i++) {
-        $self->{lengths}[$i] = $self->{_io}->read_u2le();
+        push @{$self->{lengths}}, $self->{_io}->read_u2le();
     }
     $self->{padding_3} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
     $self->{strc_magic} = $self->{_io}->read_bytes(4);
@@ -275,7 +275,7 @@ sub _read {
     $self->{structs} = ();
     my $n_structs = $self->num_structs();
     for (my $i = 0; $i < $n_structs; $i++) {
-        $self->{structs}[$i] = BlenderBlend::DnaStruct->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{structs}}, BlenderBlend::DnaStruct->new($self->{_io}, $self, $self->{_root});
     }
 }
 

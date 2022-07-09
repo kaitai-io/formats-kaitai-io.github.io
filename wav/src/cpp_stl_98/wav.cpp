@@ -422,9 +422,8 @@ wav_t::cue_chunk_type_t::cue_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_t
 
 void wav_t::cue_chunk_type_t::_read() {
     m_dw_cue_points = m__io->read_u4le();
-    int l_cue_points = dw_cue_points();
     m_cue_points = new std::vector<cue_point_type_t*>();
-    m_cue_points->reserve(l_cue_points);
+    const int l_cue_points = dw_cue_points();
     for (int i = 0; i < l_cue_points; i++) {
         m_cue_points->push_back(new cue_point_type_t(m__io, this, m__root));
     }

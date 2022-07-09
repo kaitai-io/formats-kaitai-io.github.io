@@ -148,9 +148,8 @@ heaps_pak_t::header_t::dir_t::dir_t(kaitai::kstream* p__io, heaps_pak_t::header_
 
 void heaps_pak_t::header_t::dir_t::_read() {
     m_num_entries = m__io->read_u4le();
-    int l_entries = num_entries();
     m_entries = std::unique_ptr<std::vector<std::unique_ptr<entry_t>>>(new std::vector<std::unique_ptr<entry_t>>());
-    m_entries->reserve(l_entries);
+    const int l_entries = num_entries();
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(std::move(std::unique_ptr<entry_t>(new entry_t(m__io, this, m__root))));
     }

@@ -64,9 +64,8 @@ windows_minidump_t::thread_list_t::thread_list_t(kaitai::kstream* p__io, windows
 
 void windows_minidump_t::thread_list_t::_read() {
     m_num_threads = m__io->read_u4le();
-    int l_threads = num_threads();
     m_threads = new std::vector<thread_t*>();
-    m_threads->reserve(l_threads);
+    const int l_threads = num_threads();
     for (int i = 0; i < l_threads; i++) {
         m_threads->push_back(new thread_t(m__io, this, m__root));
     }
@@ -225,9 +224,8 @@ void windows_minidump_t::exception_record_t::_read() {
     m_addr = m__io->read_u8le();
     m_num_params = m__io->read_u4le();
     m_reserved = m__io->read_u4le();
-    int l_params = 15;
     m_params = new std::vector<uint64_t>();
-    m_params->reserve(l_params);
+    const int l_params = 15;
     for (int i = 0; i < l_params; i++) {
         m_params->push_back(m__io->read_u8le());
     }
@@ -415,9 +413,8 @@ windows_minidump_t::memory_list_t::memory_list_t(kaitai::kstream* p__io, windows
 
 void windows_minidump_t::memory_list_t::_read() {
     m_num_mem_ranges = m__io->read_u4le();
-    int l_mem_ranges = num_mem_ranges();
     m_mem_ranges = new std::vector<memory_descriptor_t*>();
-    m_mem_ranges->reserve(l_mem_ranges);
+    const int l_mem_ranges = num_mem_ranges();
     for (int i = 0; i < l_mem_ranges; i++) {
         m_mem_ranges->push_back(new memory_descriptor_t(m__io, this, m__root));
     }
@@ -503,9 +500,8 @@ std::vector<windows_minidump_t::dir_t*>* windows_minidump_t::streams() {
         return m_streams;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_streams());
-    int l_streams = num_streams();
     m_streams = new std::vector<dir_t*>();
-    m_streams->reserve(l_streams);
+    const int l_streams = num_streams();
     for (int i = 0; i < l_streams; i++) {
         m_streams->push_back(new dir_t(m__io, this, m__root));
     }

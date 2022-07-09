@@ -83,7 +83,7 @@ namespace Kaitai
         private void _read()
         {
             _manifest = new Manifest(m_io, this, m_root);
-            _files = new List<byte[]>((int) (Manifest.NumFiles));
+            _files = new List<byte[]>();
             for (var i = 0; i < Manifest.NumFiles; i++)
             {
                 _files.Add(m_io.ReadBytes(Manifest.FileEntries[i].LenDataCompressed));
@@ -447,7 +447,7 @@ namespace Kaitai
                     var io___raw_metadata = new KaitaiStream(__raw_metadata);
                     _metadata = new SerializedValue(io___raw_metadata, this, m_root);
                 }
-                _fileEntries = new List<FileEntry>((int) (NumFiles));
+                _fileEntries = new List<FileEntry>();
                 for (var i = 0; i < NumFiles; i++)
                 {
                     _fileEntries.Add(new FileEntry(m_io, this, m_root));

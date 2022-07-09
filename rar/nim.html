@@ -336,9 +336,12 @@ how to process a certain block type.</p>
     <span class="p">`</span><span class="n">addBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar</span>
     <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">hasAddInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">headerSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">bodySizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">hasAddInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasAddInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">headerSizeInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">headerSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bodySizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">bodySizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Rar_BlockFileHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lowUnpSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">hostOs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Rar_Oses</span>
@@ -519,28 +522,28 @@ how to process a certain block type.</p>
   <span class="sd">##[</span>
   <span class="kp">True</span> <span class="k">if</span> <span class="k">block</span> <span class="n">has</span> <span class="n">additional</span> <span class="n">content</span> <span class="n">attached</span> <span class="n">to</span> <span class="n">it</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span>
   <span class="k">let</span> <span class="n">hasAddInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span> <span class="o">=</span> <span class="n">hasAddInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasAddInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAddInst</span>
 
 <span class="k">proc </span><span class="nf">headerSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span>
   <span class="k">let</span> <span class="n">headerSizeInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasAdd</span><span class="p">:</span> <span class="mi">11</span> <span class="k">else</span><span class="p">:</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span> <span class="o">=</span> <span class="n">headerSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span>
 
 <span class="k">proc </span><span class="nf">bodySize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Rar_Block</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
   <span class="k">let</span> <span class="n">bodySizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">blockSize</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">headerSize</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">=</span> <span class="n">bodySizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_Block], filename: string): Rar_Block =</span>
   <span class="n">Rar_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

@@ -8,7 +8,7 @@
   } else {
     root.Dicom = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * DICOM (Digital Imaging and Communications in Medicine), AKA NEMA
  * PS3, AKA ISO 12052:2006, is a file format and network protocol
@@ -8143,7 +8143,7 @@ var Dicom = (function() {
         this.value = this._io.readBytes(this.valueLen);
       }
       if ( ((this.vr == "SQ") && (this.valueLen == 4294967295)) ) {
-        this.items = []
+        this.items = [];
         var i = 0;
         do {
           var _ = new SeqItem(this._io, this, this._root);
@@ -8229,7 +8229,7 @@ var Dicom = (function() {
         this.value = this._io.readBytes(this.valueLen);
       }
       if ( ((this.vr == "SQ") && (this.valueLen == 4294967295)) ) {
-        this.items = []
+        this.items = [];
         var i = 0;
         do {
           var _ = new SeqItem(this._io, this, this._root);
@@ -8309,7 +8309,7 @@ var Dicom = (function() {
         this.value = this._io.readBytes(this.valueLen);
       }
       if (this.valueLen == 4294967295) {
-        this.items = []
+        this.items = [];
         var i = 0;
         do {
           var _ = new TDataElementExplicit(this._io, this, this._root);

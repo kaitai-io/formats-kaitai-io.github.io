@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class FasttrackerXmModule(KaitaiStruct):
@@ -33,13 +32,13 @@ class FasttrackerXmModule(KaitaiStruct):
         self._raw_header = self._io.read_bytes((self.preheader.header_size - 4))
         _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
         self.header = FasttrackerXmModule.Header(_io__raw_header, self, self._root)
-        self.patterns = [None] * (self.header.num_patterns)
+        self.patterns = []
         for i in range(self.header.num_patterns):
-            self.patterns[i] = FasttrackerXmModule.Pattern(self._io, self, self._root)
+            self.patterns.append(FasttrackerXmModule.Pattern(self._io, self, self._root))
 
-        self.instruments = [None] * (self.header.num_instruments)
+        self.instruments = []
         for i in range(self.header.num_instruments):
-            self.instruments[i] = FasttrackerXmModule.Instrument(self._io, self, self._root)
+            self.instruments.append(FasttrackerXmModule.Instrument(self._io, self, self._root))
 
 
     class Preheader(KaitaiStruct):
@@ -75,10 +74,10 @@ class FasttrackerXmModule(KaitaiStruct):
             @property
             def value(self):
                 if hasattr(self, '_m_value'):
-                    return self._m_value if hasattr(self, '_m_value') else None
+                    return self._m_value
 
                 self._m_value = ((self.major << 8) | self.minor)
-                return self._m_value if hasattr(self, '_m_value') else None
+                return getattr(self, '_m_value', None)
 
 
 
@@ -125,10 +124,10 @@ class FasttrackerXmModule(KaitaiStruct):
                 @property
                 def num_rows(self):
                     if hasattr(self, '_m_num_rows'):
-                        return self._m_num_rows if hasattr(self, '_m_num_rows') else None
+                        return self._m_num_rows
 
                     self._m_num_rows = (self.num_rows_raw + (1 if self._root.preheader.version_number.value == 258 else 0))
-                    return self._m_num_rows if hasattr(self, '_m_num_rows') else None
+                    return getattr(self, '_m_num_rows', None)
 
 
 
@@ -161,9 +160,9 @@ class FasttrackerXmModule(KaitaiStruct):
             self.flags = FasttrackerXmModule.Flags(self._io, self, self._root)
             self.default_tempo = self._io.read_u2le()
             self.default_bpm = self._io.read_u2le()
-            self.pattern_order_table = [None] * (256)
+            self.pattern_order_table = []
             for i in range(256):
-                self.pattern_order_table[i] = self._io.read_u1()
+                self.pattern_order_table.append(self._io.read_u1())
 
 
 
@@ -188,13 +187,13 @@ class FasttrackerXmModule(KaitaiStruct):
             self._raw_header = self._io.read_bytes((self.header_size - 4))
             _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
             self.header = FasttrackerXmModule.Instrument.Header(_io__raw_header, self, self._root)
-            self.samples_headers = [None] * (self.header.num_samples)
+            self.samples_headers = []
             for i in range(self.header.num_samples):
-                self.samples_headers[i] = FasttrackerXmModule.Instrument.SampleHeader(self._io, self, self._root)
+                self.samples_headers.append(FasttrackerXmModule.Instrument.SampleHeader(self._io, self, self._root))
 
-            self.samples = [None] * (self.header.num_samples)
+            self.samples = []
             for i in range(self.header.num_samples):
-                self.samples[i] = FasttrackerXmModule.Instrument.SamplesData(self.samples_headers[i], self._io, self, self._root)
+                self.samples.append(FasttrackerXmModule.Instrument.SamplesData(self.samples_headers[i], self._io, self, self._root))
 
 
         class Header(KaitaiStruct):
@@ -227,17 +226,17 @@ class FasttrackerXmModule(KaitaiStruct):
 
             def _read(self):
                 self.len_sample_header = self._io.read_u4le()
-                self.idx_sample_per_note = [None] * (96)
+                self.idx_sample_per_note = []
                 for i in range(96):
-                    self.idx_sample_per_note[i] = self._io.read_u1()
+                    self.idx_sample_per_note.append(self._io.read_u1())
 
-                self.volume_points = [None] * (12)
+                self.volume_points = []
                 for i in range(12):
-                    self.volume_points[i] = FasttrackerXmModule.Instrument.ExtraHeader.EnvelopePoint(self._io, self, self._root)
+                    self.volume_points.append(FasttrackerXmModule.Instrument.ExtraHeader.EnvelopePoint(self._io, self, self._root))
 
-                self.panning_points = [None] * (12)
+                self.panning_points = []
                 for i in range(12):
-                    self.panning_points[i] = FasttrackerXmModule.Instrument.ExtraHeader.EnvelopePoint(self._io, self, self._root)
+                    self.panning_points.append(FasttrackerXmModule.Instrument.ExtraHeader.EnvelopePoint(self._io, self, self._root))
 
                 self.num_volume_points = self._io.read_u1()
                 self.num_panning_points = self._io.read_u1()

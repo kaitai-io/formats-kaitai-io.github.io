@@ -35,8 +35,10 @@ type
     `flags`*: int32
     `size`*: float32
     `parent`*: QuakeMdl
-    `versionInst`*: int8
-    `skinSizeInst`*: int
+    `versionInst`: int8
+    `versionInstFlag`: bool
+    `skinSizeInst`: int
+    `skinSizeInstFlag`: bool
   QuakeMdl_MdlSkin* = ref object of KaitaiStruct
     `group`*: int32
     `singleTextureData`*: seq[byte]
@@ -51,7 +53,8 @@ type
     `time`*: seq[float32]
     `frames`*: seq[QuakeMdl_MdlSimpleFrame]
     `parent`*: QuakeMdl
-    `numSimpleFramesInst`*: int32
+    `numSimpleFramesInst`: int32
+    `numSimpleFramesInstFlag`: bool
   QuakeMdl_MdlSimpleFrame* = ref object of KaitaiStruct
     `bboxMin`*: QuakeMdl_MdlVertex
     `bboxMax`*: QuakeMdl_MdlVertex
@@ -183,20 +186,20 @@ proc read*(_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct
   this.size = sizeExpr
 
 proc version(this: QuakeMdl_MdlHeader): int8 = 
-  if this.versionInst != nil:
+  if this.versionInstFlag:
     return this.versionInst
   let versionInstExpr = int8(6)
   this.versionInst = versionInstExpr
-  if this.versionInst != nil:
-    return this.versionInst
+  this.versionInstFlag = true
+  return this.versionInst
 
 proc skinSize(this: QuakeMdl_MdlHeader): int = 
-  if this.skinSizeInst != nil:
+  if this.skinSizeInstFlag:
     return this.skinSizeInst
   let skinSizeInstExpr = int((this.skinWidth * this.skinHeight))
   this.skinSizeInst = skinSizeInstExpr
-  if this.skinSizeInst != nil:
-    return this.skinSizeInst
+  this.skinSizeInstFlag = true
+  return this.skinSizeInst
 
 proc fromFile*(_: typedesc[QuakeMdl_MdlHeader], filename: string): QuakeMdl_MdlHeader =
   QuakeMdl_MdlHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -254,12 +257,12 @@ proc read*(_: typedesc[QuakeMdl_MdlFrame], io: KaitaiStream, root: KaitaiStruct,
     this.frames.add(it)
 
 proc numSimpleFrames(this: QuakeMdl_MdlFrame): int32 = 
-  if this.numSimpleFramesInst != nil:
+  if this.numSimpleFramesInstFlag:
     return this.numSimpleFramesInst
   let numSimpleFramesInstExpr = int32((if this.type == 0: 1 else: this.type))
   this.numSimpleFramesInst = numSimpleFramesInstExpr
-  if this.numSimpleFramesInst != nil:
-    return this.numSimpleFramesInst
+  this.numSimpleFramesInstFlag = true
+  return this.numSimpleFramesInst
 
 proc fromFile*(_: typedesc[QuakeMdl_MdlFrame], filename: string): QuakeMdl_MdlFrame =
   QuakeMdl_MdlFrame.read(newKaitaiFileStream(filename), nil, nil)

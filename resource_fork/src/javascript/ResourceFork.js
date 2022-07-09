@@ -8,7 +8,7 @@
   } else {
     root.ResourceFork = factory(root.KaitaiStream, root.BytesWithIo);
   }
-}(this, function (KaitaiStream, BytesWithIo) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, BytesWithIo) {
 /**
  * The data format of Macintosh resource forks,
  * used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file's main data (the data fork).
@@ -307,9 +307,9 @@ var ResourceFork = (function() {
         }
         TypeList.prototype._read = function() {
           this.numTypesM1 = this._io.readU2be();
-          this.entries = new Array(this.numTypes);
+          this.entries = [];
           for (var i = 0; i < this.numTypes; i++) {
-            this.entries[i] = new TypeListEntry(this._io, this, this._root);
+            this.entries.push(new TypeListEntry(this._io, this, this._root));
           }
         }
 
@@ -432,9 +432,9 @@ var ResourceFork = (function() {
           this._read();
         }
         ReferenceList.prototype._read = function() {
-          this.references = new Array(this.numReferences);
+          this.references = [];
           for (var i = 0; i < this.numReferences; i++) {
-            this.references[i] = new Reference(this._io, this, this._root);
+            this.references.push(new Reference(this._io, this, this._root));
           }
         }
 

@@ -8,7 +8,7 @@
   } else {
     root.GimpBrush = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * GIMP brush format is native to the GIMP image editor for storing a brush or a texture.
  * It can be used in all [Paint Tools](https://docs.gimp.org/2.10/en/gimp-tools-paint.html),
@@ -108,9 +108,9 @@ var GimpBrush = (function() {
       this._read();
     }
     Bitmap.prototype._read = function() {
-      this.rows = new Array(this._root.header.height);
+      this.rows = [];
       for (var i = 0; i < this._root.header.height; i++) {
-        this.rows[i] = new Row(this._io, this, this._root);
+        this.rows.push(new Row(this._io, this, this._root));
       }
     }
 
@@ -126,14 +126,14 @@ var GimpBrush = (function() {
       this._read();
     }
     Row.prototype._read = function() {
-      this.pixels = new Array(this._root.header.width);
+      this.pixels = [];
       for (var i = 0; i < this._root.header.width; i++) {
         switch (this._root.header.bytesPerPixel) {
         case GimpBrush.ColorDepth.GRAYSCALE:
-          this.pixels[i] = new PixelGray(this._io, this, this._root);
+          this.pixels.push(new PixelGray(this._io, this, this._root));
           break;
         case GimpBrush.ColorDepth.RGBA:
-          this.pixels[i] = new PixelRgba(this._io, this, this._root);
+          this.pixels.push(new PixelRgba(this._io, this, this._root));
           break;
         }
       }

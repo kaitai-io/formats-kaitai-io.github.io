@@ -43,7 +43,7 @@ namespace Kaitai
             }
             _reserved1 = m_io.ReadU2le();
             _reserved2 = m_io.ReadU4le();
-            _images = new List<Image>((int) (3));
+            _images = new List<Image>();
             for (var i = 0; i < 3; i++)
             {
                 _images.Add(new Image(m_io, this, m_root));

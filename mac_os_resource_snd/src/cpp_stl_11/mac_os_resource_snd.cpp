@@ -21,9 +21,8 @@ void mac_os_resource_snd_t::_read() {
     n_data_formats = true;
     if (format() == 1) {
         n_data_formats = false;
-        int l_data_formats = num_data_formats();
         m_data_formats = std::unique_ptr<std::vector<std::unique_ptr<data_format_t>>>(new std::vector<std::unique_ptr<data_format_t>>());
-        m_data_formats->reserve(l_data_formats);
+        const int l_data_formats = num_data_formats();
         for (int i = 0; i < l_data_formats; i++) {
             m_data_formats->push_back(std::move(std::unique_ptr<data_format_t>(new data_format_t(m__io, this, m__root))));
         }
@@ -34,9 +33,8 @@ void mac_os_resource_snd_t::_read() {
         m_reference_count = m__io->read_u2be();
     }
     m_num_sound_commands = m__io->read_u2be();
-    int l_sound_commands = num_sound_commands();
     m_sound_commands = std::unique_ptr<std::vector<std::unique_ptr<sound_command_t>>>(new std::vector<std::unique_ptr<sound_command_t>>());
-    m_sound_commands->reserve(l_sound_commands);
+    const int l_sound_commands = num_sound_commands();
     for (int i = 0; i < l_sound_commands; i++) {
         m_sound_commands->push_back(std::move(std::unique_ptr<sound_command_t>(new sound_command_t(m__io, this, m__root))));
     }

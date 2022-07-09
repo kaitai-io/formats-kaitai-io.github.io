@@ -195,7 +195,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _numEntries = m_io.ReadU4le();
-                    _entries = new List<Entry>((int) (NumEntries));
+                    _entries = new List<Entry>();
                     for (var i = 0; i < NumEntries; i++)
                     {
                         _entries.Add(new Entry(m_io, this, m_root));

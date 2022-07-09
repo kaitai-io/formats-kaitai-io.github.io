@@ -123,9 +123,8 @@ std::vector<std::unique_ptr<dos_mz_t::relocation_t>>* dos_mz_t::relocations() {
         kaitai::kstream *io = header()->_io();
         std::streampos _pos = io->pos();
         io->seek(header()->mz()->ofs_relocations());
-        int l_relocations = header()->mz()->num_relocations();
         m_relocations = std::unique_ptr<std::vector<std::unique_ptr<relocation_t>>>(new std::vector<std::unique_ptr<relocation_t>>());
-        m_relocations->reserve(l_relocations);
+        const int l_relocations = header()->mz()->num_relocations();
         for (int i = 0; i < l_relocations; i++) {
             m_relocations->push_back(std::move(std::unique_ptr<relocation_t>(new relocation_t(io, this, m__root))));
         }

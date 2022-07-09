@@ -43,7 +43,7 @@ sub _read {
     $self->{objects} = ();
     my $n_objects = $self->num_objects();
     for (my $i = 0; $i < $n_objects; $i++) {
-        $self->{objects}[$i] = AllegroDat::DatObject->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{objects}}, AllegroDat::DatObject->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -100,7 +100,7 @@ sub _read {
     $self->{chars} = ();
     my $n_chars = 95;
     for (my $i = 0; $i < $n_chars; $i++) {
-        $self->{chars}[$i] = $self->{_io}->read_bytes(16);
+        push @{$self->{chars}}, $self->{_io}->read_bytes(16);
     }
 }
 
@@ -251,7 +251,7 @@ sub _read {
     $self->{chars} = ();
     my $n_chars = 95;
     for (my $i = 0; $i < $n_chars; $i++) {
-        $self->{chars}[$i] = $self->{_io}->read_bytes(8);
+        push @{$self->{chars}}, $self->{_io}->read_bytes(8);
     }
 }
 
@@ -384,7 +384,7 @@ sub _read {
     $self->{ranges} = ();
     my $n_ranges = $self->num_ranges();
     for (my $i = 0; $i < $n_ranges; $i++) {
-        $self->{ranges}[$i] = AllegroDat::DatFont39::Range->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{ranges}}, AllegroDat::DatFont39::Range->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -434,7 +434,7 @@ sub _read {
     $self->{chars} = ();
     my $n_chars = (($self->end_char() - $self->start_char()) + 1);
     for (my $i = 0; $i < $n_chars; $i++) {
-        $self->{chars}[$i] = AllegroDat::DatFont39::FontChar->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{chars}}, AllegroDat::DatFont39::FontChar->new($self->{_io}, $self, $self->{_root});
     }
 }
 

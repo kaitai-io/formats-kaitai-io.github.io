@@ -38,9 +38,9 @@ class Dcmp2 < Kaitai::Struct::Struct
 
   def _read
     if header_parameters.flags.has_custom_lookup_table
-      @custom_lookup_table = Array.new(header_parameters.num_custom_lookup_table_entries)
+      @custom_lookup_table = []
       (header_parameters.num_custom_lookup_table_entries).times { |i|
-        @custom_lookup_table[i] = @_io.read_bytes(2)
+        @custom_lookup_table << @_io.read_bytes(2)
       }
     end
     case header_parameters.flags.tagged
@@ -209,9 +209,9 @@ class Dcmp2 < Kaitai::Struct::Struct
       end
 
       def _read
-        @tag = Array.new(8)
+        @tag = []
         (8).times { |i|
-          @tag[i] = @_io.read_bits_int_be(1) != 0
+          @tag << @_io.read_bits_int_be(1) != 0
         }
         @_io.align_to_byte
         @_raw_units = []

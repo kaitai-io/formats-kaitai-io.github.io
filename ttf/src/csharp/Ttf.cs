@@ -29,7 +29,7 @@ namespace Kaitai
         private void _read()
         {
             _offsetTable = new OffsetTable(m_io, this, m_root);
-            _directoryTable = new List<DirTableEntry>((int) (OffsetTable.NumTables));
+            _directoryTable = new List<DirTableEntry>();
             for (var i = 0; i < OffsetTable.NumTables; i++)
             {
                 _directoryTable.Add(new DirTableEntry(m_io, this, m_root));
@@ -79,7 +79,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _numberOfGlyphs = m_io.ReadU2be();
-                    _glyphNameIndex = new List<ushort>((int) (NumberOfGlyphs));
+                    _glyphNameIndex = new List<ushort>();
                     for (var i = 0; i < NumberOfGlyphs; i++)
                     {
                         _glyphNameIndex.Add(m_io.ReadU2be());
@@ -222,7 +222,7 @@ namespace Kaitai
                 _formatSelector = m_io.ReadU2be();
                 _numNameRecords = m_io.ReadU2be();
                 _ofsStrings = m_io.ReadU2be();
-                _nameRecords = new List<NameRecord>((int) (NumNameRecords));
+                _nameRecords = new List<NameRecord>();
                 for (var i = 0; i < NumNameRecords; i++)
                 {
                     _nameRecords.Add(new NameRecord(m_io, this, m_root));
@@ -565,7 +565,7 @@ namespace Kaitai
             {
                 _version = m_io.ReadU2be();
                 _subtableCount = m_io.ReadU2be();
-                _subtables = new List<Subtable>((int) (SubtableCount));
+                _subtables = new List<Subtable>();
                 for (var i = 0; i < SubtableCount; i++)
                 {
                     _subtables.Add(new Subtable(m_io, this, m_root));
@@ -618,7 +618,7 @@ namespace Kaitai
                         _searchRange = m_io.ReadU2be();
                         _entrySelector = m_io.ReadU2be();
                         _rangeShift = m_io.ReadU2be();
-                        _kerningPairs = new List<KerningPair>((int) (PairCount));
+                        _kerningPairs = new List<KerningPair>();
                         for (var i = 0; i < PairCount; i++)
                         {
                             _kerningPairs.Add(new KerningPair(m_io, this, m_root));
@@ -1725,14 +1725,14 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _endPtsOfContours = new List<ushort>((int) (M_Parent.NumberOfContours));
+                    _endPtsOfContours = new List<ushort>();
                     for (var i = 0; i < M_Parent.NumberOfContours; i++)
                     {
                         _endPtsOfContours.Add(m_io.ReadU2be());
                     }
                     _instructionLength = m_io.ReadU2be();
                     _instructions = m_io.ReadBytes(InstructionLength);
-                    _flags = new List<Flag>((int) (PointCount));
+                    _flags = new List<Flag>();
                     for (var i = 0; i < PointCount; i++)
                     {
                         _flags.Add(new Flag(m_io, this, m_root));
@@ -2087,7 +2087,7 @@ namespace Kaitai
             {
                 _versionNumber = m_io.ReadU2be();
                 _numberOfEncodingTables = m_io.ReadU2be();
-                _tables = new List<SubtableHeader>((int) (NumberOfEncodingTables));
+                _tables = new List<SubtableHeader>();
                 for (var i = 0; i < NumberOfEncodingTables; i++)
                 {
                     _tables.Add(new SubtableHeader(m_io, this, m_root));
@@ -2237,7 +2237,7 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _subHeaderKeys = new List<ushort>((int) (256));
+                        _subHeaderKeys = new List<ushort>();
                         for (var i = 0; i < 256; i++)
                         {
                             _subHeaderKeys.Add(m_io.ReadU2be());
@@ -2270,23 +2270,23 @@ namespace Kaitai
                         _searchRange = m_io.ReadU2be();
                         _entrySelector = m_io.ReadU2be();
                         _rangeShift = m_io.ReadU2be();
-                        _endCount = new List<ushort>((int) (SegCount));
+                        _endCount = new List<ushort>();
                         for (var i = 0; i < SegCount; i++)
                         {
                             _endCount.Add(m_io.ReadU2be());
                         }
                         _reservedPad = m_io.ReadU2be();
-                        _startCount = new List<ushort>((int) (SegCount));
+                        _startCount = new List<ushort>();
                         for (var i = 0; i < SegCount; i++)
                         {
                             _startCount.Add(m_io.ReadU2be());
                         }
-                        _idDelta = new List<ushort>((int) (SegCount));
+                        _idDelta = new List<ushort>();
                         for (var i = 0; i < SegCount; i++)
                         {
                             _idDelta.Add(m_io.ReadU2be());
                         }
-                        _idRangeOffset = new List<ushort>((int) (SegCount));
+                        _idRangeOffset = new List<ushort>();
                         for (var i = 0; i < SegCount; i++)
                         {
                             _idRangeOffset.Add(m_io.ReadU2be());
@@ -2355,7 +2355,7 @@ namespace Kaitai
                     {
                         _firstCode = m_io.ReadU2be();
                         _entryCount = m_io.ReadU2be();
-                        _glyphIdArray = new List<ushort>((int) (EntryCount));
+                        _glyphIdArray = new List<ushort>();
                         for (var i = 0; i < EntryCount; i++)
                         {
                             _glyphIdArray.Add(m_io.ReadU2be());

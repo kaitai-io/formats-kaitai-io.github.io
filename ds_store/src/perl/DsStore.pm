@@ -170,18 +170,18 @@ sub _read {
     $self->{block_addresses} = ();
     my $n_block_addresses = $self->num_block_addresses();
     for (my $i = 0; $i < $n_block_addresses; $i++) {
-        $self->{block_addresses}[$i] = DsStore::BuddyAllocatorBody::BlockDescriptor->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{block_addresses}}, DsStore::BuddyAllocatorBody::BlockDescriptor->new($self->{_io}, $self, $self->{_root});
     }
     $self->{num_directories} = $self->{_io}->read_u4be();
     $self->{directory_entries} = ();
     my $n_directory_entries = $self->num_directories();
     for (my $i = 0; $i < $n_directory_entries; $i++) {
-        $self->{directory_entries}[$i] = DsStore::BuddyAllocatorBody::DirectoryEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{directory_entries}}, DsStore::BuddyAllocatorBody::DirectoryEntry->new($self->{_io}, $self, $self->{_root});
     }
     $self->{free_lists} = ();
     my $n_free_lists = $self->num_free_lists();
     for (my $i = 0; $i < $n_free_lists; $i++) {
-        $self->{free_lists}[$i] = DsStore::BuddyAllocatorBody::FreeList->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{free_lists}}, DsStore::BuddyAllocatorBody::FreeList->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -206,7 +206,7 @@ sub directories {
     $self->{directories} = ();
     my $n_directories = $self->num_directories();
     for (my $i = 0; $i < $n_directories; $i++) {
-        $self->{directories}[$i] = DsStore::MasterBlockRef->new($io, $self, $self->{_root});
+        push @{$self->{directories}}, DsStore::MasterBlockRef->new($io, $self, $self->{_root});
     }
     return $self->{directories};
 }
@@ -377,7 +377,7 @@ sub _read {
     $self->{offsets} = ();
     my $n_offsets = $self->counter();
     for (my $i = 0; $i < $n_offsets; $i++) {
-        $self->{offsets}[$i] = $self->{_io}->read_u4be();
+        push @{$self->{offsets}}, $self->{_io}->read_u4be();
     }
 }
 
@@ -553,7 +553,7 @@ sub _read {
     $self->{data} = ();
     my $n_data = $self->counter();
     for (my $i = 0; $i < $n_data; $i++) {
-        $self->{data}[$i] = DsStore::Block::BlockData->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{data}}, DsStore::Block::BlockData->new($self->{_io}, $self, $self->{_root});
     }
 }
 

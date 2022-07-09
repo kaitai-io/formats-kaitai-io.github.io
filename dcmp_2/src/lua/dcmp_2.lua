@@ -199,8 +199,8 @@ end
 
 function Dcmp2.HeaderParameters.Flags:_read()
   self.reserved = self._io:read_bits_int_be(6)
-  self.tagged = self._io:read_bits_int_be(1)
-  self.has_custom_lookup_table = self._io:read_bits_int_be(1)
+  self.tagged = self._io:read_bits_int_be(1) ~= 0
+  self.has_custom_lookup_table = self._io:read_bits_int_be(1) ~= 0
 end
 
 -- 
@@ -295,7 +295,7 @@ end
 function Dcmp2.TaggedData.Chunk:_read()
   self.tag = {}
   for i = 0, 8 - 1 do
-    self.tag[i + 1] = self._io:read_bits_int_be(1)
+    self.tag[i + 1] = self._io:read_bits_int_be(1) ~= 0
   end
   self._io:align_to_byte()
   self._raw_units = {}
@@ -304,10 +304,10 @@ function Dcmp2.TaggedData.Chunk:_read()
   while true do
     local _on = self.tag[i + 1]
     if _on == true then
-      _ = self._io:read_u1()
+      local _ = self._io:read_u1()
       self.units[i + 1] = _
     else
-      _ = self._io:read_bytes(utils.box_unwrap((self.tag[i + 1]) and utils.box_wrap(1) or (2)))
+      local _ = self._io:read_bytes(utils.box_unwrap((self.tag[i + 1]) and utils.box_wrap(1) or (2)))
       self.units[i + 1] = _
     end
     if  ((i >= 7) or (self._io:is_eof()))  then

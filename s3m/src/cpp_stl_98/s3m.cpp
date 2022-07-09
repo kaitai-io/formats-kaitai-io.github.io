@@ -47,31 +47,27 @@ void s3m_t::_read() {
     m_has_custom_pan = m__io->read_u1();
     m_reserved2 = m__io->read_bytes(8);
     m_ofs_special = m__io->read_u2le();
-    int l_channels = 32;
     m_channels = new std::vector<channel_t*>();
-    m_channels->reserve(l_channels);
+    const int l_channels = 32;
     for (int i = 0; i < l_channels; i++) {
         m_channels->push_back(new channel_t(m__io, this, m__root));
     }
     m_orders = m__io->read_bytes(num_orders());
-    int l_instruments = num_instruments();
     m_instruments = new std::vector<instrument_ptr_t*>();
-    m_instruments->reserve(l_instruments);
+    const int l_instruments = num_instruments();
     for (int i = 0; i < l_instruments; i++) {
         m_instruments->push_back(new instrument_ptr_t(m__io, this, m__root));
     }
-    int l_patterns = num_patterns();
     m_patterns = new std::vector<pattern_ptr_t*>();
-    m_patterns->reserve(l_patterns);
+    const int l_patterns = num_patterns();
     for (int i = 0; i < l_patterns; i++) {
         m_patterns->push_back(new pattern_ptr_t(m__io, this, m__root));
     }
     n_channel_pans = true;
     if (has_custom_pan() == 252) {
         n_channel_pans = false;
-        int l_channel_pans = 32;
         m_channel_pans = new std::vector<channel_pan_t*>();
-        m_channel_pans->reserve(l_channel_pans);
+        const int l_channel_pans = 32;
         for (int i = 0; i < l_channel_pans; i++) {
             m_channel_pans->push_back(new channel_pan_t(m__io, this, m__root));
         }

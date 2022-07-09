@@ -45,12 +45,12 @@ sub _read {
     $self->{folder_names} = ();
     my $n_folder_names = $self->folder_count();
     for (my $i = 0; $i < $n_folder_names; $i++) {
-        $self->{folder_names}[$i] = FalloutDat::Pstr->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{folder_names}}, FalloutDat::Pstr->new($self->{_io}, $self, $self->{_root});
     }
     $self->{folders} = ();
     my $n_folders = $self->folder_count();
     for (my $i = 0; $i < $n_folders; $i++) {
-        $self->{folders}[$i] = FalloutDat::Folder->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{folders}}, FalloutDat::Folder->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -165,7 +165,7 @@ sub _read {
     $self->{files} = ();
     my $n_files = $self->file_count();
     for (my $i = 0; $i < $n_files; $i++) {
-        $self->{files}[$i] = FalloutDat::File->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{files}}, FalloutDat::File->new($self->{_io}, $self, $self->{_root});
     }
 }
 

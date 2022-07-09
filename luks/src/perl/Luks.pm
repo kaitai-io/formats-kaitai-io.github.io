@@ -97,7 +97,7 @@ sub _read {
     $self->{key_slots} = ();
     my $n_key_slots = 8;
     for (my $i = 0; $i < $n_key_slots; $i++) {
-        $self->{key_slots}[$i] = Luks::PartitionHeader::KeySlot->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{key_slots}}, Luks::PartitionHeader::KeySlot->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -404,9 +404,9 @@ class Dcmp0 < Kaitai::Struct::Struct
         def _read
           @segment_number_raw = DcmpVariableLengthInteger.new(@_io)
           @num_addresses_raw = DcmpVariableLengthInteger.new(@_io)
-          @addresses_raw = Array.new(num_addresses)
+          @addresses_raw = []
           (num_addresses).times { |i|
-            @addresses_raw[i] = DcmpVariableLengthInteger.new(@_io)
+            @addresses_raw << DcmpVariableLengthInteger.new(@_io)
           }
           self
         end
@@ -549,9 +549,9 @@ class Dcmp0 < Kaitai::Struct::Struct
         def _read
           @first_value_raw = DcmpVariableLengthInteger.new(@_io)
           @num_deltas_raw = DcmpVariableLengthInteger.new(@_io)
-          @deltas = Array.new(num_deltas)
+          @deltas = []
           (num_deltas).times { |i|
-            @deltas[i] = @_io.read_s1
+            @deltas << @_io.read_s1
           }
           self
         end
@@ -611,9 +611,9 @@ class Dcmp0 < Kaitai::Struct::Struct
         def _read
           @first_value_raw = DcmpVariableLengthInteger.new(@_io)
           @num_deltas_raw = DcmpVariableLengthInteger.new(@_io)
-          @deltas_raw = Array.new(num_deltas)
+          @deltas_raw = []
           (num_deltas).times { |i|
-            @deltas_raw[i] = DcmpVariableLengthInteger.new(@_io)
+            @deltas_raw << DcmpVariableLengthInteger.new(@_io)
           }
           self
         end

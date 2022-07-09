@@ -86,9 +86,9 @@ class GimpBrush < Kaitai::Struct::Struct
     end
 
     def _read
-      @rows = Array.new(_root.header.height)
+      @rows = []
       (_root.header.height).times { |i|
-        @rows[i] = Row.new(@_io, self, @_root)
+        @rows << Row.new(@_io, self, @_root)
       }
       self
     end
@@ -101,13 +101,13 @@ class GimpBrush < Kaitai::Struct::Struct
     end
 
     def _read
-      @pixels = Array.new(_root.header.width)
+      @pixels = []
       (_root.header.width).times { |i|
         case _root.header.bytes_per_pixel
         when :color_depth_grayscale
-          @pixels[i] = PixelGray.new(@_io, self, @_root)
+          @pixels << PixelGray.new(@_io, self, @_root)
         when :color_depth_rgba
-          @pixels[i] = PixelRgba.new(@_io, self, @_root)
+          @pixels << PixelRgba.new(@_io, self, @_root)
         end
       }
       self

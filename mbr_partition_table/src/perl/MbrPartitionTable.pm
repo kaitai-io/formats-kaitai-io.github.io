@@ -38,7 +38,7 @@ sub _read {
     $self->{partitions} = ();
     my $n_partitions = 4;
     for (my $i = 0; $i < $n_partitions; $i++) {
-        $self->{partitions}[$i] = MbrPartitionTable::PartitionEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{partitions}}, MbrPartitionTable::PartitionEntry->new($self->{_io}, $self, $self->{_root});
     }
     $self->{boot_signature} = $self->{_io}->read_bytes(2);
 }

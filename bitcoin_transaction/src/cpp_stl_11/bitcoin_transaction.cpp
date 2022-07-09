@@ -14,16 +14,14 @@ bitcoin_transaction_t::bitcoin_transaction_t(kaitai::kstream* p__io, kaitai::kst
 void bitcoin_transaction_t::_read() {
     m_version = m__io->read_u4le();
     m_num_vins = m__io->read_u1();
-    int l_vins = num_vins();
     m_vins = std::unique_ptr<std::vector<std::unique_ptr<vin_t>>>(new std::vector<std::unique_ptr<vin_t>>());
-    m_vins->reserve(l_vins);
+    const int l_vins = num_vins();
     for (int i = 0; i < l_vins; i++) {
         m_vins->push_back(std::move(std::unique_ptr<vin_t>(new vin_t(m__io, this, m__root))));
     }
     m_num_vouts = m__io->read_u1();
-    int l_vouts = num_vouts();
     m_vouts = std::unique_ptr<std::vector<std::unique_ptr<vout_t>>>(new std::vector<std::unique_ptr<vout_t>>());
-    m_vouts->reserve(l_vouts);
+    const int l_vouts = num_vouts();
     for (int i = 0; i < l_vouts; i++) {
         m_vouts->push_back(std::move(std::unique_ptr<vout_t>(new vout_t(m__io, this, m__root))));
     }

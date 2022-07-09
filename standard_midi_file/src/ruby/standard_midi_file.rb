@@ -30,9 +30,9 @@ class StandardMidiFile < Kaitai::Struct::Struct
 
   def _read
     @hdr = Header.new(@_io, self, @_root)
-    @tracks = Array.new(hdr.num_tracks)
+    @tracks = []
     (hdr.num_tracks).times { |i|
-      @tracks[i] = Track.new(@_io, self, @_root)
+      @tracks << Track.new(@_io, self, @_root)
     }
     self
   end

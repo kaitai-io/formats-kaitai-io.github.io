@@ -9,7 +9,8 @@ type
     `body`*: KaitaiStruct
     `parent`*: KaitaiStruct
     `rawBody`*: seq[byte]
-    `versionInst`*: int
+    `versionInst`: int
+    `versionInstFlag`: bool
   RenderwareBinaryStream_Sections* = enum
     struct = 1
     string = 2
@@ -192,10 +193,14 @@ type
     `geometry`*: RenderwareBinaryStream_GeometryNonNative
     `morphTargets`*: seq[RenderwareBinaryStream_MorphTarget]
     `parent`*: RenderwareBinaryStream_ListWithHeader
-    `isTexturedInst`*: bool
-    `isPrelitInst`*: bool
-    `isTextured2Inst`*: bool
-    `isNativeInst`*: bool
+    `isTexturedInst`: bool
+    `isTexturedInstFlag`: bool
+    `isPrelitInst`: bool
+    `isPrelitInstFlag`: bool
+    `isTextured2Inst`: bool
+    `isTextured2InstFlag`: bool
+    `isNativeInst`: bool
+    `isNativeInstFlag`: bool
   RenderwareBinaryStream_GeometryNonNative* = ref object of KaitaiStruct
     `prelitColors`*: seq[RenderwareBinaryStream_Rgba]
     `texCoords`*: seq[RenderwareBinaryStream_TexCoord]
@@ -248,7 +253,8 @@ type
     `entries`*: seq[RenderwareBinaryStream]
     `parent`*: RenderwareBinaryStream
     `rawHeader`*: seq[byte]
-    `versionInst`*: int
+    `versionInst`: int
+    `versionInstFlag`: bool
   RenderwareBinaryStream_Triangle* = ref object of KaitaiStruct
     `vertex2`*: uint16
     `vertex1`*: uint16
@@ -355,12 +361,12 @@ proc read*(_: typedesc[RenderwareBinaryStream], io: KaitaiStream, root: KaitaiSt
       this.body = bodyExpr
 
 proc version(this: RenderwareBinaryStream): int = 
-  if this.versionInst != nil:
+  if this.versionInstFlag:
     return this.versionInst
   let versionInstExpr = int((if (this.libraryIdStamp and 4294901760'i64) != 0: ((((this.libraryIdStamp shr 14) and 261888) + 196608) or ((this.libraryIdStamp shr 16) and 63)) else: (this.libraryIdStamp shl 8)))
   this.versionInst = versionInstExpr
-  if this.versionInst != nil:
-    return this.versionInst
+  this.versionInstFlag = true
+  return this.versionInst
 
 proc fromFile*(_: typedesc[RenderwareBinaryStream], filename: string): RenderwareBinaryStream =
   RenderwareBinaryStream.read(newKaitaiFileStream(filename), nil, nil)
@@ -420,36 +426,36 @@ proc read*(_: typedesc[RenderwareBinaryStream_StructGeometry], io: KaitaiStream,
     this.morphTargets.add(it)
 
 proc isTextured(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isTexturedInst != nil:
+  if this.isTexturedInstFlag:
     return this.isTexturedInst
   let isTexturedInstExpr = bool((this.format and 4) != 0)
   this.isTexturedInst = isTexturedInstExpr
-  if this.isTexturedInst != nil:
-    return this.isTexturedInst
+  this.isTexturedInstFlag = true
+  return this.isTexturedInst
 
 proc isPrelit(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isPrelitInst != nil:
+  if this.isPrelitInstFlag:
     return this.isPrelitInst
   let isPrelitInstExpr = bool((this.format and 8) != 0)
   this.isPrelitInst = isPrelitInstExpr
-  if this.isPrelitInst != nil:
-    return this.isPrelitInst
+  this.isPrelitInstFlag = true
+  return this.isPrelitInst
 
 proc isTextured2(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isTextured2Inst != nil:
+  if this.isTextured2InstFlag:
     return this.isTextured2Inst
   let isTextured2InstExpr = bool((this.format and 128) != 0)
   this.isTextured2Inst = isTextured2InstExpr
-  if this.isTextured2Inst != nil:
-    return this.isTextured2Inst
+  this.isTextured2InstFlag = true
+  return this.isTextured2Inst
 
 proc isNative(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isNativeInst != nil:
+  if this.isNativeInstFlag:
     return this.isNativeInst
   let isNativeInstExpr = bool((this.format and 16777216) != 0)
   this.isNativeInst = isNativeInstExpr
-  if this.isNativeInst != nil:
-    return this.isNativeInst
+  this.isNativeInstFlag = true
+  return this.isNativeInst
 
 proc fromFile*(_: typedesc[RenderwareBinaryStream_StructGeometry], filename: string): RenderwareBinaryStream_StructGeometry =
   RenderwareBinaryStream_StructGeometry.read(newKaitaiFileStream(filename), nil, nil)
@@ -712,12 +718,12 @@ proc read*(_: typedesc[RenderwareBinaryStream_ListWithHeader], io: KaitaiStream,
       inc i
 
 proc version(this: RenderwareBinaryStream_ListWithHeader): int = 
-  if this.versionInst != nil:
+  if this.versionInstFlag:
     return this.versionInst
   let versionInstExpr = int((if (this.libraryIdStamp and 4294901760'i64) != 0: ((((this.libraryIdStamp shr 14) and 261888) + 196608) or ((this.libraryIdStamp shr 16) and 63)) else: (this.libraryIdStamp shl 8)))
   this.versionInst = versionInstExpr
-  if this.versionInst != nil:
-    return this.versionInst
+  this.versionInstFlag = true
+  return this.versionInst
 
 proc fromFile*(_: typedesc[RenderwareBinaryStream_ListWithHeader], filename: string): RenderwareBinaryStream_ListWithHeader =
   RenderwareBinaryStream_ListWithHeader.read(newKaitaiFileStream(filename), nil, nil)

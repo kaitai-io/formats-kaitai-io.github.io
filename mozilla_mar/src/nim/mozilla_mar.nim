@@ -11,7 +11,8 @@ type
     `lenAdditionalSections`*: uint32
     `additionalSections`*: seq[MozillaMar_AdditionalSection]
     `parent`*: KaitaiStruct
-    `indexInst`*: MozillaMar_MarIndex
+    `indexInst`: MozillaMar_MarIndex
+    `indexInstFlag`: bool
   MozillaMar_SignatureAlgorithms* = enum
     rsa_pkcs1_sha1 = 1
     rsa_pkcs1_sha384 = 2
@@ -40,7 +41,8 @@ type
     `flags`*: uint32
     `fileName`*: string
     `parent`*: MozillaMar_IndexEntries
-    `bodyInst`*: seq[byte]
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   MozillaMar_AdditionalSection* = ref object of KaitaiStruct
     `lenBlock`*: uint32
     `blockIdentifier`*: MozillaMar_BlockIdentifiers
@@ -94,15 +96,15 @@ proc read*(_: typedesc[MozillaMar], io: KaitaiStream, root: KaitaiStruct, parent
     this.additionalSections.add(it)
 
 proc index(this: MozillaMar): MozillaMar_MarIndex = 
-  if this.indexInst != nil:
+  if this.indexInstFlag:
     return this.indexInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsIndex))
   let indexInstExpr = MozillaMar_MarIndex.read(this.io, this.root, this)
   this.indexInst = indexInstExpr
   this.io.seek(pos)
-  if this.indexInst != nil:
-    return this.indexInst
+  this.indexInstFlag = true
+  return this.indexInst
 
 proc fromFile*(_: typedesc[MozillaMar], filename: string): MozillaMar =
   MozillaMar.read(newKaitaiFileStream(filename), nil, nil)
@@ -200,7 +202,7 @@ proc read*(_: typedesc[MozillaMar_IndexEntry], io: KaitaiStream, root: KaitaiStr
   this.fileName = fileNameExpr
 
 proc body(this: MozillaMar_IndexEntry): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let io = MozillaMar(this.root).io
   let pos = io.pos()
@@ -208,8 +210,8 @@ proc body(this: MozillaMar_IndexEntry): seq[byte] =
   let bodyInstExpr = io.readBytes(int(this.lenContent))
   this.bodyInst = bodyInstExpr
   io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[MozillaMar_IndexEntry], filename: string): MozillaMar_IndexEntry =
   MozillaMar_IndexEntry.read(newKaitaiFileStream(filename), nil, nil)

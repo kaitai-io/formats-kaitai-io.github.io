@@ -117,14 +117,14 @@ end
 
 function VmwareVmdk.HeaderFlags:_read()
   self.reserved1 = self._io:read_bits_int_be(5)
-  self.zeroed_grain_table_entry = self._io:read_bits_int_be(1)
-  self.use_secondary_grain_dir = self._io:read_bits_int_be(1)
-  self.valid_new_line_detection_test = self._io:read_bits_int_be(1)
+  self.zeroed_grain_table_entry = self._io:read_bits_int_be(1) ~= 0
+  self.use_secondary_grain_dir = self._io:read_bits_int_be(1) ~= 0
+  self.valid_new_line_detection_test = self._io:read_bits_int_be(1) ~= 0
   self._io:align_to_byte()
   self.reserved2 = self._io:read_u1()
   self.reserved3 = self._io:read_bits_int_be(6)
-  self.has_metadata = self._io:read_bits_int_be(1)
-  self.has_compressed_grain = self._io:read_bits_int_be(1)
+  self.has_metadata = self._io:read_bits_int_be(1) ~= 0
+  self.has_compressed_grain = self._io:read_bits_int_be(1) ~= 0
   self._io:align_to_byte()
   self.reserved4 = self._io:read_u1()
 end

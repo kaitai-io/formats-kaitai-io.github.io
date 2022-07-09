@@ -8,7 +8,7 @@
   } else {
     root.Ipv4Packet = factory(root.KaitaiStream, root.ProtocolBody);
   }
-}(this, function (KaitaiStream, ProtocolBody) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, ProtocolBody) {
 var Ipv4Packet = (function() {
   function Ipv4Packet(_io, _parent, _root) {
     this._io = _io;

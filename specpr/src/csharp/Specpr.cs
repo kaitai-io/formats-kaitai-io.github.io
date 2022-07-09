@@ -75,7 +75,7 @@ namespace Kaitai
                 _itchan = m_io.ReadS4be();
                 _irmas = m_io.ReadS4be();
                 _revs = m_io.ReadS4be();
-                _iband = new List<int>((int) (2));
+                _iband = new List<int>();
                 for (var i = 0; i < 2; i++)
                 {
                     _iband.Add(m_io.ReadS4be());
@@ -85,7 +85,7 @@ namespace Kaitai
                 _irecno = m_io.ReadS4be();
                 _itpntr = m_io.ReadS4be();
                 _ihist = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(60), 32));
-                _mhist = new List<string>((int) (4));
+                _mhist = new List<string>();
                 for (var i = 0; i < 4; i++)
                 {
                     _mhist.Add(System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(74)));
@@ -100,7 +100,7 @@ namespace Kaitai
                 _scatim = m_io.ReadF4be();
                 _timint = m_io.ReadF4be();
                 _tempd = m_io.ReadF4be();
-                _data = new List<float>((int) (256));
+                _data = new List<float>();
                 for (var i = 0; i < 256; i++)
                 {
                     _data.Add(m_io.ReadF4be());
@@ -453,7 +453,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _cdata = new List<float>((int) (383));
+                _cdata = new List<float>();
                 for (var i = 0; i < 383; i++)
                 {
                     _cdata.Add(m_io.ReadF4be());

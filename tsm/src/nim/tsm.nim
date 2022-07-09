@@ -5,7 +5,8 @@ type
   Tsm* = ref object of KaitaiStruct
     `header`*: Tsm_Header
     `parent`*: KaitaiStruct
-    `indexInst`*: Tsm_Index
+    `indexInst`: Tsm_Index
+    `indexInstFlag`: bool
   Tsm_Header* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `version`*: uint8
@@ -13,7 +14,8 @@ type
   Tsm_Index* = ref object of KaitaiStruct
     `offset`*: uint64
     `parent`*: Tsm
-    `entriesInst`*: seq[Tsm_Index_IndexHeader]
+    `entriesInst`: seq[Tsm_Index_IndexHeader]
+    `entriesInstFlag`: bool
   Tsm_Index_IndexHeader* = ref object of KaitaiStruct
     `keyLen`*: uint16
     `key`*: string
@@ -27,7 +29,8 @@ type
     `blockOffset`*: uint64
     `blockSize`*: uint32
     `parent`*: Tsm_Index_IndexHeader
-    `blockInst`*: Tsm_Index_IndexHeader_IndexEntry_BlockEntry
+    `blockInst`: Tsm_Index_IndexHeader_IndexEntry_BlockEntry
+    `blockInstFlag`: bool
   Tsm_Index_IndexHeader_IndexEntry_BlockEntry* = ref object of KaitaiStruct
     `crc32`*: uint32
     `data`*: seq[byte]
@@ -68,15 +71,15 @@ proc read*(_: typedesc[Tsm], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
   this.header = headerExpr
 
 proc index(this: Tsm): Tsm_Index = 
-  if this.indexInst != nil:
+  if this.indexInstFlag:
     return this.indexInst
   let pos = this.io.pos()
   this.io.seek(int((this.io.size - 8)))
   let indexInstExpr = Tsm_Index.read(this.io, this.root, this)
   this.indexInst = indexInstExpr
   this.io.seek(pos)
-  if this.indexInst != nil:
-    return this.indexInst
+  this.indexInstFlag = true
+  return this.indexInst
 
 proc fromFile*(_: typedesc[Tsm], filename: string): Tsm =
   Tsm.read(newKaitaiFileStream(filename), nil, nil)
@@ -109,7 +112,7 @@ proc read*(_: typedesc[Tsm_Index], io: KaitaiStream, root: KaitaiStruct, parent:
   this.offset = offsetExpr
 
 proc entries(this: Tsm_Index): seq[Tsm_Index_IndexHeader] = 
-  if this.entriesInst.len != 0:
+  if this.entriesInstFlag:
     return this.entriesInst
   let pos = this.io.pos()
   this.io.seek(int(this.offset))
@@ -122,8 +125,8 @@ proc entries(this: Tsm_Index): seq[Tsm_Index_IndexHeader] =
         break
       inc i
   this.io.seek(pos)
-  if this.entriesInst.len != 0:
-    return this.entriesInst
+  this.entriesInstFlag = true
+  return this.entriesInst
 
 proc fromFile*(_: typedesc[Tsm_Index], filename: string): Tsm_Index =
   Tsm_Index.read(newKaitaiFileStream(filename), nil, nil)
@@ -169,7 +172,7 @@ proc read*(_: typedesc[Tsm_Index_IndexHeader_IndexEntry], io: KaitaiStream, root
   this.blockSize = blockSizeExpr
 
 proc block(this: Tsm_Index_IndexHeader_IndexEntry): Tsm_Index_IndexHeader_IndexEntry_BlockEntry = 
-  if this.blockInst != nil:
+  if this.blockInstFlag:
     return this.blockInst
   let io = Tsm(this.root).io
   let pos = io.pos()
@@ -177,8 +180,8 @@ proc block(this: Tsm_Index_IndexHeader_IndexEntry): Tsm_Index_IndexHeader_IndexE
   let blockInstExpr = Tsm_Index_IndexHeader_IndexEntry_BlockEntry.read(io, this.root, this)
   this.blockInst = blockInstExpr
   io.seek(pos)
-  if this.blockInst != nil:
-    return this.blockInst
+  this.blockInstFlag = true
+  return this.blockInst
 
 proc fromFile*(_: typedesc[Tsm_Index_IndexHeader_IndexEntry], filename: string): Tsm_Index_IndexHeader_IndexEntry =
   Tsm_Index_IndexHeader_IndexEntry.read(newKaitaiFileStream(filename), nil, nil)

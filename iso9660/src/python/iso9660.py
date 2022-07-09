@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Iso9660(KaitaiStruct):
@@ -81,7 +80,7 @@ class Iso9660(KaitaiStruct):
         @property
         def path_table(self):
             if hasattr(self, '_m_path_table'):
-                return self._m_path_table if hasattr(self, '_m_path_table') else None
+                return self._m_path_table
 
             _pos = self._io.pos()
             self._io.seek((self.lba_path_table_le * self._root.sector_size))
@@ -89,7 +88,7 @@ class Iso9660(KaitaiStruct):
             _io__raw__m_path_table = KaitaiStream(BytesIO(self._raw__m_path_table))
             self._m_path_table = Iso9660.PathTableLe(_io__raw__m_path_table, self, self._root)
             self._io.seek(_pos)
-            return self._m_path_table if hasattr(self, '_m_path_table') else None
+            return getattr(self, '_m_path_table', None)
 
 
     class VolDescBootRecord(KaitaiStruct):
@@ -286,7 +285,7 @@ class Iso9660(KaitaiStruct):
         @property
         def extent_as_dir(self):
             if hasattr(self, '_m_extent_as_dir'):
-                return self._m_extent_as_dir if hasattr(self, '_m_extent_as_dir') else None
+                return self._m_extent_as_dir
 
             if (self.file_flags & 2) != 0:
                 io = self._root._io
@@ -297,12 +296,12 @@ class Iso9660(KaitaiStruct):
                 self._m_extent_as_dir = Iso9660.DirEntries(_io__raw__m_extent_as_dir, self, self._root)
                 io.seek(_pos)
 
-            return self._m_extent_as_dir if hasattr(self, '_m_extent_as_dir') else None
+            return getattr(self, '_m_extent_as_dir', None)
 
         @property
         def extent_as_file(self):
             if hasattr(self, '_m_extent_as_file'):
-                return self._m_extent_as_file if hasattr(self, '_m_extent_as_file') else None
+                return self._m_extent_as_file
 
             if (self.file_flags & 2) == 0:
                 io = self._root._io
@@ -311,26 +310,26 @@ class Iso9660(KaitaiStruct):
                 self._m_extent_as_file = io.read_bytes(self.size_extent.le)
                 io.seek(_pos)
 
-            return self._m_extent_as_file if hasattr(self, '_m_extent_as_file') else None
+            return getattr(self, '_m_extent_as_file', None)
 
 
     @property
     def sector_size(self):
         if hasattr(self, '_m_sector_size'):
-            return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+            return self._m_sector_size
 
         self._m_sector_size = 2048
-        return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+        return getattr(self, '_m_sector_size', None)
 
     @property
     def primary_vol_desc(self):
         if hasattr(self, '_m_primary_vol_desc'):
-            return self._m_primary_vol_desc if hasattr(self, '_m_primary_vol_desc') else None
+            return self._m_primary_vol_desc
 
         _pos = self._io.pos()
         self._io.seek((16 * self.sector_size))
         self._m_primary_vol_desc = Iso9660.VolDesc(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_primary_vol_desc if hasattr(self, '_m_primary_vol_desc') else None
+        return getattr(self, '_m_primary_vol_desc', None)
 
 

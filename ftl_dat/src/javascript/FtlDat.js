@@ -8,7 +8,7 @@
   } else {
     root.FtlDat = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var FtlDat = (function() {
   function FtlDat(_io, _parent, _root) {
     this._io = _io;
@@ -19,9 +19,9 @@ var FtlDat = (function() {
   }
   FtlDat.prototype._read = function() {
     this.numFiles = this._io.readU4le();
-    this.files = new Array(this.numFiles);
+    this.files = [];
     for (var i = 0; i < this.numFiles; i++) {
-      this.files[i] = new File(this._io, this, this._root);
+      this.files.push(new File(this._io, this, this._root));
     }
   }
 

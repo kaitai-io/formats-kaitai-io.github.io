@@ -276,9 +276,9 @@ class MicrosoftPe < Kaitai::Struct::Struct
       @_raw_optional_hdr = @_io.read_bytes(coff_hdr.size_of_optional_header)
       _io__raw_optional_hdr = Kaitai::Struct::Stream.new(@_raw_optional_hdr)
       @optional_hdr = OptionalHeader.new(_io__raw_optional_hdr, self, @_root)
-      @sections = Array.new(coff_hdr.number_of_sections)
+      @sections = []
       (coff_hdr.number_of_sections).times { |i|
-        @sections[i] = Section.new(@_io, self, @_root)
+        @sections << Section.new(@_io, self, @_root)
       }
       self
     end
@@ -493,9 +493,9 @@ class MicrosoftPe < Kaitai::Struct::Struct
       return @symbol_table unless @symbol_table.nil?
       _pos = @_io.pos
       @_io.seek(pointer_to_symbol_table)
-      @symbol_table = Array.new(number_of_symbols)
+      @symbol_table = []
       (number_of_symbols).times { |i|
-        @symbol_table[i] = CoffSymbol.new(@_io, self, @_root)
+        @symbol_table << CoffSymbol.new(@_io, self, @_root)
       }
       @_io.seek(_pos)
       @symbol_table

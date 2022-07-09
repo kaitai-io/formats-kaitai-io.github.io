@@ -583,7 +583,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _records = new List<RootDirectoryRec>((int) (M_Root.BootSector.Bpb.MaxRootDirRec));
+                _records = new List<RootDirectoryRec>();
                 for (var i = 0; i < M_Root.BootSector.Bpb.MaxRootDirRec; i++)
                 {
                     _records.Add(new RootDirectoryRec(m_io, this, m_root));
@@ -674,7 +674,7 @@ namespace Kaitai
                     return _fats;
                 long _pos = m_io.Pos;
                 m_io.Seek(BootSector.PosFats);
-                _fats = new List<byte[]>((int) (BootSector.Bpb.NumFats));
+                _fats = new List<byte[]>();
                 for (var i = 0; i < BootSector.Bpb.NumFats; i++)
                 {
                     _fats.Add(m_io.ReadBytes(BootSector.SizeFat));

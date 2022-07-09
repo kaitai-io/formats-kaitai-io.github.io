@@ -8,8 +8,10 @@ type
     `footerMagic`*: Mcap_Magic
     `parent`*: KaitaiStruct
     `rawFooterInst`*: seq[byte]
-    `footerInst`*: Mcap_Record
-    `ofsFooterInst`*: int
+    `footerInst`: Mcap_Record
+    `footerInstFlag`: bool
+    `ofsFooterInst`: int
+    `ofsFooterInstFlag`: bool
   Mcap_Opcode* = enum
     header = 1
     footer = 2
@@ -93,7 +95,8 @@ type
     `contentType`*: Mcap_PrefixedStr
     `parent`*: Mcap_Record
     `rawAttachmentInst`*: seq[byte]
-    `attachmentInst`*: Mcap_Record
+    `attachmentInst`: Mcap_Record
+    `attachmentInstFlag`: bool
   Mcap_Schema* = ref object of KaitaiStruct
     `id`*: uint16
     `name`*: Mcap_PrefixedStr
@@ -115,7 +118,8 @@ type
     `lenGroup`*: uint64
     `parent`*: Mcap_Record
     `rawGroupInst`*: seq[byte]
-    `groupInst`*: Mcap_Records
+    `groupInst`: Mcap_Records
+    `groupInstFlag`: bool
   Mcap_Attachment* = ref object of KaitaiStruct
     `logTime`*: uint64
     `createTime`*: uint64
@@ -126,8 +130,10 @@ type
     `invokeCrc32InputEnd`*: seq[byte]
     `crc32`*: uint32
     `parent`*: Mcap_Record
-    `crc32InputEndInst`*: int
-    `crc32InputInst`*: seq[byte]
+    `crc32InputEndInst`: int
+    `crc32InputEndInstFlag`: bool
+    `crc32InputInst`: seq[byte]
+    `crc32InputInstFlag`: bool
   Mcap_Metadata* = ref object of KaitaiStruct
     `name`*: Mcap_PrefixedStr
     `metadata`*: Mcap_MapStrStr
@@ -153,7 +159,8 @@ type
     `name`*: Mcap_PrefixedStr
     `parent`*: Mcap_Record
     `rawMetadataInst`*: seq[byte]
-    `metadataInst`*: Mcap_Record
+    `metadataInst`: Mcap_Record
+    `metadataInstFlag`: bool
   Mcap_Magic* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `parent`*: Mcap
@@ -167,10 +174,14 @@ type
     `parent`*: Mcap_Record
     `rawSummarySectionInst`*: seq[byte]
     `rawSummaryOffsetSectionInst`*: seq[byte]
-    `summarySectionInst`*: Mcap_Records
-    `summaryOffsetSectionInst`*: Mcap_Records
-    `ofsSummaryCrc32InputInst`*: int
-    `summaryCrc32InputInst`*: seq[byte]
+    `summarySectionInst`: Mcap_Records
+    `summarySectionInstFlag`: bool
+    `summaryOffsetSectionInst`: Mcap_Records
+    `summaryOffsetSectionInstFlag`: bool
+    `ofsSummaryCrc32InputInst`: int
+    `ofsSummaryCrc32InputInstFlag`: bool
+    `summaryCrc32InputInst`: seq[byte]
+    `summaryCrc32InputInstFlag`: bool
   Mcap_Record* = ref object of KaitaiStruct
     `op`*: Mcap_Opcode
     `lenBody`*: uint64
@@ -191,7 +202,8 @@ type
     `parent`*: Mcap_Record
     `rawMessageIndexOffsets`*: seq[byte]
     `rawChunkInst`*: seq[byte]
-    `chunkInst`*: Mcap_Record
+    `chunkInst`: Mcap_Record
+    `chunkInstFlag`: bool
   Mcap_ChunkIndex_MessageIndexOffset* = ref object of KaitaiStruct
     `channelId`*: uint16
     `offset`*: uint64
@@ -278,7 +290,7 @@ proc read*(_: typedesc[Mcap], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.footerMagic = footerMagicExpr
 
 proc footer(this: Mcap): Mcap_Record = 
-  if this.footerInst != nil:
+  if this.footerInstFlag:
     return this.footerInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsFooter))
@@ -288,16 +300,16 @@ proc footer(this: Mcap): Mcap_Record =
   let footerInstExpr = Mcap_Record.read(rawFooterInstIo, this.root, this)
   this.footerInst = footerInstExpr
   this.io.seek(pos)
-  if this.footerInst != nil:
-    return this.footerInst
+  this.footerInstFlag = true
+  return this.footerInst
 
 proc ofsFooter(this: Mcap): int = 
-  if this.ofsFooterInst != nil:
+  if this.ofsFooterInstFlag:
     return this.ofsFooterInst
   let ofsFooterInstExpr = int(((((this.io.size - 1) - 8) - 20) - 8))
   this.ofsFooterInst = ofsFooterInstExpr
-  if this.ofsFooterInst != nil:
-    return this.ofsFooterInst
+  this.ofsFooterInstFlag = true
+  return this.ofsFooterInst
 
 proc fromFile*(_: typedesc[Mcap], filename: string): Mcap =
   Mcap.read(newKaitaiFileStream(filename), nil, nil)
@@ -549,7 +561,7 @@ proc read*(_: typedesc[Mcap_AttachmentIndex], io: KaitaiStream, root: KaitaiStru
   this.contentType = contentTypeExpr
 
 proc attachment(this: Mcap_AttachmentIndex): Mcap_Record = 
-  if this.attachmentInst != nil:
+  if this.attachmentInstFlag:
     return this.attachmentInst
   let io = Mcap(this.root).io
   let pos = io.pos()
@@ -560,8 +572,8 @@ proc attachment(this: Mcap_AttachmentIndex): Mcap_Record =
   let attachmentInstExpr = Mcap_Record.read(rawAttachmentInstIo, this.root, this)
   this.attachmentInst = attachmentInstExpr
   io.seek(pos)
-  if this.attachmentInst != nil:
-    return this.attachmentInst
+  this.attachmentInstFlag = true
+  return this.attachmentInst
 
 proc fromFile*(_: typedesc[Mcap_AttachmentIndex], filename: string): Mcap_AttachmentIndex =
   Mcap_AttachmentIndex.read(newKaitaiFileStream(filename), nil, nil)
@@ -641,7 +653,7 @@ proc read*(_: typedesc[Mcap_SummaryOffset], io: KaitaiStream, root: KaitaiStruct
   this.lenGroup = lenGroupExpr
 
 proc group(this: Mcap_SummaryOffset): Mcap_Records = 
-  if this.groupInst != nil:
+  if this.groupInstFlag:
     return this.groupInst
   let io = Mcap(this.root).io
   let pos = io.pos()
@@ -652,8 +664,8 @@ proc group(this: Mcap_SummaryOffset): Mcap_Records =
   let groupInstExpr = Mcap_Records.read(rawGroupInstIo, this.root, this)
   this.groupInst = groupInstExpr
   io.seek(pos)
-  if this.groupInst != nil:
-    return this.groupInst
+  this.groupInstFlag = true
+  return this.groupInst
 
 proc fromFile*(_: typedesc[Mcap_SummaryOffset], filename: string): Mcap_SummaryOffset =
   Mcap_SummaryOffset.read(newKaitaiFileStream(filename), nil, nil)
@@ -691,23 +703,23 @@ CRC validation should not be performed.
   this.crc32 = crc32Expr
 
 proc crc32InputEnd(this: Mcap_Attachment): int = 
-  if this.crc32InputEndInst != nil:
+  if this.crc32InputEndInstFlag:
     return this.crc32InputEndInst
   let crc32InputEndInstExpr = int(this.io.pos)
   this.crc32InputEndInst = crc32InputEndInstExpr
-  if this.crc32InputEndInst != nil:
-    return this.crc32InputEndInst
+  this.crc32InputEndInstFlag = true
+  return this.crc32InputEndInst
 
 proc crc32Input(this: Mcap_Attachment): seq[byte] = 
-  if this.crc32InputInst.len != 0:
+  if this.crc32InputInstFlag:
     return this.crc32InputInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let crc32InputInstExpr = this.io.readBytes(int(this.crc32InputEnd))
   this.crc32InputInst = crc32InputInstExpr
   this.io.seek(pos)
-  if this.crc32InputInst.len != 0:
-    return this.crc32InputInst
+  this.crc32InputInstFlag = true
+  return this.crc32InputInst
 
 proc fromFile*(_: typedesc[Mcap_Attachment], filename: string): Mcap_Attachment =
   Mcap_Attachment.read(newKaitaiFileStream(filename), nil, nil)
@@ -798,7 +810,7 @@ proc read*(_: typedesc[Mcap_MetadataIndex], io: KaitaiStream, root: KaitaiStruct
   this.name = nameExpr
 
 proc metadata(this: Mcap_MetadataIndex): Mcap_Record = 
-  if this.metadataInst != nil:
+  if this.metadataInstFlag:
     return this.metadataInst
   let io = Mcap(this.root).io
   let pos = io.pos()
@@ -809,8 +821,8 @@ proc metadata(this: Mcap_MetadataIndex): Mcap_Record =
   let metadataInstExpr = Mcap_Record.read(rawMetadataInstIo, this.root, this)
   this.metadataInst = metadataInstExpr
   io.seek(pos)
-  if this.metadataInst != nil:
-    return this.metadataInst
+  this.metadataInstFlag = true
+  return this.metadataInst
 
 proc fromFile*(_: typedesc[Mcap_MetadataIndex], filename: string): Mcap_MetadataIndex =
   Mcap_MetadataIndex.read(newKaitaiFileStream(filename), nil, nil)
@@ -870,7 +882,7 @@ record. A value of 0 indicates the CRC-32 is not available.
   this.summaryCrc32 = summaryCrc32Expr
 
 proc summarySection(this: Mcap_Footer): Mcap_Records = 
-  if this.summarySectionInst != nil:
+  if this.summarySectionInstFlag:
     return this.summarySectionInst
   if this.ofsSummarySection != 0:
     let io = Mcap(this.root).io
@@ -882,11 +894,11 @@ proc summarySection(this: Mcap_Footer): Mcap_Records =
     let summarySectionInstExpr = Mcap_Records.read(rawSummarySectionInstIo, this.root, this)
     this.summarySectionInst = summarySectionInstExpr
     io.seek(pos)
-  if this.summarySectionInst != nil:
-    return this.summarySectionInst
+  this.summarySectionInstFlag = true
+  return this.summarySectionInst
 
 proc summaryOffsetSection(this: Mcap_Footer): Mcap_Records = 
-  if this.summaryOffsetSectionInst != nil:
+  if this.summaryOffsetSectionInstFlag:
     return this.summaryOffsetSectionInst
   if this.ofsSummaryOffsetSection != 0:
     let io = Mcap(this.root).io
@@ -898,19 +910,19 @@ proc summaryOffsetSection(this: Mcap_Footer): Mcap_Records =
     let summaryOffsetSectionInstExpr = Mcap_Records.read(rawSummaryOffsetSectionInstIo, this.root, this)
     this.summaryOffsetSectionInst = summaryOffsetSectionInstExpr
     io.seek(pos)
-  if this.summaryOffsetSectionInst != nil:
-    return this.summaryOffsetSectionInst
+  this.summaryOffsetSectionInstFlag = true
+  return this.summaryOffsetSectionInst
 
 proc ofsSummaryCrc32Input(this: Mcap_Footer): int = 
-  if this.ofsSummaryCrc32InputInst != nil:
+  if this.ofsSummaryCrc32InputInstFlag:
     return this.ofsSummaryCrc32InputInst
   let ofsSummaryCrc32InputInstExpr = int((if this.ofsSummarySection != 0: this.ofsSummarySection else: Mcap(this.root).ofsFooter))
   this.ofsSummaryCrc32InputInst = ofsSummaryCrc32InputInstExpr
-  if this.ofsSummaryCrc32InputInst != nil:
-    return this.ofsSummaryCrc32InputInst
+  this.ofsSummaryCrc32InputInstFlag = true
+  return this.ofsSummaryCrc32InputInst
 
 proc summaryCrc32Input(this: Mcap_Footer): seq[byte] = 
-  if this.summaryCrc32InputInst.len != 0:
+  if this.summaryCrc32InputInstFlag:
     return this.summaryCrc32InputInst
   let io = Mcap(this.root).io
   let pos = io.pos()
@@ -918,8 +930,8 @@ proc summaryCrc32Input(this: Mcap_Footer): seq[byte] =
   let summaryCrc32InputInstExpr = io.readBytes(int((((Mcap(this.root).io.size - this.ofsSummaryCrc32Input) - 8) - 4)))
   this.summaryCrc32InputInst = summaryCrc32InputInstExpr
   io.seek(pos)
-  if this.summaryCrc32InputInst.len != 0:
-    return this.summaryCrc32InputInst
+  this.summaryCrc32InputInstFlag = true
+  return this.summaryCrc32InputInst
 
 proc fromFile*(_: typedesc[Mcap_Footer], filename: string): Mcap_Footer =
   Mcap_Footer.read(newKaitaiFileStream(filename), nil, nil)
@@ -1068,7 +1080,7 @@ proc read*(_: typedesc[Mcap_ChunkIndex], io: KaitaiStream, root: KaitaiStruct, p
   this.uncompressedSize = uncompressedSizeExpr
 
 proc chunk(this: Mcap_ChunkIndex): Mcap_Record = 
-  if this.chunkInst != nil:
+  if this.chunkInstFlag:
     return this.chunkInst
   let io = Mcap(this.root).io
   let pos = io.pos()
@@ -1079,8 +1091,8 @@ proc chunk(this: Mcap_ChunkIndex): Mcap_Record =
   let chunkInstExpr = Mcap_Record.read(rawChunkInstIo, this.root, this)
   this.chunkInst = chunkInstExpr
   io.seek(pos)
-  if this.chunkInst != nil:
-    return this.chunkInst
+  this.chunkInstFlag = true
+  return this.chunkInst
 
 proc fromFile*(_: typedesc[Mcap_ChunkIndex], filename: string): Mcap_ChunkIndex =
   Mcap_ChunkIndex.read(newKaitaiFileStream(filename), nil, nil)

@@ -412,8 +412,8 @@ public class Vdi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            index = new ArrayList<BlockIndex>(((Number) (_root.header().headerMain().blocksInImage())).intValue());
-            for (int i = 0; i < _root.header().headerMain().blocksInImage(); i++) {
+            this.index = new ArrayList<BlockIndex>();
+            for (int i = 0; i < _root().header().headerMain().blocksInImage(); i++) {
                 this.index.add(new BlockIndex(this._io, this, _root));
             }
         }
@@ -443,7 +443,7 @@ public class Vdi extends KaitaiStruct {
             public Boolean isAllocated() {
                 if (this.isAllocated != null)
                     return this.isAllocated;
-                boolean _tmp = (boolean) (index() < _root.blockDiscarded());
+                boolean _tmp = (boolean) (index() < _root().blockDiscarded());
                 this.isAllocated = _tmp;
                 return this.isAllocated;
             }
@@ -452,7 +452,7 @@ public class Vdi extends KaitaiStruct {
                 if (this.block != null)
                     return this.block;
                 if (isAllocated()) {
-                    this.block = _root.disk().blocks().get((int) index());
+                    this.block = _root().disk().blocks().get((int) index());
                 }
                 return this.block;
             }
@@ -490,8 +490,8 @@ public class Vdi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            blocks = new ArrayList<Block>(((Number) (_root.header().headerMain().blocksInImage())).intValue());
-            for (int i = 0; i < _root.header().headerMain().blocksInImage(); i++) {
+            this.blocks = new ArrayList<Block>();
+            for (int i = 0; i < _root().header().headerMain().blocksInImage(); i++) {
                 this.blocks.add(new Block(this._io, this, _root));
             }
         }
@@ -515,13 +515,13 @@ public class Vdi extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.metadata = this._io.readBytes(_root.header().headerMain().blockMetadataSize());
+                this.metadata = this._io.readBytes(_root().header().headerMain().blockMetadataSize());
                 this._raw_data = new ArrayList<byte[]>();
                 this.data = new ArrayList<Sector>();
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        this._raw_data.add(this._io.readBytes(_root.header().headerMain().blockDataSize()));
+                        this._raw_data.add(this._io.readBytes(_root().header().headerMain().blockDataSize()));
                         KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data.get(_raw_data.size() - 1));
                         this.data.add(new Sector(_io__raw_data, this, _root));
                         i++;
@@ -548,7 +548,7 @@ public class Vdi extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    this.data = this._io.readBytes(_root.header().headerMain().geometry().sectorSize());
+                    this.data = this._io.readBytes(_root().header().headerMain().geometry().sectorSize());
                 }
                 private byte[] data;
                 private Vdi _root;

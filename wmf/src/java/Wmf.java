@@ -389,7 +389,7 @@ public class Wmf extends KaitaiStruct {
         }
         private void _read() {
             this.numPoints = this._io.readS2le();
-            points = new ArrayList<PointS>(((Number) (numPoints())).intValue());
+            this.points = new ArrayList<PointS>();
             for (int i = 0; i < numPoints(); i++) {
                 this.points.add(new PointS(this._io, this, _root));
             }
@@ -606,7 +606,7 @@ public class Wmf extends KaitaiStruct {
         }
         private void _read() {
             this.numPoints = this._io.readS2le();
-            points = new ArrayList<PointS>(((Number) (numPoints())).intValue());
+            this.points = new ArrayList<PointS>();
             for (int i = 0; i < numPoints(); i++) {
                 this.points.add(new PointS(this._io, this, _root));
             }

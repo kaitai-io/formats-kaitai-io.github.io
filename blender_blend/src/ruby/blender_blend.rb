@@ -61,9 +61,9 @@ class BlenderBlend < Kaitai::Struct::Struct
     def _read
       @idx_type = @_io.read_u2le
       @num_fields = @_io.read_u2le
-      @fields = Array.new(num_fields)
+      @fields = []
       (num_fields).times { |i|
-        @fields[i] = DnaField.new(@_io, self, @_root)
+        @fields << DnaField.new(@_io, self, @_root)
       }
       self
     end
@@ -154,32 +154,32 @@ class BlenderBlend < Kaitai::Struct::Struct
       @name_magic = @_io.read_bytes(4)
       raise Kaitai::Struct::ValidationNotEqualError.new([78, 65, 77, 69].pack('C*'), name_magic, _io, "/types/dna1_body/seq/1") if not name_magic == [78, 65, 77, 69].pack('C*')
       @num_names = @_io.read_u4le
-      @names = Array.new(num_names)
+      @names = []
       (num_names).times { |i|
-        @names[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+        @names << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       }
       @padding_1 = @_io.read_bytes(((4 - _io.pos) % 4))
       @type_magic = @_io.read_bytes(4)
       raise Kaitai::Struct::ValidationNotEqualError.new([84, 89, 80, 69].pack('C*'), type_magic, _io, "/types/dna1_body/seq/5") if not type_magic == [84, 89, 80, 69].pack('C*')
       @num_types = @_io.read_u4le
-      @types = Array.new(num_types)
+      @types = []
       (num_types).times { |i|
-        @types[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+        @types << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       }
       @padding_2 = @_io.read_bytes(((4 - _io.pos) % 4))
       @tlen_magic = @_io.read_bytes(4)
       raise Kaitai::Struct::ValidationNotEqualError.new([84, 76, 69, 78].pack('C*'), tlen_magic, _io, "/types/dna1_body/seq/9") if not tlen_magic == [84, 76, 69, 78].pack('C*')
-      @lengths = Array.new(num_types)
+      @lengths = []
       (num_types).times { |i|
-        @lengths[i] = @_io.read_u2le
+        @lengths << @_io.read_u2le
       }
       @padding_3 = @_io.read_bytes(((4 - _io.pos) % 4))
       @strc_magic = @_io.read_bytes(4)
       raise Kaitai::Struct::ValidationNotEqualError.new([83, 84, 82, 67].pack('C*'), strc_magic, _io, "/types/dna1_body/seq/12") if not strc_magic == [83, 84, 82, 67].pack('C*')
       @num_structs = @_io.read_u4le
-      @structs = Array.new(num_structs)
+      @structs = []
       (num_structs).times { |i|
-        @structs[i] = DnaStruct.new(@_io, self, @_root)
+        @structs << DnaStruct.new(@_io, self, @_root)
       }
       self
     end

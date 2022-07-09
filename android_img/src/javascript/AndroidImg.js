@@ -8,7 +8,7 @@
   } else {
     root.AndroidImg = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://source.android.com/devices/bootloader/boot-image-header|Source}
  */

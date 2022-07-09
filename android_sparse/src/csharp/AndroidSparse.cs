@@ -49,7 +49,7 @@ namespace Kaitai
             __raw_header = m_io.ReadBytes((HeaderPrefix.LenHeader - 10));
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new FileHeader(io___raw_header, this, m_root);
-            _chunks = new List<Chunk>((int) (Header.NumChunks));
+            _chunks = new List<Chunk>();
             for (var i = 0; i < Header.NumChunks; i++)
             {
                 _chunks.Add(new Chunk(m_io, this, m_root));

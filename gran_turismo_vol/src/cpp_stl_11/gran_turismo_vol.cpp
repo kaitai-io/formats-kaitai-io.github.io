@@ -24,9 +24,8 @@ void gran_turismo_vol_t::_read() {
     if (!(reserved() == std::string("\x00\x00\x00\x00", 4))) {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), reserved(), _io(), std::string("/seq/3"));
     }
-    int l_offsets = num_files();
     m_offsets = std::unique_ptr<std::vector<uint32_t>>(new std::vector<uint32_t>());
-    m_offsets->reserve(l_offsets);
+    const int l_offsets = num_files();
     for (int i = 0; i < l_offsets; i++) {
         m_offsets->push_back(std::move(m__io->read_u4le()));
     }
@@ -119,9 +118,8 @@ std::vector<std::unique_ptr<gran_turismo_vol_t::file_info_t>>* gran_turismo_vol_
         return m_files.get();
     std::streampos _pos = m__io->pos();
     m__io->seek((ofs_dir() & 4294965248UL));
-    int l_files = _root()->num_entries();
     m_files = std::unique_ptr<std::vector<std::unique_ptr<file_info_t>>>(new std::vector<std::unique_ptr<file_info_t>>());
-    m_files->reserve(l_files);
+    const int l_files = _root()->num_entries();
     for (int i = 0; i < l_files; i++) {
         m_files->push_back(std::move(std::unique_ptr<file_info_t>(new file_info_t(m__io, this, m__root))));
     }

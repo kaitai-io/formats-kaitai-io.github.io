@@ -172,7 +172,7 @@ namespace Kaitai
                 if ( ((PageType == 2) || (PageType == 5)) ) {
                     _rightPtr = m_io.ReadU4be();
                 }
-                _cells = new List<RefCell>((int) (NumCells));
+                _cells = new List<RefCell>();
                 for (var i = 0; i < NumCells; i++)
                 {
                     _cells.Add(new RefCell(m_io, this, m_root));
@@ -324,7 +324,7 @@ namespace Kaitai
                 __raw_columnSerials = m_io.ReadBytes((LenHeaderAndLen.Value - 1));
                 var io___raw_columnSerials = new KaitaiStream(__raw_columnSerials);
                 _columnSerials = new Serials(io___raw_columnSerials, this, m_root);
-                _columnContents = new List<ColumnContent>((int) (ColumnSerials.Entries.Count));
+                _columnContents = new List<ColumnContent>();
                 for (var i = 0; i < ColumnSerials.Entries.Count; i++)
                 {
                     _columnContents.Add(new ColumnContent(ColumnSerials.Entries[i], m_io, this, m_root));

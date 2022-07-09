@@ -688,9 +688,9 @@ public class Elf extends KaitaiStruct {
         }
         private void _read() {
             {
-                Endian on = _root.endian();
+                Endian on = _root().endian();
                 if (on != null) {
-                    switch (_root.endian()) {
+                    switch (_root().endian()) {
                     case LE: {
                         boolean _tmp = (boolean) (true);
                         this._is_le = _tmp;
@@ -718,9 +718,9 @@ public class Elf extends KaitaiStruct {
             this.machine = Elf.Machine.byId(this._io.readU2le());
             this.eVersion = this._io.readU4le();
             {
-                Bits on = _root.bits();
+                Bits on = _root().bits();
                 if (on != null) {
-                    switch (_root.bits()) {
+                    switch (_root().bits()) {
                     case B32: {
                         this.entryPoint = (long) (this._io.readU4le());
                         break;
@@ -733,9 +733,9 @@ public class Elf extends KaitaiStruct {
                 }
             }
             {
-                Bits on = _root.bits();
+                Bits on = _root().bits();
                 if (on != null) {
-                    switch (_root.bits()) {
+                    switch (_root().bits()) {
                     case B32: {
                         this.programHeaderOffset = (long) (this._io.readU4le());
                         break;
@@ -748,9 +748,9 @@ public class Elf extends KaitaiStruct {
                 }
             }
             {
-                Bits on = _root.bits();
+                Bits on = _root().bits();
                 if (on != null) {
-                    switch (_root.bits()) {
+                    switch (_root().bits()) {
                     case B32: {
                         this.sectionHeaderOffset = (long) (this._io.readU4le());
                         break;
@@ -775,9 +775,9 @@ public class Elf extends KaitaiStruct {
             this.machine = Elf.Machine.byId(this._io.readU2be());
             this.eVersion = this._io.readU4be();
             {
-                Bits on = _root.bits();
+                Bits on = _root().bits();
                 if (on != null) {
-                    switch (_root.bits()) {
+                    switch (_root().bits()) {
                     case B32: {
                         this.entryPoint = (long) (this._io.readU4be());
                         break;
@@ -790,9 +790,9 @@ public class Elf extends KaitaiStruct {
                 }
             }
             {
-                Bits on = _root.bits();
+                Bits on = _root().bits();
                 if (on != null) {
-                    switch (_root.bits()) {
+                    switch (_root().bits()) {
                     case B32: {
                         this.programHeaderOffset = (long) (this._io.readU4be());
                         break;
@@ -805,9 +805,9 @@ public class Elf extends KaitaiStruct {
                 }
             }
             {
-                Bits on = _root.bits();
+                Bits on = _root().bits();
                 if (on != null) {
-                    switch (_root.bits()) {
+                    switch (_root().bits()) {
                     case B32: {
                         this.sectionHeaderOffset = (long) (this._io.readU4be());
                         break;
@@ -896,13 +896,13 @@ public class Elf extends KaitaiStruct {
             }
             private void _readLE() {
                 this.type = Elf.PhType.byId(this._io.readU4le());
-                if (_root.bits() == Elf.Bits.B64) {
+                if (_root().bits() == Elf.Bits.B64) {
                     this.flags64 = this._io.readU4le();
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.offset = (long) (this._io.readU4le());
                             break;
@@ -915,9 +915,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.vaddr = (long) (this._io.readU4le());
                             break;
@@ -930,9 +930,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.paddr = (long) (this._io.readU4le());
                             break;
@@ -945,9 +945,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.filesz = (long) (this._io.readU4le());
                             break;
@@ -960,9 +960,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.memsz = (long) (this._io.readU4le());
                             break;
@@ -974,13 +974,13 @@ public class Elf extends KaitaiStruct {
                         }
                     }
                 }
-                if (_root.bits() == Elf.Bits.B32) {
+                if (_root().bits() == Elf.Bits.B32) {
                     this.flags32 = this._io.readU4le();
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.align = (long) (this._io.readU4le());
                             break;
@@ -995,13 +995,13 @@ public class Elf extends KaitaiStruct {
             }
             private void _readBE() {
                 this.type = Elf.PhType.byId(this._io.readU4be());
-                if (_root.bits() == Elf.Bits.B64) {
+                if (_root().bits() == Elf.Bits.B64) {
                     this.flags64 = this._io.readU4be();
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.offset = (long) (this._io.readU4be());
                             break;
@@ -1014,9 +1014,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.vaddr = (long) (this._io.readU4be());
                             break;
@@ -1029,9 +1029,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.paddr = (long) (this._io.readU4be());
                             break;
@@ -1044,9 +1044,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.filesz = (long) (this._io.readU4be());
                             break;
@@ -1059,9 +1059,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.memsz = (long) (this._io.readU4be());
                             break;
@@ -1073,13 +1073,13 @@ public class Elf extends KaitaiStruct {
                         }
                     }
                 }
-                if (_root.bits() == Elf.Bits.B32) {
+                if (_root().bits() == Elf.Bits.B32) {
                     this.flags32 = this._io.readU4be();
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.align = (long) (this._io.readU4be());
                             break;
@@ -1098,9 +1098,9 @@ public class Elf extends KaitaiStruct {
                     return this.flagsObj;
                 if (_is_le) {
                     {
-                        Bits on = _root.bits();
+                        Bits on = _root().bits();
                         if (on != null) {
-                            switch (_root.bits()) {
+                            switch (_root().bits()) {
                             case B32: {
                                 this.flagsObj = new PhdrTypeFlags(this._io, this, _root, flags32());
                                 break;
@@ -1114,9 +1114,9 @@ public class Elf extends KaitaiStruct {
                     }
                 } else {
                     {
-                        Bits on = _root.bits();
+                        Bits on = _root().bits();
                         if (on != null) {
-                            switch (_root.bits()) {
+                            switch (_root().bits()) {
                             case B32: {
                                 this.flagsObj = new PhdrTypeFlags(this._io, this, _root, flags32());
                                 break;
@@ -1181,9 +1181,9 @@ public class Elf extends KaitaiStruct {
             }
             private void _readLE() {
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.tag = (long) (this._io.readU4le());
                             break;
@@ -1196,9 +1196,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.valueOrPtr = (long) (this._io.readU4le());
                             break;
@@ -1213,9 +1213,9 @@ public class Elf extends KaitaiStruct {
             }
             private void _readBE() {
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.tag = (long) (this._io.readU4be());
                             break;
@@ -1228,9 +1228,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.valueOrPtr = (long) (this._io.readU4be());
                             break;
@@ -1265,9 +1265,9 @@ public class Elf extends KaitaiStruct {
                     long _pos = io.pos();
                     io.seek(valueOrPtr());
                     if (_is_le) {
-                        this.valueStr = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
                     } else {
-                        this.valueStr = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
                     }
                     io.seek(_pos);
                 }
@@ -1334,9 +1334,9 @@ public class Elf extends KaitaiStruct {
                 this.ofsName = this._io.readU4le();
                 this.type = Elf.ShType.byId(this._io.readU4le());
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.flags = (long) (this._io.readU4le());
                             break;
@@ -1349,9 +1349,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.addr = (long) (this._io.readU4le());
                             break;
@@ -1364,9 +1364,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.ofsBody = (long) (this._io.readU4le());
                             break;
@@ -1379,9 +1379,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.lenBody = (long) (this._io.readU4le());
                             break;
@@ -1396,9 +1396,9 @@ public class Elf extends KaitaiStruct {
                 this.linkedSectionIdx = this._io.readU4le();
                 this.info = this._io.readBytes(4);
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.align = (long) (this._io.readU4le());
                             break;
@@ -1411,9 +1411,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.entrySize = (long) (this._io.readU4le());
                             break;
@@ -1430,9 +1430,9 @@ public class Elf extends KaitaiStruct {
                 this.ofsName = this._io.readU4be();
                 this.type = Elf.ShType.byId(this._io.readU4be());
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.flags = (long) (this._io.readU4be());
                             break;
@@ -1445,9 +1445,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.addr = (long) (this._io.readU4be());
                             break;
@@ -1460,9 +1460,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.ofsBody = (long) (this._io.readU4be());
                             break;
@@ -1475,9 +1475,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.lenBody = (long) (this._io.readU4be());
                             break;
@@ -1492,9 +1492,9 @@ public class Elf extends KaitaiStruct {
                 this.linkedSectionIdx = this._io.readU4be();
                 this.info = this._io.readBytes(4);
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.align = (long) (this._io.readU4be());
                             break;
@@ -1507,9 +1507,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.entrySize = (long) (this._io.readU4be());
                             break;
@@ -1527,7 +1527,7 @@ public class Elf extends KaitaiStruct {
                 if (this.body != null)
                     return this.body;
                 if (type() != Elf.ShType.NOBITS) {
-                    KaitaiStream io = _root._io();
+                    KaitaiStream io = _root()._io();
                     long _pos = io.pos();
                     io.seek(ofsBody());
                     if (_is_le) {
@@ -1656,8 +1656,8 @@ public class Elf extends KaitaiStruct {
             public SectionHeader linkedSection() {
                 if (this.linkedSection != null)
                     return this.linkedSection;
-                if ( ((linkedSectionIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (linkedSectionIdx() < _root.header().qtySectionHeader())) ) {
-                    this.linkedSection = _root.header().sectionHeaders().get((int) linkedSectionIdx());
+                if ( ((linkedSectionIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (linkedSectionIdx() < _root().header().qtySectionHeader())) ) {
+                    this.linkedSection = _root().header().sectionHeaders().get((int) linkedSectionIdx());
                 }
                 return this.linkedSection;
             }
@@ -1665,13 +1665,13 @@ public class Elf extends KaitaiStruct {
             public String name() {
                 if (this.name != null)
                     return this.name;
-                KaitaiStream io = _root.header().sectionNames()._io();
+                KaitaiStream io = _root().header().sectionNames()._io();
                 long _pos = io.pos();
                 io.seek(ofsName());
                 if (_is_le) {
-                    this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                    this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
                 } else {
-                    this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                    this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
                 }
                 io.seek(_pos);
                 return this.name;
@@ -1901,9 +1901,9 @@ public class Elf extends KaitaiStruct {
             }
             private void _readLE() {
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.offset = (long) (this._io.readU4le());
                             break;
@@ -1916,9 +1916,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.info = (long) (this._io.readU4le());
                             break;
@@ -1932,9 +1932,9 @@ public class Elf extends KaitaiStruct {
                 }
                 if (_parent().hasAddend()) {
                     {
-                        Bits on = _root.bits();
+                        Bits on = _root().bits();
                         if (on != null) {
-                            switch (_root.bits()) {
+                            switch (_root().bits()) {
                             case B32: {
                                 this.addend = (long) (this._io.readS4le());
                                 break;
@@ -1950,9 +1950,9 @@ public class Elf extends KaitaiStruct {
             }
             private void _readBE() {
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.offset = (long) (this._io.readU4be());
                             break;
@@ -1965,9 +1965,9 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 {
-                    Bits on = _root.bits();
+                    Bits on = _root().bits();
                     if (on != null) {
-                        switch (_root.bits()) {
+                        switch (_root().bits()) {
                         case B32: {
                             this.info = (long) (this._io.readU4be());
                             break;
@@ -1981,9 +1981,9 @@ public class Elf extends KaitaiStruct {
                 }
                 if (_parent().hasAddend()) {
                     {
-                        Bits on = _root.bits();
+                        Bits on = _root().bits();
                         if (on != null) {
-                            switch (_root.bits()) {
+                            switch (_root().bits()) {
                             case B32: {
                                 this.addend = (long) (this._io.readS4be());
                                 break;
@@ -2035,10 +2035,10 @@ public class Elf extends KaitaiStruct {
             }
             private void _readLE() {
                 this.ofsName = this._io.readU4le();
-                if (_root.bits() == Elf.Bits.B32) {
+                if (_root().bits() == Elf.Bits.B32) {
                     this.valueB32 = this._io.readU4le();
                 }
-                if (_root.bits() == Elf.Bits.B32) {
+                if (_root().bits() == Elf.Bits.B32) {
                     this.sizeB32 = this._io.readU4le();
                 }
                 this.bind = Elf.SymbolBinding.byId(this._io.readBitsIntBe(4));
@@ -2046,19 +2046,19 @@ public class Elf extends KaitaiStruct {
                 this._io.alignToByte();
                 this.other = this._io.readU1();
                 this.shIdx = this._io.readU2le();
-                if (_root.bits() == Elf.Bits.B64) {
+                if (_root().bits() == Elf.Bits.B64) {
                     this.valueB64 = this._io.readU8le();
                 }
-                if (_root.bits() == Elf.Bits.B64) {
+                if (_root().bits() == Elf.Bits.B64) {
                     this.sizeB64 = this._io.readU8le();
                 }
             }
             private void _readBE() {
                 this.ofsName = this._io.readU4be();
-                if (_root.bits() == Elf.Bits.B32) {
+                if (_root().bits() == Elf.Bits.B32) {
                     this.valueB32 = this._io.readU4be();
                 }
-                if (_root.bits() == Elf.Bits.B32) {
+                if (_root().bits() == Elf.Bits.B32) {
                     this.sizeB32 = this._io.readU4be();
                 }
                 this.bind = Elf.SymbolBinding.byId(this._io.readBitsIntBe(4));
@@ -2066,10 +2066,10 @@ public class Elf extends KaitaiStruct {
                 this._io.alignToByte();
                 this.other = this._io.readU1();
                 this.shIdx = this._io.readU2be();
-                if (_root.bits() == Elf.Bits.B64) {
+                if (_root().bits() == Elf.Bits.B64) {
                     this.valueB64 = this._io.readU8be();
                 }
-                if (_root.bits() == Elf.Bits.B64) {
+                if (_root().bits() == Elf.Bits.B64) {
                     this.sizeB64 = this._io.readU8be();
                 }
             }
@@ -2077,7 +2077,7 @@ public class Elf extends KaitaiStruct {
             public Boolean isShIdxReserved() {
                 if (this.isShIdxReserved != null)
                     return this.isShIdxReserved;
-                boolean _tmp = (boolean) ( ((shIdx() >= _root.shIdxLoReserved()) && (shIdx() <= _root.shIdxHiReserved())) );
+                boolean _tmp = (boolean) ( ((shIdx() >= _root().shIdxLoReserved()) && (shIdx() <= _root().shIdxHiReserved())) );
                 this.isShIdxReserved = _tmp;
                 return this.isShIdxReserved;
             }
@@ -2085,7 +2085,7 @@ public class Elf extends KaitaiStruct {
             public Boolean isShIdxOs() {
                 if (this.isShIdxOs != null)
                     return this.isShIdxOs;
-                boolean _tmp = (boolean) ( ((shIdx() >= _root.shIdxLoOs()) && (shIdx() <= _root.shIdxHiOs())) );
+                boolean _tmp = (boolean) ( ((shIdx() >= _root().shIdxLoOs()) && (shIdx() <= _root().shIdxHiOs())) );
                 this.isShIdxOs = _tmp;
                 return this.isShIdxOs;
             }
@@ -2093,7 +2093,7 @@ public class Elf extends KaitaiStruct {
             public Boolean isShIdxProc() {
                 if (this.isShIdxProc != null)
                     return this.isShIdxProc;
-                boolean _tmp = (boolean) ( ((shIdx() >= _root.shIdxLoProc()) && (shIdx() <= _root.shIdxHiProc())) );
+                boolean _tmp = (boolean) ( ((shIdx() >= _root().shIdxLoProc()) && (shIdx() <= _root().shIdxHiProc())) );
                 this.isShIdxProc = _tmp;
                 return this.isShIdxProc;
             }
@@ -2101,7 +2101,7 @@ public class Elf extends KaitaiStruct {
             public Long size() {
                 if (this.size != null)
                     return this.size;
-                long _tmp = (long) ((_root.bits() == Elf.Bits.B32 ? sizeB32() : (_root.bits() == Elf.Bits.B64 ? sizeB64() : 0)));
+                long _tmp = (long) ((_root().bits() == Elf.Bits.B32 ? sizeB32() : (_root().bits() == Elf.Bits.B64 ? sizeB64() : 0)));
                 this.size = _tmp;
                 return this.size;
             }
@@ -2116,7 +2116,7 @@ public class Elf extends KaitaiStruct {
             public Long value() {
                 if (this.value != null)
                     return this.value;
-                long _tmp = (long) ((_root.bits() == Elf.Bits.B32 ? valueB32() : (_root.bits() == Elf.Bits.B64 ? valueB64() : 0)));
+                long _tmp = (long) ((_root().bits() == Elf.Bits.B32 ? valueB32() : (_root().bits() == Elf.Bits.B64 ? valueB64() : 0)));
                 this.value = _tmp;
                 return this.value;
             }
@@ -2129,9 +2129,9 @@ public class Elf extends KaitaiStruct {
                     long _pos = io.pos();
                     io.seek(ofsName());
                     if (_is_le) {
-                        this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                     } else {
-                        this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                     }
                     io.seek(_pos);
                 }
@@ -2269,7 +2269,7 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
+                        this.entries.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
                         i++;
                     }
                 }
@@ -2279,7 +2279,7 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
+                        this.entries.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
                         i++;
                     }
                 }
@@ -2298,16 +2298,16 @@ public class Elf extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek(programHeaderOffset());
             if (_is_le) {
-                this._raw_programHeaders = new ArrayList<byte[]>(((Number) (qtyProgramHeader())).intValue());
-                programHeaders = new ArrayList<ProgramHeader>(((Number) (qtyProgramHeader())).intValue());
+                this._raw_programHeaders = new ArrayList<byte[]>();
+                this.programHeaders = new ArrayList<ProgramHeader>();
                 for (int i = 0; i < qtyProgramHeader(); i++) {
                     this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
                     KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
                     this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
                 }
             } else {
-                this._raw_programHeaders = new ArrayList<byte[]>(((Number) (qtyProgramHeader())).intValue());
-                programHeaders = new ArrayList<ProgramHeader>(((Number) (qtyProgramHeader())).intValue());
+                this._raw_programHeaders = new ArrayList<byte[]>();
+                this.programHeaders = new ArrayList<ProgramHeader>();
                 for (int i = 0; i < qtyProgramHeader(); i++) {
                     this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
                     KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
@@ -2324,16 +2324,16 @@ public class Elf extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek(sectionHeaderOffset());
             if (_is_le) {
-                this._raw_sectionHeaders = new ArrayList<byte[]>(((Number) (qtySectionHeader())).intValue());
-                sectionHeaders = new ArrayList<SectionHeader>(((Number) (qtySectionHeader())).intValue());
+                this._raw_sectionHeaders = new ArrayList<byte[]>();
+                this.sectionHeaders = new ArrayList<SectionHeader>();
                 for (int i = 0; i < qtySectionHeader(); i++) {
                     this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
                     KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
                     this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
                 }
             } else {
-                this._raw_sectionHeaders = new ArrayList<byte[]>(((Number) (qtySectionHeader())).intValue());
-                sectionHeaders = new ArrayList<SectionHeader>(((Number) (qtySectionHeader())).intValue());
+                this._raw_sectionHeaders = new ArrayList<byte[]>();
+                this.sectionHeaders = new ArrayList<SectionHeader>();
                 for (int i = 0; i < qtySectionHeader(); i++) {
                     this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
                     KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
@@ -2347,7 +2347,7 @@ public class Elf extends KaitaiStruct {
         public StringsStruct sectionNames() {
             if (this.sectionNames != null)
                 return this.sectionNames;
-            if ( ((sectionNamesIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (sectionNamesIdx() < _root.header().qtySectionHeader())) ) {
+            if ( ((sectionNamesIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (sectionNamesIdx() < _root().header().qtySectionHeader())) ) {
                 long _pos = this._io.pos();
                 this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).ofsBody());
                 if (_is_le) {

@@ -8,8 +8,10 @@ type
     `bootSector`*: Vfat_BootSector
     `parent`*: KaitaiStruct
     `rawRootDirInst`*: seq[byte]
-    `fatsInst`*: seq[seq[byte]]
-    `rootDirInst`*: Vfat_RootDirectory
+    `fatsInst`: seq[seq[byte]]
+    `fatsInstFlag`: bool
+    `rootDirInst`: Vfat_RootDirectory
+    `rootDirInstFlag`: bool
   Vfat_ExtBiosParamBlockFat32* = ref object of KaitaiStruct
     `lsPerFat`*: uint32
     `hasActiveFat`*: bool
@@ -35,13 +37,20 @@ type
     `ebpbFat16`*: Vfat_ExtBiosParamBlockFat16
     `ebpbFat32`*: Vfat_ExtBiosParamBlockFat32
     `parent`*: Vfat
-    `posFatsInst`*: int
-    `lsPerFatInst`*: uint32
-    `lsPerRootDirInst`*: int
-    `isFat32Inst`*: bool
-    `sizeFatInst`*: int
-    `posRootDirInst`*: int
-    `sizeRootDirInst`*: int
+    `posFatsInst`: int
+    `posFatsInstFlag`: bool
+    `lsPerFatInst`: uint32
+    `lsPerFatInstFlag`: bool
+    `lsPerRootDirInst`: int
+    `lsPerRootDirInstFlag`: bool
+    `isFat32Inst`: bool
+    `isFat32InstFlag`: bool
+    `sizeFatInst`: int
+    `sizeFatInstFlag`: bool
+    `posRootDirInst`: int
+    `posRootDirInstFlag`: bool
+    `sizeRootDirInst`: int
+    `sizeRootDirInstFlag`: bool
   Vfat_BiosParamBlock* = ref object of KaitaiStruct
     `bytesPerLs`*: uint16
     `lsPerClus`*: uint8
@@ -75,7 +84,8 @@ type
     `archive`*: bool
     `reserved`*: uint64
     `parent`*: Vfat_RootDirectoryRec
-    `longNameInst`*: bool
+    `longNameInst`: bool
+    `longNameInstFlag`: bool
   Vfat_RootDirectory* = ref object of KaitaiStruct
     `records`*: seq[Vfat_RootDirectoryRec]
     `parent`*: Vfat
@@ -124,7 +134,7 @@ proc read*(_: typedesc[Vfat], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.bootSector = bootSectorExpr
 
 proc fats(this: Vfat): seq[seq[byte]] = 
-  if this.fatsInst.len != 0:
+  if this.fatsInstFlag:
     return this.fatsInst
   let pos = this.io.pos()
   this.io.seek(int(this.bootSector.posFats))
@@ -132,11 +142,11 @@ proc fats(this: Vfat): seq[seq[byte]] =
     let it = this.io.readBytes(int(this.bootSector.sizeFat))
     this.fatsInst.add(it)
   this.io.seek(pos)
-  if this.fatsInst.len != 0:
-    return this.fatsInst
+  this.fatsInstFlag = true
+  return this.fatsInst
 
 proc rootDir(this: Vfat): Vfat_RootDirectory = 
-  if this.rootDirInst != nil:
+  if this.rootDirInstFlag:
     return this.rootDirInst
   let pos = this.io.pos()
   this.io.seek(int(this.bootSector.posRootDir))
@@ -146,8 +156,8 @@ proc rootDir(this: Vfat): Vfat_RootDirectory =
   let rootDirInstExpr = Vfat_RootDirectory.read(rawRootDirInstIo, this.root, this)
   this.rootDirInst = rootDirInstExpr
   this.io.seek(pos)
-  if this.rootDirInst != nil:
-    return this.rootDirInst
+  this.rootDirInstFlag = true
+  return this.rootDirInst
 
 proc fromFile*(_: typedesc[Vfat], filename: string): Vfat =
   Vfat.read(newKaitaiFileStream(filename), nil, nil)
@@ -307,20 +317,20 @@ proc posFats(this: Vfat_BootSector): int =
   ##[
   Offset of FATs in bytes from start of filesystem
   ]##
-  if this.posFatsInst != nil:
+  if this.posFatsInstFlag:
     return this.posFatsInst
   let posFatsInstExpr = int((this.bpb.bytesPerLs * this.bpb.numReservedLs))
   this.posFatsInst = posFatsInstExpr
-  if this.posFatsInst != nil:
-    return this.posFatsInst
+  this.posFatsInstFlag = true
+  return this.posFatsInst
 
 proc lsPerFat(this: Vfat_BootSector): uint32 = 
-  if this.lsPerFatInst != nil:
+  if this.lsPerFatInstFlag:
     return this.lsPerFatInst
   let lsPerFatInstExpr = uint32((if this.isFat32: this.ebpbFat32.lsPerFat else: this.bpb.lsPerFat))
   this.lsPerFatInst = lsPerFatInstExpr
-  if this.lsPerFatInst != nil:
-    return this.lsPerFatInst
+  this.lsPerFatInstFlag = true
+  return this.lsPerFatInst
 
 proc lsPerRootDir(this: Vfat_BootSector): int = 
 
@@ -328,12 +338,12 @@ proc lsPerRootDir(this: Vfat_BootSector): int =
   Size of root directory in logical sectors
   @see "FAT: General Overview of On-Disk Format, section "FAT Data Structure""
   ]##
-  if this.lsPerRootDirInst != nil:
+  if this.lsPerRootDirInstFlag:
     return this.lsPerRootDirInst
   let lsPerRootDirInstExpr = int(((((this.bpb.maxRootDirRec * 32) + this.bpb.bytesPerLs) - 1) div this.bpb.bytesPerLs))
   this.lsPerRootDirInst = lsPerRootDirInstExpr
-  if this.lsPerRootDirInst != nil:
-    return this.lsPerRootDirInst
+  this.lsPerRootDirInstFlag = true
+  return this.lsPerRootDirInst
 
 proc isFat32(this: Vfat_BootSector): bool = 
 
@@ -344,48 +354,48 @@ determine whether we should parse post-BPB data as
 `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
 
   ]##
-  if this.isFat32Inst != nil:
+  if this.isFat32InstFlag:
     return this.isFat32Inst
   let isFat32InstExpr = bool(this.bpb.maxRootDirRec == 0)
   this.isFat32Inst = isFat32InstExpr
-  if this.isFat32Inst != nil:
-    return this.isFat32Inst
+  this.isFat32InstFlag = true
+  return this.isFat32Inst
 
 proc sizeFat(this: Vfat_BootSector): int = 
 
   ##[
   Size of one FAT in bytes
   ]##
-  if this.sizeFatInst != nil:
+  if this.sizeFatInstFlag:
     return this.sizeFatInst
   let sizeFatInstExpr = int((this.bpb.bytesPerLs * this.lsPerFat))
   this.sizeFatInst = sizeFatInstExpr
-  if this.sizeFatInst != nil:
-    return this.sizeFatInst
+  this.sizeFatInstFlag = true
+  return this.sizeFatInst
 
 proc posRootDir(this: Vfat_BootSector): int = 
 
   ##[
   Offset of root directory in bytes from start of filesystem
   ]##
-  if this.posRootDirInst != nil:
+  if this.posRootDirInstFlag:
     return this.posRootDirInst
   let posRootDirInstExpr = int((this.bpb.bytesPerLs * (this.bpb.numReservedLs + (this.lsPerFat * this.bpb.numFats))))
   this.posRootDirInst = posRootDirInstExpr
-  if this.posRootDirInst != nil:
-    return this.posRootDirInst
+  this.posRootDirInstFlag = true
+  return this.posRootDirInst
 
 proc sizeRootDir(this: Vfat_BootSector): int = 
 
   ##[
   Size of root directory in bytes
   ]##
-  if this.sizeRootDirInst != nil:
+  if this.sizeRootDirInstFlag:
     return this.sizeRootDirInst
   let sizeRootDirInstExpr = int((this.lsPerRootDir * this.bpb.bytesPerLs))
   this.sizeRootDirInst = sizeRootDirInstExpr
-  if this.sizeRootDirInst != nil:
-    return this.sizeRootDirInst
+  this.sizeRootDirInstFlag = true
+  return this.sizeRootDirInst
 
 proc fromFile*(_: typedesc[Vfat_BootSector], filename: string): Vfat_BootSector =
   Vfat_BootSector.read(newKaitaiFileStream(filename), nil, nil)
@@ -551,12 +561,12 @@ proc read*(_: typedesc[Vfat_RootDirectoryRec_AttrFlags], io: KaitaiStream, root:
   this.reserved = reservedExpr
 
 proc longName(this: Vfat_RootDirectoryRec_AttrFlags): bool = 
-  if this.longNameInst != nil:
+  if this.longNameInstFlag:
     return this.longNameInst
   let longNameInstExpr = bool( ((this.readOnly) and (this.hidden) and (this.system) and (this.volumeId)) )
   this.longNameInst = longNameInstExpr
-  if this.longNameInst != nil:
-    return this.longNameInst
+  this.longNameInstFlag = true
+  return this.longNameInst
 
 proc fromFile*(_: typedesc[Vfat_RootDirectoryRec_AttrFlags], filename: string): Vfat_RootDirectoryRec_AttrFlags =
   Vfat_RootDirectoryRec_AttrFlags.read(newKaitaiFileStream(filename), nil, nil)

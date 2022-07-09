@@ -32,7 +32,7 @@ namespace Kaitai
         private void _read()
         {
             _bootstrapCode = m_io.ReadBytes(446);
-            _partitions = new List<PartitionEntry>((int) (4));
+            _partitions = new List<PartitionEntry>();
             for (var i = 0; i < 4; i++)
             {
                 _partitions.Add(new PartitionEntry(m_io, this, m_root));

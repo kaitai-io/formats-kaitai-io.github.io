@@ -7,7 +7,8 @@ type
     `blockPointers`*: seq[uint32]
     `parent`*: KaitaiStruct
     `rawHeader`*: seq[byte]
-    `blocksInst`*: seq[Zisofs_Block]
+    `blocksInst`: seq[Zisofs_Block]
+    `blocksInstFlag`: bool
   Zisofs_Header* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `uncompressedSize`*: uint32
@@ -15,14 +16,18 @@ type
     `blockSizeLog2`*: uint8
     `reserved`*: seq[byte]
     `parent`*: Zisofs
-    `blockSizeInst`*: int
-    `numBlocksInst`*: int
+    `blockSizeInst`: int
+    `blockSizeInstFlag`: bool
+    `numBlocksInst`: int
+    `numBlocksInstFlag`: bool
   Zisofs_Block* = ref object of KaitaiStruct
     `ofsStart`*: uint32
     `ofsEnd`*: uint32
     `parent`*: Zisofs
-    `lenDataInst`*: int
-    `dataInst`*: seq[byte]
+    `lenDataInst`: int
+    `lenDataInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
 
 proc read*(_: typedesc[Zisofs], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zisofs
 proc read*(_: typedesc[Zisofs_Header], io: KaitaiStream, root: KaitaiStruct, parent: Zisofs): Zisofs_Header
@@ -73,13 +78,13 @@ of the last block. Typically this is also the end of the file data.
     this.blockPointers.add(it)
 
 proc blocks(this: Zisofs): seq[Zisofs_Block] = 
-  if this.blocksInst.len != 0:
+  if this.blocksInstFlag:
     return this.blocksInst
   for i in 0 ..< int(this.header.numBlocks):
     let it = Zisofs_Block.read(this.io, this.root, this, this.blockPointers[i], this.blockPointers[(i + 1)])
     this.blocksInst.add(it)
-  if this.blocksInst.len != 0:
-    return this.blocksInst
+  this.blocksInstFlag = true
+  return this.blocksInst
 
 proc fromFile*(_: typedesc[Zisofs], filename: string): Zisofs =
   Zisofs.read(newKaitaiFileStream(filename), nil, nil)
@@ -112,24 +117,24 @@ proc read*(_: typedesc[Zisofs_Header], io: KaitaiStream, root: KaitaiStruct, par
   this.reserved = reservedExpr
 
 proc blockSize(this: Zisofs_Header): int = 
-  if this.blockSizeInst != nil:
+  if this.blockSizeInstFlag:
     return this.blockSizeInst
   let blockSizeInstExpr = int((1 shl this.blockSizeLog2))
   this.blockSizeInst = blockSizeInstExpr
-  if this.blockSizeInst != nil:
-    return this.blockSizeInst
+  this.blockSizeInstFlag = true
+  return this.blockSizeInst
 
 proc numBlocks(this: Zisofs_Header): int = 
 
   ##[
   ceil(uncompressed_size / block_size)
   ]##
-  if this.numBlocksInst != nil:
+  if this.numBlocksInstFlag:
     return this.numBlocksInst
   let numBlocksInstExpr = int(((this.uncompressedSize div this.blockSize) + (if (this.uncompressedSize %%% this.blockSize) != 0: 1 else: 0)))
   this.numBlocksInst = numBlocksInstExpr
-  if this.numBlocksInst != nil:
-    return this.numBlocksInst
+  this.numBlocksInstFlag = true
+  return this.numBlocksInst
 
 proc fromFile*(_: typedesc[Zisofs_Header], filename: string): Zisofs_Header =
   Zisofs_Header.read(newKaitaiFileStream(filename), nil, nil)
@@ -148,15 +153,15 @@ proc read*(_: typedesc[Zisofs_Block], io: KaitaiStream, root: KaitaiStruct, pare
 
 
 proc lenData(this: Zisofs_Block): int = 
-  if this.lenDataInst != nil:
+  if this.lenDataInstFlag:
     return this.lenDataInst
   let lenDataInstExpr = int((this.ofsEnd - this.ofsStart))
   this.lenDataInst = lenDataInstExpr
-  if this.lenDataInst != nil:
-    return this.lenDataInst
+  this.lenDataInstFlag = true
+  return this.lenDataInst
 
 proc data(this: Zisofs_Block): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let io = Zisofs(this.root).io
   let pos = io.pos()
@@ -164,8 +169,8 @@ proc data(this: Zisofs_Block): seq[byte] =
   let dataInstExpr = io.readBytes(int(this.lenData))
   this.dataInst = dataInstExpr
   io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[Zisofs_Block], filename: string): Zisofs_Block =
   Zisofs_Block.read(newKaitaiFileStream(filename), nil, nil)

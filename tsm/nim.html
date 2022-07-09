@@ -287,7 +287,8 @@ requested time boundary.</p>
   <span class="n">Tsm</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tsm_Header</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">indexInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tsm_Index</span>
+    <span class="p">`</span><span class="n">indexInst</span><span class="p">`:</span> <span class="n">Tsm_Index</span>
+    <span class="p">`</span><span class="n">indexInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Tsm_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -295,7 +296,8 @@ requested time boundary.</p>
   <span class="n">Tsm_Index</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">offset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tsm</span>
-    <span class="p">`</span><span class="n">entriesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Tsm_Index_IndexHeader</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">entriesInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Tsm_Index_IndexHeader</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">entriesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Tsm_Index_IndexHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">keyLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">key</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
@@ -309,7 +311,8 @@ requested time boundary.</p>
     <span class="p">`</span><span class="n">blockOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">blockSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tsm_Index_IndexHeader</span>
-    <span class="p">`</span><span class="n">blockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tsm_Index_IndexHeader_IndexEntry_BlockEntry</span>
+    <span class="p">`</span><span class="n">blockInst</span><span class="p">`:</span> <span class="n">Tsm_Index_IndexHeader_IndexEntry_BlockEntry</span>
+    <span class="p">`</span><span class="n">blockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Tsm_Index_IndexHeader_IndexEntry_BlockEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">crc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -350,15 +353,15 @@ requested time boundary.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
 
 <span class="k">proc </span><span class="nf">index</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tsm</span><span class="p">):</span> <span class="n">Tsm_Index</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">indexInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">indexInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">indexInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">indexInstExpr</span> <span class="o">=</span> <span class="n">Tsm_Index</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">indexInst</span> <span class="o">=</span> <span class="n">indexInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">indexInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">indexInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">indexInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">indexInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tsm], filename: string): Tsm =</span>
   <span class="n">Tsm</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -391,7 +394,7 @@ requested time boundary.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offsetExpr</span>
 
 <span class="k">proc </span><span class="nf">entries</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tsm_Index</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Tsm_Index_IndexHeader</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">offset</span><span class="p">))</span>
@@ -404,8 +407,8 @@ requested time boundary.</p>
         <span class="k">break</span>
       <span class="n">inc</span> <span class="n">i</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">entriesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tsm_Index], filename: string): Tsm_Index =</span>
   <span class="n">Tsm_Index</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -451,7 +454,7 @@ requested time boundary.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">blockSize</span> <span class="o">=</span> <span class="n">blockSizeExpr</span>
 
 <span class="k">proc </span><span class="nf">block</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tsm_Index_IndexHeader_IndexEntry</span><span class="p">):</span> <span class="n">Tsm_Index_IndexHeader_IndexEntry_BlockEntry</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Tsm</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -459,8 +462,8 @@ requested time boundary.</p>
   <span class="k">let</span> <span class="n">blockInstExpr</span> <span class="o">=</span> <span class="n">Tsm_Index_IndexHeader_IndexEntry_BlockEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span> <span class="o">=</span> <span class="n">blockInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tsm_Index_IndexHeader_IndexEntry], filename: string): Tsm_Index_IndexHeader_IndexEntry =</span>
   <span class="n">Tsm_Index_IndexHeader_IndexEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

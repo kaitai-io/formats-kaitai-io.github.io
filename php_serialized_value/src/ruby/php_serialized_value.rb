@@ -99,9 +99,9 @@ class PhpSerializedValue < Kaitai::Struct::Struct
       @num_entries_dec = (@_io.read_bytes_term(58, false, true, true)).force_encoding("ASCII")
       @opening_brace = @_io.read_bytes(1)
       raise Kaitai::Struct::ValidationNotEqualError.new([123].pack('C*'), opening_brace, _io, "/types/count_prefixed_mapping/seq/1") if not opening_brace == [123].pack('C*')
-      @entries = Array.new(num_entries)
+      @entries = []
       (num_entries).times { |i|
-        @entries[i] = MappingEntry.new(@_io, self, @_root)
+        @entries << MappingEntry.new(@_io, self, @_root)
       }
       @closing_brace = @_io.read_bytes(1)
       raise Kaitai::Struct::ValidationNotEqualError.new([125].pack('C*'), closing_brace, _io, "/types/count_prefixed_mapping/seq/3") if not closing_brace == [125].pack('C*')

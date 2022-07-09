@@ -33,9 +33,8 @@ void vp8_ivf_t::_read() {
     m_timescale = m__io->read_u4le();
     m_num_frames = m__io->read_u4le();
     m_unused = m__io->read_u4le();
-    int l_image_data = num_frames();
     m_image_data = new std::vector<blocks_t*>();
-    m_image_data->reserve(l_image_data);
+    const int l_image_data = num_frames();
     for (int i = 0; i < l_image_data; i++) {
         m_image_data->push_back(new blocks_t(m__io, this, m__root));
     }

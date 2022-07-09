@@ -35,7 +35,7 @@ namespace Kaitai
                 throw new ValidationLessThanError(43, VersionMajor, M_Io, "/seq/2");
             }
             _constantPoolCount = m_io.ReadU2be();
-            _constantPool = new List<ConstantPoolEntry>((int) ((ConstantPoolCount - 1)));
+            _constantPool = new List<ConstantPoolEntry>();
             for (var i = 0; i < (ConstantPoolCount - 1); i++)
             {
                 _constantPool.Add(new ConstantPoolEntry((i != 0 ? ConstantPool[(i - 1)].IsTwoEntries : false), m_io, this, m_root));
@@ -44,25 +44,25 @@ namespace Kaitai
             _thisClass = m_io.ReadU2be();
             _superClass = m_io.ReadU2be();
             _interfacesCount = m_io.ReadU2be();
-            _interfaces = new List<ushort>((int) (InterfacesCount));
+            _interfaces = new List<ushort>();
             for (var i = 0; i < InterfacesCount; i++)
             {
                 _interfaces.Add(m_io.ReadU2be());
             }
             _fieldsCount = m_io.ReadU2be();
-            _fields = new List<FieldInfo>((int) (FieldsCount));
+            _fields = new List<FieldInfo>();
             for (var i = 0; i < FieldsCount; i++)
             {
                 _fields.Add(new FieldInfo(m_io, this, m_root));
             }
             _methodsCount = m_io.ReadU2be();
-            _methods = new List<MethodInfo>((int) (MethodsCount));
+            _methods = new List<MethodInfo>();
             for (var i = 0; i < MethodsCount; i++)
             {
                 _methods.Add(new MethodInfo(m_io, this, m_root));
             }
             _attributesCount = m_io.ReadU2be();
-            _attributes = new List<AttributeInfo>((int) (AttributesCount));
+            _attributes = new List<AttributeInfo>();
             for (var i = 0; i < AttributesCount; i++)
             {
                 _attributes.Add(new AttributeInfo(m_io, this, m_root));
@@ -173,13 +173,13 @@ namespace Kaitai
                     _codeLength = m_io.ReadU4be();
                     _code = m_io.ReadBytes(CodeLength);
                     _exceptionTableLength = m_io.ReadU2be();
-                    _exceptionTable = new List<ExceptionEntry>((int) (ExceptionTableLength));
+                    _exceptionTable = new List<ExceptionEntry>();
                     for (var i = 0; i < ExceptionTableLength; i++)
                     {
                         _exceptionTable.Add(new ExceptionEntry(m_io, this, m_root));
                     }
                     _attributesCount = m_io.ReadU2be();
-                    _attributes = new List<AttributeInfo>((int) (AttributesCount));
+                    _attributes = new List<AttributeInfo>();
                     for (var i = 0; i < AttributesCount; i++)
                     {
                         _attributes.Add(new AttributeInfo(m_io, this, m_root));
@@ -299,7 +299,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _numberOfExceptions = m_io.ReadU2be();
-                    _exceptions = new List<ExceptionTableEntry>((int) (NumberOfExceptions));
+                    _exceptions = new List<ExceptionTableEntry>();
                     for (var i = 0; i < NumberOfExceptions; i++)
                     {
                         _exceptions.Add(new ExceptionTableEntry(m_io, this, m_root));
@@ -428,7 +428,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _lineNumberTableLength = m_io.ReadU2be();
-                    _lineNumberTable = new List<LineNumberTableEntry>((int) (LineNumberTableLength));
+                    _lineNumberTable = new List<LineNumberTableEntry>();
                     for (var i = 0; i < LineNumberTableLength; i++)
                     {
                         _lineNumberTable.Add(new LineNumberTableEntry(m_io, this, m_root));
@@ -579,7 +579,7 @@ namespace Kaitai
                 _nameIndex = m_io.ReadU2be();
                 _descriptorIndex = m_io.ReadU2be();
                 _attributesCount = m_io.ReadU2be();
-                _attributes = new List<AttributeInfo>((int) (AttributesCount));
+                _attributes = new List<AttributeInfo>();
                 for (var i = 0; i < AttributesCount; i++)
                 {
                     _attributes.Add(new AttributeInfo(m_io, this, m_root));
@@ -1179,7 +1179,7 @@ namespace Kaitai
                 _nameIndex = m_io.ReadU2be();
                 _descriptorIndex = m_io.ReadU2be();
                 _attributesCount = m_io.ReadU2be();
-                _attributes = new List<AttributeInfo>((int) (AttributesCount));
+                _attributes = new List<AttributeInfo>();
                 for (var i = 0; i < AttributesCount; i++)
                 {
                     _attributes.Add(new AttributeInfo(m_io, this, m_root));

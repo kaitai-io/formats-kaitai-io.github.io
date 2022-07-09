@@ -369,9 +369,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
     <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">112</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">112</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
     <span class="vi">@num_tables</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-    <span class="vi">@tables</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_tables</span><span class="p">)</span>
+    <span class="vi">@tables</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">num_tables</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@tables</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@tables</span> <span class="o">&lt;&lt;</span> <span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -406,9 +406,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@format</span> <span class="o">=</span> <span class="no">Format</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@num_glyphs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-        <span class="vi">@swidths</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_glyphs</span><span class="p">)</span>
+        <span class="vi">@swidths</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">num_glyphs</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@swidths</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+          <span class="vi">@swidths</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -434,9 +434,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@format</span> <span class="o">=</span> <span class="no">Format</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@num_props</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-        <span class="vi">@props</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_props</span><span class="p">)</span>
+        <span class="vi">@props</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">num_props</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@props</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Prop</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@props</span> <span class="o">&lt;&lt;</span> <span class="no">Prop</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="vi">@padding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">num_props</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="p">:</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">num_props</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">))))</span>
         <span class="vi">@len_strings</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -555,9 +555,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
         <span class="vi">@min_byte1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@max_byte1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@default_char</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-        <span class="vi">@glyph_indexes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((((</span><span class="n">max_char_or_byte2</span> <span class="o">-</span> <span class="n">min_char_or_byte2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">max_byte1</span> <span class="o">-</span> <span class="n">min_byte1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="vi">@glyph_indexes</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">((((</span><span class="n">max_char_or_byte2</span> <span class="o">-</span> <span class="n">min_char_or_byte2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">max_byte1</span> <span class="o">-</span> <span class="n">min_byte1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@glyph_indexes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+          <span class="vi">@glyph_indexes</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -582,9 +582,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@format</span> <span class="o">=</span> <span class="no">Format</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@num_glyphs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-        <span class="vi">@names</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_glyphs</span><span class="p">)</span>
+        <span class="vi">@names</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">num_glyphs</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@names</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">StringRef</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@names</span> <span class="o">&lt;&lt;</span> <span class="no">StringRef</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="vi">@len_strings</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@_raw_strings</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_strings</span><span class="p">)</span>
@@ -639,13 +639,13 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@format</span> <span class="o">=</span> <span class="no">Format</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@num_glyphs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-        <span class="vi">@offsets</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_glyphs</span><span class="p">)</span>
+        <span class="vi">@offsets</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">num_glyphs</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@offsets</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+          <span class="vi">@offsets</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="p">}</span>
-        <span class="vi">@bitmap_sizes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="vi">@bitmap_sizes</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@bitmap_sizes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+          <span class="vi">@bitmap_sizes</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>

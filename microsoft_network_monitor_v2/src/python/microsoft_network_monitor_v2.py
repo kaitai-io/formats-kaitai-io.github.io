@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 import ethernet_frame
@@ -190,14 +189,14 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         def body(self):
             """Frame body itself."""
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.ofs)
             self._m_body = MicrosoftNetworkMonitorV2.Frame(io, self, self._root)
             io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     class Frame(KaitaiStruct):
@@ -231,7 +230,7 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
     def frame_table(self):
         """Index that is used to access individual captured frames."""
         if hasattr(self, '_m_frame_table'):
-            return self._m_frame_table if hasattr(self, '_m_frame_table') else None
+            return self._m_frame_table
 
         _pos = self._io.pos()
         self._io.seek(self.frame_table_ofs)
@@ -239,6 +238,6 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         _io__raw__m_frame_table = KaitaiStream(BytesIO(self._raw__m_frame_table))
         self._m_frame_table = MicrosoftNetworkMonitorV2.FrameIndex(_io__raw__m_frame_table, self, self._root)
         self._io.seek(_pos)
-        return self._m_frame_table if hasattr(self, '_m_frame_table') else None
+        return getattr(self, '_m_frame_table', None)
 
 

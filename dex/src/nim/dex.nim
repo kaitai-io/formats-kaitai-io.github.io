@@ -7,15 +7,24 @@ type
   Dex* = ref object of KaitaiStruct
     `header`*: Dex_HeaderItem
     `parent`*: KaitaiStruct
-    `stringIdsInst`*: seq[Dex_StringIdItem]
-    `methodIdsInst`*: seq[Dex_MethodIdItem]
-    `linkDataInst`*: seq[byte]
-    `mapInst`*: Dex_MapList
-    `classDefsInst`*: seq[Dex_ClassDefItem]
-    `dataInst`*: seq[byte]
-    `typeIdsInst`*: seq[Dex_TypeIdItem]
-    `protoIdsInst`*: seq[Dex_ProtoIdItem]
-    `fieldIdsInst`*: seq[Dex_FieldIdItem]
+    `stringIdsInst`: seq[Dex_StringIdItem]
+    `stringIdsInstFlag`: bool
+    `methodIdsInst`: seq[Dex_MethodIdItem]
+    `methodIdsInstFlag`: bool
+    `linkDataInst`: seq[byte]
+    `linkDataInstFlag`: bool
+    `mapInst`: Dex_MapList
+    `mapInstFlag`: bool
+    `classDefsInst`: seq[Dex_ClassDefItem]
+    `classDefsInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
+    `typeIdsInst`: seq[Dex_TypeIdItem]
+    `typeIdsInstFlag`: bool
+    `protoIdsInst`: seq[Dex_ProtoIdItem]
+    `protoIdsInstFlag`: bool
+    `fieldIdsInst`: seq[Dex_FieldIdItem]
+    `fieldIdsInstFlag`: bool
   Dex_ClassAccessFlags* = enum
     public = 1
     private = 2
@@ -92,17 +101,22 @@ type
     `protoIdx`*: uint16
     `nameIdx`*: uint32
     `parent`*: Dex
-    `classNameInst`*: string
-    `protoDescInst`*: string
-    `methodNameInst`*: string
+    `classNameInst`: string
+    `classNameInstFlag`: bool
+    `protoDescInst`: string
+    `protoDescInstFlag`: bool
+    `methodNameInst`: string
+    `methodNameInstFlag`: bool
   Dex_TypeItem* = ref object of KaitaiStruct
     `typeIdx`*: uint16
     `parent`*: Dex_TypeList
-    `valueInst`*: string
+    `valueInst`: string
+    `valueInstFlag`: bool
   Dex_TypeIdItem* = ref object of KaitaiStruct
     `descriptorIdx`*: uint32
     `parent`*: Dex
-    `typeNameInst`*: string
+    `typeNameInst`: string
+    `typeNameInstFlag`: bool
   Dex_AnnotationElement* = ref object of KaitaiStruct
     `nameIdx`*: VlqBase128Le
     `value`*: Dex_EncodedValue
@@ -129,9 +143,12 @@ type
     `typeIdx`*: uint16
     `nameIdx`*: uint32
     `parent`*: Dex
-    `classNameInst`*: string
-    `typeNameInst`*: string
-    `fieldNameInst`*: string
+    `classNameInst`: string
+    `classNameInstFlag`: bool
+    `typeNameInst`: string
+    `typeNameInstFlag`: bool
+    `fieldNameInst`: string
+    `fieldNameInstFlag`: bool
   Dex_EncodedAnnotation* = ref object of KaitaiStruct
     `typeIdx`*: VlqBase128Le
     `size`*: VlqBase128Le
@@ -147,9 +164,12 @@ type
     `classDataOff`*: uint32
     `staticValuesOff`*: uint32
     `parent`*: Dex
-    `typeNameInst`*: string
-    `classDataInst`*: Dex_ClassDataItem
-    `staticValuesInst`*: Dex_EncodedArrayItem
+    `typeNameInst`: string
+    `typeNameInstFlag`: bool
+    `classDataInst`: Dex_ClassDataItem
+    `classDataInstFlag`: bool
+    `staticValuesInst`: Dex_EncodedArrayItem
+    `staticValuesInstFlag`: bool
   Dex_TypeList* = ref object of KaitaiStruct
     `size`*: uint32
     `list`*: seq[Dex_TypeItem]
@@ -157,7 +177,8 @@ type
   Dex_StringIdItem* = ref object of KaitaiStruct
     `stringDataOff`*: uint32
     `parent`*: Dex
-    `valueInst`*: Dex_StringIdItem_StringDataItem
+    `valueInst`: Dex_StringIdItem_StringDataItem
+    `valueInstFlag`: bool
   Dex_StringIdItem_StringDataItem* = ref object of KaitaiStruct
     `utf16Size`*: VlqBase128Le
     `data`*: string
@@ -167,9 +188,12 @@ type
     `returnTypeIdx`*: uint32
     `parametersOff`*: uint32
     `parent`*: Dex
-    `shortyDescInst`*: string
-    `paramsTypesInst`*: Dex_TypeList
-    `returnTypeInst`*: string
+    `shortyDescInst`: string
+    `shortyDescInstFlag`: bool
+    `paramsTypesInst`: Dex_TypeList
+    `paramsTypesInstFlag`: bool
+    `returnTypeInst`: string
+    `returnTypeInstFlag`: bool
   Dex_EncodedMethod* = ref object of KaitaiStruct
     `methodIdxDiff`*: VlqBase128Le
     `accessFlags`*: VlqBase128Le
@@ -290,7 +314,7 @@ This list must be sorted by string contents, using UTF-16 code point values
 (not in a locale-sensitive manner), and it must not contain any duplicate entries.
 
   ]##
-  if this.stringIdsInst.len != 0:
+  if this.stringIdsInstFlag:
     return this.stringIdsInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.stringIdsOff))
@@ -298,8 +322,8 @@ This list must be sorted by string contents, using UTF-16 code point values
     let it = Dex_StringIdItem.read(this.io, this.root, this)
     this.stringIdsInst.add(it)
   this.io.seek(pos)
-  if this.stringIdsInst.len != 0:
-    return this.stringIdsInst
+  this.stringIdsInstFlag = true
+  return this.stringIdsInst
 
 proc methodIds(this: Dex): seq[Dex_MethodIdItem] = 
 
@@ -316,7 +340,7 @@ order, and method prototype (by proto_id index) is the minor order.
 The list must not contain any duplicate entries.
 
   ]##
-  if this.methodIdsInst.len != 0:
+  if this.methodIdsInstFlag:
     return this.methodIdsInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.methodIdsOff))
@@ -324,8 +348,8 @@ The list must not contain any duplicate entries.
     let it = Dex_MethodIdItem.read(this.io, this.root, this)
     this.methodIdsInst.add(it)
   this.io.seek(pos)
-  if this.methodIdsInst.len != 0:
-    return this.methodIdsInst
+  this.methodIdsInstFlag = true
+  return this.methodIdsInst
 
 proc linkData(this: Dex): seq[byte] = 
 
@@ -338,26 +362,26 @@ This section is empty in unlinked files, and runtime implementations may
 use it as they see fit.
 
   ]##
-  if this.linkDataInst.len != 0:
+  if this.linkDataInstFlag:
     return this.linkDataInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.linkOff))
   let linkDataInstExpr = this.io.readBytes(int(this.header.linkSize))
   this.linkDataInst = linkDataInstExpr
   this.io.seek(pos)
-  if this.linkDataInst.len != 0:
-    return this.linkDataInst
+  this.linkDataInstFlag = true
+  return this.linkDataInst
 
 proc map(this: Dex): Dex_MapList = 
-  if this.mapInst != nil:
+  if this.mapInstFlag:
     return this.mapInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.mapOff))
   let mapInstExpr = Dex_MapList.read(this.io, this.root, this)
   this.mapInst = mapInstExpr
   this.io.seek(pos)
-  if this.mapInst != nil:
-    return this.mapInst
+  this.mapInstFlag = true
+  return this.mapInst
 
 proc classDefs(this: Dex): seq[Dex_ClassDefItem] = 
 
@@ -371,7 +395,7 @@ Furthermore, it is invalid for a definition for the same-named class to
 appear more than once in the list.
 
   ]##
-  if this.classDefsInst.len != 0:
+  if this.classDefsInstFlag:
     return this.classDefsInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.classDefsOff))
@@ -379,8 +403,8 @@ appear more than once in the list.
     let it = Dex_ClassDefItem.read(this.io, this.root, this)
     this.classDefsInst.add(it)
   this.io.seek(pos)
-  if this.classDefsInst.len != 0:
-    return this.classDefsInst
+  this.classDefsInstFlag = true
+  return this.classDefsInst
 
 proc data(this: Dex): seq[byte] = 
 
@@ -391,15 +415,15 @@ Different items have different alignment requirements, and padding bytes
 are inserted before each item if necessary to achieve proper alignment.
 
   ]##
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.dataOff))
   let dataInstExpr = this.io.readBytes(int(this.header.dataSize))
   this.dataInst = dataInstExpr
   this.io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc typeIds(this: Dex): seq[Dex_TypeIdItem] = 
 
@@ -412,7 +436,7 @@ referred to by this file, whether defined in the file or not.
 This list must be sorted by string_id index, and it must not contain any duplicate entries.
 
   ]##
-  if this.typeIdsInst.len != 0:
+  if this.typeIdsInstFlag:
     return this.typeIdsInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.typeIdsOff))
@@ -420,8 +444,8 @@ This list must be sorted by string_id index, and it must not contain any duplica
     let it = Dex_TypeIdItem.read(this.io, this.root, this)
     this.typeIdsInst.add(it)
   this.io.seek(pos)
-  if this.typeIdsInst.len != 0:
-    return this.typeIdsInst
+  this.typeIdsInstFlag = true
+  return this.typeIdsInst
 
 proc protoIds(this: Dex): seq[Dex_ProtoIdItem] = 
 
@@ -435,7 +459,7 @@ and then by argument list (lexicographic ordering, individual arguments
 ordered by type_id index). The list must not contain any duplicate entries.
 
   ]##
-  if this.protoIdsInst.len != 0:
+  if this.protoIdsInstFlag:
     return this.protoIdsInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.protoIdsOff))
@@ -443,8 +467,8 @@ ordered by type_id index). The list must not contain any duplicate entries.
     let it = Dex_ProtoIdItem.read(this.io, this.root, this)
     this.protoIdsInst.add(it)
   this.io.seek(pos)
-  if this.protoIdsInst.len != 0:
-    return this.protoIdsInst
+  this.protoIdsInstFlag = true
+  return this.protoIdsInst
 
 proc fieldIds(this: Dex): seq[Dex_FieldIdItem] = 
 
@@ -460,7 +484,7 @@ order, and type (by type_id index) is the minor order.
 The list must not contain any duplicate entries.
 
   ]##
-  if this.fieldIdsInst.len != 0:
+  if this.fieldIdsInstFlag:
     return this.fieldIdsInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.fieldIdsOff))
@@ -468,8 +492,8 @@ The list must not contain any duplicate entries.
     let it = Dex_FieldIdItem.read(this.io, this.root, this)
     this.fieldIdsInst.add(it)
   this.io.seek(pos)
-  if this.fieldIdsInst.len != 0:
-    return this.fieldIdsInst
+  this.fieldIdsInstFlag = true
+  return this.fieldIdsInst
 
 proc fromFile*(_: typedesc[Dex], filename: string): Dex =
   Dex.read(newKaitaiFileStream(filename), nil, nil)
@@ -803,36 +827,36 @@ proc className(this: Dex_MethodIdItem): string =
   ##[
   the definer of this method
   ]##
-  if this.classNameInst.len != 0:
+  if this.classNameInstFlag:
     return this.classNameInst
   let classNameInstExpr = string(Dex(this.root).typeIds[this.classIdx].typeName)
   this.classNameInst = classNameInstExpr
-  if this.classNameInst.len != 0:
-    return this.classNameInst
+  this.classNameInstFlag = true
+  return this.classNameInst
 
 proc protoDesc(this: Dex_MethodIdItem): string = 
 
   ##[
   the short-form descriptor of the prototype of this method
   ]##
-  if this.protoDescInst.len != 0:
+  if this.protoDescInstFlag:
     return this.protoDescInst
   let protoDescInstExpr = string(Dex(this.root).protoIds[this.protoIdx].shortyDesc)
   this.protoDescInst = protoDescInstExpr
-  if this.protoDescInst.len != 0:
-    return this.protoDescInst
+  this.protoDescInstFlag = true
+  return this.protoDescInst
 
 proc methodName(this: Dex_MethodIdItem): string = 
 
   ##[
   the name of this method
   ]##
-  if this.methodNameInst.len != 0:
+  if this.methodNameInstFlag:
     return this.methodNameInst
   let methodNameInstExpr = string(Dex(this.root).stringIds[this.nameIdx].value.data)
   this.methodNameInst = methodNameInstExpr
-  if this.methodNameInst.len != 0:
-    return this.methodNameInst
+  this.methodNameInstFlag = true
+  return this.methodNameInst
 
 proc fromFile*(_: typedesc[Dex_MethodIdItem], filename: string): Dex_MethodIdItem =
   Dex_MethodIdItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -849,12 +873,12 @@ proc read*(_: typedesc[Dex_TypeItem], io: KaitaiStream, root: KaitaiStruct, pare
   this.typeIdx = typeIdxExpr
 
 proc value(this: Dex_TypeItem): string = 
-  if this.valueInst.len != 0:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = string(Dex(this.root).typeIds[this.typeIdx].typeName)
   this.valueInst = valueInstExpr
-  if this.valueInst.len != 0:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Dex_TypeItem], filename: string): Dex_TypeItem =
   Dex_TypeItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -877,12 +901,12 @@ The string must conform to the syntax for TypeDescriptor, defined above.
   this.descriptorIdx = descriptorIdxExpr
 
 proc typeName(this: Dex_TypeIdItem): string = 
-  if this.typeNameInst.len != 0:
+  if this.typeNameInstFlag:
     return this.typeNameInst
   let typeNameInstExpr = string(Dex(this.root).stringIds[this.descriptorIdx].value.data)
   this.typeNameInst = typeNameInstExpr
-  if this.typeNameInst.len != 0:
-    return this.typeNameInst
+  this.typeNameInstFlag = true
+  return this.typeNameInst
 
 proc fromFile*(_: typedesc[Dex_TypeIdItem], filename: string): Dex_TypeIdItem =
   Dex_TypeIdItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -1085,36 +1109,36 @@ proc className(this: Dex_FieldIdItem): string =
   ##[
   the definer of this field
   ]##
-  if this.classNameInst.len != 0:
+  if this.classNameInstFlag:
     return this.classNameInst
   let classNameInstExpr = string(Dex(this.root).typeIds[this.classIdx].typeName)
   this.classNameInst = classNameInstExpr
-  if this.classNameInst.len != 0:
-    return this.classNameInst
+  this.classNameInstFlag = true
+  return this.classNameInst
 
 proc typeName(this: Dex_FieldIdItem): string = 
 
   ##[
   the type of this field
   ]##
-  if this.typeNameInst.len != 0:
+  if this.typeNameInstFlag:
     return this.typeNameInst
   let typeNameInstExpr = string(Dex(this.root).typeIds[this.typeIdx].typeName)
   this.typeNameInst = typeNameInstExpr
-  if this.typeNameInst.len != 0:
-    return this.typeNameInst
+  this.typeNameInstFlag = true
+  return this.typeNameInst
 
 proc fieldName(this: Dex_FieldIdItem): string = 
 
   ##[
   the name of this field
   ]##
-  if this.fieldNameInst.len != 0:
+  if this.fieldNameInstFlag:
     return this.fieldNameInst
   let fieldNameInstExpr = string(Dex(this.root).stringIds[this.nameIdx].value.data)
   this.fieldNameInst = fieldNameInstExpr
-  if this.fieldNameInst.len != 0:
-    return this.fieldNameInst
+  this.fieldNameInstFlag = true
+  return this.fieldNameInst
 
 proc fromFile*(_: typedesc[Dex_FieldIdItem], filename: string): Dex_FieldIdItem =
   Dex_FieldIdItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -1268,15 +1292,15 @@ then the leftover fields are initialized with a type-appropriate 0 or null.
   this.staticValuesOff = staticValuesOffExpr
 
 proc typeName(this: Dex_ClassDefItem): string = 
-  if this.typeNameInst.len != 0:
+  if this.typeNameInstFlag:
     return this.typeNameInst
   let typeNameInstExpr = string(Dex(this.root).typeIds[this.classIdx].typeName)
   this.typeNameInst = typeNameInstExpr
-  if this.typeNameInst.len != 0:
-    return this.typeNameInst
+  this.typeNameInstFlag = true
+  return this.typeNameInst
 
 proc classData(this: Dex_ClassDefItem): Dex_ClassDataItem = 
-  if this.classDataInst != nil:
+  if this.classDataInstFlag:
     return this.classDataInst
   if this.classDataOff != 0:
     let pos = this.io.pos()
@@ -1284,11 +1308,11 @@ proc classData(this: Dex_ClassDefItem): Dex_ClassDataItem =
     let classDataInstExpr = Dex_ClassDataItem.read(this.io, this.root, this)
     this.classDataInst = classDataInstExpr
     this.io.seek(pos)
-  if this.classDataInst != nil:
-    return this.classDataInst
+  this.classDataInstFlag = true
+  return this.classDataInst
 
 proc staticValues(this: Dex_ClassDefItem): Dex_EncodedArrayItem = 
-  if this.staticValuesInst != nil:
+  if this.staticValuesInstFlag:
     return this.staticValuesInst
   if this.staticValuesOff != 0:
     let pos = this.io.pos()
@@ -1296,8 +1320,8 @@ proc staticValues(this: Dex_ClassDefItem): Dex_EncodedArrayItem =
     let staticValuesInstExpr = Dex_EncodedArrayItem.read(this.io, this.root, this)
     this.staticValuesInst = staticValuesInstExpr
     this.io.seek(pos)
-  if this.staticValuesInst != nil:
-    return this.staticValuesInst
+  this.staticValuesInstFlag = true
+  return this.staticValuesInst
 
 proc fromFile*(_: typedesc[Dex_ClassDefItem], filename: string): Dex_ClassDefItem =
   Dex_ClassDefItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -1339,15 +1363,15 @@ There is no alignment requirement for the offset.
   this.stringDataOff = stringDataOffExpr
 
 proc value(this: Dex_StringIdItem): Dex_StringIdItem_StringDataItem = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let pos = this.io.pos()
   this.io.seek(int(this.stringDataOff))
   let valueInstExpr = Dex_StringIdItem_StringDataItem.read(this.io, this.root, this)
   this.valueInst = valueInstExpr
   this.io.seek(pos)
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Dex_StringIdItem], filename: string): Dex_StringIdItem =
   Dex_StringIdItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -1409,19 +1433,19 @@ proc shortyDesc(this: Dex_ProtoIdItem): string =
   ##[
   short-form descriptor string of this prototype, as pointed to by shorty_idx
   ]##
-  if this.shortyDescInst.len != 0:
+  if this.shortyDescInstFlag:
     return this.shortyDescInst
   let shortyDescInstExpr = string(Dex(this.root).stringIds[this.shortyIdx].value.data)
   this.shortyDescInst = shortyDescInstExpr
-  if this.shortyDescInst.len != 0:
-    return this.shortyDescInst
+  this.shortyDescInstFlag = true
+  return this.shortyDescInst
 
 proc paramsTypes(this: Dex_ProtoIdItem): Dex_TypeList = 
 
   ##[
   list of parameter types for this prototype
   ]##
-  if this.paramsTypesInst != nil:
+  if this.paramsTypesInstFlag:
     return this.paramsTypesInst
   if this.parametersOff != 0:
     let io = Dex(this.root).io
@@ -1430,20 +1454,20 @@ proc paramsTypes(this: Dex_ProtoIdItem): Dex_TypeList =
     let paramsTypesInstExpr = Dex_TypeList.read(io, this.root, this)
     this.paramsTypesInst = paramsTypesInstExpr
     io.seek(pos)
-  if this.paramsTypesInst != nil:
-    return this.paramsTypesInst
+  this.paramsTypesInstFlag = true
+  return this.paramsTypesInst
 
 proc returnType(this: Dex_ProtoIdItem): string = 
 
   ##[
   return type of this prototype
   ]##
-  if this.returnTypeInst.len != 0:
+  if this.returnTypeInstFlag:
     return this.returnTypeInst
   let returnTypeInstExpr = string(Dex(this.root).typeIds[this.returnTypeIdx].typeName)
   this.returnTypeInst = returnTypeInstExpr
-  if this.returnTypeInst.len != 0:
-    return this.returnTypeInst
+  this.returnTypeInstFlag = true
+  return this.returnTypeInst
 
 proc fromFile*(_: typedesc[Dex_ProtoIdItem], filename: string): Dex_ProtoIdItem =
   Dex_ProtoIdItem.read(newKaitaiFileStream(filename), nil, nil)

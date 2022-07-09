@@ -111,9 +111,9 @@ end
 
 function Ines.Header.F6:_read()
   self.lower_mapper = self._io:read_bits_int_be(4)
-  self.four_screen = self._io:read_bits_int_be(1)
-  self.trainer = self._io:read_bits_int_be(1)
-  self.has_battery_ram = self._io:read_bits_int_be(1)
+  self.four_screen = self._io:read_bits_int_be(1) ~= 0
+  self.trainer = self._io:read_bits_int_be(1) ~= 0
+  self.has_battery_ram = self._io:read_bits_int_be(1) ~= 0
   self.mirroring = Ines.Header.F6.Mirroring(self._io:read_bits_int_be(1))
 end
 
@@ -142,8 +142,8 @@ end
 function Ines.Header.F7:_read()
   self.upper_mapper = self._io:read_bits_int_be(4)
   self.format = self._io:read_bits_int_be(2)
-  self.playchoice10 = self._io:read_bits_int_be(1)
-  self.vs_unisystem = self._io:read_bits_int_be(1)
+  self.playchoice10 = self._io:read_bits_int_be(1) ~= 0
+  self.vs_unisystem = self._io:read_bits_int_be(1) ~= 0
 end
 
 -- 
@@ -199,8 +199,8 @@ end
 
 function Ines.Header.F10:_read()
   self.reserved1 = self._io:read_bits_int_be(2)
-  self.bus_conflict = self._io:read_bits_int_be(1)
-  self.prg_ram = self._io:read_bits_int_be(1)
+  self.bus_conflict = self._io:read_bits_int_be(1) ~= 0
+  self.prg_ram = self._io:read_bits_int_be(1) ~= 0
   self.reserved2 = self._io:read_bits_int_be(2)
   self.tv_system = Ines.Header.F10.TvSystem(self._io:read_bits_int_be(2))
 end

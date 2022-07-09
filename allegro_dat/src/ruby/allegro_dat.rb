@@ -36,9 +36,9 @@ class AllegroDat < Kaitai::Struct::Struct
     @dat_magic = @_io.read_bytes(4)
     raise Kaitai::Struct::ValidationNotEqualError.new([65, 76, 76, 46].pack('C*'), dat_magic, _io, "/seq/1") if not dat_magic == [65, 76, 76, 46].pack('C*')
     @num_objects = @_io.read_u4be
-    @objects = Array.new(num_objects)
+    @objects = []
     (num_objects).times { |i|
-      @objects[i] = DatObject.new(@_io, self, @_root)
+      @objects << DatObject.new(@_io, self, @_root)
     }
     self
   end
@@ -53,9 +53,9 @@ class AllegroDat < Kaitai::Struct::Struct
     end
 
     def _read
-      @chars = Array.new(95)
+      @chars = []
       (95).times { |i|
-        @chars[i] = @_io.read_bytes(16)
+        @chars << @_io.read_bytes(16)
       }
       self
     end
@@ -111,9 +111,9 @@ class AllegroDat < Kaitai::Struct::Struct
     end
 
     def _read
-      @chars = Array.new(95)
+      @chars = []
       (95).times { |i|
-        @chars[i] = @_io.read_bytes(8)
+        @chars << @_io.read_bytes(8)
       }
       self
     end
@@ -177,9 +177,9 @@ class AllegroDat < Kaitai::Struct::Struct
 
     def _read
       @num_ranges = @_io.read_s2be
-      @ranges = Array.new(num_ranges)
+      @ranges = []
       (num_ranges).times { |i|
-        @ranges[i] = Range.new(@_io, self, @_root)
+        @ranges << Range.new(@_io, self, @_root)
       }
       self
     end
@@ -193,9 +193,9 @@ class AllegroDat < Kaitai::Struct::Struct
         @mono = @_io.read_u1
         @start_char = @_io.read_u4be
         @end_char = @_io.read_u4be
-        @chars = Array.new(((end_char - start_char) + 1))
+        @chars = []
         (((end_char - start_char) + 1)).times { |i|
-          @chars[i] = FontChar.new(@_io, self, @_root)
+          @chars << FontChar.new(@_io, self, @_root)
         }
         self
       end

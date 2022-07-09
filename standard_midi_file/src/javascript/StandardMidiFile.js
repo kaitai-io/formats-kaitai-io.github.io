@@ -8,7 +8,7 @@
   } else {
     root.StandardMidiFile = factory(root.KaitaiStream, root.VlqBase128Be);
   }
-}(this, function (KaitaiStream, VlqBase128Be) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Be) {
 /**
  * Standard MIDI file, typically known just as "MID", is a standard way
  * to serialize series of MIDI events, which is a protocol used in many
@@ -36,9 +36,9 @@ var StandardMidiFile = (function() {
   }
   StandardMidiFile.prototype._read = function() {
     this.hdr = new Header(this._io, this, this._root);
-    this.tracks = new Array(this.hdr.numTracks);
+    this.tracks = [];
     for (var i = 0; i < this.hdr.numTracks; i++) {
-      this.tracks[i] = new Track(this._io, this, this._root);
+      this.tracks.push(new Track(this._io, this, this._root));
     }
   }
 

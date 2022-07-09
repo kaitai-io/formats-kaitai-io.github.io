@@ -290,7 +290,8 @@ updated in 1991, is likely the closest authoritative source.</p>
     <span class="p">`</span><span class="n">hdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Pcx_Header</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawHdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">palette256Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Pcx_TPalette256</span>
+    <span class="p">`</span><span class="n">palette256Inst</span><span class="p">`:</span> <span class="n">Pcx_TPalette256</span>
+    <span class="p">`</span><span class="n">palette256InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Pcx_Versions</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">v2_5</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">v2_8_with_palette</span> <span class="o">=</span> <span class="mi">2</span>
@@ -373,7 +374,7 @@ updated in 1991, is likely the closest authoritative source.</p>
   <span class="sd">##[</span>
   <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt&quot;</span><span class="o">&gt;-</span> <span class="s">&quot;VGA 256 Color Palette Information&quot;</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">palette256Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">palette256InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">palette256Inst</span>
   <span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">pcx</span><span class="p">.</span><span class="n">v3_0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">numPlanes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -381,8 +382,8 @@ updated in 1991, is likely the closest authoritative source.</p>
     <span class="k">let</span> <span class="n">palette256InstExpr</span> <span class="o">=</span> <span class="n">Pcx_TPalette256</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">palette256Inst</span> <span class="o">=</span> <span class="n">palette256InstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">palette256Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">palette256Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">palette256InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">palette256Inst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Pcx], filename: string): Pcx =</span>
   <span class="n">Pcx</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

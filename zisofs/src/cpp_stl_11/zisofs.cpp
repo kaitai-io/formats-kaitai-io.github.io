@@ -18,9 +18,8 @@ void zisofs_t::_read() {
     m__raw_header = m__io->read_bytes(16);
     m__io__raw_header = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_header));
     m_header = std::unique_ptr<header_t>(new header_t(m__io__raw_header.get(), this, m__root));
-    int l_block_pointers = (header()->num_blocks() + 1);
     m_block_pointers = std::unique_ptr<std::vector<uint32_t>>(new std::vector<uint32_t>());
-    m_block_pointers->reserve(l_block_pointers);
+    const int l_block_pointers = (header()->num_blocks() + 1);
     for (int i = 0; i < l_block_pointers; i++) {
         m_block_pointers->push_back(std::move(m__io->read_u4le()));
     }
@@ -131,9 +130,8 @@ std::string zisofs_t::block_t::data() {
 std::vector<std::unique_ptr<zisofs_t::block_t>>* zisofs_t::blocks() {
     if (f_blocks)
         return m_blocks.get();
-    int l_blocks = header()->num_blocks();
     m_blocks = std::unique_ptr<std::vector<std::unique_ptr<block_t>>>(new std::vector<std::unique_ptr<block_t>>());
-    m_blocks->reserve(l_blocks);
+    const int l_blocks = header()->num_blocks();
     for (int i = 0; i < l_blocks; i++) {
         m_blocks->push_back(std::move(std::unique_ptr<block_t>(new block_t(block_pointers()->at(i), block_pointers()->at((i + 1)), m__io, this, m__root))));
     }

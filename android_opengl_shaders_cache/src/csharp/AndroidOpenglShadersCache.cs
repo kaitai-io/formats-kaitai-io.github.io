@@ -125,7 +125,7 @@ namespace Kaitai
                 if (Version >= 3) {
                     _buildId = new PrefixedString(m_io, this, m_root);
                 }
-                _entries = new List<Entry>((int) (NumEntries));
+                _entries = new List<Entry>();
                 for (var i = 0; i < NumEntries; i++)
                 {
                     _entries.Add(new Entry(m_io, this, m_root));

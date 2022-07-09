@@ -1636,13 +1636,10 @@ std::vector<std::unique_ptr<elf_t::endian_elf_t::program_header_t>>* elf_t::endi
     std::streampos _pos = m__io->pos();
     m__io->seek(program_header_offset());
     if (m__is_le == 1) {
-        int l_program_headers = qty_program_header();
         m__raw_program_headers = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-        m__raw_program_headers->reserve(l_program_headers);
         m__io__raw_program_headers = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-        m__io__raw_program_headers->reserve(l_program_headers);
         m_program_headers = std::unique_ptr<std::vector<std::unique_ptr<program_header_t>>>(new std::vector<std::unique_ptr<program_header_t>>());
-        m_program_headers->reserve(l_program_headers);
+        const int l_program_headers = qty_program_header();
         for (int i = 0; i < l_program_headers; i++) {
             m__raw_program_headers->push_back(std::move(m__io->read_bytes(program_header_entry_size())));
             kaitai::kstream* io__raw_program_headers = new kaitai::kstream(m__raw_program_headers->at(m__raw_program_headers->size() - 1));
@@ -1650,13 +1647,10 @@ std::vector<std::unique_ptr<elf_t::endian_elf_t::program_header_t>>* elf_t::endi
             m_program_headers->push_back(std::move(std::unique_ptr<program_header_t>(new program_header_t(io__raw_program_headers, this, m__root, m__is_le))));
         }
     } else {
-        int l_program_headers = qty_program_header();
         m__raw_program_headers = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-        m__raw_program_headers->reserve(l_program_headers);
         m__io__raw_program_headers = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-        m__io__raw_program_headers->reserve(l_program_headers);
         m_program_headers = std::unique_ptr<std::vector<std::unique_ptr<program_header_t>>>(new std::vector<std::unique_ptr<program_header_t>>());
-        m_program_headers->reserve(l_program_headers);
+        const int l_program_headers = qty_program_header();
         for (int i = 0; i < l_program_headers; i++) {
             m__raw_program_headers->push_back(std::move(m__io->read_bytes(program_header_entry_size())));
             kaitai::kstream* io__raw_program_headers = new kaitai::kstream(m__raw_program_headers->at(m__raw_program_headers->size() - 1));
@@ -1675,13 +1669,10 @@ std::vector<std::unique_ptr<elf_t::endian_elf_t::section_header_t>>* elf_t::endi
     std::streampos _pos = m__io->pos();
     m__io->seek(section_header_offset());
     if (m__is_le == 1) {
-        int l_section_headers = qty_section_header();
         m__raw_section_headers = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-        m__raw_section_headers->reserve(l_section_headers);
         m__io__raw_section_headers = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-        m__io__raw_section_headers->reserve(l_section_headers);
         m_section_headers = std::unique_ptr<std::vector<std::unique_ptr<section_header_t>>>(new std::vector<std::unique_ptr<section_header_t>>());
-        m_section_headers->reserve(l_section_headers);
+        const int l_section_headers = qty_section_header();
         for (int i = 0; i < l_section_headers; i++) {
             m__raw_section_headers->push_back(std::move(m__io->read_bytes(section_header_entry_size())));
             kaitai::kstream* io__raw_section_headers = new kaitai::kstream(m__raw_section_headers->at(m__raw_section_headers->size() - 1));
@@ -1689,13 +1680,10 @@ std::vector<std::unique_ptr<elf_t::endian_elf_t::section_header_t>>* elf_t::endi
             m_section_headers->push_back(std::move(std::unique_ptr<section_header_t>(new section_header_t(io__raw_section_headers, this, m__root, m__is_le))));
         }
     } else {
-        int l_section_headers = qty_section_header();
         m__raw_section_headers = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-        m__raw_section_headers->reserve(l_section_headers);
         m__io__raw_section_headers = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-        m__io__raw_section_headers->reserve(l_section_headers);
         m_section_headers = std::unique_ptr<std::vector<std::unique_ptr<section_header_t>>>(new std::vector<std::unique_ptr<section_header_t>>());
-        m_section_headers->reserve(l_section_headers);
+        const int l_section_headers = qty_section_header();
         for (int i = 0; i < l_section_headers; i++) {
             m__raw_section_headers->push_back(std::move(m__io->read_bytes(section_header_entry_size())));
             kaitai::kstream* io__raw_section_headers = new kaitai::kstream(m__raw_section_headers->at(m__raw_section_headers->size() - 1));

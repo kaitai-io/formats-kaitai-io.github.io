@@ -98,7 +98,7 @@ namespace Kaitai
                 _journalInum = m_io.ReadU4le();
                 _journalDev = m_io.ReadU4le();
                 _lastOrphan = m_io.ReadU4le();
-                _hashSeed = new List<uint>((int) (4));
+                _hashSeed = new List<uint>();
                 for (var i = 0; i < 4; i++)
                 {
                     _hashSeed.Add(m_io.ReadU4le());
@@ -317,7 +317,7 @@ namespace Kaitai
                 _blocks = m_io.ReadU4le();
                 _flags = m_io.ReadU4le();
                 _osd1 = m_io.ReadU4le();
-                _block = new List<BlockPtr>((int) (15));
+                _block = new List<BlockPtr>();
                 for (var i = 0; i < 15; i++)
                 {
                     _block.Add(new BlockPtr(m_io, this, m_root));
@@ -480,7 +480,7 @@ namespace Kaitai
                 __raw_superBlock = m_io.ReadBytes(1024);
                 var io___raw_superBlock = new KaitaiStream(__raw_superBlock);
                 _superBlock = new SuperBlockStruct(io___raw_superBlock, this, m_root);
-                _blockGroups = new List<Bgd>((int) (SuperBlock.BlockGroupCount));
+                _blockGroups = new List<Bgd>();
                 for (var i = 0; i < SuperBlock.BlockGroupCount; i++)
                 {
                     _blockGroups.Add(new Bgd(m_io, this, m_root));
@@ -565,7 +565,7 @@ namespace Kaitai
                         return _inodes;
                     long _pos = m_io.Pos;
                     m_io.Seek((InodeTableBlock * M_Root.Bg1.SuperBlock.BlockSize));
-                    _inodes = new List<Inode>((int) (M_Root.Bg1.SuperBlock.InodesPerGroup));
+                    _inodes = new List<Inode>();
                     for (var i = 0; i < M_Root.Bg1.SuperBlock.InodesPerGroup; i++)
                     {
                         _inodes.Add(new Inode(m_io, this, m_root));

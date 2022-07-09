@@ -23,13 +23,13 @@ class FalloutDat < Kaitai::Struct::Struct
     @unknown1 = @_io.read_u4be
     @unknown2 = @_io.read_u4be
     @timestamp = @_io.read_u4be
-    @folder_names = Array.new(folder_count)
+    @folder_names = []
     (folder_count).times { |i|
-      @folder_names[i] = Pstr.new(@_io, self, @_root)
+      @folder_names << Pstr.new(@_io, self, @_root)
     }
-    @folders = Array.new(folder_count)
+    @folders = []
     (folder_count).times { |i|
-      @folders[i] = Folder.new(@_io, self, @_root)
+      @folders << Folder.new(@_io, self, @_root)
     }
     self
   end
@@ -58,9 +58,9 @@ class FalloutDat < Kaitai::Struct::Struct
       @unknown = @_io.read_u4be
       @flags = @_io.read_u4be
       @timestamp = @_io.read_u4be
-      @files = Array.new(file_count)
+      @files = []
       (file_count).times { |i|
-        @files[i] = File.new(@_io, self, @_root)
+        @files << File.new(@_io, self, @_root)
       }
       self
     end

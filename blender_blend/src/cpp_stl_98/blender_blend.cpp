@@ -63,9 +63,8 @@ blender_blend_t::dna_struct_t::dna_struct_t(kaitai::kstream* p__io, blender_blen
 void blender_blend_t::dna_struct_t::_read() {
     m_idx_type = m__io->read_u2le();
     m_num_fields = m__io->read_u2le();
-    int l_fields = num_fields();
     m_fields = new std::vector<dna_field_t*>();
-    m_fields->reserve(l_fields);
+    const int l_fields = num_fields();
     for (int i = 0; i < l_fields; i++) {
         m_fields->push_back(new dna_field_t(m__io, this, m__root));
     }
@@ -180,9 +179,8 @@ void blender_blend_t::dna1_body_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x4E\x41\x4D\x45", 4), name_magic(), _io(), std::string("/types/dna1_body/seq/1"));
     }
     m_num_names = m__io->read_u4le();
-    int l_names = num_names();
     m_names = new std::vector<std::string>();
-    m_names->reserve(l_names);
+    const int l_names = num_names();
     for (int i = 0; i < l_names; i++) {
         m_names->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8")));
     }
@@ -192,9 +190,8 @@ void blender_blend_t::dna1_body_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x54\x59\x50\x45", 4), type_magic(), _io(), std::string("/types/dna1_body/seq/5"));
     }
     m_num_types = m__io->read_u4le();
-    int l_types = num_types();
     m_types = new std::vector<std::string>();
-    m_types->reserve(l_types);
+    const int l_types = num_types();
     for (int i = 0; i < l_types; i++) {
         m_types->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8")));
     }
@@ -203,9 +200,8 @@ void blender_blend_t::dna1_body_t::_read() {
     if (!(tlen_magic() == std::string("\x54\x4C\x45\x4E", 4))) {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x54\x4C\x45\x4E", 4), tlen_magic(), _io(), std::string("/types/dna1_body/seq/9"));
     }
-    int l_lengths = num_types();
     m_lengths = new std::vector<uint16_t>();
-    m_lengths->reserve(l_lengths);
+    const int l_lengths = num_types();
     for (int i = 0; i < l_lengths; i++) {
         m_lengths->push_back(m__io->read_u2le());
     }
@@ -215,9 +211,8 @@ void blender_blend_t::dna1_body_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x53\x54\x52\x43", 4), strc_magic(), _io(), std::string("/types/dna1_body/seq/12"));
     }
     m_num_structs = m__io->read_u4le();
-    int l_structs = num_structs();
     m_structs = new std::vector<dna_struct_t*>();
-    m_structs->reserve(l_structs);
+    const int l_structs = num_structs();
     for (int i = 0; i < l_structs; i++) {
         m_structs->push_back(new dna_struct_t(m__io, this, m__root));
     }

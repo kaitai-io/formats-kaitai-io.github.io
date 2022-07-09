@@ -277,7 +277,8 @@ the tag itself, please use <code>id3v1_1::id3_v1_1_tag</code> subtype.</p>
 <span class="k">type</span>
   <span class="n">Id3v11</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">id3v1TagInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v11_Id3V11Tag</span>
+    <span class="p">`</span><span class="n">id3v1TagInst</span><span class="p">`:</span> <span class="n">Id3v11_Id3V11Tag</span>
+    <span class="p">`</span><span class="n">id3v1TagInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Id3v11_Id3V11Tag</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">title</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -441,15 +442,15 @@ the tag itself, please use <code>id3v1_1::id3_v1_1_tag</code> subtype.</p>
 
 
 <span class="k">proc </span><span class="nf">id3v1Tag</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Id3v11</span><span class="p">):</span> <span class="n">Id3v11_Id3V11Tag</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">128</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">id3v1TagInstExpr</span> <span class="o">=</span> <span class="n">Id3v11_Id3V11Tag</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInst</span> <span class="o">=</span> <span class="n">id3v1TagInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">id3v1TagInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Id3v11], filename: string): Id3v11 =</span>
   <span class="n">Id3v11</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

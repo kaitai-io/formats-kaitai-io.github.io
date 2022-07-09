@@ -124,7 +124,7 @@ namespace Kaitai
             private void _read()
             {
                 _numThreads = m_io.ReadU4le();
-                _threads = new List<Thread>((int) (NumThreads));
+                _threads = new List<Thread>();
                 for (var i = 0; i < NumThreads; i++)
                 {
                     _threads.Add(new Thread(m_io, this, m_root));
@@ -342,7 +342,7 @@ namespace Kaitai
                 _addr = m_io.ReadU8le();
                 _numParams = m_io.ReadU4le();
                 _reserved = m_io.ReadU4le();
-                _params = new List<ulong>((int) (15));
+                _params = new List<ulong>();
                 for (var i = 0; i < 15; i++)
                 {
                     _params.Add(m_io.ReadU8le());
@@ -600,7 +600,7 @@ namespace Kaitai
             private void _read()
             {
                 _numMemRanges = m_io.ReadU4le();
-                _memRanges = new List<MemoryDescriptor>((int) (NumMemRanges));
+                _memRanges = new List<MemoryDescriptor>();
                 for (var i = 0; i < NumMemRanges; i++)
                 {
                     _memRanges.Add(new MemoryDescriptor(m_io, this, m_root));
@@ -693,7 +693,7 @@ namespace Kaitai
                     return _streams;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsStreams);
-                _streams = new List<Dir>((int) (NumStreams));
+                _streams = new List<Dir>();
                 for (var i = 0; i < NumStreams; i++)
                 {
                     _streams.Add(new Dir(m_io, this, m_root));

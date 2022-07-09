@@ -8,7 +8,7 @@
   } else {
     root.GettextMo = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * [GNU gettext](https://www.gnu.org/software/gettext/) is a popular
  * solution in free/open source software world to do i18n/l10n of
@@ -421,14 +421,14 @@ var GettextMo = (function() {
         var _pos = io.pos;
         io.seek(this.ofsOriginals);
         if (this._is_le) {
-          this._m_originals = new Array(this.numTranslations);
+          this._m_originals = [];
           for (var i = 0; i < this.numTranslations; i++) {
-            this._m_originals[i] = new Descriptor(io, this, this._root, this._is_le);
+            this._m_originals.push(new Descriptor(io, this, this._root, this._is_le));
           }
         } else {
-          this._m_originals = new Array(this.numTranslations);
+          this._m_originals = [];
           for (var i = 0; i < this.numTranslations; i++) {
-            this._m_originals[i] = new Descriptor(io, this, this._root, this._is_le);
+            this._m_originals.push(new Descriptor(io, this, this._root, this._is_le));
           }
         }
         io.seek(_pos);
@@ -443,14 +443,14 @@ var GettextMo = (function() {
         var _pos = io.pos;
         io.seek(this.ofsTranslations);
         if (this._is_le) {
-          this._m_translations = new Array(this.numTranslations);
+          this._m_translations = [];
           for (var i = 0; i < this.numTranslations; i++) {
-            this._m_translations[i] = new Descriptor(io, this, this._root, this._is_le);
+            this._m_translations.push(new Descriptor(io, this, this._root, this._is_le));
           }
         } else {
-          this._m_translations = new Array(this.numTranslations);
+          this._m_translations = [];
           for (var i = 0; i < this.numTranslations; i++) {
-            this._m_translations[i] = new Descriptor(io, this, this._root, this._is_le);
+            this._m_translations.push(new Descriptor(io, this, this._root, this._is_le));
           }
         }
         io.seek(_pos);
@@ -466,14 +466,14 @@ var GettextMo = (function() {
           var _pos = io.pos;
           io.seek(this.ofsHashtableItems);
           if (this._is_le) {
-            this._m_hashtableItems = new Array(this.numHashtableItems);
+            this._m_hashtableItems = [];
             for (var i = 0; i < this.numHashtableItems; i++) {
-              this._m_hashtableItems[i] = new HashtableItem(io, this, this._root, this._is_le);
+              this._m_hashtableItems.push(new HashtableItem(io, this, this._root, this._is_le));
             }
           } else {
-            this._m_hashtableItems = new Array(this.numHashtableItems);
+            this._m_hashtableItems = [];
             for (var i = 0; i < this.numHashtableItems; i++) {
-              this._m_hashtableItems[i] = new HashtableItem(io, this, this._root, this._is_le);
+              this._m_hashtableItems.push(new HashtableItem(io, this, this._root, this._is_le));
             }
           }
           io.seek(_pos);

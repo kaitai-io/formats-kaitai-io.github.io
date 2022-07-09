@@ -18,35 +18,64 @@ type
     `numMapElements32`*: uint32
     `mapElements`*: seq[Msgpack_MapTuple]
     `parent`*: KaitaiStruct
-    `isArray32Inst`*: bool
-    `intValueInst`*: int
-    `strLenInst`*: int
-    `isFixArrayInst`*: bool
-    `isMapInst`*: bool
-    `isArrayInst`*: bool
-    `isFloatInst`*: bool
-    `isStr8Inst`*: bool
-    `isFixMapInst`*: bool
-    `isIntInst`*: bool
-    `isBoolInst`*: bool
-    `isStr16Inst`*: bool
-    `isFloat64Inst`*: bool
-    `isMap16Inst`*: bool
-    `isNegInt5Inst`*: bool
-    `posInt7ValueInst`*: uint8
-    `isNilInst`*: bool
-    `floatValueInst`*: float64
-    `numArrayElementsInst`*: int
-    `negInt5ValueInst`*: int
-    `boolValueInst`*: bool
-    `isPosInt7Inst`*: bool
-    `isArray16Inst`*: bool
-    `isStrInst`*: bool
-    `isFixStrInst`*: bool
-    `isStr32Inst`*: bool
-    `numMapElementsInst`*: int
-    `isFloat32Inst`*: bool
-    `isMap32Inst`*: bool
+    `isArray32Inst`: bool
+    `isArray32InstFlag`: bool
+    `intValueInst`: int
+    `intValueInstFlag`: bool
+    `strLenInst`: int
+    `strLenInstFlag`: bool
+    `isFixArrayInst`: bool
+    `isFixArrayInstFlag`: bool
+    `isMapInst`: bool
+    `isMapInstFlag`: bool
+    `isArrayInst`: bool
+    `isArrayInstFlag`: bool
+    `isFloatInst`: bool
+    `isFloatInstFlag`: bool
+    `isStr8Inst`: bool
+    `isStr8InstFlag`: bool
+    `isFixMapInst`: bool
+    `isFixMapInstFlag`: bool
+    `isIntInst`: bool
+    `isIntInstFlag`: bool
+    `isBoolInst`: bool
+    `isBoolInstFlag`: bool
+    `isStr16Inst`: bool
+    `isStr16InstFlag`: bool
+    `isFloat64Inst`: bool
+    `isFloat64InstFlag`: bool
+    `isMap16Inst`: bool
+    `isMap16InstFlag`: bool
+    `isNegInt5Inst`: bool
+    `isNegInt5InstFlag`: bool
+    `posInt7ValueInst`: uint8
+    `posInt7ValueInstFlag`: bool
+    `isNilInst`: bool
+    `isNilInstFlag`: bool
+    `floatValueInst`: float64
+    `floatValueInstFlag`: bool
+    `numArrayElementsInst`: int
+    `numArrayElementsInstFlag`: bool
+    `negInt5ValueInst`: int
+    `negInt5ValueInstFlag`: bool
+    `boolValueInst`: bool
+    `boolValueInstFlag`: bool
+    `isPosInt7Inst`: bool
+    `isPosInt7InstFlag`: bool
+    `isArray16Inst`: bool
+    `isArray16InstFlag`: bool
+    `isStrInst`: bool
+    `isStrInstFlag`: bool
+    `isFixStrInst`: bool
+    `isFixStrInstFlag`: bool
+    `isStr32Inst`: bool
+    `isStr32InstFlag`: bool
+    `numMapElementsInst`: int
+    `numMapElementsInstFlag`: bool
+    `isFloat32Inst`: bool
+    `isFloat32InstFlag`: bool
+    `isMap32Inst`: bool
+    `isMap32InstFlag`: bool
   Msgpack_MapTuple* = ref object of KaitaiStruct
     `key`*: Msgpack
     `value`*: Msgpack
@@ -179,312 +208,312 @@ proc isArray32(this: Msgpack): bool =
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array">Source</a>
   ]##
-  if this.isArray32Inst != nil:
+  if this.isArray32InstFlag:
     return this.isArray32Inst
   let isArray32InstExpr = bool(this.b1 == 221)
   this.isArray32Inst = isArray32InstExpr
-  if this.isArray32Inst != nil:
-    return this.isArray32Inst
+  this.isArray32InstFlag = true
+  return this.isArray32Inst
 
 proc intValue(this: Msgpack): int = 
-  if this.intValueInst != nil:
+  if this.intValueInstFlag:
     return this.intValueInst
   if this.isInt:
     let intValueInstExpr = int((if this.isPosInt7: this.posInt7Value else: (if this.isNegInt5: this.negInt5Value else: 4919)))
     this.intValueInst = intValueInstExpr
-  if this.intValueInst != nil:
-    return this.intValueInst
+  this.intValueInstFlag = true
+  return this.intValueInst
 
 proc strLen(this: Msgpack): int = 
-  if this.strLenInst != nil:
+  if this.strLenInstFlag:
     return this.strLenInst
   if this.isStr:
     let strLenInstExpr = int((if this.isFixStr: (this.b1 and 31) else: (if this.isStr8: this.strLen8 else: (if this.isStr16: this.strLen16 else: this.strLen32))))
     this.strLenInst = strLenInstExpr
-  if this.strLenInst != nil:
-    return this.strLenInst
+  this.strLenInstFlag = true
+  return this.strLenInst
 
 proc isFixArray(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array">Source</a>
   ]##
-  if this.isFixArrayInst != nil:
+  if this.isFixArrayInstFlag:
     return this.isFixArrayInst
   let isFixArrayInstExpr = bool((this.b1 and 240) == 144)
   this.isFixArrayInst = isFixArrayInstExpr
-  if this.isFixArrayInst != nil:
-    return this.isFixArrayInst
+  this.isFixArrayInstFlag = true
+  return this.isFixArrayInst
 
 proc isMap(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map">Source</a>
   ]##
-  if this.isMapInst != nil:
+  if this.isMapInstFlag:
     return this.isMapInst
   let isMapInstExpr = bool( ((this.isFixMap) or (this.isMap16) or (this.isMap32)) )
   this.isMapInst = isMapInstExpr
-  if this.isMapInst != nil:
-    return this.isMapInst
+  this.isMapInstFlag = true
+  return this.isMapInst
 
 proc isArray(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array">Source</a>
   ]##
-  if this.isArrayInst != nil:
+  if this.isArrayInstFlag:
     return this.isArrayInst
   let isArrayInstExpr = bool( ((this.isFixArray) or (this.isArray16) or (this.isArray32)) )
   this.isArrayInst = isArrayInstExpr
-  if this.isArrayInst != nil:
-    return this.isArrayInst
+  this.isArrayInstFlag = true
+  return this.isArrayInst
 
 proc isFloat(this: Msgpack): bool = 
-  if this.isFloatInst != nil:
+  if this.isFloatInstFlag:
     return this.isFloatInst
   let isFloatInstExpr = bool( ((this.isFloat32) or (this.isFloat64)) )
   this.isFloatInst = isFloatInstExpr
-  if this.isFloatInst != nil:
-    return this.isFloatInst
+  this.isFloatInstFlag = true
+  return this.isFloatInst
 
 proc isStr8(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str">Source</a>
   ]##
-  if this.isStr8Inst != nil:
+  if this.isStr8InstFlag:
     return this.isStr8Inst
   let isStr8InstExpr = bool(this.b1 == 217)
   this.isStr8Inst = isStr8InstExpr
-  if this.isStr8Inst != nil:
-    return this.isStr8Inst
+  this.isStr8InstFlag = true
+  return this.isStr8Inst
 
 proc isFixMap(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map">Source</a>
   ]##
-  if this.isFixMapInst != nil:
+  if this.isFixMapInstFlag:
     return this.isFixMapInst
   let isFixMapInstExpr = bool((this.b1 and 240) == 128)
   this.isFixMapInst = isFixMapInstExpr
-  if this.isFixMapInst != nil:
-    return this.isFixMapInst
+  this.isFixMapInstFlag = true
+  return this.isFixMapInst
 
 proc isInt(this: Msgpack): bool = 
-  if this.isIntInst != nil:
+  if this.isIntInstFlag:
     return this.isIntInst
   let isIntInstExpr = bool( ((this.isPosInt7) or (this.isNegInt5)) )
   this.isIntInst = isIntInstExpr
-  if this.isIntInst != nil:
-    return this.isIntInst
+  this.isIntInstFlag = true
+  return this.isIntInst
 
 proc isBool(this: Msgpack): bool = 
-  if this.isBoolInst != nil:
+  if this.isBoolInstFlag:
     return this.isBoolInst
   let isBoolInstExpr = bool( ((this.b1 == 194) or (this.b1 == 195)) )
   this.isBoolInst = isBoolInstExpr
-  if this.isBoolInst != nil:
-    return this.isBoolInst
+  this.isBoolInstFlag = true
+  return this.isBoolInst
 
 proc isStr16(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str">Source</a>
   ]##
-  if this.isStr16Inst != nil:
+  if this.isStr16InstFlag:
     return this.isStr16Inst
   let isStr16InstExpr = bool(this.b1 == 218)
   this.isStr16Inst = isStr16InstExpr
-  if this.isStr16Inst != nil:
-    return this.isStr16Inst
+  this.isStr16InstFlag = true
+  return this.isStr16Inst
 
 proc isFloat64(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float">Source</a>
   ]##
-  if this.isFloat64Inst != nil:
+  if this.isFloat64InstFlag:
     return this.isFloat64Inst
   let isFloat64InstExpr = bool(this.b1 == 203)
   this.isFloat64Inst = isFloat64InstExpr
-  if this.isFloat64Inst != nil:
-    return this.isFloat64Inst
+  this.isFloat64InstFlag = true
+  return this.isFloat64Inst
 
 proc isMap16(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map">Source</a>
   ]##
-  if this.isMap16Inst != nil:
+  if this.isMap16InstFlag:
     return this.isMap16Inst
   let isMap16InstExpr = bool(this.b1 == 222)
   this.isMap16Inst = isMap16InstExpr
-  if this.isMap16Inst != nil:
-    return this.isMap16Inst
+  this.isMap16InstFlag = true
+  return this.isMap16Inst
 
 proc isNegInt5(this: Msgpack): bool = 
-  if this.isNegInt5Inst != nil:
+  if this.isNegInt5InstFlag:
     return this.isNegInt5Inst
   let isNegInt5InstExpr = bool((this.b1 and 224) == 224)
   this.isNegInt5Inst = isNegInt5InstExpr
-  if this.isNegInt5Inst != nil:
-    return this.isNegInt5Inst
+  this.isNegInt5InstFlag = true
+  return this.isNegInt5Inst
 
 proc posInt7Value(this: Msgpack): uint8 = 
-  if this.posInt7ValueInst != nil:
+  if this.posInt7ValueInstFlag:
     return this.posInt7ValueInst
   if this.isPosInt7:
     let posInt7ValueInstExpr = uint8(this.b1)
     this.posInt7ValueInst = posInt7ValueInstExpr
-  if this.posInt7ValueInst != nil:
-    return this.posInt7ValueInst
+  this.posInt7ValueInstFlag = true
+  return this.posInt7ValueInst
 
 proc isNil(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-nil">Source</a>
   ]##
-  if this.isNilInst != nil:
+  if this.isNilInstFlag:
     return this.isNilInst
   let isNilInstExpr = bool(this.b1 == 192)
   this.isNilInst = isNilInstExpr
-  if this.isNilInst != nil:
-    return this.isNilInst
+  this.isNilInstFlag = true
+  return this.isNilInst
 
 proc floatValue(this: Msgpack): float64 = 
-  if this.floatValueInst != nil:
+  if this.floatValueInstFlag:
     return this.floatValueInst
   if this.isFloat:
     let floatValueInstExpr = float64((if this.isFloat32: this.float32Value else: this.float64Value))
     this.floatValueInst = floatValueInstExpr
-  if this.floatValueInst != nil:
-    return this.floatValueInst
+  this.floatValueInstFlag = true
+  return this.floatValueInst
 
 proc numArrayElements(this: Msgpack): int = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array">Source</a>
   ]##
-  if this.numArrayElementsInst != nil:
+  if this.numArrayElementsInstFlag:
     return this.numArrayElementsInst
   if this.isArray:
     let numArrayElementsInstExpr = int((if this.isFixArray: (this.b1 and 15) else: (if this.isArray16: this.numArrayElements16 else: this.numArrayElements32)))
     this.numArrayElementsInst = numArrayElementsInstExpr
-  if this.numArrayElementsInst != nil:
-    return this.numArrayElementsInst
+  this.numArrayElementsInstFlag = true
+  return this.numArrayElementsInst
 
 proc negInt5Value(this: Msgpack): int = 
-  if this.negInt5ValueInst != nil:
+  if this.negInt5ValueInstFlag:
     return this.negInt5ValueInst
   if this.isNegInt5:
     let negInt5ValueInstExpr = int(-((this.b1 and 31)))
     this.negInt5ValueInst = negInt5ValueInstExpr
-  if this.negInt5ValueInst != nil:
-    return this.negInt5ValueInst
+  this.negInt5ValueInstFlag = true
+  return this.negInt5ValueInst
 
 proc boolValue(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bool">Source</a>
   ]##
-  if this.boolValueInst != nil:
+  if this.boolValueInstFlag:
     return this.boolValueInst
   if this.isBool:
     let boolValueInstExpr = bool(this.b1 == 195)
     this.boolValueInst = boolValueInstExpr
-  if this.boolValueInst != nil:
-    return this.boolValueInst
+  this.boolValueInstFlag = true
+  return this.boolValueInst
 
 proc isPosInt7(this: Msgpack): bool = 
-  if this.isPosInt7Inst != nil:
+  if this.isPosInt7InstFlag:
     return this.isPosInt7Inst
   let isPosInt7InstExpr = bool((this.b1 and 128) == 0)
   this.isPosInt7Inst = isPosInt7InstExpr
-  if this.isPosInt7Inst != nil:
-    return this.isPosInt7Inst
+  this.isPosInt7InstFlag = true
+  return this.isPosInt7Inst
 
 proc isArray16(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array">Source</a>
   ]##
-  if this.isArray16Inst != nil:
+  if this.isArray16InstFlag:
     return this.isArray16Inst
   let isArray16InstExpr = bool(this.b1 == 220)
   this.isArray16Inst = isArray16InstExpr
-  if this.isArray16Inst != nil:
-    return this.isArray16Inst
+  this.isArray16InstFlag = true
+  return this.isArray16Inst
 
 proc isStr(this: Msgpack): bool = 
-  if this.isStrInst != nil:
+  if this.isStrInstFlag:
     return this.isStrInst
   let isStrInstExpr = bool( ((this.isFixStr) or (this.isStr8) or (this.isStr16) or (this.isStr32)) )
   this.isStrInst = isStrInstExpr
-  if this.isStrInst != nil:
-    return this.isStrInst
+  this.isStrInstFlag = true
+  return this.isStrInst
 
 proc isFixStr(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str">Source</a>
   ]##
-  if this.isFixStrInst != nil:
+  if this.isFixStrInstFlag:
     return this.isFixStrInst
   let isFixStrInstExpr = bool((this.b1 and 224) == 160)
   this.isFixStrInst = isFixStrInstExpr
-  if this.isFixStrInst != nil:
-    return this.isFixStrInst
+  this.isFixStrInstFlag = true
+  return this.isFixStrInst
 
 proc isStr32(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str">Source</a>
   ]##
-  if this.isStr32Inst != nil:
+  if this.isStr32InstFlag:
     return this.isStr32Inst
   let isStr32InstExpr = bool(this.b1 == 219)
   this.isStr32Inst = isStr32InstExpr
-  if this.isStr32Inst != nil:
-    return this.isStr32Inst
+  this.isStr32InstFlag = true
+  return this.isStr32Inst
 
 proc numMapElements(this: Msgpack): int = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map">Source</a>
   ]##
-  if this.numMapElementsInst != nil:
+  if this.numMapElementsInstFlag:
     return this.numMapElementsInst
   if this.isMap:
     let numMapElementsInstExpr = int((if this.isFixMap: (this.b1 and 15) else: (if this.isMap16: this.numMapElements16 else: this.numMapElements32)))
     this.numMapElementsInst = numMapElementsInstExpr
-  if this.numMapElementsInst != nil:
-    return this.numMapElementsInst
+  this.numMapElementsInstFlag = true
+  return this.numMapElementsInst
 
 proc isFloat32(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float">Source</a>
   ]##
-  if this.isFloat32Inst != nil:
+  if this.isFloat32InstFlag:
     return this.isFloat32Inst
   let isFloat32InstExpr = bool(this.b1 == 202)
   this.isFloat32Inst = isFloat32InstExpr
-  if this.isFloat32Inst != nil:
-    return this.isFloat32Inst
+  this.isFloat32InstFlag = true
+  return this.isFloat32Inst
 
 proc isMap32(this: Msgpack): bool = 
 
   ##[
   @see <a href="https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map">Source</a>
   ]##
-  if this.isMap32Inst != nil:
+  if this.isMap32InstFlag:
     return this.isMap32Inst
   let isMap32InstExpr = bool(this.b1 == 223)
   this.isMap32Inst = isMap32InstExpr
-  if this.isMap32Inst != nil:
-    return this.isMap32Inst
+  this.isMap32InstFlag = true
+  return this.isMap32Inst
 
 proc fromFile*(_: typedesc[Msgpack], filename: string): Msgpack =
   Msgpack.read(newKaitaiFileStream(filename), nil, nil)

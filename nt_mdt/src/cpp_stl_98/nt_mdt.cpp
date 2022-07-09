@@ -59,9 +59,8 @@ nt_mdt_t::uuid_t::uuid_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data
 }
 
 void nt_mdt_t::uuid_t::_read() {
-    int l_data = 16;
     m_data = new std::vector<uint8_t>();
-    m_data->reserve(l_data);
+    const int l_data = 16;
     for (int i = 0; i < l_data; i++) {
         m_data->push_back(m__io->read_u1());
     }
@@ -91,9 +90,8 @@ nt_mdt_t::framez_t::framez_t(kaitai::kstream* p__io, nt_mdt_t* p__parent, nt_mdt
 }
 
 void nt_mdt_t::framez_t::_read() {
-    int l_frames = (_root()->last_frame() + 1);
     m_frames = new std::vector<frame_t*>();
-    m_frames->reserve(l_frames);
+    const int l_frames = (_root()->last_frame() + 1);
     for (int i = 0; i < l_frames; i++) {
         m_frames->push_back(new frame_t(m__io, this, m__root));
     }
@@ -168,15 +166,13 @@ void nt_mdt_t::frame_t::dots_t::_read() {
         n_coord_header = false;
         m_coord_header = new dots_header_t(m__io, this, m__root);
     }
-    int l_coordinates = fm_ndots();
     m_coordinates = new std::vector<dots_data_t*>();
-    m_coordinates->reserve(l_coordinates);
+    const int l_coordinates = fm_ndots();
     for (int i = 0; i < l_coordinates; i++) {
         m_coordinates->push_back(new dots_data_t(m__io, this, m__root));
     }
-    int l_data = fm_ndots();
     m_data = new std::vector<data_linez_t*>();
-    m_data->reserve(l_data);
+    const int l_data = fm_ndots();
     for (int i = 0; i < l_data; i++) {
         m_data->push_back(new data_linez_t(i, m__io, this, m__root));
     }
@@ -307,15 +303,13 @@ nt_mdt_t::frame_t::dots_t::data_linez_t::data_linez_t(uint16_t p_index, kaitai::
 }
 
 void nt_mdt_t::frame_t::dots_t::data_linez_t::_read() {
-    int l_forward = _parent()->coordinates()->at(index())->forward_size();
     m_forward = new std::vector<int16_t>();
-    m_forward->reserve(l_forward);
+    const int l_forward = _parent()->coordinates()->at(index())->forward_size();
     for (int i = 0; i < l_forward; i++) {
         m_forward->push_back(m__io->read_s2le());
     }
-    int l_backward = _parent()->coordinates()->at(index())->backward_size();
     m_backward = new std::vector<int16_t>();
-    m_backward->reserve(l_backward);
+    const int l_backward = _parent()->coordinates()->at(index())->backward_size();
     for (int i = 0; i < l_backward; i++) {
         m_backward->push_back(m__io->read_s2le());
     }
@@ -436,21 +430,18 @@ nt_mdt_t::frame_t::fd_curves_new_t::fd_curves_new_t(kaitai::kstream* p__io, nt_m
 
 void nt_mdt_t::frame_t::fd_curves_new_t::_read() {
     m_block_count = m__io->read_u4le();
-    int l_blocks_headers = block_count();
     m_blocks_headers = new std::vector<block_descr_t*>();
-    m_blocks_headers->reserve(l_blocks_headers);
+    const int l_blocks_headers = block_count();
     for (int i = 0; i < l_blocks_headers; i++) {
         m_blocks_headers->push_back(new block_descr_t(m__io, this, m__root));
     }
-    int l_blocks_names = block_count();
     m_blocks_names = new std::vector<std::string>();
-    m_blocks_names->reserve(l_blocks_names);
+    const int l_blocks_names = block_count();
     for (int i = 0; i < l_blocks_names; i++) {
         m_blocks_names->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes(blocks_headers()->at(i)->name_len()), std::string("UTF-8")));
     }
-    int l_blocks_data = block_count();
     m_blocks_data = new std::vector<std::string>();
-    m_blocks_data->reserve(l_blocks_data);
+    const int l_blocks_data = block_count();
     for (int i = 0; i < l_blocks_data; i++) {
         m_blocks_data->push_back(m__io->read_bytes(blocks_headers()->at(i)->len()));
     }
@@ -520,9 +511,8 @@ nt_mdt_t::frame_t::fd_meta_data_t::fd_meta_data_t(kaitai::kstream* p__io, nt_mdt
 void nt_mdt_t::frame_t::fd_meta_data_t::_read() {
     m_head_size = m__io->read_u4le();
     m_tot_len = m__io->read_u4le();
-    int l_guids = 2;
     m_guids = new std::vector<uuid_t*>();
-    m_guids->reserve(l_guids);
+    const int l_guids = 2;
     for (int i = 0; i < l_guids; i++) {
         m_guids->push_back(new uuid_t(m__io, this, m__root));
     }
@@ -542,15 +532,13 @@ void nt_mdt_t::frame_t::fd_meta_data_t::_read() {
     m_cell_size = m__io->read_u4le();
     m_n_dimensions = m__io->read_u4le();
     m_n_mesurands = m__io->read_u4le();
-    int l_dimensions = n_dimensions();
     m_dimensions = new std::vector<calibration_t*>();
-    m_dimensions->reserve(l_dimensions);
+    const int l_dimensions = n_dimensions();
     for (int i = 0; i < l_dimensions; i++) {
         m_dimensions->push_back(new calibration_t(m__io, this, m__root));
     }
-    int l_mesurands = n_mesurands();
     m_mesurands = new std::vector<calibration_t*>();
-    m_mesurands->reserve(l_mesurands);
+    const int l_mesurands = n_mesurands();
     for (int i = 0; i < l_mesurands; i++) {
         m_mesurands->push_back(new calibration_t(m__io, this, m__root));
     }
@@ -640,9 +628,8 @@ nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::vec_t(kaitai::kstream* p__io,
 }
 
 void nt_mdt_t::frame_t::fd_meta_data_t::image_t::vec_t::_read() {
-    int l_items = _parent()->_parent()->n_mesurands();
     m_items = new std::vector<double>();
-    m_items->reserve(l_items);
+    const int l_items = _parent()->_parent()->n_mesurands();
     for (int i = 0; i < l_items; i++) {
         switch (_parent()->_parent()->mesurands()->at(i)->data_type()) {
         case nt_mdt_t::DATA_TYPE_UINT64: {
@@ -787,9 +774,8 @@ void nt_mdt_t::frame_t::fd_spectroscopy_t::_read() {
     m_fm_xres = m__io->read_u2le();
     m_fm_yres = m__io->read_u2le();
     m_dots = new dots_t(m__io, this, m__root);
-    int l_data = (fm_xres() * fm_yres());
     m_data = new std::vector<int16_t>();
-    m_data->reserve(l_data);
+    const int l_data = (fm_xres() * fm_yres());
     for (int i = 0; i < l_data; i++) {
         m_data->push_back(m__io->read_s2le());
     }
@@ -1034,9 +1020,8 @@ void nt_mdt_t::frame_t::fd_scanned_t::_read() {
     m_fm_xres = m__io->read_u2le();
     m_fm_yres = m__io->read_u2le();
     m_dots = new dots_t(m__io, this, m__root);
-    int l_image = (fm_xres() * fm_yres());
     m_image = new std::vector<int16_t>();
-    m_image->reserve(l_image);
+    const int l_image = (fm_xres() * fm_yres());
     for (int i = 0; i < l_image; i++) {
         m_image->push_back(m__io->read_s2le());
     }

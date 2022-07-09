@@ -23,9 +23,8 @@ bcd_t::bcd_t(uint8_t p_num_digits, uint8_t p_bits_per_digit, bool p_is_le, kaita
 }
 
 void bcd_t::_read() {
-    int l_digits = num_digits();
     m_digits = new std::vector<int32_t>();
-    m_digits->reserve(l_digits);
+    const int l_digits = num_digits();
     for (int i = 0; i < l_digits; i++) {
         switch (bits_per_digit()) {
         case 4: {

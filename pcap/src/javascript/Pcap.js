@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './EthernetFrame', './PacketPpi'], factory);
+    define(['kaitai-struct/KaitaiStream', './PacketPpi', './EthernetFrame'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'), require('./PacketPpi'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./PacketPpi'), require('./EthernetFrame'));
   } else {
-    root.Pcap = factory(root.KaitaiStream, root.EthernetFrame, root.PacketPpi);
+    root.Pcap = factory(root.KaitaiStream, root.PacketPpi, root.EthernetFrame);
   }
-}(this, function (KaitaiStream, EthernetFrame, PacketPpi) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, PacketPpi, EthernetFrame) {
 /**
  * PCAP (named after libpcap / winpcap) is a popular format for saving
  * network traffic grabbed by network sniffers. It is typically

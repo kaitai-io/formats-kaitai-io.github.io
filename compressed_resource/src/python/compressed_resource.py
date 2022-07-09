@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 import bytes_with_io
@@ -133,10 +132,10 @@ class CompressedResource(KaitaiStruct):
                 so depending on the decompressor some parts of this field may be meaningless.
                 """
                 if hasattr(self, '_m_decompressor_specific_parameters'):
-                    return self._m_decompressor_specific_parameters if hasattr(self, '_m_decompressor_specific_parameters') else None
+                    return self._m_decompressor_specific_parameters
 
                 self._m_decompressor_specific_parameters = self.decompressor_specific_parameters_with_io.data
-                return self._m_decompressor_specific_parameters if hasattr(self, '_m_decompressor_specific_parameters') else None
+                return getattr(self, '_m_decompressor_specific_parameters', None)
 
 
         @property
@@ -145,10 +144,10 @@ class CompressedResource(KaitaiStruct):
             as a raw byte array.
             """
             if hasattr(self, '_m_type_specific_part_raw'):
-                return self._m_type_specific_part_raw if hasattr(self, '_m_type_specific_part_raw') else None
+                return self._m_type_specific_part_raw
 
             self._m_type_specific_part_raw = self.type_specific_part_raw_with_io.data
-            return self._m_type_specific_part_raw if hasattr(self, '_m_type_specific_part_raw') else None
+            return getattr(self, '_m_type_specific_part_raw', None)
 
         @property
         def type_specific_part(self):
@@ -156,7 +155,7 @@ class CompressedResource(KaitaiStruct):
             parsed according to the type from the common part.
             """
             if hasattr(self, '_m_type_specific_part'):
-                return self._m_type_specific_part if hasattr(self, '_m_type_specific_part') else None
+                return self._m_type_specific_part
 
             io = self.type_specific_part_raw_with_io._io
             _pos = io.pos()
@@ -167,7 +166,7 @@ class CompressedResource(KaitaiStruct):
             elif _on == 9:
                 self._m_type_specific_part = CompressedResource.Header.TypeSpecificPartType9(io, self, self._root)
             io.seek(_pos)
-            return self._m_type_specific_part if hasattr(self, '_m_type_specific_part') else None
+            return getattr(self, '_m_type_specific_part', None)
 
 
 

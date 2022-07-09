@@ -2193,8 +2193,8 @@ namespace Kaitai
                     long _pos = m_io.Pos;
                     m_io.Seek(ProgramHeaderOffset);
                     if (m_isLe == true) {
-                        __raw_programHeaders = new List<byte[]>((int) (QtyProgramHeader));
-                        _programHeaders = new List<ProgramHeader>((int) (QtyProgramHeader));
+                        __raw_programHeaders = new List<byte[]>();
+                        _programHeaders = new List<ProgramHeader>();
                         for (var i = 0; i < QtyProgramHeader; i++)
                         {
                             __raw_programHeaders.Add(m_io.ReadBytes(ProgramHeaderEntrySize));
@@ -2202,8 +2202,8 @@ namespace Kaitai
                             _programHeaders.Add(new ProgramHeader(io___raw_programHeaders, this, m_root, m_isLe));
                         }
                     } else {
-                        __raw_programHeaders = new List<byte[]>((int) (QtyProgramHeader));
-                        _programHeaders = new List<ProgramHeader>((int) (QtyProgramHeader));
+                        __raw_programHeaders = new List<byte[]>();
+                        _programHeaders = new List<ProgramHeader>();
                         for (var i = 0; i < QtyProgramHeader; i++)
                         {
                             __raw_programHeaders.Add(m_io.ReadBytes(ProgramHeaderEntrySize));
@@ -2227,8 +2227,8 @@ namespace Kaitai
                     long _pos = m_io.Pos;
                     m_io.Seek(SectionHeaderOffset);
                     if (m_isLe == true) {
-                        __raw_sectionHeaders = new List<byte[]>((int) (QtySectionHeader));
-                        _sectionHeaders = new List<SectionHeader>((int) (QtySectionHeader));
+                        __raw_sectionHeaders = new List<byte[]>();
+                        _sectionHeaders = new List<SectionHeader>();
                         for (var i = 0; i < QtySectionHeader; i++)
                         {
                             __raw_sectionHeaders.Add(m_io.ReadBytes(SectionHeaderEntrySize));
@@ -2236,8 +2236,8 @@ namespace Kaitai
                             _sectionHeaders.Add(new SectionHeader(io___raw_sectionHeaders, this, m_root, m_isLe));
                         }
                     } else {
-                        __raw_sectionHeaders = new List<byte[]>((int) (QtySectionHeader));
-                        _sectionHeaders = new List<SectionHeader>((int) (QtySectionHeader));
+                        __raw_sectionHeaders = new List<byte[]>();
+                        _sectionHeaders = new List<SectionHeader>();
                         for (var i = 0; i < QtySectionHeader; i++)
                         {
                             __raw_sectionHeaders.Add(m_io.ReadBytes(SectionHeaderEntrySize));

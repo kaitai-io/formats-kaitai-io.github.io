@@ -8,7 +8,7 @@
   } else {
     root.AndroidOpenglShadersCache = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Android apps using directly or indirectly OpenGL cache compiled shaders
  * into com.android.opengl.shaders_cache file.
@@ -93,9 +93,9 @@ var AndroidOpenglShadersCache = (function() {
       if (this.version >= 3) {
         this.buildId = new PrefixedString(this._io, this, this._root);
       }
-      this.entries = new Array(this.numEntries);
+      this.entries = [];
       for (var i = 0; i < this.numEntries; i++) {
-        this.entries[i] = new Entry(this._io, this, this._root);
+        this.entries.push(new Entry(this._io, this, this._root));
       }
     }
 

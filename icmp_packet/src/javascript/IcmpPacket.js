@@ -8,7 +8,7 @@
   } else {
     root.IcmpPacket = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var IcmpPacket = (function() {
   IcmpPacket.IcmpTypeEnum = Object.freeze({
     ECHO_REPLY: 0,

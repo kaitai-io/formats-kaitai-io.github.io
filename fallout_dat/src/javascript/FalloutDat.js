@@ -8,7 +8,7 @@
   } else {
     root.FalloutDat = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var FalloutDat = (function() {
   FalloutDat.Compression = Object.freeze({
     NONE: 32,
@@ -30,13 +30,13 @@ var FalloutDat = (function() {
     this.unknown1 = this._io.readU4be();
     this.unknown2 = this._io.readU4be();
     this.timestamp = this._io.readU4be();
-    this.folderNames = new Array(this.folderCount);
+    this.folderNames = [];
     for (var i = 0; i < this.folderCount; i++) {
-      this.folderNames[i] = new Pstr(this._io, this, this._root);
+      this.folderNames.push(new Pstr(this._io, this, this._root));
     }
-    this.folders = new Array(this.folderCount);
+    this.folders = [];
     for (var i = 0; i < this.folderCount; i++) {
-      this.folders[i] = new Folder(this._io, this, this._root);
+      this.folders.push(new Folder(this._io, this, this._root));
     }
   }
 
@@ -69,9 +69,9 @@ var FalloutDat = (function() {
       this.unknown = this._io.readU4be();
       this.flags = this._io.readU4be();
       this.timestamp = this._io.readU4be();
-      this.files = new Array(this.fileCount);
+      this.files = [];
       for (var i = 0; i < this.fileCount; i++) {
-        this.files[i] = new File(this._io, this, this._root);
+        this.files.push(new File(this._io, this, this._root));
       }
     }
 

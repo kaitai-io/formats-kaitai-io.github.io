@@ -192,7 +192,7 @@ sub _read {
     $self->{comp_hw} = ();
     my $n_comp_hw = 4;
     for (my $i = 0; $i < $n_comp_hw; $i++) {
-        $self->{comp_hw}[$i] = BroadcomTrx::Tail::HwCompInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{comp_hw}}, BroadcomTrx::Tail::HwCompInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{reserved} = $self->{_io}->read_bytes(32);
 }
@@ -447,7 +447,7 @@ sub _read {
     $self->{flags} = ();
     my $n_flags = 16;
     for (my $i = 0; $i < $n_flags; $i++) {
-        $self->{flags}[$i] = $self->{_io}->read_bits_int_le(1);
+        push @{$self->{flags}}, $self->{_io}->read_bits_int_le(1);
     }
 }
 

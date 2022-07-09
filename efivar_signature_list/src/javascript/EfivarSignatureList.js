@@ -8,7 +8,7 @@
   } else {
     root.EfivarSignatureList = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Parse UEFI variables db and dbx that contain signatures, certificates and
  * hashes. On a Linux system using UEFI, these variables are readable from
@@ -61,12 +61,12 @@ var EfivarSignatureList = (function() {
       this.lenSignature = this._io.readU4le();
       this.header = this._io.readBytes(this.lenSignatureHeader);
       if (this.lenSignature > 0) {
-        this._raw_signatures = new Array(Math.floor(((this.lenSignatureList - this.lenSignatureHeader) - 28) / this.lenSignature));
-        this.signatures = new Array(Math.floor(((this.lenSignatureList - this.lenSignatureHeader) - 28) / this.lenSignature));
+        this._raw_signatures = [];
+        this.signatures = [];
         for (var i = 0; i < Math.floor(((this.lenSignatureList - this.lenSignatureHeader) - 28) / this.lenSignature); i++) {
-          this._raw_signatures[i] = this._io.readBytes(this.lenSignature);
+          this._raw_signatures.push(this._io.readBytes(this.lenSignature));
           var _io__raw_signatures = new KaitaiStream(this._raw_signatures[i]);
-          this.signatures[i] = new SignatureData(_io__raw_signatures, this, this._root);
+          this.signatures.push(new SignatureData(_io__raw_signatures, this, this._root));
         }
       }
     }

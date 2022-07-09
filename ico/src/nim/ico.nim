@@ -17,9 +17,12 @@ type
     `lenImg`*: uint32
     `ofsImg`*: uint32
     `parent`*: Ico
-    `imgInst`*: seq[byte]
-    `pngHeaderInst`*: seq[byte]
-    `isPngInst`*: bool
+    `imgInst`: seq[byte]
+    `imgInstFlag`: bool
+    `pngHeaderInst`: seq[byte]
+    `pngHeaderInstFlag`: bool
+    `isPngInst`: bool
+    `isPngInstFlag`: bool
 
 proc read*(_: typedesc[Ico], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ico
 proc read*(_: typedesc[Ico_IconDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Ico): Ico_IconDirEntry
@@ -123,15 +126,15 @@ embedded PNG file (true) or a DIB bitmap (false) and call a
 relevant parser, if needed to parse image data further.
 
   ]##
-  if this.imgInst.len != 0:
+  if this.imgInstFlag:
     return this.imgInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsImg))
   let imgInstExpr = this.io.readBytes(int(this.lenImg))
   this.imgInst = imgInstExpr
   this.io.seek(pos)
-  if this.imgInst.len != 0:
-    return this.imgInst
+  this.imgInstFlag = true
+  return this.imgInst
 
 proc pngHeader(this: Ico_IconDirEntry): seq[byte] = 
 
@@ -140,27 +143,27 @@ proc pngHeader(this: Ico_IconDirEntry): seq[byte] =
 embedded PNG file.
 
   ]##
-  if this.pngHeaderInst.len != 0:
+  if this.pngHeaderInstFlag:
     return this.pngHeaderInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsImg))
   let pngHeaderInstExpr = this.io.readBytes(int(8))
   this.pngHeaderInst = pngHeaderInstExpr
   this.io.seek(pos)
-  if this.pngHeaderInst.len != 0:
-    return this.pngHeaderInst
+  this.pngHeaderInstFlag = true
+  return this.pngHeaderInst
 
 proc isPng(this: Ico_IconDirEntry): bool = 
 
   ##[
   True if this image is in PNG format.
   ]##
-  if this.isPngInst != nil:
+  if this.isPngInstFlag:
     return this.isPngInst
-  let isPngInstExpr = bool(this.pngHeader == @[-119'u8, 80'u8, 78'u8, 71'u8, 13'u8, 10'u8, 26'u8, 10'u8])
+  let isPngInstExpr = bool(this.pngHeader == @[137'u8, 80'u8, 78'u8, 71'u8, 13'u8, 10'u8, 26'u8, 10'u8])
   this.isPngInst = isPngInstExpr
-  if this.isPngInst != nil:
-    return this.isPngInst
+  this.isPngInstFlag = true
+  return this.isPngInst
 
 proc fromFile*(_: typedesc[Ico_IconDirEntry], filename: string): Ico_IconDirEntry =
   Ico_IconDirEntry.read(newKaitaiFileStream(filename), nil, nil)

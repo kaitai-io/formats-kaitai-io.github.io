@@ -82,8 +82,10 @@ type
     `samplingFactors`*: uint8
     `quantizationTableId`*: uint8
     `parent`*: Jpeg_SegmentSof0
-    `samplingXInst`*: int
-    `samplingYInst`*: int
+    `samplingXInst`: int
+    `samplingXInstFlag`: bool
+    `samplingYInst`: int
+    `samplingYInstFlag`: bool
   Jpeg_ExifInJpeg* = ref object of KaitaiStruct
     `extraZero`*: seq[byte]
     `data`*: Exif
@@ -333,20 +335,20 @@ proc read*(_: typedesc[Jpeg_SegmentSof0_Component], io: KaitaiStream, root: Kait
   this.quantizationTableId = quantizationTableIdExpr
 
 proc samplingX(this: Jpeg_SegmentSof0_Component): int = 
-  if this.samplingXInst != nil:
+  if this.samplingXInstFlag:
     return this.samplingXInst
   let samplingXInstExpr = int(((this.samplingFactors and 240) shr 4))
   this.samplingXInst = samplingXInstExpr
-  if this.samplingXInst != nil:
-    return this.samplingXInst
+  this.samplingXInstFlag = true
+  return this.samplingXInst
 
 proc samplingY(this: Jpeg_SegmentSof0_Component): int = 
-  if this.samplingYInst != nil:
+  if this.samplingYInstFlag:
     return this.samplingYInst
   let samplingYInstExpr = int((this.samplingFactors and 15))
   this.samplingYInst = samplingYInstExpr
-  if this.samplingYInst != nil:
-    return this.samplingYInst
+  this.samplingYInstFlag = true
+  return this.samplingYInst
 
 proc fromFile*(_: typedesc[Jpeg_SegmentSof0_Component], filename: string): Jpeg_SegmentSof0_Component =
   Jpeg_SegmentSof0_Component.read(newKaitaiFileStream(filename), nil, nil)

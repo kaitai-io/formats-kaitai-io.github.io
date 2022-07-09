@@ -46,7 +46,7 @@ namespace Kaitai
             __raw_teHdr = m_io.ReadBytes(40);
             var io___raw_teHdr = new KaitaiStream(__raw_teHdr);
             _teHdr = new TeHeader(io___raw_teHdr, this, m_root);
-            _sections = new List<Section>((int) (TeHdr.NumSections));
+            _sections = new List<Section>();
             for (var i = 0; i < TeHdr.NumSections; i++)
             {
                 _sections.Add(new Section(m_io, this, m_root));

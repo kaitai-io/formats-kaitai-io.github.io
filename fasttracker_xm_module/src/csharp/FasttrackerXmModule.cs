@@ -38,12 +38,12 @@ namespace Kaitai
             __raw_header = m_io.ReadBytes((Preheader.HeaderSize - 4));
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new Header(io___raw_header, this, m_root);
-            _patterns = new List<Pattern>((int) (Header.NumPatterns));
+            _patterns = new List<Pattern>();
             for (var i = 0; i < Header.NumPatterns; i++)
             {
                 _patterns.Add(new Pattern(m_io, this, m_root));
             }
-            _instruments = new List<Instrument>((int) (Header.NumInstruments));
+            _instruments = new List<Instrument>();
             for (var i = 0; i < Header.NumInstruments; i++)
             {
                 _instruments.Add(new Instrument(m_io, this, m_root));
@@ -342,7 +342,7 @@ namespace Kaitai
                 _flags = new Flags(m_io, this, m_root);
                 _defaultTempo = m_io.ReadU2le();
                 _defaultBpm = m_io.ReadU2le();
-                _patternOrderTable = new List<byte>((int) (256));
+                _patternOrderTable = new List<byte>();
                 for (var i = 0; i < 256; i++)
                 {
                     _patternOrderTable.Add(m_io.ReadU1());
@@ -421,12 +421,12 @@ namespace Kaitai
                 __raw_header = m_io.ReadBytes((HeaderSize - 4));
                 var io___raw_header = new KaitaiStream(__raw_header);
                 _header = new Header(io___raw_header, this, m_root);
-                _samplesHeaders = new List<SampleHeader>((int) (Header.NumSamples));
+                _samplesHeaders = new List<SampleHeader>();
                 for (var i = 0; i < Header.NumSamples; i++)
                 {
                     _samplesHeaders.Add(new SampleHeader(m_io, this, m_root));
                 }
-                _samples = new List<SamplesData>((int) (Header.NumSamples));
+                _samples = new List<SamplesData>();
                 for (var i = 0; i < Header.NumSamples; i++)
                 {
                     _samples.Add(new SamplesData(SamplesHeaders[i], m_io, this, m_root));
@@ -494,17 +494,17 @@ namespace Kaitai
                 private void _read()
                 {
                     _lenSampleHeader = m_io.ReadU4le();
-                    _idxSamplePerNote = new List<byte>((int) (96));
+                    _idxSamplePerNote = new List<byte>();
                     for (var i = 0; i < 96; i++)
                     {
                         _idxSamplePerNote.Add(m_io.ReadU1());
                     }
-                    _volumePoints = new List<EnvelopePoint>((int) (12));
+                    _volumePoints = new List<EnvelopePoint>();
                     for (var i = 0; i < 12; i++)
                     {
                         _volumePoints.Add(new EnvelopePoint(m_io, this, m_root));
                     }
-                    _panningPoints = new List<EnvelopePoint>((int) (12));
+                    _panningPoints = new List<EnvelopePoint>();
                     for (var i = 0; i < 12; i++)
                     {
                         _panningPoints.Add(new EnvelopePoint(m_io, this, m_root));

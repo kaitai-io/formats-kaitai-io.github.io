@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class QuakeMdl(KaitaiStruct):
@@ -17,21 +16,21 @@ class QuakeMdl(KaitaiStruct):
 
     def _read(self):
         self.header = QuakeMdl.MdlHeader(self._io, self, self._root)
-        self.skins = [None] * (self.header.num_skins)
+        self.skins = []
         for i in range(self.header.num_skins):
-            self.skins[i] = QuakeMdl.MdlSkin(self._io, self, self._root)
+            self.skins.append(QuakeMdl.MdlSkin(self._io, self, self._root))
 
-        self.texture_coordinates = [None] * (self.header.num_verts)
+        self.texture_coordinates = []
         for i in range(self.header.num_verts):
-            self.texture_coordinates[i] = QuakeMdl.MdlTexcoord(self._io, self, self._root)
+            self.texture_coordinates.append(QuakeMdl.MdlTexcoord(self._io, self, self._root))
 
-        self.triangles = [None] * (self.header.num_tris)
+        self.triangles = []
         for i in range(self.header.num_tris):
-            self.triangles[i] = QuakeMdl.MdlTriangle(self._io, self, self._root)
+            self.triangles.append(QuakeMdl.MdlTriangle(self._io, self, self._root))
 
-        self.frames = [None] * (self.header.num_frames)
+        self.frames = []
         for i in range(self.header.num_frames):
-            self.frames[i] = QuakeMdl.MdlFrame(self._io, self, self._root)
+            self.frames.append(QuakeMdl.MdlFrame(self._io, self, self._root))
 
 
     class MdlVertex(KaitaiStruct):
@@ -42,9 +41,9 @@ class QuakeMdl(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.values = [None] * (3)
+            self.values = []
             for i in range(3):
-                self.values[i] = self._io.read_u1()
+                self.values.append(self._io.read_u1())
 
             self.normal_index = self._io.read_u1()
 
@@ -93,18 +92,18 @@ class QuakeMdl(KaitaiStruct):
         @property
         def version(self):
             if hasattr(self, '_m_version'):
-                return self._m_version if hasattr(self, '_m_version') else None
+                return self._m_version
 
             self._m_version = 6
-            return self._m_version if hasattr(self, '_m_version') else None
+            return getattr(self, '_m_version', None)
 
         @property
         def skin_size(self):
             if hasattr(self, '_m_skin_size'):
-                return self._m_skin_size if hasattr(self, '_m_skin_size') else None
+                return self._m_skin_size
 
             self._m_skin_size = (self.skin_width * self.skin_height)
-            return self._m_skin_size if hasattr(self, '_m_skin_size') else None
+            return getattr(self, '_m_skin_size', None)
 
 
     class MdlSkin(KaitaiStruct):
@@ -123,15 +122,15 @@ class QuakeMdl(KaitaiStruct):
                 self.num_frames = self._io.read_u4le()
 
             if self.group != 0:
-                self.frame_times = [None] * (self.num_frames)
+                self.frame_times = []
                 for i in range(self.num_frames):
-                    self.frame_times[i] = self._io.read_f4le()
+                    self.frame_times.append(self._io.read_f4le())
 
 
             if self.group != 0:
-                self.group_texture_data = [None] * (self.num_frames)
+                self.group_texture_data = []
                 for i in range(self.num_frames):
-                    self.group_texture_data[i] = self._io.read_bytes(self._root.header.skin_size)
+                    self.group_texture_data.append(self._io.read_bytes(self._root.header.skin_size))
 
 
 
@@ -152,23 +151,23 @@ class QuakeMdl(KaitaiStruct):
                 self.max = QuakeMdl.MdlVertex(self._io, self, self._root)
 
             if self.type != 0:
-                self.time = [None] * (self.type)
+                self.time = []
                 for i in range(self.type):
-                    self.time[i] = self._io.read_f4le()
+                    self.time.append(self._io.read_f4le())
 
 
-            self.frames = [None] * (self.num_simple_frames)
+            self.frames = []
             for i in range(self.num_simple_frames):
-                self.frames[i] = QuakeMdl.MdlSimpleFrame(self._io, self, self._root)
+                self.frames.append(QuakeMdl.MdlSimpleFrame(self._io, self, self._root))
 
 
         @property
         def num_simple_frames(self):
             if hasattr(self, '_m_num_simple_frames'):
-                return self._m_num_simple_frames if hasattr(self, '_m_num_simple_frames') else None
+                return self._m_num_simple_frames
 
             self._m_num_simple_frames = (1 if self.type == 0 else self.type)
-            return self._m_num_simple_frames if hasattr(self, '_m_num_simple_frames') else None
+            return getattr(self, '_m_num_simple_frames', None)
 
 
     class MdlSimpleFrame(KaitaiStruct):
@@ -182,9 +181,9 @@ class QuakeMdl(KaitaiStruct):
             self.bbox_min = QuakeMdl.MdlVertex(self._io, self, self._root)
             self.bbox_max = QuakeMdl.MdlVertex(self._io, self, self._root)
             self.name = (KaitaiStream.bytes_terminate(KaitaiStream.bytes_strip_right(self._io.read_bytes(16), 0), 0, False)).decode(u"ASCII")
-            self.vertices = [None] * (self._root.header.num_verts)
+            self.vertices = []
             for i in range(self._root.header.num_verts):
-                self.vertices[i] = QuakeMdl.MdlVertex(self._io, self, self._root)
+                self.vertices.append(QuakeMdl.MdlVertex(self._io, self, self._root))
 
 
 
@@ -197,9 +196,9 @@ class QuakeMdl(KaitaiStruct):
 
         def _read(self):
             self.faces_front = self._io.read_s4le()
-            self.vertices = [None] * (3)
+            self.vertices = []
             for i in range(3):
-                self.vertices[i] = self._io.read_s4le()
+                self.vertices.append(self._io.read_s4le())
 
 
 

@@ -8,7 +8,7 @@
   } else {
     root.GptPartitionTable = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://en.wikipedia.org/wiki/GUID_Partition_Table|Source}
  */
@@ -78,12 +78,12 @@ var GptPartitionTable = (function() {
         var io = this._root._io;
         var _pos = io.pos;
         io.seek((this.entriesStart * this._root.sectorSize));
-        this._raw__m_entries = new Array(this.entriesCount);
-        this._m_entries = new Array(this.entriesCount);
+        this._raw__m_entries = [];
+        this._m_entries = [];
         for (var i = 0; i < this.entriesCount; i++) {
-          this._raw__m_entries[i] = io.readBytes(this.entriesSize);
+          this._raw__m_entries.push(io.readBytes(this.entriesSize));
           var _io__raw__m_entries = new KaitaiStream(this._raw__m_entries[i]);
-          this._m_entries[i] = new PartitionEntry(_io__raw__m_entries, this, this._root);
+          this._m_entries.push(new PartitionEntry(_io__raw__m_entries, this, this._root));
         }
         io.seek(_pos);
         return this._m_entries;

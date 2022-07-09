@@ -36,8 +36,10 @@ type
     `durationSamples`*: uint16
     `freqDiv`*: uint8
     `parent`*: CreativeVoiceFile_Block
-    `sampleRateInst`*: float64
-    `durationSecInst`*: float64
+    `sampleRateInst`: float64
+    `sampleRateInstFlag`: bool
+    `durationSecInst`: float64
+    `durationSecInstFlag`: bool
   CreativeVoiceFile_BlockSoundDataNew* = ref object of KaitaiStruct
     `sampleRate`*: uint32
     `bitsPerSample`*: uint8
@@ -53,7 +55,8 @@ type
     `body`*: KaitaiStruct
     `parent`*: CreativeVoiceFile
     `rawBody`*: seq[byte]
-    `bodySizeInst`*: int
+    `bodySizeInst`: int
+    `bodySizeInstFlag`: bool
   CreativeVoiceFile_BlockRepeatStart* = ref object of KaitaiStruct
     `repeatCount1`*: uint16
     `parent`*: CreativeVoiceFile_Block
@@ -62,14 +65,17 @@ type
     `codec`*: CreativeVoiceFile_Codecs
     `wave`*: seq[byte]
     `parent`*: CreativeVoiceFile_Block
-    `sampleRateInst`*: float64
+    `sampleRateInst`: float64
+    `sampleRateInstFlag`: bool
   CreativeVoiceFile_BlockExtraInfo* = ref object of KaitaiStruct
     `freqDiv`*: uint16
     `codec`*: CreativeVoiceFile_Codecs
     `numChannels1`*: uint8
     `parent`*: CreativeVoiceFile_Block
-    `numChannelsInst`*: int
-    `sampleRateInst`*: float64
+    `numChannelsInst`: int
+    `numChannelsInstFlag`: bool
+    `sampleRateInst`: float64
+    `sampleRateInstFlag`: bool
 
 proc read*(_: typedesc[CreativeVoiceFile], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CreativeVoiceFile
 proc read*(_: typedesc[CreativeVoiceFile_BlockMarker], io: KaitaiStream, root: KaitaiStruct, parent: CreativeVoiceFile_Block): CreativeVoiceFile_BlockMarker
@@ -188,24 +194,24 @@ proc read*(_: typedesc[CreativeVoiceFile_BlockSilence], io: KaitaiStream, root: 
   this.freqDiv = freqDivExpr
 
 proc sampleRate(this: CreativeVoiceFile_BlockSilence): float64 = 
-  if this.sampleRateInst != nil:
+  if this.sampleRateInstFlag:
     return this.sampleRateInst
   let sampleRateInstExpr = float64((1000000.0 div (256 - this.freqDiv)))
   this.sampleRateInst = sampleRateInstExpr
-  if this.sampleRateInst != nil:
-    return this.sampleRateInst
+  this.sampleRateInstFlag = true
+  return this.sampleRateInst
 
 proc durationSec(this: CreativeVoiceFile_BlockSilence): float64 = 
 
   ##[
   Duration of silence, in seconds
   ]##
-  if this.durationSecInst != nil:
+  if this.durationSecInstFlag:
     return this.durationSecInst
   let durationSecInstExpr = float64((this.durationSamples div this.sampleRate))
   this.durationSecInst = durationSecInstExpr
-  if this.durationSecInst != nil:
-    return this.durationSecInst
+  this.durationSecInstFlag = true
+  return this.durationSecInst
 
 proc fromFile*(_: typedesc[CreativeVoiceFile_BlockSilence], filename: string): CreativeVoiceFile_BlockSilence =
   CreativeVoiceFile_BlockSilence.read(newKaitaiFileStream(filename), nil, nil)
@@ -313,13 +319,13 @@ emulating that by adding two standard-sized integers
 (body_size1 and body_size2).
 
   ]##
-  if this.bodySizeInst != nil:
+  if this.bodySizeInstFlag:
     return this.bodySizeInst
   if this.blockType != creative_voice_file.terminator:
     let bodySizeInstExpr = int((this.bodySize1 + (this.bodySize2 shl 16)))
     this.bodySizeInst = bodySizeInstExpr
-  if this.bodySizeInst != nil:
-    return this.bodySizeInst
+  this.bodySizeInstFlag = true
+  return this.bodySizeInst
 
 proc fromFile*(_: typedesc[CreativeVoiceFile_Block], filename: string): CreativeVoiceFile_Block =
   CreativeVoiceFile_Block.read(newKaitaiFileStream(filename), nil, nil)
@@ -370,12 +376,12 @@ proc read*(_: typedesc[CreativeVoiceFile_BlockSoundData], io: KaitaiStream, root
   this.wave = waveExpr
 
 proc sampleRate(this: CreativeVoiceFile_BlockSoundData): float64 = 
-  if this.sampleRateInst != nil:
+  if this.sampleRateInstFlag:
     return this.sampleRateInst
   let sampleRateInstExpr = float64((1000000.0 div (256 - this.freqDiv)))
   this.sampleRateInst = sampleRateInstExpr
-  if this.sampleRateInst != nil:
-    return this.sampleRateInst
+  this.sampleRateInstFlag = true
+  return this.sampleRateInst
 
 proc fromFile*(_: typedesc[CreativeVoiceFile_BlockSoundData], filename: string): CreativeVoiceFile_BlockSoundData =
   CreativeVoiceFile_BlockSoundData.read(newKaitaiFileStream(filename), nil, nil)
@@ -412,20 +418,20 @@ proc numChannels(this: CreativeVoiceFile_BlockExtraInfo): int =
   ##[
   Number of channels (1 = mono, 2 = stereo)
   ]##
-  if this.numChannelsInst != nil:
+  if this.numChannelsInstFlag:
     return this.numChannelsInst
   let numChannelsInstExpr = int((this.numChannels1 + 1))
   this.numChannelsInst = numChannelsInstExpr
-  if this.numChannelsInst != nil:
-    return this.numChannelsInst
+  this.numChannelsInstFlag = true
+  return this.numChannelsInst
 
 proc sampleRate(this: CreativeVoiceFile_BlockExtraInfo): float64 = 
-  if this.sampleRateInst != nil:
+  if this.sampleRateInstFlag:
     return this.sampleRateInst
   let sampleRateInstExpr = float64((256000000.0 div (this.numChannels * (65536 - this.freqDiv))))
   this.sampleRateInst = sampleRateInstExpr
-  if this.sampleRateInst != nil:
-    return this.sampleRateInst
+  this.sampleRateInstFlag = true
+  return this.sampleRateInst
 
 proc fromFile*(_: typedesc[CreativeVoiceFile_BlockExtraInfo], filename: string): CreativeVoiceFile_BlockExtraInfo =
   CreativeVoiceFile_BlockExtraInfo.read(newKaitaiFileStream(filename), nil, nil)

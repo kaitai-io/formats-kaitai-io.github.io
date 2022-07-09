@@ -18,14 +18,18 @@ type
     `sysexBody`*: StandardMidiFile_SysexEventBody
     `eventBody`*: KaitaiStruct
     `parent`*: StandardMidiFile_TrackEvents
-    `eventTypeInst`*: int
-    `channelInst`*: int
+    `eventTypeInst`: int
+    `eventTypeInstFlag`: bool
+    `channelInst`: int
+    `channelInstFlag`: bool
   StandardMidiFile_PitchBendEvent* = ref object of KaitaiStruct
     `b1`*: uint8
     `b2`*: uint8
     `parent`*: StandardMidiFile_TrackEvent
-    `bendValueInst`*: int
-    `adjBendValueInst`*: int
+    `bendValueInst`: int
+    `bendValueInstFlag`: bool
+    `adjBendValueInst`: int
+    `adjBendValueInstFlag`: bool
   StandardMidiFile_ProgramChangeEvent* = ref object of KaitaiStruct
     `program`*: uint8
     `parent`*: StandardMidiFile_TrackEvent
@@ -203,21 +207,21 @@ proc read*(_: typedesc[StandardMidiFile_TrackEvent], io: KaitaiStream, root: Kai
       this.eventBody = eventBodyExpr
 
 proc eventType(this: StandardMidiFile_TrackEvent): int = 
-  if this.eventTypeInst != nil:
+  if this.eventTypeInstFlag:
     return this.eventTypeInst
   let eventTypeInstExpr = int((this.eventHeader and 240))
   this.eventTypeInst = eventTypeInstExpr
-  if this.eventTypeInst != nil:
-    return this.eventTypeInst
+  this.eventTypeInstFlag = true
+  return this.eventTypeInst
 
 proc channel(this: StandardMidiFile_TrackEvent): int = 
-  if this.channelInst != nil:
+  if this.channelInstFlag:
     return this.channelInst
   if this.eventType != 240:
     let channelInstExpr = int((this.eventHeader and 15))
     this.channelInst = channelInstExpr
-  if this.channelInst != nil:
-    return this.channelInst
+  this.channelInstFlag = true
+  return this.channelInst
 
 proc fromFile*(_: typedesc[StandardMidiFile_TrackEvent], filename: string): StandardMidiFile_TrackEvent =
   StandardMidiFile_TrackEvent.read(newKaitaiFileStream(filename), nil, nil)
@@ -236,20 +240,20 @@ proc read*(_: typedesc[StandardMidiFile_PitchBendEvent], io: KaitaiStream, root:
   this.b2 = b2Expr
 
 proc bendValue(this: StandardMidiFile_PitchBendEvent): int = 
-  if this.bendValueInst != nil:
+  if this.bendValueInstFlag:
     return this.bendValueInst
   let bendValueInstExpr = int((((this.b2 shl 7) + this.b1) - 16384))
   this.bendValueInst = bendValueInstExpr
-  if this.bendValueInst != nil:
-    return this.bendValueInst
+  this.bendValueInstFlag = true
+  return this.bendValueInst
 
 proc adjBendValue(this: StandardMidiFile_PitchBendEvent): int = 
-  if this.adjBendValueInst != nil:
+  if this.adjBendValueInstFlag:
     return this.adjBendValueInst
   let adjBendValueInstExpr = int((this.bendValue - 16384))
   this.adjBendValueInst = adjBendValueInstExpr
-  if this.adjBendValueInst != nil:
-    return this.adjBendValueInst
+  this.adjBendValueInstFlag = true
+  return this.adjBendValueInst
 
 proc fromFile*(_: typedesc[StandardMidiFile_PitchBendEvent], filename: string): StandardMidiFile_PitchBendEvent =
   StandardMidiFile_PitchBendEvent.read(newKaitaiFileStream(filename), nil, nil)

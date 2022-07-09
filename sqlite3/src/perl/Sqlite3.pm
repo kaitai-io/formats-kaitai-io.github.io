@@ -298,7 +298,7 @@ sub _read {
     $self->{cells} = ();
     my $n_cells = $self->num_cells();
     for (my $i = 0; $i < $n_cells; $i++) {
-        $self->{cells}[$i] = Sqlite3::RefCell->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{cells}}, Sqlite3::RefCell->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -523,7 +523,7 @@ sub _read {
     $self->{column_contents} = ();
     my $n_column_contents = scalar(@{$self->column_serials()->entries()});
     for (my $i = 0; $i < $n_column_contents; $i++) {
-        $self->{column_contents}[$i] = Sqlite3::ColumnContent->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{column_contents}}, Sqlite3::ColumnContent->new($self->{_io}, $self, $self->{_root});
     }
 }
 

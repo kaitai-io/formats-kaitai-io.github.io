@@ -8,7 +8,7 @@
   } else {
     root.DosDatetime = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * MS-DOS date and time are packed 16-bit values that specify local date/time.
  * The time is always stored in the current UTC time offset set on the computer

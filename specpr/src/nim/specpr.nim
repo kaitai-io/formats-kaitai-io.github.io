@@ -41,11 +41,13 @@ type
     `tempd`*: float32
     `data`*: seq[float32]
     `parent`*: Specpr_Record
-    `phaseAngleArcsecInst`*: float64
+    `phaseAngleArcsecInst`: float64
+    `phaseAngleArcsecInstFlag`: bool
   Specpr_CoarseTimestamp* = ref object of KaitaiStruct
     `scaledSeconds`*: int32
     `parent`*: Specpr_DataInitial
-    `secondsInst`*: float64
+    `secondsInst`: float64
+    `secondsInstFlag`: bool
   Specpr_Icflag* = ref object of KaitaiStruct
     `reserved`*: uint64
     `isctbType`*: bool
@@ -55,7 +57,8 @@ type
     `text`*: bool
     `continuation`*: bool
     `parent`*: Specpr_Record
-    `typeInst`*: Specpr_RecordType
+    `typeInst`: Specpr_RecordType
+    `typeInstFlag`: bool
   Specpr_DataContinuation* = ref object of KaitaiStruct
     `cdata`*: seq[float32]
     `parent`*: Specpr_Record
@@ -66,9 +69,12 @@ type
   Specpr_IllumAngle* = ref object of KaitaiStruct
     `angl`*: int32
     `parent`*: Specpr_DataInitial
-    `secondsTotalInst`*: int
-    `minutesTotalInst`*: int
-    `degreesTotalInst`*: int
+    `secondsTotalInst`: int
+    `secondsTotalInstFlag`: bool
+    `minutesTotalInst`: int
+    `minutesTotalInstFlag`: bool
+    `degreesTotalInst`: int
+    `degreesTotalInstFlag`: bool
   Specpr_TextInitial* = ref object of KaitaiStruct
     `ids`*: Specpr_Identifiers
     `itxtpt`*: uint32
@@ -328,12 +334,12 @@ proc phaseAngleArcsec(this: Specpr_DataInitial): float64 =
   ##[
   The phase angle between iangl and eangl in seconds
   ]##
-  if this.phaseAngleArcsecInst != nil:
+  if this.phaseAngleArcsecInstFlag:
     return this.phaseAngleArcsecInst
   let phaseAngleArcsecInstExpr = float64((this.sphase div 1500))
   this.phaseAngleArcsecInst = phaseAngleArcsecInstExpr
-  if this.phaseAngleArcsecInst != nil:
-    return this.phaseAngleArcsecInst
+  this.phaseAngleArcsecInstFlag = true
+  return this.phaseAngleArcsecInst
 
 proc fromFile*(_: typedesc[Specpr_DataInitial], filename: string): Specpr_DataInitial =
   Specpr_DataInitial.read(newKaitaiFileStream(filename), nil, nil)
@@ -350,12 +356,12 @@ proc read*(_: typedesc[Specpr_CoarseTimestamp], io: KaitaiStream, root: KaitaiSt
   this.scaledSeconds = scaledSecondsExpr
 
 proc seconds(this: Specpr_CoarseTimestamp): float64 = 
-  if this.secondsInst != nil:
+  if this.secondsInstFlag:
     return this.secondsInst
   let secondsInstExpr = float64((this.scaledSeconds * 24000))
   this.secondsInst = secondsInstExpr
-  if this.secondsInst != nil:
-    return this.secondsInst
+  this.secondsInstFlag = true
+  return this.secondsInst
 
 proc fromFile*(_: typedesc[Specpr_CoarseTimestamp], filename: string): Specpr_CoarseTimestamp =
   Specpr_CoarseTimestamp.read(newKaitaiFileStream(filename), nil, nil)
@@ -431,12 +437,12 @@ proc read*(_: typedesc[Specpr_Icflag], io: KaitaiStream, root: KaitaiStruct, par
   this.continuation = continuationExpr
 
 proc type(this: Specpr_Icflag): Specpr_RecordType = 
-  if this.typeInst != nil:
+  if this.typeInstFlag:
     return this.typeInst
   let typeInstExpr = Specpr_RecordType(Specpr_RecordType((((if this.text: 1 else: 0) * 1) + ((if this.continuation: 1 else: 0) * 2))))
   this.typeInst = typeInstExpr
-  if this.typeInst != nil:
-    return this.typeInst
+  this.typeInstFlag = true
+  return this.typeInst
 
 proc fromFile*(_: typedesc[Specpr_Icflag], filename: string): Specpr_Icflag =
   Specpr_Icflag.read(newKaitaiFileStream(filename), nil, nil)
@@ -501,28 +507,28 @@ proc read*(_: typedesc[Specpr_IllumAngle], io: KaitaiStream, root: KaitaiStruct,
   this.angl = anglExpr
 
 proc secondsTotal(this: Specpr_IllumAngle): int = 
-  if this.secondsTotalInst != nil:
+  if this.secondsTotalInstFlag:
     return this.secondsTotalInst
   let secondsTotalInstExpr = int((this.angl div 6000))
   this.secondsTotalInst = secondsTotalInstExpr
-  if this.secondsTotalInst != nil:
-    return this.secondsTotalInst
+  this.secondsTotalInstFlag = true
+  return this.secondsTotalInst
 
 proc minutesTotal(this: Specpr_IllumAngle): int = 
-  if this.minutesTotalInst != nil:
+  if this.minutesTotalInstFlag:
     return this.minutesTotalInst
   let minutesTotalInstExpr = int((this.secondsTotal div 60))
   this.minutesTotalInst = minutesTotalInstExpr
-  if this.minutesTotalInst != nil:
-    return this.minutesTotalInst
+  this.minutesTotalInstFlag = true
+  return this.minutesTotalInst
 
 proc degreesTotal(this: Specpr_IllumAngle): int = 
-  if this.degreesTotalInst != nil:
+  if this.degreesTotalInstFlag:
     return this.degreesTotalInst
   let degreesTotalInstExpr = int((this.minutesTotal div 60))
   this.degreesTotalInst = degreesTotalInstExpr
-  if this.degreesTotalInst != nil:
-    return this.degreesTotalInst
+  this.degreesTotalInstFlag = true
+  return this.degreesTotalInst
 
 proc fromFile*(_: typedesc[Specpr_IllumAngle], filename: string): Specpr_IllumAngle =
   Specpr_IllumAngle.read(newKaitaiFileStream(filename), nil, nil)

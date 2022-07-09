@@ -58,9 +58,8 @@ void rtcp_payload_t::psfb_afb_remb_packet_t::_read() {
     m_br_exp = m__io->read_bits_int_be(6);
     m_br_mantissa = m__io->read_bits_int_be(18);
     m__io->align_to_byte();
-    int l_ssrc_list = num_ssrc();
     m_ssrc_list = new std::vector<uint32_t>();
-    m_ssrc_list->reserve(l_ssrc_list);
+    const int l_ssrc_list = num_ssrc();
     for (int i = 0; i < l_ssrc_list; i++) {
         m_ssrc_list->push_back(m__io->read_u4be());
     }
@@ -105,9 +104,8 @@ void rtcp_payload_t::sr_packet_t::_read() {
     m_rtp_timestamp = m__io->read_u4be();
     m_sender_packet_count = m__io->read_u4be();
     m_sender_octet_count = m__io->read_u4be();
-    int l_report_block = _parent()->subtype();
     m_report_block = new std::vector<report_block_t*>();
-    m_report_block->reserve(l_report_block);
+    const int l_report_block = _parent()->subtype();
     for (int i = 0; i < l_report_block; i++) {
         m_report_block->push_back(new report_block_t(m__io, this, m__root));
     }
@@ -149,9 +147,8 @@ rtcp_payload_t::rr_packet_t::rr_packet_t(kaitai::kstream* p__io, rtcp_payload_t:
 
 void rtcp_payload_t::rr_packet_t::_read() {
     m_ssrc = m__io->read_u4be();
-    int l_report_block = _parent()->subtype();
     m_report_block = new std::vector<report_block_t*>();
-    m_report_block->reserve(l_report_block);
+    const int l_report_block = _parent()->subtype();
     for (int i = 0; i < l_report_block; i++) {
         m_report_block->push_back(new report_block_t(m__io, this, m__root));
     }
@@ -507,9 +504,8 @@ rtcp_payload_t::sdes_packet_t::sdes_packet_t(kaitai::kstream* p__io, rtcp_payloa
 }
 
 void rtcp_payload_t::sdes_packet_t::_read() {
-    int l_source_chunk = source_count();
     m_source_chunk = new std::vector<source_chunk_t*>();
-    m_source_chunk->reserve(l_source_chunk);
+    const int l_source_chunk = source_count();
     for (int i = 0; i < l_source_chunk; i++) {
         m_source_chunk->push_back(new source_chunk_t(m__io, this, m__root));
     }

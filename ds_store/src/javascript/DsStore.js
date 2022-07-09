@@ -8,7 +8,7 @@
   } else {
     root.DsStore = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Apple macOS '.DS_Store' file format.
  * @see {@link https://en.wikipedia.org/wiki/.DS_Store
@@ -79,18 +79,18 @@ var DsStore = (function() {
     BuddyAllocatorBody.prototype._read = function() {
       this.numBlocks = this._io.readU4be();
       this._unnamed1 = this._io.readBytes(4);
-      this.blockAddresses = new Array(this.numBlockAddresses);
+      this.blockAddresses = [];
       for (var i = 0; i < this.numBlockAddresses; i++) {
-        this.blockAddresses[i] = new BlockDescriptor(this._io, this, this._root);
+        this.blockAddresses.push(new BlockDescriptor(this._io, this, this._root));
       }
       this.numDirectories = this._io.readU4be();
-      this.directoryEntries = new Array(this.numDirectories);
+      this.directoryEntries = [];
       for (var i = 0; i < this.numDirectories; i++) {
-        this.directoryEntries[i] = new DirectoryEntry(this._io, this, this._root);
+        this.directoryEntries.push(new DirectoryEntry(this._io, this, this._root));
       }
-      this.freeLists = new Array(this.numFreeLists);
+      this.freeLists = [];
       for (var i = 0; i < this.numFreeLists; i++) {
-        this.freeLists[i] = new FreeList(this._io, this, this._root);
+        this.freeLists.push(new FreeList(this._io, this, this._root));
       }
     }
 
@@ -152,9 +152,9 @@ var DsStore = (function() {
       }
       FreeList.prototype._read = function() {
         this.counter = this._io.readU4be();
-        this.offsets = new Array(this.counter);
+        this.offsets = [];
         for (var i = 0; i < this.counter; i++) {
-          this.offsets[i] = this._io.readU4be();
+          this.offsets.push(this._io.readU4be());
         }
       }
 
@@ -185,9 +185,9 @@ var DsStore = (function() {
         if (this._m_directories !== undefined)
           return this._m_directories;
         var io = this._root._io;
-        this._m_directories = new Array(this.numDirectories);
+        this._m_directories = [];
         for (var i = 0; i < this.numDirectories; i++) {
-          this._m_directories[i] = new MasterBlockRef(io, this, this._root, i);
+          this._m_directories.push(new MasterBlockRef(io, this, this._root, i));
         }
         return this._m_directories;
       }
@@ -306,9 +306,9 @@ var DsStore = (function() {
     Block.prototype._read = function() {
       this.mode = this._io.readU4be();
       this.counter = this._io.readU4be();
-      this.data = new Array(this.counter);
+      this.data = [];
       for (var i = 0; i < this.counter; i++) {
-        this.data[i] = new BlockData(this._io, this, this._root, this.mode);
+        this.data.push(new BlockData(this._io, this, this._root, this.mode));
       }
     }
 

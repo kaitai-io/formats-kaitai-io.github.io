@@ -44,7 +44,7 @@ public class Zisofs extends KaitaiStruct {
         this._raw_header = this._io.readBytes(16);
         KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
         this.header = new Header(_io__raw_header, this, _root);
-        blockPointers = new ArrayList<Long>(((Number) ((header().numBlocks() + 1))).intValue());
+        this.blockPointers = new ArrayList<Long>();
         for (int i = 0; i < (header().numBlocks() + 1); i++) {
             this.blockPointers.add(this._io.readU4le());
         }
@@ -162,7 +162,7 @@ public class Zisofs extends KaitaiStruct {
         public byte[] data() {
             if (this.data != null)
                 return this.data;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsStart());
             this.data = io.readBytes(lenData());
@@ -182,7 +182,7 @@ public class Zisofs extends KaitaiStruct {
     public ArrayList<Block> blocks() {
         if (this.blocks != null)
             return this.blocks;
-        blocks = new ArrayList<Block>(((Number) (header().numBlocks())).intValue());
+        this.blocks = new ArrayList<Block>();
         for (int i = 0; i < header().numBlocks(); i++) {
             this.blocks.add(new Block(this._io, this, _root, blockPointers().get((int) i), blockPointers().get((int) (i + 1))));
         }

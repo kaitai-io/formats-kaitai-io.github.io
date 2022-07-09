@@ -31,7 +31,8 @@ type
     `sizeUnpacked`*: uint32
     `sizePacked`*: uint32
     `parent`*: FalloutDat_Folder
-    `contentsInst`*: seq[byte]
+    `contentsInst`: seq[byte]
+    `contentsInstFlag`: bool
 
 proc read*(_: typedesc[FalloutDat], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): FalloutDat
 proc read*(_: typedesc[FalloutDat_Pstr], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): FalloutDat_Pstr
@@ -125,7 +126,7 @@ proc read*(_: typedesc[FalloutDat_File], io: KaitaiStream, root: KaitaiStruct, p
   this.sizePacked = sizePackedExpr
 
 proc contents(this: FalloutDat_File): seq[byte] = 
-  if this.contentsInst.len != 0:
+  if this.contentsInstFlag:
     return this.contentsInst
   let io = FalloutDat(this.root).io
   let pos = io.pos()
@@ -133,8 +134,8 @@ proc contents(this: FalloutDat_File): seq[byte] =
   let contentsInstExpr = io.readBytes(int((if this.flags == fallout_dat.none: this.sizeUnpacked else: this.sizePacked)))
   this.contentsInst = contentsInstExpr
   io.seek(pos)
-  if this.contentsInst.len != 0:
-    return this.contentsInst
+  this.contentsInstFlag = true
+  return this.contentsInst
 
 proc fromFile*(_: typedesc[FalloutDat_File], filename: string): FalloutDat_File =
   FalloutDat_File.read(newKaitaiFileStream(filename), nil, nil)

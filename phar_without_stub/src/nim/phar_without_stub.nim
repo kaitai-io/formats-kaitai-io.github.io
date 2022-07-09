@@ -19,7 +19,8 @@ type
   PharWithoutStub_SerializedValue* = ref object of KaitaiStruct
     `raw`*: seq[byte]
     `parent`*: KaitaiStruct
-    `parsedInst`*: PhpSerializedValue
+    `parsedInst`: PhpSerializedValue
+    `parsedInstFlag`: bool
   PharWithoutStub_Signature* = ref object of KaitaiStruct
     `data`*: seq[byte]
     `type`*: PharWithoutStub_SignatureType
@@ -28,9 +29,12 @@ type
   PharWithoutStub_FileFlags* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: PharWithoutStub_FileEntry
-    `permissionsInst`*: int
-    `zlibCompressedInst`*: bool
-    `bzip2CompressedInst`*: bool
+    `permissionsInst`: int
+    `permissionsInstFlag`: bool
+    `zlibCompressedInst`: bool
+    `zlibCompressedInstFlag`: bool
+    `bzip2CompressedInst`: bool
+    `bzip2CompressedInstFlag`: bool
   PharWithoutStub_ApiVersion* = ref object of KaitaiStruct
     `release`*: uint64
     `major`*: uint64
@@ -40,9 +44,12 @@ type
   PharWithoutStub_GlobalFlags* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: PharWithoutStub_Manifest
-    `anyZlibCompressedInst`*: bool
-    `anyBzip2CompressedInst`*: bool
-    `hasSignatureInst`*: bool
+    `anyZlibCompressedInst`: bool
+    `anyZlibCompressedInstFlag`: bool
+    `anyBzip2CompressedInst`: bool
+    `anyBzip2CompressedInstFlag`: bool
+    `hasSignatureInst`: bool
+    `hasSignatureInstFlag`: bool
   PharWithoutStub_Manifest* = ref object of KaitaiStruct
     `lenManifest`*: uint32
     `numFiles`*: uint32
@@ -199,15 +206,15 @@ proc parsed(this: PharWithoutStub_SerializedValue): PhpSerializedValue =
   ##[
   The serialized value, parsed as a structure.
   ]##
-  if this.parsedInst != nil:
+  if this.parsedInstFlag:
     return this.parsedInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let parsedInstExpr = PhpSerializedValue.read(this.io, this.root, this)
   this.parsedInst = parsedInstExpr
   this.io.seek(pos)
-  if this.parsedInst != nil:
-    return this.parsedInst
+  this.parsedInstFlag = true
+  return this.parsedInst
 
 proc fromFile*(_: typedesc[PharWithoutStub_SerializedValue], filename: string): PharWithoutStub_SerializedValue =
   PharWithoutStub_SerializedValue.read(newKaitaiFileStream(filename), nil, nil)
@@ -260,36 +267,36 @@ proc permissions(this: PharWithoutStub_FileFlags): int =
   ##[
   The file's permission bits.
   ]##
-  if this.permissionsInst != nil:
+  if this.permissionsInstFlag:
     return this.permissionsInst
   let permissionsInstExpr = int((this.value and 511))
   this.permissionsInst = permissionsInstExpr
-  if this.permissionsInst != nil:
-    return this.permissionsInst
+  this.permissionsInstFlag = true
+  return this.permissionsInst
 
 proc zlibCompressed(this: PharWithoutStub_FileFlags): bool = 
 
   ##[
   Whether this file's data is stored using zlib compression.
   ]##
-  if this.zlibCompressedInst != nil:
+  if this.zlibCompressedInstFlag:
     return this.zlibCompressedInst
   let zlibCompressedInstExpr = bool((this.value and 4096) != 0)
   this.zlibCompressedInst = zlibCompressedInstExpr
-  if this.zlibCompressedInst != nil:
-    return this.zlibCompressedInst
+  this.zlibCompressedInstFlag = true
+  return this.zlibCompressedInst
 
 proc bzip2Compressed(this: PharWithoutStub_FileFlags): bool = 
 
   ##[
   Whether this file's data is stored using bzip2 compression.
   ]##
-  if this.bzip2CompressedInst != nil:
+  if this.bzip2CompressedInstFlag:
     return this.bzip2CompressedInst
   let bzip2CompressedInstExpr = bool((this.value and 8192) != 0)
   this.bzip2CompressedInst = bzip2CompressedInstExpr
-  if this.bzip2CompressedInst != nil:
-    return this.bzip2CompressedInst
+  this.bzip2CompressedInstFlag = true
+  return this.bzip2CompressedInst
 
 proc fromFile*(_: typedesc[PharWithoutStub_FileFlags], filename: string): PharWithoutStub_FileFlags =
   PharWithoutStub_FileFlags.read(newKaitaiFileStream(filename), nil, nil)
@@ -372,12 +379,12 @@ proc anyZlibCompressed(this: PharWithoutStub_GlobalFlags): bool =
 zlib compression.
 
   ]##
-  if this.anyZlibCompressedInst != nil:
+  if this.anyZlibCompressedInstFlag:
     return this.anyZlibCompressedInst
   let anyZlibCompressedInstExpr = bool((this.value and 4096) != 0)
   this.anyZlibCompressedInst = anyZlibCompressedInstExpr
-  if this.anyZlibCompressedInst != nil:
-    return this.anyZlibCompressedInst
+  this.anyZlibCompressedInstFlag = true
+  return this.anyZlibCompressedInst
 
 proc anyBzip2Compressed(this: PharWithoutStub_GlobalFlags): bool = 
 
@@ -386,24 +393,24 @@ proc anyBzip2Compressed(this: PharWithoutStub_GlobalFlags): bool =
 bzip2 compression.
 
   ]##
-  if this.anyBzip2CompressedInst != nil:
+  if this.anyBzip2CompressedInstFlag:
     return this.anyBzip2CompressedInst
   let anyBzip2CompressedInstExpr = bool((this.value and 8192) != 0)
   this.anyBzip2CompressedInst = anyBzip2CompressedInstExpr
-  if this.anyBzip2CompressedInst != nil:
-    return this.anyBzip2CompressedInst
+  this.anyBzip2CompressedInstFlag = true
+  return this.anyBzip2CompressedInst
 
 proc hasSignature(this: PharWithoutStub_GlobalFlags): bool = 
 
   ##[
   Whether this phar contains a signature.
   ]##
-  if this.hasSignatureInst != nil:
+  if this.hasSignatureInstFlag:
     return this.hasSignatureInst
   let hasSignatureInstExpr = bool((this.value and 65536) != 0)
   this.hasSignatureInst = hasSignatureInstExpr
-  if this.hasSignatureInst != nil:
-    return this.hasSignatureInst
+  this.hasSignatureInstFlag = true
+  return this.hasSignatureInst
 
 proc fromFile*(_: typedesc[PharWithoutStub_GlobalFlags], filename: string): PharWithoutStub_GlobalFlags =
   PharWithoutStub_GlobalFlags.read(newKaitaiFileStream(filename), nil, nil)

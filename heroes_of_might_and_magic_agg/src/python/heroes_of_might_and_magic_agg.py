@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class HeroesOfMightAndMagicAgg(KaitaiStruct):
@@ -21,9 +20,9 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
 
     def _read(self):
         self.num_files = self._io.read_u2le()
-        self.entries = [None] * (self.num_files)
+        self.entries = []
         for i in range(self.num_files):
-            self.entries[i] = HeroesOfMightAndMagicAgg.Entry(self._io, self, self._root)
+            self.entries.append(HeroesOfMightAndMagicAgg.Entry(self._io, self, self._root))
 
 
     class Entry(KaitaiStruct):
@@ -42,13 +41,13 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek(self.offset)
             self._m_body = self._io.read_bytes(self.size)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     class Filename(KaitaiStruct):
@@ -65,18 +64,18 @@ class HeroesOfMightAndMagicAgg(KaitaiStruct):
     @property
     def filenames(self):
         if hasattr(self, '_m_filenames'):
-            return self._m_filenames if hasattr(self, '_m_filenames') else None
+            return self._m_filenames
 
         _pos = self._io.pos()
         self._io.seek((self.entries[-1].offset + self.entries[-1].size))
-        self._raw__m_filenames = [None] * (self.num_files)
-        self._m_filenames = [None] * (self.num_files)
+        self._raw__m_filenames = []
+        self._m_filenames = []
         for i in range(self.num_files):
-            self._raw__m_filenames[i] = self._io.read_bytes(15)
+            self._raw__m_filenames.append(self._io.read_bytes(15))
             _io__raw__m_filenames = KaitaiStream(BytesIO(self._raw__m_filenames[i]))
-            self._m_filenames[i] = HeroesOfMightAndMagicAgg.Filename(_io__raw__m_filenames, self, self._root)
+            self._m_filenames.append(HeroesOfMightAndMagicAgg.Filename(_io__raw__m_filenames, self, self._root))
 
         self._io.seek(_pos)
-        return self._m_filenames if hasattr(self, '_m_filenames') else None
+        return getattr(self, '_m_filenames', None)
 
 

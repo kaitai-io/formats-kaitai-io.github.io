@@ -8,7 +8,7 @@
   } else {
     root.AndroidBootldrHuawei = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Format of `bootloader-*.img` files found in factory images of certain Android devices from Huawei:
  * 

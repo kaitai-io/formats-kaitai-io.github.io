@@ -299,9 +299,9 @@ public class Pcap extends KaitaiStruct {
             this.inclLen = this._io.readU4le();
             this.origLen = this._io.readU4le();
             {
-                Linktype on = _root.hdr().network();
+                Linktype on = _root().hdr().network();
                 if (on != null) {
-                    switch (_root.hdr().network()) {
+                    switch (_root().hdr().network()) {
                     case PPI: {
                         this._raw_body = this._io.readBytes(inclLen());
                         KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);

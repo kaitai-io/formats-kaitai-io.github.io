@@ -4,8 +4,10 @@ import options
 type
   Iso9660* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `sectorSizeInst`*: int
-    `primaryVolDescInst`*: Iso9660_VolDesc
+    `sectorSizeInst`: int
+    `sectorSizeInstFlag`: bool
+    `primaryVolDescInst`: Iso9660_VolDesc
+    `primaryVolDescInstFlag`: bool
   Iso9660_VolDescPrimary* = ref object of KaitaiStruct
     `unused1`*: seq[byte]
     `systemId`*: string
@@ -39,7 +41,8 @@ type
     `parent`*: Iso9660_VolDesc
     `rawRootDir`*: seq[byte]
     `rawPathTableInst`*: seq[byte]
-    `pathTableInst`*: Iso9660_PathTableLe
+    `pathTableInst`: Iso9660_PathTableLe
+    `pathTableInstFlag`: bool
   Iso9660_VolDescBootRecord* = ref object of KaitaiStruct
     `bootSystemId`*: string
     `bootId`*: string
@@ -112,8 +115,10 @@ type
     `rest`*: seq[byte]
     `parent`*: Iso9660_DirEntry
     `rawExtentAsDirInst`*: seq[byte]
-    `extentAsDirInst`*: Iso9660_DirEntries
-    `extentAsFileInst`*: seq[byte]
+    `extentAsDirInst`: Iso9660_DirEntries
+    `extentAsDirInstFlag`: bool
+    `extentAsFileInst`: seq[byte]
+    `extentAsFileInstFlag`: bool
 
 proc read*(_: typedesc[Iso9660], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Iso9660
 proc read*(_: typedesc[Iso9660_VolDescPrimary], io: KaitaiStream, root: KaitaiStruct, parent: Iso9660_VolDesc): Iso9660_VolDescPrimary
@@ -158,23 +163,23 @@ proc read*(_: typedesc[Iso9660], io: KaitaiStream, root: KaitaiStruct, parent: K
 
 
 proc sectorSize(this: Iso9660): int = 
-  if this.sectorSizeInst != nil:
+  if this.sectorSizeInstFlag:
     return this.sectorSizeInst
   let sectorSizeInstExpr = int(2048)
   this.sectorSizeInst = sectorSizeInstExpr
-  if this.sectorSizeInst != nil:
-    return this.sectorSizeInst
+  this.sectorSizeInstFlag = true
+  return this.sectorSizeInst
 
 proc primaryVolDesc(this: Iso9660): Iso9660_VolDesc = 
-  if this.primaryVolDescInst != nil:
+  if this.primaryVolDescInstFlag:
     return this.primaryVolDescInst
   let pos = this.io.pos()
   this.io.seek(int((16 * this.sectorSize)))
   let primaryVolDescInstExpr = Iso9660_VolDesc.read(this.io, this.root, this)
   this.primaryVolDescInst = primaryVolDescInstExpr
   this.io.seek(pos)
-  if this.primaryVolDescInst != nil:
-    return this.primaryVolDescInst
+  this.primaryVolDescInstFlag = true
+  return this.primaryVolDescInst
 
 proc fromFile*(_: typedesc[Iso9660], filename: string): Iso9660 =
   Iso9660.read(newKaitaiFileStream(filename), nil, nil)
@@ -254,7 +259,7 @@ proc read*(_: typedesc[Iso9660_VolDescPrimary], io: KaitaiStream, root: KaitaiSt
   this.applicationArea = applicationAreaExpr
 
 proc pathTable(this: Iso9660_VolDescPrimary): Iso9660_PathTableLe = 
-  if this.pathTableInst != nil:
+  if this.pathTableInstFlag:
     return this.pathTableInst
   let pos = this.io.pos()
   this.io.seek(int((this.lbaPathTableLe * Iso9660(this.root).sectorSize)))
@@ -264,8 +269,8 @@ proc pathTable(this: Iso9660_VolDescPrimary): Iso9660_PathTableLe =
   let pathTableInstExpr = Iso9660_PathTableLe.read(rawPathTableInstIo, this.root, this)
   this.pathTableInst = pathTableInstExpr
   this.io.seek(pos)
-  if this.pathTableInst != nil:
-    return this.pathTableInst
+  this.pathTableInstFlag = true
+  return this.pathTableInst
 
 proc fromFile*(_: typedesc[Iso9660_VolDescPrimary], filename: string): Iso9660_VolDescPrimary =
   Iso9660_VolDescPrimary.read(newKaitaiFileStream(filename), nil, nil)
@@ -522,7 +527,7 @@ proc read*(_: typedesc[Iso9660_DirEntryBody], io: KaitaiStream, root: KaitaiStru
   this.rest = restExpr
 
 proc extentAsDir(this: Iso9660_DirEntryBody): Iso9660_DirEntries = 
-  if this.extentAsDirInst != nil:
+  if this.extentAsDirInstFlag:
     return this.extentAsDirInst
   if (this.fileFlags and 2) != 0:
     let io = Iso9660(this.root).io
@@ -534,11 +539,11 @@ proc extentAsDir(this: Iso9660_DirEntryBody): Iso9660_DirEntries =
     let extentAsDirInstExpr = Iso9660_DirEntries.read(rawExtentAsDirInstIo, this.root, this)
     this.extentAsDirInst = extentAsDirInstExpr
     io.seek(pos)
-  if this.extentAsDirInst != nil:
-    return this.extentAsDirInst
+  this.extentAsDirInstFlag = true
+  return this.extentAsDirInst
 
 proc extentAsFile(this: Iso9660_DirEntryBody): seq[byte] = 
-  if this.extentAsFileInst.len != 0:
+  if this.extentAsFileInstFlag:
     return this.extentAsFileInst
   if (this.fileFlags and 2) == 0:
     let io = Iso9660(this.root).io
@@ -547,8 +552,8 @@ proc extentAsFile(this: Iso9660_DirEntryBody): seq[byte] =
     let extentAsFileInstExpr = io.readBytes(int(this.sizeExtent.le))
     this.extentAsFileInst = extentAsFileInstExpr
     io.seek(pos)
-  if this.extentAsFileInst.len != 0:
-    return this.extentAsFileInst
+  this.extentAsFileInstFlag = true
+  return this.extentAsFileInst
 
 proc fromFile*(_: typedesc[Iso9660_DirEntryBody], filename: string): Iso9660_DirEntryBody =
   Iso9660_DirEntryBody.read(newKaitaiFileStream(filename), nil, nil)

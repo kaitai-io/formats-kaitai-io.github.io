@@ -69,7 +69,7 @@ end
 
 function Vfat.ExtBiosParamBlockFat32:_read()
   self.ls_per_fat = self._io:read_u4le()
-  self.has_active_fat = self._io:read_bits_int_le(1)
+  self.has_active_fat = self._io:read_bits_int_le(1) ~= 0
   self.reserved1 = self._io:read_bits_int_le(3)
   self.active_fat_id = self._io:read_bits_int_le(4)
   self._io:align_to_byte()
@@ -344,12 +344,12 @@ function Vfat.RootDirectoryRec.AttrFlags:_init(io, parent, root)
 end
 
 function Vfat.RootDirectoryRec.AttrFlags:_read()
-  self.read_only = self._io:read_bits_int_le(1)
-  self.hidden = self._io:read_bits_int_le(1)
-  self.system = self._io:read_bits_int_le(1)
-  self.volume_id = self._io:read_bits_int_le(1)
-  self.is_directory = self._io:read_bits_int_le(1)
-  self.archive = self._io:read_bits_int_le(1)
+  self.read_only = self._io:read_bits_int_le(1) ~= 0
+  self.hidden = self._io:read_bits_int_le(1) ~= 0
+  self.system = self._io:read_bits_int_le(1) ~= 0
+  self.volume_id = self._io:read_bits_int_le(1) ~= 0
+  self.is_directory = self._io:read_bits_int_le(1) ~= 0
+  self.archive = self._io:read_bits_int_le(1) ~= 0
   self.reserved = self._io:read_bits_int_le(2)
 end
 

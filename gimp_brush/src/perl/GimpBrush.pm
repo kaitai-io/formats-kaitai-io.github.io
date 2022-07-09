@@ -183,7 +183,7 @@ sub _read {
     $self->{rows} = ();
     my $n_rows = $self->_root()->header()->height();
     for (my $i = 0; $i < $n_rows; $i++) {
-        $self->{rows}[$i] = GimpBrush::Row->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{rows}}, GimpBrush::Row->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -227,10 +227,10 @@ sub _read {
     for (my $i = 0; $i < $n_pixels; $i++) {
         my $_on = $self->_root()->header()->bytes_per_pixel();
         if ($_on == $GimpBrush::COLOR_DEPTH_GRAYSCALE) {
-            $self->{pixels}[$i] = GimpBrush::Row::PixelGray->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{pixels}}, GimpBrush::Row::PixelGray->new($self->{_io}, $self, $self->{_root});
         }
         elsif ($_on == $GimpBrush::COLOR_DEPTH_RGBA) {
-            $self->{pixels}[$i] = GimpBrush::Row::PixelRgba->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{pixels}}, GimpBrush::Row::PixelRgba->new($self->{_io}, $self, $self->{_root});
         }
     }
 }

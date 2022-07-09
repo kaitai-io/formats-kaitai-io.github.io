@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Exif(KaitaiStruct):
@@ -66,24 +65,24 @@ class Exif(KaitaiStruct):
 
             def _read_le(self):
                 self.num_fields = self._io.read_u2le()
-                self.fields = [None] * (self.num_fields)
+                self.fields = []
                 for i in range(self.num_fields):
-                    self.fields[i] = Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le)
+                    self.fields.append(Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le))
 
                 self.next_ifd_ofs = self._io.read_u4le()
 
             def _read_be(self):
                 self.num_fields = self._io.read_u2be()
-                self.fields = [None] * (self.num_fields)
+                self.fields = []
                 for i in range(self.num_fields):
-                    self.fields[i] = Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le)
+                    self.fields.append(Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le))
 
                 self.next_ifd_ofs = self._io.read_u4be()
 
             @property
             def next_ifd(self):
                 if hasattr(self, '_m_next_ifd'):
-                    return self._m_next_ifd if hasattr(self, '_m_next_ifd') else None
+                    return self._m_next_ifd
 
                 if self.next_ifd_ofs != 0:
                     _pos = self._io.pos()
@@ -94,7 +93,7 @@ class Exif(KaitaiStruct):
                         self._m_next_ifd = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
                     self._io.seek(_pos)
 
-                return self._m_next_ifd if hasattr(self, '_m_next_ifd') else None
+                return getattr(self, '_m_next_ifd', None)
 
 
         class IfdField(KaitaiStruct):
@@ -598,31 +597,31 @@ class Exif(KaitaiStruct):
             @property
             def type_byte_length(self):
                 if hasattr(self, '_m_type_byte_length'):
-                    return self._m_type_byte_length if hasattr(self, '_m_type_byte_length') else None
+                    return self._m_type_byte_length
 
                 self._m_type_byte_length = (2 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.word else (4 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.dword else 1))
-                return self._m_type_byte_length if hasattr(self, '_m_type_byte_length') else None
+                return getattr(self, '_m_type_byte_length', None)
 
             @property
             def byte_length(self):
                 if hasattr(self, '_m_byte_length'):
-                    return self._m_byte_length if hasattr(self, '_m_byte_length') else None
+                    return self._m_byte_length
 
                 self._m_byte_length = (self.length * self.type_byte_length)
-                return self._m_byte_length if hasattr(self, '_m_byte_length') else None
+                return getattr(self, '_m_byte_length', None)
 
             @property
             def is_immediate_data(self):
                 if hasattr(self, '_m_is_immediate_data'):
-                    return self._m_is_immediate_data if hasattr(self, '_m_is_immediate_data') else None
+                    return self._m_is_immediate_data
 
                 self._m_is_immediate_data = self.byte_length <= 4
-                return self._m_is_immediate_data if hasattr(self, '_m_is_immediate_data') else None
+                return getattr(self, '_m_is_immediate_data', None)
 
             @property
             def data(self):
                 if hasattr(self, '_m_data'):
-                    return self._m_data if hasattr(self, '_m_data') else None
+                    return self._m_data
 
                 if not (self.is_immediate_data):
                     io = self._root._io
@@ -634,13 +633,13 @@ class Exif(KaitaiStruct):
                         self._m_data = io.read_bytes(self.byte_length)
                     io.seek(_pos)
 
-                return self._m_data if hasattr(self, '_m_data') else None
+                return getattr(self, '_m_data', None)
 
 
         @property
         def ifd0(self):
             if hasattr(self, '_m_ifd0'):
-                return self._m_ifd0 if hasattr(self, '_m_ifd0') else None
+                return self._m_ifd0
 
             _pos = self._io.pos()
             self._io.seek(self.ifd0_ofs)
@@ -649,7 +648,7 @@ class Exif(KaitaiStruct):
             else:
                 self._m_ifd0 = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
             self._io.seek(_pos)
-            return self._m_ifd0 if hasattr(self, '_m_ifd0') else None
+            return getattr(self, '_m_ifd0', None)
 
 
 

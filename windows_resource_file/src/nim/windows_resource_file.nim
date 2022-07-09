@@ -19,7 +19,8 @@ type
     `value`*: seq[byte]
     `padding2`*: seq[byte]
     `parent`*: WindowsResourceFile
-    `typeAsPredefInst`*: WindowsResourceFile_Resource_PredefTypes
+    `typeAsPredefInst`: WindowsResourceFile_Resource_PredefTypes
+    `typeAsPredefInstFlag`: bool
   WindowsResourceFile_Resource_PredefTypes* = enum
     cursor = 1
     bitmap = 2
@@ -48,10 +49,14 @@ type
     `rest`*: seq[uint16]
     `noop`*: seq[byte]
     `parent`*: WindowsResourceFile_Resource
-    `savePos1Inst`*: int
-    `savePos2Inst`*: int
-    `isStringInst`*: bool
-    `asStringInst`*: string
+    `savePos1Inst`: int
+    `savePos1InstFlag`: bool
+    `savePos2Inst`: int
+    `savePos2InstFlag`: bool
+    `isStringInst`: bool
+    `isStringInstFlag`: bool
+    `asStringInst`: string
+    `asStringInstFlag`: bool
 
 proc read*(_: typedesc[WindowsResourceFile], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsResourceFile
 proc read*(_: typedesc[WindowsResourceFile_Resource], io: KaitaiStream, root: KaitaiStruct, parent: WindowsResourceFile): WindowsResourceFile_Resource
@@ -177,13 +182,13 @@ well-known values in that range. This instance allows to get
 it as enum value, if applicable.
 
   ]##
-  if this.typeAsPredefInst != nil:
+  if this.typeAsPredefInstFlag:
     return this.typeAsPredefInst
   if  ((not(this.type.isString)) and (this.type.asNumeric <= 255)) :
     let typeAsPredefInstExpr = WindowsResourceFile_Resource_PredefTypes(WindowsResourceFile_Resource_PredefTypes(this.type.asNumeric))
     this.typeAsPredefInst = typeAsPredefInstExpr
-  if this.typeAsPredefInst != nil:
-    return this.typeAsPredefInst
+  this.typeAsPredefInstFlag = true
+  return this.typeAsPredefInst
 
 proc fromFile*(_: typedesc[WindowsResourceFile_Resource], filename: string): WindowsResourceFile_Resource =
   WindowsResourceFile_Resource.read(newKaitaiFileStream(filename), nil, nil)
@@ -225,31 +230,31 @@ proc read*(_: typedesc[WindowsResourceFile_UnicodeOrId], io: KaitaiStream, root:
     this.noop = noopExpr
 
 proc savePos1(this: WindowsResourceFile_UnicodeOrId): int = 
-  if this.savePos1Inst != nil:
+  if this.savePos1InstFlag:
     return this.savePos1Inst
   let savePos1InstExpr = int(this.io.pos)
   this.savePos1Inst = savePos1InstExpr
-  if this.savePos1Inst != nil:
-    return this.savePos1Inst
+  this.savePos1InstFlag = true
+  return this.savePos1Inst
 
 proc savePos2(this: WindowsResourceFile_UnicodeOrId): int = 
-  if this.savePos2Inst != nil:
+  if this.savePos2InstFlag:
     return this.savePos2Inst
   let savePos2InstExpr = int(this.io.pos)
   this.savePos2Inst = savePos2InstExpr
-  if this.savePos2Inst != nil:
-    return this.savePos2Inst
+  this.savePos2InstFlag = true
+  return this.savePos2Inst
 
 proc isString(this: WindowsResourceFile_UnicodeOrId): bool = 
-  if this.isStringInst != nil:
+  if this.isStringInstFlag:
     return this.isStringInst
   let isStringInstExpr = bool(this.first != 65535)
   this.isStringInst = isStringInstExpr
-  if this.isStringInst != nil:
-    return this.isStringInst
+  this.isStringInstFlag = true
+  return this.isStringInst
 
 proc asString(this: WindowsResourceFile_UnicodeOrId): string = 
-  if this.asStringInst.len != 0:
+  if this.asStringInstFlag:
     return this.asStringInst
   if this.isString:
     let pos = this.io.pos()
@@ -257,8 +262,8 @@ proc asString(this: WindowsResourceFile_UnicodeOrId): string =
     let asStringInstExpr = encode(this.io.readBytes(int(((this.savePos2 - this.savePos1) - 2))), "UTF-16LE")
     this.asStringInst = asStringInstExpr
     this.io.seek(pos)
-  if this.asStringInst.len != 0:
-    return this.asStringInst
+  this.asStringInstFlag = true
+  return this.asStringInst
 
 proc fromFile*(_: typedesc[WindowsResourceFile_UnicodeOrId], filename: string): WindowsResourceFile_UnicodeOrId =
   WindowsResourceFile_UnicodeOrId.read(newKaitaiFileStream(filename), nil, nil)

@@ -208,9 +208,9 @@ class Swf < Kaitai::Struct::Struct
 
     def _read
       @num_symbols = @_io.read_u2le
-      @symbols = Array.new(num_symbols)
+      @symbols = []
       (num_symbols).times { |i|
-        @symbols[i] = Symbol.new(@_io, self, @_root)
+        @symbols << Symbol.new(@_io, self, @_root)
       }
       self
     end

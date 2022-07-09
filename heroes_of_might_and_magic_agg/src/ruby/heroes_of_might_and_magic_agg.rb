@@ -17,9 +17,9 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
 
   def _read
     @num_files = @_io.read_u2le
-    @entries = Array.new(num_files)
+    @entries = []
     (num_files).times { |i|
-      @entries[i] = Entry.new(@_io, self, @_root)
+      @entries << Entry.new(@_io, self, @_root)
     }
     self
   end
@@ -65,12 +65,12 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
     return @filenames unless @filenames.nil?
     _pos = @_io.pos
     @_io.seek((entries.last.offset + entries.last.size))
-    @_raw_filenames = Array.new(num_files)
-    @filenames = Array.new(num_files)
+    @_raw_filenames = []
+    @filenames = []
     (num_files).times { |i|
-      @_raw_filenames[i] = @_io.read_bytes(15)
+      @_raw_filenames << @_io.read_bytes(15)
       _io__raw_filenames = Kaitai::Struct::Stream.new(@_raw_filenames[i])
-      @filenames[i] = Filename.new(_io__raw_filenames, self, @_root)
+      @filenames << Filename.new(_io__raw_filenames, self, @_root)
     }
     @_io.seek(_pos)
     @filenames

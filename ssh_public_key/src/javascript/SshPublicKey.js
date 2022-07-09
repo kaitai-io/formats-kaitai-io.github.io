@@ -8,7 +8,7 @@
   } else {
     root.SshPublicKey = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * SSH public keys are encoded in a special binary format, typically represented
  * to end users as either one-liner OpenSSH format or multi-line PEM format

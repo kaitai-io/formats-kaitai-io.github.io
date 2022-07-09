@@ -8,7 +8,7 @@
   } else {
     root.ZxSpectrumTap = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * TAP files are used by emulators of ZX Spectrum computer (released in
  * 1982 by Sinclair Research). TAP file stores blocks of data as if

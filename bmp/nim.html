@@ -392,8 +392,10 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
     <span class="p">`</span><span class="n">lenProfile</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span>
-    <span class="p">`</span><span class="n">hasProfileInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">profileDataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">hasProfileInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasProfileInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">profileDataInst</span><span class="p">`:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">profileDataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Bmp_ColorMask</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">redMask</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">greenMask</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -422,7 +424,8 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
   <span class="n">Bmp_FixedPoint2Dot30</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">raw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp_CieXyz</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Bmp_Bitmap</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp</span>
   <span class="n">Bmp_BitmapHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
@@ -437,15 +440,24 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
     <span class="p">`</span><span class="n">bitmapV5Ext</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp_BitmapV5Extension</span>
     <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span>
-    <span class="p">`</span><span class="n">extendsBitmapV4Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">extendsOs22xBitmapInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">usesFixedPaletteInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">extendsBitmapInfoInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">imageHeightInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">isCoreHeaderInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">extendsBitmapV5Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isColorMaskHereInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">bottomUpInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsBitmapV4Inst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsBitmapV4InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsOs22xBitmapInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsOs22xBitmapInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">usesFixedPaletteInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">usesFixedPaletteInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsBitmapInfoInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsBitmapInfoInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">imageHeightInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">imageHeightInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCoreHeaderInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isCoreHeaderInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsBitmapV5Inst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extendsBitmapV5InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isColorMaskHereInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isColorMaskHereInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bottomUpInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bottomUpInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Bmp_Os22xBitmapExtension</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">units</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -459,13 +471,15 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
   <span class="n">Bmp_FixedPoint16Dot16</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">raw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp_BitmapV4Extension</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Bmp_ColorTable</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">colors</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Bmp_RgbRecord</span><span class="o">]</span>
     <span class="p">`</span><span class="n">hasReservedField</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
     <span class="p">`</span><span class="n">numColors</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span>
-    <span class="p">`</span><span class="n">numColorsPresentInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numColorsPresentInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numColorsPresentInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Bmp_FileHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">fileType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">lenFile</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -481,13 +495,20 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp</span>
     <span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawColorTable</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">isColorMaskGivenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">colorMaskGivenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Bmp_ColorMask</span>
-    <span class="p">`</span><span class="n">colorMaskBlueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">colorMaskAlphaInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">colorMaskGreenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">isColorMaskHereInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">colorMaskRedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">isColorMaskGivenInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isColorMaskGivenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">colorMaskGivenInst</span><span class="p">`:</span> <span class="n">Bmp_ColorMask</span>
+    <span class="p">`</span><span class="n">colorMaskGivenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">colorMaskBlueInst</span><span class="p">`:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">colorMaskBlueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">colorMaskAlphaInst</span><span class="p">`:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">colorMaskAlphaInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">colorMaskGreenInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">colorMaskGreenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isColorMaskHereInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isColorMaskHereInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">colorMaskRedInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">colorMaskRedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Bmp</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp_CieXyz], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_CieXyz</span>
@@ -697,19 +718,19 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
   <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
 
 <span class="k">proc </span><span class="nf">hasProfile</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapV5Extension</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInst</span>
   <span class="k">let</span> <span class="n">hasProfileInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">bitmapV4Ext</span><span class="p">.</span><span class="n">colorSpaceType</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">profile_linked</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">bitmapV4Ext</span><span class="p">.</span><span class="n">colorSpaceType</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">profile_embedded</span><span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInst</span> <span class="o">=</span> <span class="n">hasProfileInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasProfileInst</span>
 
 <span class="k">proc </span><span class="nf">profileData</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapV5Extension</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0&quot;</span><span class="o">&gt;</span><span class="s">&quot;If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252).&quot;</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">profileDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">profileDataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">profileDataInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasProfile</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Bmp</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -724,8 +745,8 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
         <span class="k">let</span> <span class="n">profileDataInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenProfile</span><span class="p">))</span>
         <span class="n">this</span><span class="p">.</span><span class="n">profileDataInst</span> <span class="o">=</span> <span class="n">profileDataInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">profileDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">profileDataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">profileDataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">profileDataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp_BitmapV5Extension], filename: string): Bmp_BitmapV5Extension =</span>
   <span class="n">Bmp_BitmapV5Extension</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -833,12 +854,12 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
   <span class="n">this</span><span class="p">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">rawExpr</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_FixedPoint2Dot30</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">div</span> <span class="p">(</span><span class="mi">1</span> <span class="ow">shl</span> <span class="mi">30</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp_FixedPoint2Dot30], filename: string): Bmp_FixedPoint2Dot30 =</span>
   <span class="n">Bmp_FixedPoint2Dot30</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -931,76 +952,76 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
     <span class="n">this</span><span class="p">.</span><span class="n">bitmapV5Ext</span> <span class="o">=</span> <span class="n">bitmapV5ExtExpr</span>
 
 <span class="k">proc </span><span class="nf">extendsBitmapV4</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4Inst</span>
   <span class="k">let</span> <span class="n">extendsBitmapV4InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">&gt;=</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">bitmap_v4_header</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4Inst</span> <span class="o">=</span> <span class="n">extendsBitmapV4InstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4Inst</span>
 
 <span class="k">proc </span><span class="nf">extendsOs22xBitmap</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInst</span>
   <span class="k">let</span> <span class="n">extendsOs22xBitmapInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">==</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">os2_2x_bitmap_header</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInst</span> <span class="o">=</span> <span class="n">extendsOs22xBitmapInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmapInst</span>
 
 <span class="k">proc </span><span class="nf">usesFixedPalette</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInst</span>
   <span class="k">let</span> <span class="n">usesFixedPaletteInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="ow">not</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfo</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">extendsOs22xBitmap</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bitmapInfoExt</span><span class="p">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">jpeg</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bitmapInfoExt</span><span class="p">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">png</span><span class="p">))</span> <span class="p">))</span> <span class="p">)))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInst</span> <span class="o">=</span> <span class="n">usesFixedPaletteInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">usesFixedPaletteInst</span>
 
 <span class="k">proc </span><span class="nf">extendsBitmapInfo</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInst</span>
   <span class="k">let</span> <span class="n">extendsBitmapInfoInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">&gt;=</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">bitmap_info_header</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInst</span> <span class="o">=</span> <span class="n">extendsBitmapInfoInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapInfoInst</span>
 
 <span class="k">proc </span><span class="nf">imageHeight</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInst</span>
   <span class="k">let</span> <span class="n">imageHeightInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightRaw</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">imageHeightRaw</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightRaw</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInst</span> <span class="o">=</span> <span class="n">imageHeightInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imageHeightInst</span>
 
 <span class="k">proc </span><span class="nf">isCoreHeader</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInst</span>
   <span class="k">let</span> <span class="n">isCoreHeaderInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">==</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">bitmap_core_header</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInst</span> <span class="o">=</span> <span class="n">isCoreHeaderInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isCoreHeaderInst</span>
 
 <span class="k">proc </span><span class="nf">extendsBitmapV5</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5Inst</span>
   <span class="k">let</span> <span class="n">extendsBitmapV5InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">&gt;=</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">bitmap_v5_header</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5Inst</span> <span class="o">=</span> <span class="n">extendsBitmapV5InstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV5Inst</span>
 
 <span class="k">proc </span><span class="nf">isColorMaskHere</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span>
   <span class="k">let</span> <span class="n">isColorMaskHereInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">==</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">bitmap_v2_info_header</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">==</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">bitmap_v3_info_header</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">extendsBitmapV4</span><span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span> <span class="o">=</span> <span class="n">isColorMaskHereInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span>
 
 <span class="k">proc </span><span class="nf">bottomUp</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInst</span>
   <span class="k">let</span> <span class="n">bottomUpInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">imageHeightRaw</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInst</span> <span class="o">=</span> <span class="n">bottomUpInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bottomUpInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp_BitmapHeader], filename: string): Bmp_BitmapHeader =</span>
   <span class="n">Bmp_BitmapHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1086,12 +1107,12 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
   <span class="n">this</span><span class="p">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">rawExpr</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_FixedPoint16Dot16</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">div</span> <span class="p">(</span><span class="mi">1</span> <span class="ow">shl</span> <span class="mi">16</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp_FixedPoint16Dot16], filename: string): Bmp_FixedPoint16Dot16 =</span>
   <span class="n">Bmp_FixedPoint16Dot16</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1113,12 +1134,12 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
     <span class="n">this</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">numColorsPresent</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_ColorTable</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInst</span>
   <span class="k">let</span> <span class="n">numColorsPresentInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="ow">div</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasReservedField</span><span class="p">:</span> <span class="mi">4</span> <span class="k">else</span><span class="p">:</span> <span class="mi">3</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInst</span> <span class="o">=</span> <span class="n">numColorsPresentInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numColorsPresentInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp_ColorTable], filename: string): Bmp_ColorTable =</span>
   <span class="n">Bmp_ColorTable</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1191,61 +1212,61 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
     <span class="n">this</span><span class="p">.</span><span class="n">colorTable</span> <span class="o">=</span> <span class="n">colorTableExpr</span>
 
 <span class="k">proc </span><span class="nf">isColorMaskGiven</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInst</span>
   <span class="k">let</span> <span class="n">isColorMaskGivenInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">extendsBitmapInfo</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitmapInfoExt</span><span class="p">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">bitfields</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitmapInfoExt</span><span class="p">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">alpha_bitfields</span><span class="p">))</span> <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHere</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">isColorMaskHere</span><span class="p">))</span> <span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInst</span> <span class="o">=</span> <span class="n">isColorMaskGivenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGivenInst</span>
 
 <span class="k">proc </span><span class="nf">colorMaskGiven</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span><span class="p">):</span> <span class="n">Bmp_ColorMask</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGiven</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">colorMaskGivenInstExpr</span> <span class="o">=</span> <span class="n">Bmp_ColorMask</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHere</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMask</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">colorMask</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInst</span> <span class="o">=</span> <span class="n">colorMaskGivenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGivenInst</span>
 
 <span class="k">proc </span><span class="nf">colorMaskBlue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInst</span>
   <span class="k">let</span> <span class="n">colorMaskBlueInstExpr</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGiven</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGiven</span><span class="p">.</span><span class="n">blueMask</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span> <span class="mi">31</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">:</span> <span class="mi">255</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInst</span> <span class="o">=</span> <span class="n">colorMaskBlueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskBlueInst</span>
 
 <span class="k">proc </span><span class="nf">colorMaskAlpha</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInst</span>
   <span class="k">let</span> <span class="n">colorMaskAlphaInstExpr</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">((</span><span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGiven</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">colorMaskGiven</span><span class="p">.</span><span class="n">hasAlphaMask</span><span class="p">))</span> <span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGiven</span><span class="p">.</span><span class="n">alphaMask</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInst</span> <span class="o">=</span> <span class="n">colorMaskAlphaInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskAlphaInst</span>
 
 <span class="k">proc </span><span class="nf">colorMaskGreen</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInst</span>
   <span class="k">let</span> <span class="n">colorMaskGreenInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGiven</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGiven</span><span class="p">.</span><span class="n">greenMask</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span> <span class="mi">992</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">:</span> <span class="mi">65280</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInst</span> <span class="o">=</span> <span class="n">colorMaskGreenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGreenInst</span>
 
 <span class="k">proc </span><span class="nf">isColorMaskHere</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span>
   <span class="k">let</span> <span class="n">isColorMaskHereInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">==</span> <span class="n">ord</span><span class="p">(</span><span class="n">bmp</span><span class="p">.</span><span class="n">bitmap_info_header</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitmapInfoExt</span><span class="p">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">bitfields</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitmapInfoExt</span><span class="p">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">bmp</span><span class="p">.</span><span class="n">alpha_bitfields</span><span class="p">))</span> <span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span> <span class="o">=</span> <span class="n">isColorMaskHereInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskHereInst</span>
 
 <span class="k">proc </span><span class="nf">colorMaskRed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Bmp_BitmapInfo</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInst</span>
   <span class="k">let</span> <span class="n">colorMaskRedInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isColorMaskGiven</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskGiven</span><span class="p">.</span><span class="n">redMask</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span> <span class="mi">31744</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bitsPerPixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">:</span> <span class="mi">16711680</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInst</span> <span class="o">=</span> <span class="n">colorMaskRedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMaskRedInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Bmp_BitmapInfo], filename: string): Bmp_BitmapInfo =</span>
   <span class="n">Bmp_BitmapInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

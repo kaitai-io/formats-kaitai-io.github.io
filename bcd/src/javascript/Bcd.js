@@ -8,7 +8,7 @@
   } else {
     root.Bcd = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * BCD (Binary Coded Decimals) is a common way to encode integer
  * numbers in a way that makes human-readable output somewhat
@@ -51,14 +51,14 @@ var Bcd = (function() {
     this._read();
   }
   Bcd.prototype._read = function() {
-    this.digits = new Array(this.numDigits);
+    this.digits = [];
     for (var i = 0; i < this.numDigits; i++) {
       switch (this.bitsPerDigit) {
       case 4:
-        this.digits[i] = this._io.readBitsIntBe(4);
+        this.digits.push(this._io.readBitsIntBe(4));
         break;
       case 8:
-        this.digits[i] = this._io.readU1();
+        this.digits.push(this._io.readU1());
         break;
       }
     }

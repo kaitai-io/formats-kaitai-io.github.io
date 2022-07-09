@@ -29,12 +29,12 @@ namespace Kaitai
             _unknown1 = m_io.ReadU4be();
             _unknown2 = m_io.ReadU4be();
             _timestamp = m_io.ReadU4be();
-            _folderNames = new List<Pstr>((int) (FolderCount));
+            _folderNames = new List<Pstr>();
             for (var i = 0; i < FolderCount; i++)
             {
                 _folderNames.Add(new Pstr(m_io, this, m_root));
             }
-            _folders = new List<Folder>((int) (FolderCount));
+            _folders = new List<Folder>();
             for (var i = 0; i < FolderCount; i++)
             {
                 _folders.Add(new Folder(m_io, this, m_root));
@@ -86,7 +86,7 @@ namespace Kaitai
                 _unknown = m_io.ReadU4be();
                 _flags = m_io.ReadU4be();
                 _timestamp = m_io.ReadU4be();
-                _files = new List<File>((int) (FileCount));
+                _files = new List<File>();
                 for (var i = 0; i < FileCount; i++)
                 {
                     _files.Add(new File(m_io, this, m_root));

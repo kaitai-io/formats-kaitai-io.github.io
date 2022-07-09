@@ -13,8 +13,10 @@ type
     `typeSpecificPartRawWithIo`*: BytesWithIo
     `parent`*: CompressedResource
     `rawTypeSpecificPartRawWithIo`*: seq[byte]
-    `typeSpecificPartRawInst`*: seq[byte]
-    `typeSpecificPartInst`*: KaitaiStruct
+    `typeSpecificPartRawInst`: seq[byte]
+    `typeSpecificPartRawInstFlag`: bool
+    `typeSpecificPartInst`: KaitaiStruct
+    `typeSpecificPartInstFlag`: bool
   CompressedResource_Header_CommonPart* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `lenHeader`*: uint16
@@ -33,7 +35,8 @@ type
     `decompressorSpecificParametersWithIo`*: BytesWithIo
     `parent`*: CompressedResource_Header
     `rawDecompressorSpecificParametersWithIo`*: seq[byte]
-    `decompressorSpecificParametersInst`*: seq[byte]
+    `decompressorSpecificParametersInst`: seq[byte]
+    `decompressorSpecificParametersInstFlag`: bool
 
 proc read*(_: typedesc[CompressedResource], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CompressedResource
 proc read*(_: typedesc[CompressedResource_Header], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource): CompressedResource_Header
@@ -144,12 +147,12 @@ proc typeSpecificPartRaw(this: CompressedResource_Header): seq[byte] =
 as a raw byte array.
 
   ]##
-  if this.typeSpecificPartRawInst.len != 0:
+  if this.typeSpecificPartRawInstFlag:
     return this.typeSpecificPartRawInst
   let typeSpecificPartRawInstExpr = seq[byte](this.typeSpecificPartRawWithIo.data)
   this.typeSpecificPartRawInst = typeSpecificPartRawInstExpr
-  if this.typeSpecificPartRawInst.len != 0:
-    return this.typeSpecificPartRawInst
+  this.typeSpecificPartRawInstFlag = true
+  return this.typeSpecificPartRawInst
 
 proc typeSpecificPart(this: CompressedResource_Header): KaitaiStruct = 
 
@@ -158,7 +161,7 @@ proc typeSpecificPart(this: CompressedResource_Header): KaitaiStruct =
 parsed according to the type from the common part.
 
   ]##
-  if this.typeSpecificPartInst != nil:
+  if this.typeSpecificPartInstFlag:
     return this.typeSpecificPartInst
   let io = this.typeSpecificPartRawWithIo.io
   let pos = io.pos()
@@ -172,8 +175,8 @@ parsed according to the type from the common part.
       let typeSpecificPartInstExpr = CompressedResource_Header_TypeSpecificPartType9.read(io, this.root, this)
       this.typeSpecificPartInst = typeSpecificPartInstExpr
   io.seek(pos)
-  if this.typeSpecificPartInst != nil:
-    return this.typeSpecificPartInst
+  this.typeSpecificPartInstFlag = true
+  return this.typeSpecificPartInst
 
 proc fromFile*(_: typedesc[CompressedResource_Header], filename: string): CompressedResource_Header =
   CompressedResource_Header.read(newKaitaiFileStream(filename), nil, nil)
@@ -346,12 +349,12 @@ but decompressors don't always use the entirety of the field,
 so depending on the decompressor some parts of this field may be meaningless.
 
   ]##
-  if this.decompressorSpecificParametersInst.len != 0:
+  if this.decompressorSpecificParametersInstFlag:
     return this.decompressorSpecificParametersInst
   let decompressorSpecificParametersInstExpr = seq[byte](this.decompressorSpecificParametersWithIo.data)
   this.decompressorSpecificParametersInst = decompressorSpecificParametersInstExpr
-  if this.decompressorSpecificParametersInst.len != 0:
-    return this.decompressorSpecificParametersInst
+  this.decompressorSpecificParametersInstFlag = true
+  return this.decompressorSpecificParametersInst
 
 proc fromFile*(_: typedesc[CompressedResource_Header_TypeSpecificPartType9], filename: string): CompressedResource_Header_TypeSpecificPartType9 =
   CompressedResource_Header_TypeSpecificPartType9.read(newKaitaiFileStream(filename), nil, nil)

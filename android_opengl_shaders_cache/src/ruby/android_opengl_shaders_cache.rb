@@ -75,9 +75,9 @@ class AndroidOpenglShadersCache < Kaitai::Struct::Struct
       if version >= 3
         @build_id = PrefixedString.new(@_io, self, @_root)
       end
-      @entries = Array.new(num_entries)
+      @entries = []
       (num_entries).times { |i|
-        @entries[i] = Entry.new(@_io, self, @_root)
+        @entries << Entry.new(@_io, self, @_root)
       }
       self
     end

@@ -8,7 +8,7 @@
   } else {
     root.MonomakhSaprChg = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * CHG is a container format file used by
  * [MONOMAKH-SAPR](https://www.liraland.com/mono/index.php), a software

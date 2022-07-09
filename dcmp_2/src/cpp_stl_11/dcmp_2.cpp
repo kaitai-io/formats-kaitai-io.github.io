@@ -22,9 +22,8 @@ void dcmp_2_t::_read() {
     n_custom_lookup_table = true;
     if (header_parameters()->flags()->has_custom_lookup_table()) {
         n_custom_lookup_table = false;
-        int l_custom_lookup_table = header_parameters()->num_custom_lookup_table_entries();
         m_custom_lookup_table = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-        m_custom_lookup_table->reserve(l_custom_lookup_table);
+        const int l_custom_lookup_table = header_parameters()->num_custom_lookup_table_entries();
         for (int i = 0; i < l_custom_lookup_table; i++) {
             m_custom_lookup_table->push_back(std::move(m__io->read_bytes(2)));
         }
@@ -187,9 +186,8 @@ dcmp_2_t::tagged_data_t::chunk_t::chunk_t(kaitai::kstream* p__io, dcmp_2_t::tagg
 }
 
 void dcmp_2_t::tagged_data_t::chunk_t::_read() {
-    int l_tag = 8;
     m_tag = std::unique_ptr<std::vector<bool>>(new std::vector<bool>());
-    m_tag->reserve(l_tag);
+    const int l_tag = 8;
     for (int i = 0; i < l_tag; i++) {
         m_tag->push_back(std::move(m__io->read_bits_int_be(1)));
     }

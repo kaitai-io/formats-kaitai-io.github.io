@@ -47,7 +47,7 @@ sub fats {
     $self->{fats} = ();
     my $n_fats = $self->boot_sector()->bpb()->num_fats();
     for (my $i = 0; $i < $n_fats; $i++) {
-        $self->{fats}[$i] = $self->{_io}->read_bytes($self->boot_sector()->size_fat());
+        push @{$self->{fats}}, $self->{_io}->read_bytes($self->boot_sector()->size_fat());
     }
     $self->{_io}->seek($_pos);
     return $self->{fats};
@@ -619,7 +619,7 @@ sub _read {
     $self->{records} = ();
     my $n_records = $self->_root()->boot_sector()->bpb()->max_root_dir_rec();
     for (my $i = 0; $i < $n_records; $i++) {
-        $self->{records}[$i] = Vfat::RootDirectoryRec->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{records}}, Vfat::RootDirectoryRec->new($self->{_io}, $self, $self->{_root});
     }
 }
 

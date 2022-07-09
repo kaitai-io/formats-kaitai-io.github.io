@@ -80,12 +80,12 @@ namespace Kaitai
                 _pageSeqNum = m_io.ReadU4le();
                 _crc32 = m_io.ReadU4le();
                 _numSegments = m_io.ReadU1();
-                _lenSegments = new List<byte>((int) (NumSegments));
+                _lenSegments = new List<byte>();
                 for (var i = 0; i < NumSegments; i++)
                 {
                     _lenSegments.Add(m_io.ReadU1());
                 }
-                _segments = new List<byte[]>((int) (NumSegments));
+                _segments = new List<byte[]>();
                 for (var i = 0; i < NumSegments; i++)
                 {
                     _segments.Add(m_io.ReadBytes(LenSegments[i]));

@@ -587,7 +587,7 @@ sub _read {
     $self->{index} = ();
     my $n_index = $self->_root()->header()->header_main()->blocks_in_image();
     for (my $i = 0; $i < $n_index; $i++) {
-        $self->{index}[$i] = Vdi::BlocksMap::BlockIndex->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{index}}, Vdi::BlocksMap::BlockIndex->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -683,7 +683,7 @@ sub _read {
     $self->{blocks} = ();
     my $n_blocks = $self->_root()->header()->header_main()->blocks_in_image();
     for (my $i = 0; $i < $n_blocks; $i++) {
-        $self->{blocks}[$i] = Vdi::Disk::Block->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{blocks}}, Vdi::Disk::Block->new($self->{_io}, $self, $self->{_root});
     }
 }
 

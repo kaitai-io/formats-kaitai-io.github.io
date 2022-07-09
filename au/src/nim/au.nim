@@ -8,7 +8,8 @@ type
     `header`*: Au_Header
     `parent`*: KaitaiStruct
     `rawHeader`*: seq[byte]
-    `lenDataInst`*: int
+    `lenDataInst`: int
+    `lenDataInstFlag`: bool
   Au_Encodings* = enum
     mulaw_8 = 1
     linear_8 = 2
@@ -88,12 +89,12 @@ proc read*(_: typedesc[Au], io: KaitaiStream, root: KaitaiStruct, parent: Kaitai
   this.header = headerExpr
 
 proc lenData(this: Au): int = 
-  if this.lenDataInst != nil:
+  if this.lenDataInstFlag:
     return this.lenDataInst
   let lenDataInstExpr = int((if this.header.dataSize == 4294967295'i64: (this.io.size - this.ofsData) else: this.header.dataSize))
   this.lenDataInst = lenDataInstExpr
-  if this.lenDataInst != nil:
-    return this.lenDataInst
+  this.lenDataInstFlag = true
+  return this.lenDataInst
 
 proc fromFile*(_: typedesc[Au], filename: string): Au =
   Au.read(newKaitaiFileStream(filename), nil, nil)

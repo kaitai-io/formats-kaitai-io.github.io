@@ -8,7 +8,7 @@
   } else {
     root.QuakeMdl = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var QuakeMdl = (function() {
   function QuakeMdl(_io, _parent, _root) {
     this._io = _io;
@@ -19,21 +19,21 @@ var QuakeMdl = (function() {
   }
   QuakeMdl.prototype._read = function() {
     this.header = new MdlHeader(this._io, this, this._root);
-    this.skins = new Array(this.header.numSkins);
+    this.skins = [];
     for (var i = 0; i < this.header.numSkins; i++) {
-      this.skins[i] = new MdlSkin(this._io, this, this._root);
+      this.skins.push(new MdlSkin(this._io, this, this._root));
     }
-    this.textureCoordinates = new Array(this.header.numVerts);
+    this.textureCoordinates = [];
     for (var i = 0; i < this.header.numVerts; i++) {
-      this.textureCoordinates[i] = new MdlTexcoord(this._io, this, this._root);
+      this.textureCoordinates.push(new MdlTexcoord(this._io, this, this._root));
     }
-    this.triangles = new Array(this.header.numTris);
+    this.triangles = [];
     for (var i = 0; i < this.header.numTris; i++) {
-      this.triangles[i] = new MdlTriangle(this._io, this, this._root);
+      this.triangles.push(new MdlTriangle(this._io, this, this._root));
     }
-    this.frames = new Array(this.header.numFrames);
+    this.frames = [];
     for (var i = 0; i < this.header.numFrames; i++) {
-      this.frames[i] = new MdlFrame(this._io, this, this._root);
+      this.frames.push(new MdlFrame(this._io, this, this._root));
     }
   }
 
@@ -46,9 +46,9 @@ var QuakeMdl = (function() {
       this._read();
     }
     MdlVertex.prototype._read = function() {
-      this.values = new Array(3);
+      this.values = [];
       for (var i = 0; i < 3; i++) {
-        this.values[i] = this._io.readU1();
+        this.values.push(this._io.readU1());
       }
       this.normalIndex = this._io.readU1();
     }
@@ -141,15 +141,15 @@ var QuakeMdl = (function() {
         this.numFrames = this._io.readU4le();
       }
       if (this.group != 0) {
-        this.frameTimes = new Array(this.numFrames);
+        this.frameTimes = [];
         for (var i = 0; i < this.numFrames; i++) {
-          this.frameTimes[i] = this._io.readF4le();
+          this.frameTimes.push(this._io.readF4le());
         }
       }
       if (this.group != 0) {
-        this.groupTextureData = new Array(this.numFrames);
+        this.groupTextureData = [];
         for (var i = 0; i < this.numFrames; i++) {
-          this.groupTextureData[i] = this._io.readBytes(this._root.header.skinSize);
+          this.groupTextureData.push(this._io.readBytes(this._root.header.skinSize));
         }
       }
     }
@@ -174,14 +174,14 @@ var QuakeMdl = (function() {
         this.max = new MdlVertex(this._io, this, this._root);
       }
       if (this.type != 0) {
-        this.time = new Array(this.type);
+        this.time = [];
         for (var i = 0; i < this.type; i++) {
-          this.time[i] = this._io.readF4le();
+          this.time.push(this._io.readF4le());
         }
       }
-      this.frames = new Array(this.numSimpleFrames);
+      this.frames = [];
       for (var i = 0; i < this.numSimpleFrames; i++) {
-        this.frames[i] = new MdlSimpleFrame(this._io, this, this._root);
+        this.frames.push(new MdlSimpleFrame(this._io, this, this._root));
       }
     }
     Object.defineProperty(MdlFrame.prototype, 'numSimpleFrames', {
@@ -208,9 +208,9 @@ var QuakeMdl = (function() {
       this.bboxMin = new MdlVertex(this._io, this, this._root);
       this.bboxMax = new MdlVertex(this._io, this, this._root);
       this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(16), 0), 0, false), "ASCII");
-      this.vertices = new Array(this._root.header.numVerts);
+      this.vertices = [];
       for (var i = 0; i < this._root.header.numVerts; i++) {
-        this.vertices[i] = new MdlVertex(this._io, this, this._root);
+        this.vertices.push(new MdlVertex(this._io, this, this._root));
       }
     }
 
@@ -227,9 +227,9 @@ var QuakeMdl = (function() {
     }
     MdlTriangle.prototype._read = function() {
       this.facesFront = this._io.readS4le();
-      this.vertices = new Array(3);
+      this.vertices = [];
       for (var i = 0; i < 3; i++) {
-        this.vertices[i] = this._io.readS4le();
+        this.vertices.push(this._io.readS4le());
       }
     }
 

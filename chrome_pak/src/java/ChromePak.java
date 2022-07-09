@@ -63,11 +63,11 @@ public class ChromePak extends KaitaiStruct {
         if (version() == 5) {
             this.v5Part = new HeaderV5Part(this._io, this, _root);
         }
-        resources = new ArrayList<Resource>(((Number) ((numResources() + 1))).intValue());
+        this.resources = new ArrayList<Resource>();
         for (int i = 0; i < (numResources() + 1); i++) {
             this.resources.add(new Resource(this._io, this, _root, i, i < numResources()));
         }
-        aliases = new ArrayList<Alias>(((Number) (numAliases())).intValue());
+        this.aliases = new ArrayList<Alias>();
         for (int i = 0; i < numAliases(); i++) {
             this.aliases.add(new Alias(this._io, this, _root));
         }

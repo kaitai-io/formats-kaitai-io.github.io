@@ -137,8 +137,8 @@ public class VmwareVmdk extends KaitaiStruct {
         if (this.descriptor != null)
             return this.descriptor;
         long _pos = this._io.pos();
-        this._io.seek((startDescriptor() * _root.lenSector()));
-        this.descriptor = this._io.readBytes((sizeDescriptor() * _root.lenSector()));
+        this._io.seek((startDescriptor() * _root().lenSector()));
+        this.descriptor = this._io.readBytes((sizeDescriptor() * _root().lenSector()));
         this._io.seek(_pos);
         return this.descriptor;
     }
@@ -147,8 +147,8 @@ public class VmwareVmdk extends KaitaiStruct {
         if (this.grainPrimary != null)
             return this.grainPrimary;
         long _pos = this._io.pos();
-        this._io.seek((startPrimaryGrain() * _root.lenSector()));
-        this.grainPrimary = this._io.readBytes((sizeGrain() * _root.lenSector()));
+        this._io.seek((startPrimaryGrain() * _root().lenSector()));
+        this.grainPrimary = this._io.readBytes((sizeGrain() * _root().lenSector()));
         this._io.seek(_pos);
         return this.grainPrimary;
     }
@@ -157,8 +157,8 @@ public class VmwareVmdk extends KaitaiStruct {
         if (this.grainSecondary != null)
             return this.grainSecondary;
         long _pos = this._io.pos();
-        this._io.seek((startSecondaryGrain() * _root.lenSector()));
-        this.grainSecondary = this._io.readBytes((sizeGrain() * _root.lenSector()));
+        this._io.seek((startSecondaryGrain() * _root().lenSector()));
+        this.grainSecondary = this._io.readBytes((sizeGrain() * _root().lenSector()));
         this._io.seek(_pos);
         return this.grainSecondary;
     }

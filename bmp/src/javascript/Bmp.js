@@ -8,7 +8,7 @@
   } else {
     root.Bmp = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The **BMP file format**, also known as **bitmap image file** or **device independent
  * bitmap (DIB) file format** or simply a **bitmap**, is a raster graphics image file
@@ -648,9 +648,9 @@ var Bmp = (function() {
       this._read();
     }
     ColorTable.prototype._read = function() {
-      this.colors = new Array(( ((this.numColors > 0) && (this.numColors < this.numColorsPresent))  ? this.numColors : this.numColorsPresent));
+      this.colors = [];
       for (var i = 0; i < ( ((this.numColors > 0) && (this.numColors < this.numColorsPresent))  ? this.numColors : this.numColorsPresent); i++) {
-        this.colors[i] = new RgbRecord(this._io, this, this._root, this.hasReservedField);
+        this.colors.push(new RgbRecord(this._io, this, this._root, this.hasReservedField));
       }
     }
     Object.defineProperty(ColorTable.prototype, 'numColorsPresent', {

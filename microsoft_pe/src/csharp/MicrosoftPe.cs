@@ -427,7 +427,7 @@ namespace Kaitai
                 __raw_optionalHdr = m_io.ReadBytes(CoffHdr.SizeOfOptionalHeader);
                 var io___raw_optionalHdr = new KaitaiStream(__raw_optionalHdr);
                 _optionalHdr = new OptionalHeader(io___raw_optionalHdr, this, m_root);
-                _sections = new List<Section>((int) (CoffHdr.NumberOfSections));
+                _sections = new List<Section>();
                 for (var i = 0; i < CoffHdr.NumberOfSections; i++)
                 {
                     _sections.Add(new Section(m_io, this, m_root));
@@ -800,7 +800,7 @@ namespace Kaitai
                         return _symbolTable;
                     long _pos = m_io.Pos;
                     m_io.Seek(PointerToSymbolTable);
-                    _symbolTable = new List<CoffSymbol>((int) (NumberOfSymbols));
+                    _symbolTable = new List<CoffSymbol>();
                     for (var i = 0; i < NumberOfSymbols; i++)
                     {
                         _symbolTable.Add(new CoffSymbol(m_io, this, m_root));

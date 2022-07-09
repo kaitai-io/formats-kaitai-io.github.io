@@ -8,7 +8,7 @@
   } else {
     root.MinecraftNbt = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A structured binary format native to Minecraft for saving game data and transferring
  * it over the network (in multiplayer), such as player data
@@ -138,9 +138,9 @@ var MinecraftNbt = (function() {
     }
     TagLongArray.prototype._read = function() {
       this.numTags = this._io.readS4be();
-      this.tags = new Array(this.numTags);
+      this.tags = [];
       for (var i = 0; i < this.numTags; i++) {
-        this.tags[i] = this._io.readS8be();
+        this.tags.push(this._io.readS8be());
       }
     }
     Object.defineProperty(TagLongArray.prototype, 'tagsType', {
@@ -181,9 +181,9 @@ var MinecraftNbt = (function() {
     }
     TagIntArray.prototype._read = function() {
       this.numTags = this._io.readS4be();
-      this.tags = new Array(this.numTags);
+      this.tags = [];
       for (var i = 0; i < this.numTags; i++) {
-        this.tags[i] = this._io.readS4be();
+        this.tags.push(this._io.readS4be());
       }
     }
     Object.defineProperty(TagIntArray.prototype, 'tagsType', {
@@ -209,44 +209,44 @@ var MinecraftNbt = (function() {
     TagList.prototype._read = function() {
       this.tagsType = this._io.readU1();
       this.numTags = this._io.readS4be();
-      this.tags = new Array(this.numTags);
+      this.tags = [];
       for (var i = 0; i < this.numTags; i++) {
         switch (this.tagsType) {
         case MinecraftNbt.Tag.LONG_ARRAY:
-          this.tags[i] = new TagLongArray(this._io, this, this._root);
+          this.tags.push(new TagLongArray(this._io, this, this._root));
           break;
         case MinecraftNbt.Tag.COMPOUND:
-          this.tags[i] = new TagCompound(this._io, this, this._root);
+          this.tags.push(new TagCompound(this._io, this, this._root));
           break;
         case MinecraftNbt.Tag.DOUBLE:
-          this.tags[i] = this._io.readF8be();
+          this.tags.push(this._io.readF8be());
           break;
         case MinecraftNbt.Tag.LIST:
-          this.tags[i] = new TagList(this._io, this, this._root);
+          this.tags.push(new TagList(this._io, this, this._root));
           break;
         case MinecraftNbt.Tag.FLOAT:
-          this.tags[i] = this._io.readF4be();
+          this.tags.push(this._io.readF4be());
           break;
         case MinecraftNbt.Tag.SHORT:
-          this.tags[i] = this._io.readS2be();
+          this.tags.push(this._io.readS2be());
           break;
         case MinecraftNbt.Tag.INT:
-          this.tags[i] = this._io.readS4be();
+          this.tags.push(this._io.readS4be());
           break;
         case MinecraftNbt.Tag.BYTE_ARRAY:
-          this.tags[i] = new TagByteArray(this._io, this, this._root);
+          this.tags.push(new TagByteArray(this._io, this, this._root));
           break;
         case MinecraftNbt.Tag.BYTE:
-          this.tags[i] = this._io.readS1();
+          this.tags.push(this._io.readS1());
           break;
         case MinecraftNbt.Tag.INT_ARRAY:
-          this.tags[i] = new TagIntArray(this._io, this, this._root);
+          this.tags.push(new TagIntArray(this._io, this, this._root));
           break;
         case MinecraftNbt.Tag.STRING:
-          this.tags[i] = new TagString(this._io, this, this._root);
+          this.tags.push(new TagString(this._io, this, this._root));
           break;
         case MinecraftNbt.Tag.LONG:
-          this.tags[i] = this._io.readS8be();
+          this.tags.push(this._io.readS8be());
           break;
         }
       }
@@ -284,7 +284,7 @@ var MinecraftNbt = (function() {
       this._read();
     }
     TagCompound.prototype._read = function() {
-      this.tags = []
+      this.tags = [];
       var i = 0;
       do {
         var _ = new NamedTag(this._io, this, this._root);

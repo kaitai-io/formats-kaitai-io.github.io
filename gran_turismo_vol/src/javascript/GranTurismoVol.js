@@ -8,7 +8,7 @@
   } else {
     root.GranTurismoVol = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var GranTurismoVol = (function() {
   function GranTurismoVol(_io, _parent, _root) {
     this._io = _io;
@@ -28,9 +28,9 @@ var GranTurismoVol = (function() {
     if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0]) == 0))) {
       throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.reserved, this._io, "/seq/3");
     }
-    this.offsets = new Array(this.numFiles);
+    this.offsets = [];
     for (var i = 0; i < this.numFiles; i++) {
-      this.offsets[i] = this._io.readU4le();
+      this.offsets.push(this._io.readU4le());
     }
   }
 
@@ -102,9 +102,9 @@ var GranTurismoVol = (function() {
         return this._m_files;
       var _pos = this._io.pos;
       this._io.seek((this.ofsDir & 4294965248));
-      this._m_files = new Array(this._root.numEntries);
+      this._m_files = [];
       for (var i = 0; i < this._root.numEntries; i++) {
-        this._m_files[i] = new FileInfo(this._io, this, this._root);
+        this._m_files.push(new FileInfo(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_files;

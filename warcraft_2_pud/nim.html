@@ -444,7 +444,8 @@ features got limited support in v1.3).</p>
     <span class="p">`</span><span class="n">owner</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">options</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_SectionUnit</span>
-    <span class="p">`</span><span class="n">resourceInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">resourceInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">resourceInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Warcraft2Pud</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource</span>
@@ -742,13 +743,13 @@ features got limited support in v1.3).</p>
   <span class="n">this</span><span class="p">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">optionsExpr</span>
 
 <span class="k">proc </span><span class="nf">resource</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Warcraft2Pud_Unit</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
   <span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">gold_mine</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">human_oil_well</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">orc_oil_well</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">oil_patch</span><span class="p">))</span> <span class="p">:</span>
     <span class="k">let</span> <span class="n">resourceInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">options</span> <span class="o">*</span> <span class="mi">2500</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span> <span class="o">=</span> <span class="n">resourceInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Unit], filename: string): Warcraft2Pud_Unit =</span>
   <span class="n">Warcraft2Pud_Unit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

@@ -52,12 +52,12 @@ class EfivarSignatureList < Kaitai::Struct::Struct
       @len_signature = @_io.read_u4le
       @header = @_io.read_bytes(len_signature_header)
       if len_signature > 0
-        @_raw_signatures = Array.new((((len_signature_list - len_signature_header) - 28) / len_signature))
-        @signatures = Array.new((((len_signature_list - len_signature_header) - 28) / len_signature))
+        @_raw_signatures = []
+        @signatures = []
         ((((len_signature_list - len_signature_header) - 28) / len_signature)).times { |i|
-          @_raw_signatures[i] = @_io.read_bytes(len_signature)
+          @_raw_signatures << @_io.read_bytes(len_signature)
           _io__raw_signatures = Kaitai::Struct::Stream.new(@_raw_signatures[i])
-          @signatures[i] = SignatureData.new(_io__raw_signatures, self, @_root)
+          @signatures << SignatureData.new(_io__raw_signatures, self, @_root)
         }
       end
       self

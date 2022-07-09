@@ -6,7 +6,8 @@ type
     `hdr`*: BlenderBlend_Header
     `blocks`*: seq[BlenderBlend_FileBlock]
     `parent`*: KaitaiStruct
-    `sdnaStructsInst`*: seq[BlenderBlend_DnaStruct]
+    `sdnaStructsInst`: seq[BlenderBlend_DnaStruct]
+    `sdnaStructsInstFlag`: bool
   BlenderBlend_PtrSize* = enum
     bits_64 = 45
     bits_32 = 95
@@ -18,7 +19,8 @@ type
     `numFields`*: uint16
     `fields`*: seq[BlenderBlend_DnaField]
     `parent`*: BlenderBlend_Dna1Body
-    `typeInst`*: string
+    `typeInst`: string
+    `typeInstFlag`: bool
   BlenderBlend_FileBlock* = ref object of KaitaiStruct
     `code`*: string
     `lenBody`*: uint32
@@ -28,7 +30,8 @@ type
     `body`*: KaitaiStruct
     `parent`*: BlenderBlend
     `rawBody`*: seq[byte]
-    `sdnaStructInst`*: BlenderBlend_DnaStruct
+    `sdnaStructInst`: BlenderBlend_DnaStruct
+    `sdnaStructInstFlag`: bool
   BlenderBlend_Dna1Body* = ref object of KaitaiStruct
     `id`*: seq[byte]
     `nameMagic`*: seq[byte]
@@ -52,13 +55,16 @@ type
     `endian`*: BlenderBlend_Endian
     `version`*: string
     `parent`*: BlenderBlend
-    `psizeInst`*: int8
+    `psizeInst`: int8
+    `psizeInstFlag`: bool
   BlenderBlend_DnaField* = ref object of KaitaiStruct
     `idxType`*: uint16
     `idxName`*: uint16
     `parent`*: BlenderBlend_DnaStruct
-    `typeInst`*: string
-    `nameInst`*: string
+    `typeInst`: string
+    `typeInstFlag`: bool
+    `nameInst`: string
+    `nameInstFlag`: bool
 
 proc read*(_: typedesc[BlenderBlend], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BlenderBlend
 proc read*(_: typedesc[BlenderBlend_DnaStruct], io: KaitaiStream, root: KaitaiStruct, parent: BlenderBlend_Dna1Body): BlenderBlend_DnaStruct
@@ -108,12 +114,12 @@ proc read*(_: typedesc[BlenderBlend], io: KaitaiStream, root: KaitaiStruct, pare
       inc i
 
 proc sdnaStructs(this: BlenderBlend): seq[BlenderBlend_DnaStruct] = 
-  if this.sdnaStructsInst.len != 0:
+  if this.sdnaStructsInstFlag:
     return this.sdnaStructsInst
   let sdnaStructsInstExpr = seq[BlenderBlend_DnaStruct]((BlenderBlend_Dna1Body(this.blocks[(len(this.blocks) - 2)].body)).structs)
   this.sdnaStructsInst = sdnaStructsInstExpr
-  if this.sdnaStructsInst.len != 0:
-    return this.sdnaStructsInst
+  this.sdnaStructsInstFlag = true
+  return this.sdnaStructsInst
 
 proc fromFile*(_: typedesc[BlenderBlend], filename: string): BlenderBlend =
   BlenderBlend.read(newKaitaiFileStream(filename), nil, nil)
@@ -141,12 +147,12 @@ proc read*(_: typedesc[BlenderBlend_DnaStruct], io: KaitaiStream, root: KaitaiSt
     this.fields.add(it)
 
 proc type(this: BlenderBlend_DnaStruct): string = 
-  if this.typeInst.len != 0:
+  if this.typeInstFlag:
     return this.typeInst
   let typeInstExpr = string(this.parent.types[this.idxType])
   this.typeInst = typeInstExpr
-  if this.typeInst.len != 0:
-    return this.typeInst
+  this.typeInstFlag = true
+  return this.typeInst
 
 proc fromFile*(_: typedesc[BlenderBlend_DnaStruct], filename: string): BlenderBlend_DnaStruct =
   BlenderBlend_DnaStruct.read(newKaitaiFileStream(filename), nil, nil)
@@ -202,13 +208,13 @@ proc read*(_: typedesc[BlenderBlend_FileBlock], io: KaitaiStream, root: KaitaiSt
       this.body = bodyExpr
 
 proc sdnaStruct(this: BlenderBlend_FileBlock): BlenderBlend_DnaStruct = 
-  if this.sdnaStructInst != nil:
+  if this.sdnaStructInstFlag:
     return this.sdnaStructInst
   if this.sdnaIndex != 0:
     let sdnaStructInstExpr = BlenderBlend_DnaStruct(BlenderBlend(this.root).sdnaStructs[this.sdnaIndex])
     this.sdnaStructInst = sdnaStructInstExpr
-  if this.sdnaStructInst != nil:
-    return this.sdnaStructInst
+  this.sdnaStructInstFlag = true
+  return this.sdnaStructInst
 
 proc fromFile*(_: typedesc[BlenderBlend_FileBlock], filename: string): BlenderBlend_FileBlock =
   BlenderBlend_FileBlock.read(newKaitaiFileStream(filename), nil, nil)
@@ -309,12 +315,12 @@ proc psize(this: BlenderBlend_Header): int8 =
   ##[
   Number of bytes that a pointer occupies
   ]##
-  if this.psizeInst != nil:
+  if this.psizeInstFlag:
     return this.psizeInst
   let psizeInstExpr = int8((if this.ptrSizeId == blender_blend.bits_64: 8 else: 4))
   this.psizeInst = psizeInstExpr
-  if this.psizeInst != nil:
-    return this.psizeInst
+  this.psizeInstFlag = true
+  return this.psizeInst
 
 proc fromFile*(_: typedesc[BlenderBlend_Header], filename: string): BlenderBlend_Header =
   BlenderBlend_Header.read(newKaitaiFileStream(filename), nil, nil)
@@ -333,20 +339,20 @@ proc read*(_: typedesc[BlenderBlend_DnaField], io: KaitaiStream, root: KaitaiStr
   this.idxName = idxNameExpr
 
 proc type(this: BlenderBlend_DnaField): string = 
-  if this.typeInst.len != 0:
+  if this.typeInstFlag:
     return this.typeInst
   let typeInstExpr = string(this.parent.parent.types[this.idxType])
   this.typeInst = typeInstExpr
-  if this.typeInst.len != 0:
-    return this.typeInst
+  this.typeInstFlag = true
+  return this.typeInst
 
 proc name(this: BlenderBlend_DnaField): string = 
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   let nameInstExpr = string(this.parent.parent.names[this.idxName])
   this.nameInst = nameInstExpr
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc fromFile*(_: typedesc[BlenderBlend_DnaField], filename: string): BlenderBlend_DnaField =
   BlenderBlend_DnaField.read(newKaitaiFileStream(filename), nil, nil)

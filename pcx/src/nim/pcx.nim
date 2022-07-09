@@ -6,7 +6,8 @@ type
     `hdr`*: Pcx_Header
     `parent`*: KaitaiStruct
     `rawHdr`*: seq[byte]
-    `palette256Inst`*: Pcx_TPalette256
+    `palette256Inst`: Pcx_TPalette256
+    `palette256InstFlag`: bool
   Pcx_Versions* = enum
     v2_5 = 0
     v2_8_with_palette = 2
@@ -89,7 +90,7 @@ proc palette256(this: Pcx): Pcx_TPalette256 =
   ##[
   @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
   ]##
-  if this.palette256Inst != nil:
+  if this.palette256InstFlag:
     return this.palette256Inst
   if  ((this.hdr.version == pcx.v3_0) and (this.hdr.bitsPerPixel == 8) and (this.hdr.numPlanes == 1)) :
     let pos = this.io.pos()
@@ -97,8 +98,8 @@ proc palette256(this: Pcx): Pcx_TPalette256 =
     let palette256InstExpr = Pcx_TPalette256.read(this.io, this.root, this)
     this.palette256Inst = palette256InstExpr
     this.io.seek(pos)
-  if this.palette256Inst != nil:
-    return this.palette256Inst
+  this.palette256InstFlag = true
+  return this.palette256Inst
 
 proc fromFile*(_: typedesc[Pcx], filename: string): Pcx =
   Pcx.read(newKaitaiFileStream(filename), nil, nil)

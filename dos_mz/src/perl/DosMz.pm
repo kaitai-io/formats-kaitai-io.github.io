@@ -49,7 +49,7 @@ sub relocations {
         $self->{relocations} = ();
         my $n_relocations = $self->header()->mz()->num_relocations();
         for (my $i = 0; $i < $n_relocations; $i++) {
-            $self->{relocations}[$i] = DosMz::Relocation->new($io, $self, $self->{_root});
+            push @{$self->{relocations}}, DosMz::Relocation->new($io, $self, $self->{_root});
         }
         $io->seek($_pos);
     }

@@ -991,7 +991,7 @@ sub _read {
     $self->{cue_points} = ();
     my $n_cue_points = $self->dw_cue_points();
     for (my $i = 0; $i < $n_cue_points; $i++) {
-        $self->{cue_points}[$i] = Wav::CuePointType->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{cue_points}}, Wav::CuePointType->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -35,7 +35,7 @@ namespace Kaitai
                 throw new ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, Magic, M_Io, "/seq/0");
             }
             _numImages = m_io.ReadU2le();
-            _images = new List<IconDirEntry>((int) (NumImages));
+            _images = new List<IconDirEntry>();
             for (var i = 0; i < NumImages; i++)
             {
                 _images.Add(new IconDirEntry(m_io, this, m_root));

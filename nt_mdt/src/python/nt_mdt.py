@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class NtMdt(KaitaiStruct):
@@ -200,9 +199,9 @@ class NtMdt(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.data = [None] * (16)
+            self.data = []
             for i in range(16):
-                self.data[i] = self._io.read_u1()
+                self.data.append(self._io.read_u1())
 
 
 
@@ -214,9 +213,9 @@ class NtMdt(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.frames = [None] * ((self._root.last_frame + 1))
+            self.frames = []
             for i in range((self._root.last_frame + 1)):
-                self.frames[i] = NtMdt.Frame(self._io, self, self._root)
+                self.frames.append(NtMdt.Frame(self._io, self, self._root))
 
 
 
@@ -255,13 +254,13 @@ class NtMdt(KaitaiStruct):
                 if self.fm_ndots > 0:
                     self.coord_header = NtMdt.Frame.Dots.DotsHeader(self._io, self, self._root)
 
-                self.coordinates = [None] * (self.fm_ndots)
+                self.coordinates = []
                 for i in range(self.fm_ndots):
-                    self.coordinates[i] = NtMdt.Frame.Dots.DotsData(self._io, self, self._root)
+                    self.coordinates.append(NtMdt.Frame.Dots.DotsData(self._io, self, self._root))
 
-                self.data = [None] * (self.fm_ndots)
+                self.data = []
                 for i in range(self.fm_ndots):
-                    self.data[i] = NtMdt.Frame.Dots.DataLinez(i, self._io, self, self._root)
+                    self.data.append(NtMdt.Frame.Dots.DataLinez(i, self._io, self, self._root))
 
 
             class DotsHeader(KaitaiStruct):
@@ -314,13 +313,13 @@ class NtMdt(KaitaiStruct):
                     self._read()
 
                 def _read(self):
-                    self.forward = [None] * (self._parent.coordinates[self.index].forward_size)
+                    self.forward = []
                     for i in range(self._parent.coordinates[self.index].forward_size):
-                        self.forward[i] = self._io.read_s2le()
+                        self.forward.append(self._io.read_s2le())
 
-                    self.backward = [None] * (self._parent.coordinates[self.index].backward_size)
+                    self.backward = []
                     for i in range(self._parent.coordinates[self.index].backward_size):
-                        self.backward[i] = self._io.read_s2le()
+                        self.backward.append(self._io.read_s2le())
 
 
 
@@ -371,17 +370,17 @@ class NtMdt(KaitaiStruct):
 
             def _read(self):
                 self.block_count = self._io.read_u4le()
-                self.blocks_headers = [None] * (self.block_count)
+                self.blocks_headers = []
                 for i in range(self.block_count):
-                    self.blocks_headers[i] = NtMdt.Frame.FdCurvesNew.BlockDescr(self._io, self, self._root)
+                    self.blocks_headers.append(NtMdt.Frame.FdCurvesNew.BlockDescr(self._io, self, self._root))
 
-                self.blocks_names = [None] * (self.block_count)
+                self.blocks_names = []
                 for i in range(self.block_count):
-                    self.blocks_names[i] = (self._io.read_bytes(self.blocks_headers[i].name_len)).decode(u"UTF-8")
+                    self.blocks_names.append((self._io.read_bytes(self.blocks_headers[i].name_len)).decode(u"UTF-8"))
 
-                self.blocks_data = [None] * (self.block_count)
+                self.blocks_data = []
                 for i in range(self.block_count):
-                    self.blocks_data[i] = self._io.read_bytes(self.blocks_headers[i].len)
+                    self.blocks_data.append(self._io.read_bytes(self.blocks_headers[i].len))
 
 
             class BlockDescr(KaitaiStruct):
@@ -407,9 +406,9 @@ class NtMdt(KaitaiStruct):
             def _read(self):
                 self.head_size = self._io.read_u4le()
                 self.tot_len = self._io.read_u4le()
-                self.guids = [None] * (2)
+                self.guids = []
                 for i in range(2):
-                    self.guids[i] = NtMdt.Uuid(self._io, self, self._root)
+                    self.guids.append(NtMdt.Uuid(self._io, self, self._root))
 
                 self.frame_status = self._io.read_bytes(4)
                 self.name_size = self._io.read_u4le()
@@ -427,13 +426,13 @@ class NtMdt(KaitaiStruct):
                 self.cell_size = self._io.read_u4le()
                 self.n_dimensions = self._io.read_u4le()
                 self.n_mesurands = self._io.read_u4le()
-                self.dimensions = [None] * (self.n_dimensions)
+                self.dimensions = []
                 for i in range(self.n_dimensions):
-                    self.dimensions[i] = NtMdt.Frame.FdMetaData.Calibration(self._io, self, self._root)
+                    self.dimensions.append(NtMdt.Frame.FdMetaData.Calibration(self._io, self, self._root))
 
-                self.mesurands = [None] * (self.n_mesurands)
+                self.mesurands = []
                 for i in range(self.n_mesurands):
-                    self.mesurands[i] = NtMdt.Frame.FdMetaData.Calibration(self._io, self, self._root)
+                    self.mesurands.append(NtMdt.Frame.FdMetaData.Calibration(self._io, self, self._root))
 
 
             class Image(KaitaiStruct):
@@ -459,29 +458,29 @@ class NtMdt(KaitaiStruct):
                         self._read()
 
                     def _read(self):
-                        self.items = [None] * (self._parent._parent.n_mesurands)
+                        self.items = []
                         for i in range(self._parent._parent.n_mesurands):
                             _on = self._parent._parent.mesurands[i].data_type
                             if _on == NtMdt.DataType.uint64:
-                                self.items[i] = self._io.read_u8le()
+                                self.items.append(self._io.read_u8le())
                             elif _on == NtMdt.DataType.uint8:
-                                self.items[i] = self._io.read_u1()
+                                self.items.append(self._io.read_u1())
                             elif _on == NtMdt.DataType.float32:
-                                self.items[i] = self._io.read_f4le()
+                                self.items.append(self._io.read_f4le())
                             elif _on == NtMdt.DataType.int8:
-                                self.items[i] = self._io.read_s1()
+                                self.items.append(self._io.read_s1())
                             elif _on == NtMdt.DataType.uint16:
-                                self.items[i] = self._io.read_u2le()
+                                self.items.append(self._io.read_u2le())
                             elif _on == NtMdt.DataType.int64:
-                                self.items[i] = self._io.read_s8le()
+                                self.items.append(self._io.read_s8le())
                             elif _on == NtMdt.DataType.uint32:
-                                self.items[i] = self._io.read_u4le()
+                                self.items.append(self._io.read_u4le())
                             elif _on == NtMdt.DataType.float64:
-                                self.items[i] = self._io.read_f8le()
+                                self.items.append(self._io.read_f8le())
                             elif _on == NtMdt.DataType.int16:
-                                self.items[i] = self._io.read_s2le()
+                                self.items.append(self._io.read_s2le())
                             elif _on == NtMdt.DataType.int32:
-                                self.items[i] = self._io.read_s4le()
+                                self.items.append(self._io.read_s4le())
 
 
 
@@ -516,16 +515,16 @@ class NtMdt(KaitaiStruct):
                 @property
                 def count(self):
                     if hasattr(self, '_m_count'):
-                        return self._m_count if hasattr(self, '_m_count') else None
+                        return self._m_count
 
                     self._m_count = ((self.max_index - self.min_index) + 1)
-                    return self._m_count if hasattr(self, '_m_count') else None
+                    return getattr(self, '_m_count', None)
 
 
             @property
             def image(self):
                 if hasattr(self, '_m_image'):
-                    return self._m_image if hasattr(self, '_m_image') else None
+                    return self._m_image
 
                 _pos = self._io.pos()
                 self._io.seek(self.data_offset)
@@ -533,7 +532,7 @@ class NtMdt(KaitaiStruct):
                 _io__raw__m_image = KaitaiStream(BytesIO(self._raw__m_image))
                 self._m_image = NtMdt.Frame.FdMetaData.Image(_io__raw__m_image, self, self._root)
                 self._io.seek(_pos)
-                return self._m_image if hasattr(self, '_m_image') else None
+                return getattr(self, '_m_image', None)
 
 
         class FdSpectroscopy(KaitaiStruct):
@@ -551,9 +550,9 @@ class NtMdt(KaitaiStruct):
                 self.fm_xres = self._io.read_u2le()
                 self.fm_yres = self._io.read_u2le()
                 self.dots = NtMdt.Frame.Dots(self._io, self, self._root)
-                self.data = [None] * ((self.fm_xres * self.fm_yres))
+                self.data = []
                 for i in range((self.fm_xres * self.fm_yres)):
-                    self.data[i] = self._io.read_s2le()
+                    self.data.append(self._io.read_s2le())
 
                 self.title = NtMdt.Title(self._io, self, self._root)
                 self.xml = NtMdt.Xml(self._io, self, self._root)
@@ -687,9 +686,9 @@ class NtMdt(KaitaiStruct):
                 self.fm_xres = self._io.read_u2le()
                 self.fm_yres = self._io.read_u2le()
                 self.dots = NtMdt.Frame.Dots(self._io, self, self._root)
-                self.image = [None] * ((self.fm_xres * self.fm_yres))
+                self.image = []
                 for i in range((self.fm_xres * self.fm_yres)):
-                    self.image[i] = self._io.read_s2le()
+                    self.image.append(self._io.read_s2le())
 
                 self.title = NtMdt.Title(self._io, self, self._root)
                 self.xml = NtMdt.Xml(self._io, self, self._root)

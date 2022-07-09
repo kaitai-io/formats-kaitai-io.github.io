@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AllegroDat(KaitaiStruct):
@@ -40,9 +39,9 @@ class AllegroDat(KaitaiStruct):
         if not self.dat_magic == b"\x41\x4C\x4C\x2E":
             raise kaitaistruct.ValidationNotEqualError(b"\x41\x4C\x4C\x2E", self.dat_magic, self._io, u"/seq/1")
         self.num_objects = self._io.read_u4be()
-        self.objects = [None] * (self.num_objects)
+        self.objects = []
         for i in range(self.num_objects):
-            self.objects[i] = AllegroDat.DatObject(self._io, self, self._root)
+            self.objects.append(AllegroDat.DatObject(self._io, self, self._root))
 
 
     class DatFont16(KaitaiStruct):
@@ -56,9 +55,9 @@ class AllegroDat(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.chars = [None] * (95)
+            self.chars = []
             for i in range(95):
-                self.chars[i] = self._io.read_bytes(16)
+                self.chars.append(self._io.read_bytes(16))
 
 
 
@@ -105,9 +104,9 @@ class AllegroDat(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.chars = [None] * (95)
+            self.chars = []
             for i in range(95):
-                self.chars[i] = self._io.read_bytes(8)
+                self.chars.append(self._io.read_bytes(8))
 
 
 
@@ -148,10 +147,10 @@ class AllegroDat(KaitaiStruct):
         @property
         def type(self):
             if hasattr(self, '_m_type'):
-                return self._m_type if hasattr(self, '_m_type') else None
+                return self._m_type
 
             self._m_type = self.properties[-1].magic
-            return self._m_type if hasattr(self, '_m_type') else None
+            return getattr(self, '_m_type', None)
 
 
     class DatFont39(KaitaiStruct):
@@ -167,9 +166,9 @@ class AllegroDat(KaitaiStruct):
 
         def _read(self):
             self.num_ranges = self._io.read_s2be()
-            self.ranges = [None] * (self.num_ranges)
+            self.ranges = []
             for i in range(self.num_ranges):
-                self.ranges[i] = AllegroDat.DatFont39.Range(self._io, self, self._root)
+                self.ranges.append(AllegroDat.DatFont39.Range(self._io, self, self._root))
 
 
         class Range(KaitaiStruct):
@@ -183,9 +182,9 @@ class AllegroDat(KaitaiStruct):
                 self.mono = self._io.read_u1()
                 self.start_char = self._io.read_u4be()
                 self.end_char = self._io.read_u4be()
-                self.chars = [None] * (((self.end_char - self.start_char) + 1))
+                self.chars = []
                 for i in range(((self.end_char - self.start_char) + 1)):
-                    self.chars[i] = AllegroDat.DatFont39.FontChar(self._io, self, self._root)
+                    self.chars.append(AllegroDat.DatFont39.FontChar(self._io, self, self._root))
 
 
 
@@ -225,10 +224,10 @@ class AllegroDat(KaitaiStruct):
         @property
         def is_valid(self):
             if hasattr(self, '_m_is_valid'):
-                return self._m_is_valid if hasattr(self, '_m_is_valid') else None
+                return self._m_is_valid
 
             self._m_is_valid = self.magic == u"prop"
-            return self._m_is_valid if hasattr(self, '_m_is_valid') else None
+            return getattr(self, '_m_is_valid', None)
 
 
     class DatRleSprite(KaitaiStruct):

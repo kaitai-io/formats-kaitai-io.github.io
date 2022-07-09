@@ -314,9 +314,8 @@ swf_t::symbol_class_body_t::symbol_class_body_t(kaitai::kstream* p__io, swf_t::t
 
 void swf_t::symbol_class_body_t::_read() {
     m_num_symbols = m__io->read_u2le();
-    int l_symbols = num_symbols();
     m_symbols = new std::vector<symbol_t*>();
-    m_symbols->reserve(l_symbols);
+    const int l_symbols = num_symbols();
     for (int i = 0; i < l_symbols; i++) {
         m_symbols->push_back(new symbol_t(m__io, this, m__root));
     }

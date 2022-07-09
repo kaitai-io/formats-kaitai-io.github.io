@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Luks(KaitaiStruct):
@@ -48,9 +47,9 @@ class Luks(KaitaiStruct):
             self.master_key_salt_parameter = self._io.read_bytes(32)
             self.master_key_iterations_parameter = self._io.read_u4be()
             self.uuid = (self._io.read_bytes(40)).decode(u"ASCII")
-            self.key_slots = [None] * (8)
+            self.key_slots = []
             for i in range(8):
-                self.key_slots[i] = Luks.PartitionHeader.KeySlot(self._io, self, self._root)
+                self.key_slots.append(Luks.PartitionHeader.KeySlot(self._io, self, self._root))
 
 
         class KeySlot(KaitaiStruct):
@@ -74,25 +73,25 @@ class Luks(KaitaiStruct):
             @property
             def key_material(self):
                 if hasattr(self, '_m_key_material'):
-                    return self._m_key_material if hasattr(self, '_m_key_material') else None
+                    return self._m_key_material
 
                 _pos = self._io.pos()
                 self._io.seek((self.start_sector_of_key_material * 512))
                 self._m_key_material = self._io.read_bytes((self._parent.number_of_key_bytes * self.number_of_anti_forensic_stripes))
                 self._io.seek(_pos)
-                return self._m_key_material if hasattr(self, '_m_key_material') else None
+                return getattr(self, '_m_key_material', None)
 
 
 
     @property
     def payload(self):
         if hasattr(self, '_m_payload'):
-            return self._m_payload if hasattr(self, '_m_payload') else None
+            return self._m_payload
 
         _pos = self._io.pos()
         self._io.seek((self.partition_header.payload_offset * 512))
         self._m_payload = self._io.read_bytes_full()
         self._io.seek(_pos)
-        return self._m_payload if hasattr(self, '_m_payload') else None
+        return getattr(self, '_m_payload', None)
 
 

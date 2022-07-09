@@ -8,7 +8,7 @@
   } else {
     root.GenmidiOp2 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * GENMIDI.OP2 is a sound bank file used by players based on DMX sound
  * library to play MIDI files with General MIDI instruments using OPL2
@@ -37,13 +37,13 @@ var GenmidiOp2 = (function() {
     if (!((KaitaiStream.byteArrayCompare(this.magic, [35, 79, 80, 76, 95, 73, 73, 35]) == 0))) {
       throw new KaitaiStream.ValidationNotEqualError([35, 79, 80, 76, 95, 73, 73, 35], this.magic, this._io, "/seq/0");
     }
-    this.instruments = new Array(175);
+    this.instruments = [];
     for (var i = 0; i < 175; i++) {
-      this.instruments[i] = new InstrumentEntry(this._io, this, this._root);
+      this.instruments.push(new InstrumentEntry(this._io, this, this._root));
     }
-    this.instrumentNames = new Array(175);
+    this.instrumentNames = [];
     for (var i = 0; i < 175; i++) {
-      this.instrumentNames[i] = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(32), 0), 0, false), "ASCII");
+      this.instrumentNames.push(KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(32), 0), 0, false), "ASCII"));
     }
   }
 
@@ -59,9 +59,9 @@ var GenmidiOp2 = (function() {
       this.flags = this._io.readU2le();
       this.finetune = this._io.readU1();
       this.note = this._io.readU1();
-      this.instruments = new Array(2);
+      this.instruments = [];
       for (var i = 0; i < 2; i++) {
-        this.instruments[i] = new Instrument(this._io, this, this._root);
+        this.instruments.push(new Instrument(this._io, this, this._root));
       }
     }
 

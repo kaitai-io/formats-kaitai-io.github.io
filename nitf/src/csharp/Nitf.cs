@@ -37,27 +37,27 @@ namespace Kaitai
         private void _read()
         {
             _header = new Header(m_io, this, m_root);
-            _imageSegments = new List<ImageSegment>((int) (Convert.ToInt64(Header.NumImageSegments, 10)));
+            _imageSegments = new List<ImageSegment>();
             for (var i = 0; i < Convert.ToInt64(Header.NumImageSegments, 10); i++)
             {
                 _imageSegments.Add(new ImageSegment(i, m_io, this, m_root));
             }
-            _graphicsSegments = new List<GraphicsSegment>((int) (Convert.ToInt64(Header.NumGraphicsSegments, 10)));
+            _graphicsSegments = new List<GraphicsSegment>();
             for (var i = 0; i < Convert.ToInt64(Header.NumGraphicsSegments, 10); i++)
             {
                 _graphicsSegments.Add(new GraphicsSegment(i, m_io, this, m_root));
             }
-            _textSegments = new List<TextSegment>((int) (Convert.ToInt64(Header.NumTextFiles, 10)));
+            _textSegments = new List<TextSegment>();
             for (var i = 0; i < Convert.ToInt64(Header.NumTextFiles, 10); i++)
             {
                 _textSegments.Add(new TextSegment(i, m_io, this, m_root));
             }
-            _dataExtensionSegments = new List<DataExtensionSegment>((int) (Convert.ToInt64(Header.NumDataExtension, 10)));
+            _dataExtensionSegments = new List<DataExtensionSegment>();
             for (var i = 0; i < Convert.ToInt64(Header.NumDataExtension, 10); i++)
             {
                 _dataExtensionSegments.Add(new DataExtensionSegment(i, m_io, this, m_root));
             }
-            _reservedExtensionSegments = new List<ReservedExtensionSegment>((int) (Convert.ToInt64(Header.NumReservedExtension, 10)));
+            _reservedExtensionSegments = new List<ReservedExtensionSegment>();
             for (var i = 0; i < Convert.ToInt64(Header.NumReservedExtension, 10); i++)
             {
                 _reservedExtensionSegments.Add(new ReservedExtensionSegment(i, m_io, this, m_root));
@@ -212,7 +212,7 @@ namespace Kaitai
                 if (Convert.ToInt64(NumLuts, 10) != 0) {
                     _numLutEntries = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
                 }
-                _luts = new List<byte[]>((int) (Convert.ToInt64(NumLuts, 10)));
+                _luts = new List<byte[]>();
                 for (var i = 0; i < Convert.ToInt64(NumLuts, 10); i++)
                 {
                     _luts.Add(m_io.ReadBytes(Convert.ToInt64(NumLutEntries, 10)));
@@ -550,14 +550,14 @@ namespace Kaitai
                 _tpxcdlnth = m_io.ReadU2be();
                 _tpxcd = m_io.ReadBytes(TpxcdSize);
                 if (HasBmr) {
-                    _bmrbnd = new List<uint>((int) (BmrtmrCount));
+                    _bmrbnd = new List<uint>();
                     for (var i = 0; i < BmrtmrCount; i++)
                     {
                         _bmrbnd.Add(m_io.ReadU4be());
                     }
                 }
                 if (HasTmr) {
-                    _tmrbnd = new List<uint>((int) (BmrtmrCount));
+                    _tmrbnd = new List<uint>();
                     for (var i = 0; i < BmrtmrCount; i++)
                     {
                         _tmrbnd.Add(m_io.ReadU4be());
@@ -886,7 +886,7 @@ namespace Kaitai
                 _imageCoordinateRep = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
                 _imageGeoLoc = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(60));
                 _numImgComments = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                _imgComments = new List<ImageComment>((int) (Convert.ToInt64(NumImgComments, 10)));
+                _imgComments = new List<ImageComment>();
                 for (var i = 0; i < Convert.ToInt64(NumImgComments, 10); i++)
                 {
                     _imgComments.Add(new ImageComment(m_io, this, m_root));
@@ -897,7 +897,7 @@ namespace Kaitai
                 if (Convert.ToInt64(NumBands, 10) == 0) {
                     _numMultispectralBands = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
                 }
-                _bands = new List<BandInfo>((int) ((Convert.ToInt64(NumBands, 10) != 0 ? Convert.ToInt64(NumBands, 10) : Convert.ToInt64(NumMultispectralBands, 10))));
+                _bands = new List<BandInfo>();
                 for (var i = 0; i < (Convert.ToInt64(NumBands, 10) != 0 ? Convert.ToInt64(NumBands, 10) : Convert.ToInt64(NumMultispectralBands, 10)); i++)
                 {
                     _bands.Add(new BandInfo(m_io, this, m_root));
@@ -918,7 +918,7 @@ namespace Kaitai
                     _userDefOverflow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
                 }
                 if (Convert.ToInt64(UserDefImgDataLen, 10) > 2) {
-                    _userDefImgData = new List<byte>((int) ((Convert.ToInt64(UserDefImgDataLen, 10) - 3)));
+                    _userDefImgData = new List<byte>();
                     for (var i = 0; i < (Convert.ToInt64(UserDefImgDataLen, 10) - 3); i++)
                     {
                         _userDefImgData.Add(m_io.ReadU1());
@@ -1231,32 +1231,32 @@ namespace Kaitai
                 _fileLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(12));
                 _fileHeaderLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(6));
                 _numImageSegments = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _linfo = new List<LengthImageInfo>((int) (Convert.ToInt64(NumImageSegments, 10)));
+                _linfo = new List<LengthImageInfo>();
                 for (var i = 0; i < Convert.ToInt64(NumImageSegments, 10); i++)
                 {
                     _linfo.Add(new LengthImageInfo(m_io, this, m_root));
                 }
                 _numGraphicsSegments = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _lnnfo = new List<LengthGraphicInfo>((int) (Convert.ToInt64(NumGraphicsSegments, 10)));
+                _lnnfo = new List<LengthGraphicInfo>();
                 for (var i = 0; i < Convert.ToInt64(NumGraphicsSegments, 10); i++)
                 {
                     _lnnfo.Add(new LengthGraphicInfo(m_io, this, m_root));
                 }
                 _reservedNumx = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
                 _numTextFiles = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _ltnfo = new List<LengthTextInfo>((int) (Convert.ToInt64(NumTextFiles, 10)));
+                _ltnfo = new List<LengthTextInfo>();
                 for (var i = 0; i < Convert.ToInt64(NumTextFiles, 10); i++)
                 {
                     _ltnfo.Add(new LengthTextInfo(m_io, this, m_root));
                 }
                 _numDataExtension = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _ldnfo = new List<LengthDataInfo>((int) (Convert.ToInt64(NumDataExtension, 10)));
+                _ldnfo = new List<LengthDataInfo>();
                 for (var i = 0; i < Convert.ToInt64(NumDataExtension, 10); i++)
                 {
                     _ldnfo.Add(new LengthDataInfo(m_io, this, m_root));
                 }
                 _numReservedExtension = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _lrnfo = new List<LengthReservedInfo>((int) (Convert.ToInt64(NumReservedExtension, 10)));
+                _lrnfo = new List<LengthReservedInfo>();
                 for (var i = 0; i < Convert.ToInt64(NumReservedExtension, 10); i++)
                 {
                     _lrnfo.Add(new LengthReservedInfo(m_io, this, m_root));
@@ -1354,7 +1354,7 @@ namespace Kaitai
                 _desDefinedSubheaderFieldsLen = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
                 _sfhL1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(7));
                 _sfhDelim1 = m_io.ReadU4be();
-                _sfhDr = new List<byte>((int) (Convert.ToInt64(SfhL1, 10)));
+                _sfhDr = new List<byte>();
                 for (var i = 0; i < Convert.ToInt64(SfhL1, 10); i++)
                 {
                     _sfhDr.Add(m_io.ReadU1());
@@ -1417,7 +1417,7 @@ namespace Kaitai
                     _headerOverflow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
                 }
                 if (Convert.ToInt64(HeaderDataLength, 10) > 2) {
-                    _headerData = new List<byte>((int) ((Convert.ToInt64(HeaderDataLength, 10) - 3)));
+                    _headerData = new List<byte>();
                     for (var i = 0; i < (Convert.ToInt64(HeaderDataLength, 10) - 3); i++)
                     {
                         _headerData.Add(m_io.ReadU1());

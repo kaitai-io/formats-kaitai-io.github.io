@@ -44,9 +44,9 @@ class PcfFont < Kaitai::Struct::Struct
     @magic = @_io.read_bytes(4)
     raise Kaitai::Struct::ValidationNotEqualError.new([1, 102, 99, 112].pack('C*'), magic, _io, "/seq/0") if not magic == [1, 102, 99, 112].pack('C*')
     @num_tables = @_io.read_u4le
-    @tables = Array.new(num_tables)
+    @tables = []
     (num_tables).times { |i|
-      @tables[i] = Table.new(@_io, self, @_root)
+      @tables << Table.new(@_io, self, @_root)
     }
     self
   end
@@ -81,9 +81,9 @@ class PcfFont < Kaitai::Struct::Struct
       def _read
         @format = Format.new(@_io, self, @_root)
         @num_glyphs = @_io.read_u4le
-        @swidths = Array.new(num_glyphs)
+        @swidths = []
         (num_glyphs).times { |i|
-          @swidths[i] = @_io.read_u4le
+          @swidths << @_io.read_u4le
         }
         self
       end
@@ -109,9 +109,9 @@ class PcfFont < Kaitai::Struct::Struct
       def _read
         @format = Format.new(@_io, self, @_root)
         @num_props = @_io.read_u4le
-        @props = Array.new(num_props)
+        @props = []
         (num_props).times { |i|
-          @props[i] = Prop.new(@_io, self, @_root)
+          @props << Prop.new(@_io, self, @_root)
         }
         @padding = @_io.read_bytes(((num_props & 3) == 0 ? 0 : (4 - (num_props & 3))))
         @len_strings = @_io.read_u4le
@@ -230,9 +230,9 @@ class PcfFont < Kaitai::Struct::Struct
         @min_byte1 = @_io.read_u2le
         @max_byte1 = @_io.read_u2le
         @default_char = @_io.read_u2le
-        @glyph_indexes = Array.new((((max_char_or_byte2 - min_char_or_byte2) + 1) * ((max_byte1 - min_byte1) + 1)))
+        @glyph_indexes = []
         ((((max_char_or_byte2 - min_char_or_byte2) + 1) * ((max_byte1 - min_byte1) + 1))).times { |i|
-          @glyph_indexes[i] = @_io.read_u2le
+          @glyph_indexes << @_io.read_u2le
         }
         self
       end
@@ -257,9 +257,9 @@ class PcfFont < Kaitai::Struct::Struct
       def _read
         @format = Format.new(@_io, self, @_root)
         @num_glyphs = @_io.read_u4le
-        @names = Array.new(num_glyphs)
+        @names = []
         (num_glyphs).times { |i|
-          @names[i] = StringRef.new(@_io, self, @_root)
+          @names << StringRef.new(@_io, self, @_root)
         }
         @len_strings = @_io.read_u4le
         @_raw_strings = @_io.read_bytes(len_strings)
@@ -314,13 +314,13 @@ class PcfFont < Kaitai::Struct::Struct
       def _read
         @format = Format.new(@_io, self, @_root)
         @num_glyphs = @_io.read_u4le
-        @offsets = Array.new(num_glyphs)
+        @offsets = []
         (num_glyphs).times { |i|
-          @offsets[i] = @_io.read_u4le
+          @offsets << @_io.read_u4le
         }
-        @bitmap_sizes = Array.new(4)
+        @bitmap_sizes = []
         (4).times { |i|
-          @bitmap_sizes[i] = @_io.read_u4le
+          @bitmap_sizes << @_io.read_u4le
         }
         self
       end

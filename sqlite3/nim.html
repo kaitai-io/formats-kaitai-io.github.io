@@ -299,7 +299,8 @@ reached via the links starting from the first page. First page type
     <span class="p">`</span><span class="n">sqliteVersionNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">rootPage</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Sqlite3_BtreePage</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">lenPageInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenPageInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenPageInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Sqlite3_Versions</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">legacy</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">wal</span> <span class="o">=</span> <span class="mi">2</span>
@@ -310,9 +311,12 @@ reached via the links starting from the first page. First page type
   <span class="n">Sqlite3_Serial</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">code</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Be</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">isBlobInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isStringInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">lenContentInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">isBlobInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isBlobInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isStringInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isStringInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">lenContentInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenContentInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Sqlite3_BtreePage</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">pageType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">firstFreeblock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -359,11 +363,13 @@ reached via the links starting from the first page. First page type
     <span class="p">`</span><span class="n">asStr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">ser</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Sqlite3_CellPayload</span>
-    <span class="p">`</span><span class="n">serialTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Sqlite3_Serial</span>
+    <span class="p">`</span><span class="n">serialTypeInst</span><span class="p">`:</span> <span class="n">Sqlite3_Serial</span>
+    <span class="p">`</span><span class="n">serialTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Sqlite3_RefCell</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Sqlite3_BtreePage</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Sqlite3], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3_Serial</span>
@@ -523,12 +529,12 @@ reached via the links starting from the first page. First page type
   <span class="n">this</span><span class="p">.</span><span class="n">rootPage</span> <span class="o">=</span> <span class="n">rootPageExpr</span>
 
 <span class="k">proc </span><span class="nf">lenPage</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Sqlite3</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageInst</span>
   <span class="k">let</span> <span class="n">lenPageInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageMod</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">65536</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageMod</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenPageInst</span> <span class="o">=</span> <span class="n">lenPageInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenPageInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPageInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Sqlite3], filename: string): Sqlite3 =</span>
   <span class="n">Sqlite3</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -545,29 +551,29 @@ reached via the links starting from the first page. First page type
   <span class="n">this</span><span class="p">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">codeExpr</span>
 
 <span class="k">proc </span><span class="nf">isBlob</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Sqlite3_Serial</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isBlobInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isBlobInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isBlobInst</span>
   <span class="k">let</span> <span class="n">isBlobInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">code</span><span class="p">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">code</span><span class="p">.</span><span class="n">value</span> <span class="o">%%%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isBlobInst</span> <span class="o">=</span> <span class="n">isBlobInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isBlobInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isBlobInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isBlobInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isBlobInst</span>
 
 <span class="k">proc </span><span class="nf">isString</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Sqlite3_Serial</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span>
   <span class="k">let</span> <span class="n">isStringInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">code</span><span class="p">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">13</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">code</span><span class="p">.</span><span class="n">value</span> <span class="o">%%%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span> <span class="o">=</span> <span class="n">isStringInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isStringInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span>
 
 <span class="k">proc </span><span class="nf">lenContent</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Sqlite3_Serial</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenContentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenContentInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenContentInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">code</span><span class="p">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">lenContentInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">code</span><span class="p">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="ow">div</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">lenContentInst</span> <span class="o">=</span> <span class="n">lenContentInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenContentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenContentInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenContentInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenContentInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Sqlite3_Serial], filename: string): Sqlite3_Serial =</span>
   <span class="n">Sqlite3_Serial</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -778,12 +784,12 @@ reached via the links starting from the first page. First page type
   <span class="n">this</span><span class="p">.</span><span class="n">asStr</span> <span class="o">=</span> <span class="n">asStrExpr</span>
 
 <span class="k">proc </span><span class="nf">serialType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Sqlite3_ColumnContent</span><span class="p">):</span> <span class="n">Sqlite3_Serial</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInst</span>
   <span class="k">let</span> <span class="n">serialTypeInstExpr</span> <span class="o">=</span> <span class="n">Sqlite3_Serial</span><span class="p">((</span><span class="n">Sqlite3_Serial</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ser</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInst</span> <span class="o">=</span> <span class="n">serialTypeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">serialTypeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Sqlite3_ColumnContent], filename: string): Sqlite3_ColumnContent =</span>
   <span class="n">Sqlite3_ColumnContent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -800,7 +806,7 @@ reached via the links starting from the first page. First page type
   <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">=</span> <span class="n">ofsBodyExpr</span>
 
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Sqlite3_RefCell</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
@@ -819,8 +825,8 @@ reached via the links starting from the first page. First page type
       <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Sqlite3_CellIndexInterior</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Sqlite3_RefCell], filename: string): Sqlite3_RefCell =</span>
   <span class="n">Sqlite3_RefCell</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

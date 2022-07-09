@@ -45,9 +45,9 @@ class AppleSingleDouble < Kaitai::Struct::Struct
     @version = @_io.read_u4be
     @reserved = @_io.read_bytes(16)
     @num_entries = @_io.read_u2be
-    @entries = Array.new(num_entries)
+    @entries = []
     (num_entries).times { |i|
-      @entries[i] = Entry.new(@_io, self, @_root)
+      @entries << Entry.new(@_io, self, @_root)
     }
     self
   end

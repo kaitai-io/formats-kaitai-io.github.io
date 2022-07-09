@@ -39,7 +39,7 @@ sub _read {
     $self->{triangles} = ();
     my $n_triangles = $self->num_triangles();
     for (my $i = 0; $i < $n_triangles; $i++) {
-        $self->{triangles}[$i] = Stl::Triangle->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{triangles}}, Stl::Triangle->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -92,7 +92,7 @@ sub _read {
     $self->{vertices} = ();
     my $n_vertices = 3;
     for (my $i = 0; $i < $n_vertices; $i++) {
-        $self->{vertices}[$i] = Stl::Vec3d->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{vertices}}, Stl::Vec3d->new($self->{_io}, $self, $self->{_root});
     }
     $self->{abr} = $self->{_io}->read_u2le();
 }

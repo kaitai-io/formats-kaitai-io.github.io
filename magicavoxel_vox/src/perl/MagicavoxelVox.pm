@@ -260,7 +260,7 @@ sub _read {
     $self->{colors} = ();
     my $n_colors = 256;
     for (my $i = 0; $i < $n_colors; $i++) {
-        $self->{colors}[$i] = MagicavoxelVox::Color->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{colors}}, MagicavoxelVox::Color->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -517,7 +517,7 @@ sub _read {
     $self->{voxels} = ();
     my $n_voxels = $self->num_voxels();
     for (my $i = 0; $i < $n_voxels; $i++) {
-        $self->{voxels}[$i] = MagicavoxelVox::Voxel->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{voxels}}, MagicavoxelVox::Voxel->new($self->{_io}, $self, $self->{_root});
     }
 }
 

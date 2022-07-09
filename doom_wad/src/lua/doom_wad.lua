@@ -520,15 +520,15 @@ function DoomWad.Blockmap.Blocklist.property.linedefs:get()
   self._m_linedefs = {}
   local i = 0
   while true do
-    _ = self._io:read_s2le()
+    local _ = self._io:read_s2le()
     self._m_linedefs[i + 1] = _
     if _ == -1 then
       break
     end
     i = i + 1
   end
-self._io:seek(_pos)
-return self._m_linedefs
+  self._io:seek(_pos)
+  return self._m_linedefs
 end
 
 -- 

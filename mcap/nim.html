@@ -254,8 +254,10 @@ etc.)</p>
     <span class="p">`</span><span class="n">footerMagic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Magic</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawFooterInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">footerInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
-    <span class="p">`</span><span class="n">ofsFooterInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">footerInst</span><span class="p">`:</span> <span class="n">Mcap_Record</span>
+    <span class="p">`</span><span class="n">footerInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">ofsFooterInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">ofsFooterInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Mcap_Opcode</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">header</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">footer</span> <span class="o">=</span> <span class="mi">2</span>
@@ -339,7 +341,8 @@ etc.)</p>
     <span class="p">`</span><span class="n">contentType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_PrefixedStr</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
     <span class="p">`</span><span class="n">rawAttachmentInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">attachmentInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
+    <span class="p">`</span><span class="n">attachmentInst</span><span class="p">`:</span> <span class="n">Mcap_Record</span>
+    <span class="p">`</span><span class="n">attachmentInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Mcap_Schema</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_PrefixedStr</span>
@@ -361,7 +364,8 @@ etc.)</p>
     <span class="p">`</span><span class="n">lenGroup</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
     <span class="p">`</span><span class="n">rawGroupInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">groupInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Records</span>
+    <span class="p">`</span><span class="n">groupInst</span><span class="p">`:</span> <span class="n">Mcap_Records</span>
+    <span class="p">`</span><span class="n">groupInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Mcap_Attachment</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">logTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">createTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
@@ -372,8 +376,10 @@ etc.)</p>
     <span class="p">`</span><span class="n">invokeCrc32InputEnd</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">crc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
-    <span class="p">`</span><span class="n">crc32InputEndInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">crc32InputInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">crc32InputEndInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">crc32InputEndInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">crc32InputInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">crc32InputInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Mcap_Metadata</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_PrefixedStr</span>
     <span class="p">`</span><span class="n">metadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_MapStrStr</span>
@@ -399,7 +405,8 @@ etc.)</p>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_PrefixedStr</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
     <span class="p">`</span><span class="n">rawMetadataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">metadataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
+    <span class="p">`</span><span class="n">metadataInst</span><span class="p">`:</span> <span class="n">Mcap_Record</span>
+    <span class="p">`</span><span class="n">metadataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Mcap_Magic</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap</span>
@@ -413,10 +420,14 @@ etc.)</p>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
     <span class="p">`</span><span class="n">rawSummarySectionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawSummaryOffsetSectionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">summarySectionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Records</span>
-    <span class="p">`</span><span class="n">summaryOffsetSectionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Records</span>
-    <span class="p">`</span><span class="n">ofsSummaryCrc32InputInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">summaryCrc32InputInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">summarySectionInst</span><span class="p">`:</span> <span class="n">Mcap_Records</span>
+    <span class="p">`</span><span class="n">summarySectionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">summaryOffsetSectionInst</span><span class="p">`:</span> <span class="n">Mcap_Records</span>
+    <span class="p">`</span><span class="n">summaryOffsetSectionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">ofsSummaryCrc32InputInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">ofsSummaryCrc32InputInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">summaryCrc32InputInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">summaryCrc32InputInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Mcap_Record</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">op</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Opcode</span>
     <span class="p">`</span><span class="n">lenBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
@@ -437,7 +448,8 @@ etc.)</p>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
     <span class="p">`</span><span class="n">rawMessageIndexOffsets</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawChunkInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">chunkInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Mcap_Record</span>
+    <span class="p">`</span><span class="n">chunkInst</span><span class="p">`:</span> <span class="n">Mcap_Record</span>
+    <span class="p">`</span><span class="n">chunkInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Mcap_ChunkIndex_MessageIndexOffset</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">channelId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">offset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
@@ -524,7 +536,7 @@ etc.)</p>
   <span class="n">this</span><span class="p">.</span><span class="n">footerMagic</span> <span class="o">=</span> <span class="n">footerMagicExpr</span>
 
 <span class="k">proc </span><span class="nf">footer</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap</span><span class="p">):</span> <span class="n">Mcap_Record</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsFooter</span><span class="p">))</span>
@@ -534,16 +546,16 @@ etc.)</p>
   <span class="k">let</span> <span class="n">footerInstExpr</span> <span class="o">=</span> <span class="n">Mcap_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawFooterInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span> <span class="o">=</span> <span class="n">footerInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
 
 <span class="k">proc </span><span class="nf">ofsFooter</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInst</span>
   <span class="k">let</span> <span class="n">ofsFooterInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInst</span> <span class="o">=</span> <span class="n">ofsFooterInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsFooterInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Mcap], filename: string): Mcap =</span>
   <span class="n">Mcap</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -795,7 +807,7 @@ etc.)</p>
   <span class="n">this</span><span class="p">.</span><span class="n">contentType</span> <span class="o">=</span> <span class="n">contentTypeExpr</span>
 
 <span class="k">proc </span><span class="nf">attachment</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_AttachmentIndex</span><span class="p">):</span> <span class="n">Mcap_Record</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">attachmentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">attachmentInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">attachmentInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -806,8 +818,8 @@ etc.)</p>
   <span class="k">let</span> <span class="n">attachmentInstExpr</span> <span class="o">=</span> <span class="n">Mcap_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawAttachmentInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">attachmentInst</span> <span class="o">=</span> <span class="n">attachmentInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">attachmentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">attachmentInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">attachmentInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">attachmentInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Mcap_AttachmentIndex], filename: string): Mcap_AttachmentIndex =</span>
   <span class="n">Mcap_AttachmentIndex</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -887,7 +899,7 @@ etc.)</p>
   <span class="n">this</span><span class="p">.</span><span class="n">lenGroup</span> <span class="o">=</span> <span class="n">lenGroupExpr</span>
 
 <span class="k">proc </span><span class="nf">group</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_SummaryOffset</span><span class="p">):</span> <span class="n">Mcap_Records</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">groupInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">groupInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">groupInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -898,8 +910,8 @@ etc.)</p>
   <span class="k">let</span> <span class="n">groupInstExpr</span> <span class="o">=</span> <span class="n">Mcap_Records</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawGroupInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">groupInst</span> <span class="o">=</span> <span class="n">groupInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">groupInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">groupInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">groupInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">groupInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Mcap_SummaryOffset], filename: string): Mcap_SummaryOffset =</span>
   <span class="n">Mcap_SummaryOffset</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -937,23 +949,23 @@ etc.)</p>
   <span class="n">this</span><span class="p">.</span><span class="n">crc32</span> <span class="o">=</span> <span class="n">crc32Expr</span>
 
 <span class="k">proc </span><span class="nf">crc32InputEnd</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_Attachment</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInst</span>
   <span class="k">let</span> <span class="n">crc32InputEndInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInst</span> <span class="o">=</span> <span class="n">crc32InputEndInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputEndInst</span>
 
 <span class="k">proc </span><span class="nf">crc32Input</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_Attachment</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">crc32InputInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">crc32InputEnd</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInst</span> <span class="o">=</span> <span class="n">crc32InputInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">crc32InputInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Mcap_Attachment], filename: string): Mcap_Attachment =</span>
   <span class="n">Mcap_Attachment</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1044,7 +1056,7 @@ etc.)</p>
   <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
 
 <span class="k">proc </span><span class="nf">metadata</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_MetadataIndex</span><span class="p">):</span> <span class="n">Mcap_Record</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -1055,8 +1067,8 @@ etc.)</p>
   <span class="k">let</span> <span class="n">metadataInstExpr</span> <span class="o">=</span> <span class="n">Mcap_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMetadataInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span> <span class="o">=</span> <span class="n">metadataInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">metadataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Mcap_MetadataIndex], filename: string): Mcap_MetadataIndex =</span>
   <span class="n">Mcap_MetadataIndex</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1116,7 +1128,7 @@ etc.)</p>
   <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32</span> <span class="o">=</span> <span class="n">summaryCrc32Expr</span>
 
 <span class="k">proc </span><span class="nf">summarySection</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_Footer</span><span class="p">):</span> <span class="n">Mcap_Records</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummarySection</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -1128,11 +1140,11 @@ etc.)</p>
     <span class="k">let</span> <span class="n">summarySectionInstExpr</span> <span class="o">=</span> <span class="n">Mcap_Records</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawSummarySectionInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInst</span> <span class="o">=</span> <span class="n">summarySectionInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summarySectionInst</span>
 
 <span class="k">proc </span><span class="nf">summaryOffsetSection</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_Footer</span><span class="p">):</span> <span class="n">Mcap_Records</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryOffsetSection</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -1144,19 +1156,19 @@ etc.)</p>
     <span class="k">let</span> <span class="n">summaryOffsetSectionInstExpr</span> <span class="o">=</span> <span class="n">Mcap_Records</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawSummaryOffsetSectionInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInst</span> <span class="o">=</span> <span class="n">summaryOffsetSectionInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryOffsetSectionInst</span>
 
 <span class="k">proc </span><span class="nf">ofsSummaryCrc32Input</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_Footer</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInst</span>
   <span class="k">let</span> <span class="n">ofsSummaryCrc32InputInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummarySection</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummarySection</span> <span class="k">else</span><span class="p">:</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">ofsFooter</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInst</span> <span class="o">=</span> <span class="n">ofsSummaryCrc32InputInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32InputInst</span>
 
 <span class="k">proc </span><span class="nf">summaryCrc32Input</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_Footer</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -1164,8 +1176,8 @@ etc.)</p>
   <span class="k">let</span> <span class="n">summaryCrc32InputInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((((</span><span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsSummaryCrc32Input</span><span class="p">)</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInst</span> <span class="o">=</span> <span class="n">summaryCrc32InputInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">summaryCrc32InputInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Mcap_Footer], filename: string): Mcap_Footer =</span>
   <span class="n">Mcap_Footer</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1314,7 +1326,7 @@ etc.)</p>
   <span class="n">this</span><span class="p">.</span><span class="n">uncompressedSize</span> <span class="o">=</span> <span class="n">uncompressedSizeExpr</span>
 
 <span class="k">proc </span><span class="nf">chunk</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Mcap_ChunkIndex</span><span class="p">):</span> <span class="n">Mcap_Record</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">chunkInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">chunkInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">chunkInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Mcap</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -1325,8 +1337,8 @@ etc.)</p>
   <span class="k">let</span> <span class="n">chunkInstExpr</span> <span class="o">=</span> <span class="n">Mcap_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawChunkInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">chunkInst</span> <span class="o">=</span> <span class="n">chunkInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">chunkInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">chunkInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">chunkInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">chunkInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Mcap_ChunkIndex], filename: string): Mcap_ChunkIndex =</span>
   <span class="n">Mcap_ChunkIndex</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

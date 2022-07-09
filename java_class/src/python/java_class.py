@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class JavaClass(KaitaiStruct):
@@ -29,32 +28,32 @@ class JavaClass(KaitaiStruct):
         if not self.version_major >= 43:
             raise kaitaistruct.ValidationLessThanError(43, self.version_major, self._io, u"/seq/2")
         self.constant_pool_count = self._io.read_u2be()
-        self.constant_pool = [None] * ((self.constant_pool_count - 1))
+        self.constant_pool = []
         for i in range((self.constant_pool_count - 1)):
-            self.constant_pool[i] = JavaClass.ConstantPoolEntry((self.constant_pool[(i - 1)].is_two_entries if i != 0 else False), self._io, self, self._root)
+            self.constant_pool.append(JavaClass.ConstantPoolEntry((self.constant_pool[(i - 1)].is_two_entries if i != 0 else False), self._io, self, self._root))
 
         self.access_flags = self._io.read_u2be()
         self.this_class = self._io.read_u2be()
         self.super_class = self._io.read_u2be()
         self.interfaces_count = self._io.read_u2be()
-        self.interfaces = [None] * (self.interfaces_count)
+        self.interfaces = []
         for i in range(self.interfaces_count):
-            self.interfaces[i] = self._io.read_u2be()
+            self.interfaces.append(self._io.read_u2be())
 
         self.fields_count = self._io.read_u2be()
-        self.fields = [None] * (self.fields_count)
+        self.fields = []
         for i in range(self.fields_count):
-            self.fields[i] = JavaClass.FieldInfo(self._io, self, self._root)
+            self.fields.append(JavaClass.FieldInfo(self._io, self, self._root))
 
         self.methods_count = self._io.read_u2be()
-        self.methods = [None] * (self.methods_count)
+        self.methods = []
         for i in range(self.methods_count):
-            self.methods[i] = JavaClass.MethodInfo(self._io, self, self._root)
+            self.methods.append(JavaClass.MethodInfo(self._io, self, self._root))
 
         self.attributes_count = self._io.read_u2be()
-        self.attributes = [None] * (self.attributes_count)
+        self.attributes = []
         for i in range(self.attributes_count):
-            self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
+            self.attributes.append(JavaClass.AttributeInfo(self._io, self, self._root))
 
 
     class FloatCpInfo(KaitaiStruct):
@@ -123,14 +122,14 @@ class JavaClass(KaitaiStruct):
                 self.code_length = self._io.read_u4be()
                 self.code = self._io.read_bytes(self.code_length)
                 self.exception_table_length = self._io.read_u2be()
-                self.exception_table = [None] * (self.exception_table_length)
+                self.exception_table = []
                 for i in range(self.exception_table_length):
-                    self.exception_table[i] = JavaClass.AttributeInfo.AttrBodyCode.ExceptionEntry(self._io, self, self._root)
+                    self.exception_table.append(JavaClass.AttributeInfo.AttrBodyCode.ExceptionEntry(self._io, self, self._root))
 
                 self.attributes_count = self._io.read_u2be()
-                self.attributes = [None] * (self.attributes_count)
+                self.attributes = []
                 for i in range(self.attributes_count):
-                    self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
+                    self.attributes.append(JavaClass.AttributeInfo(self._io, self, self._root))
 
 
             class ExceptionEntry(KaitaiStruct):
@@ -153,12 +152,12 @@ class JavaClass(KaitaiStruct):
                 @property
                 def catch_exception(self):
                     if hasattr(self, '_m_catch_exception'):
-                        return self._m_catch_exception if hasattr(self, '_m_catch_exception') else None
+                        return self._m_catch_exception
 
                     if self.catch_type != 0:
                         self._m_catch_exception = self._root.constant_pool[(self.catch_type - 1)]
 
-                    return self._m_catch_exception if hasattr(self, '_m_catch_exception') else None
+                    return getattr(self, '_m_catch_exception', None)
 
 
 
@@ -175,9 +174,9 @@ class JavaClass(KaitaiStruct):
 
             def _read(self):
                 self.number_of_exceptions = self._io.read_u2be()
-                self.exceptions = [None] * (self.number_of_exceptions)
+                self.exceptions = []
                 for i in range(self.number_of_exceptions):
-                    self.exceptions[i] = JavaClass.AttributeInfo.AttrBodyExceptions.ExceptionTableEntry(self._io, self, self._root)
+                    self.exceptions.append(JavaClass.AttributeInfo.AttrBodyExceptions.ExceptionTableEntry(self._io, self, self._root))
 
 
             class ExceptionTableEntry(KaitaiStruct):
@@ -193,18 +192,18 @@ class JavaClass(KaitaiStruct):
                 @property
                 def as_info(self):
                     if hasattr(self, '_m_as_info'):
-                        return self._m_as_info if hasattr(self, '_m_as_info') else None
+                        return self._m_as_info
 
                     self._m_as_info = self._root.constant_pool[(self.index - 1)].cp_info
-                    return self._m_as_info if hasattr(self, '_m_as_info') else None
+                    return getattr(self, '_m_as_info', None)
 
                 @property
                 def name_as_str(self):
                     if hasattr(self, '_m_name_as_str'):
-                        return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+                        return self._m_name_as_str
 
                     self._m_name_as_str = self.as_info.name_as_str
-                    return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+                    return getattr(self, '_m_name_as_str', None)
 
 
 
@@ -225,10 +224,10 @@ class JavaClass(KaitaiStruct):
             @property
             def sourcefile_as_str(self):
                 if hasattr(self, '_m_sourcefile_as_str'):
-                    return self._m_sourcefile_as_str if hasattr(self, '_m_sourcefile_as_str') else None
+                    return self._m_sourcefile_as_str
 
                 self._m_sourcefile_as_str = self._root.constant_pool[(self.sourcefile_index - 1)].cp_info.value
-                return self._m_sourcefile_as_str if hasattr(self, '_m_sourcefile_as_str') else None
+                return getattr(self, '_m_sourcefile_as_str', None)
 
 
         class AttrBodyLineNumberTable(KaitaiStruct):
@@ -244,9 +243,9 @@ class JavaClass(KaitaiStruct):
 
             def _read(self):
                 self.line_number_table_length = self._io.read_u2be()
-                self.line_number_table = [None] * (self.line_number_table_length)
+                self.line_number_table = []
                 for i in range(self.line_number_table_length):
-                    self.line_number_table[i] = JavaClass.AttributeInfo.AttrBodyLineNumberTable.LineNumberTableEntry(self._io, self, self._root)
+                    self.line_number_table.append(JavaClass.AttributeInfo.AttrBodyLineNumberTable.LineNumberTableEntry(self._io, self, self._root))
 
 
             class LineNumberTableEntry(KaitaiStruct):
@@ -265,10 +264,10 @@ class JavaClass(KaitaiStruct):
         @property
         def name_as_str(self):
             if hasattr(self, '_m_name_as_str'):
-                return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+                return self._m_name_as_str
 
             self._m_name_as_str = self._root.constant_pool[(self.name_index - 1)].cp_info.value
-            return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+            return getattr(self, '_m_name_as_str', None)
 
 
     class MethodRefCpInfo(KaitaiStruct):
@@ -289,18 +288,18 @@ class JavaClass(KaitaiStruct):
         @property
         def class_as_info(self):
             if hasattr(self, '_m_class_as_info'):
-                return self._m_class_as_info if hasattr(self, '_m_class_as_info') else None
+                return self._m_class_as_info
 
             self._m_class_as_info = self._root.constant_pool[(self.class_index - 1)].cp_info
-            return self._m_class_as_info if hasattr(self, '_m_class_as_info') else None
+            return getattr(self, '_m_class_as_info', None)
 
         @property
         def name_and_type_as_info(self):
             if hasattr(self, '_m_name_and_type_as_info'):
-                return self._m_name_and_type_as_info if hasattr(self, '_m_name_and_type_as_info') else None
+                return self._m_name_and_type_as_info
 
             self._m_name_and_type_as_info = self._root.constant_pool[(self.name_and_type_index - 1)].cp_info
-            return self._m_name_and_type_as_info if hasattr(self, '_m_name_and_type_as_info') else None
+            return getattr(self, '_m_name_and_type_as_info', None)
 
 
     class FieldInfo(KaitaiStruct):
@@ -319,18 +318,18 @@ class JavaClass(KaitaiStruct):
             self.name_index = self._io.read_u2be()
             self.descriptor_index = self._io.read_u2be()
             self.attributes_count = self._io.read_u2be()
-            self.attributes = [None] * (self.attributes_count)
+            self.attributes = []
             for i in range(self.attributes_count):
-                self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
+                self.attributes.append(JavaClass.AttributeInfo(self._io, self, self._root))
 
 
         @property
         def name_as_str(self):
             if hasattr(self, '_m_name_as_str'):
-                return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+                return self._m_name_as_str
 
             self._m_name_as_str = self._root.constant_pool[(self.name_index - 1)].cp_info.value
-            return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+            return getattr(self, '_m_name_as_str', None)
 
 
     class DoubleCpInfo(KaitaiStruct):
@@ -424,34 +423,34 @@ class JavaClass(KaitaiStruct):
         @property
         def name_as_info(self):
             if hasattr(self, '_m_name_as_info'):
-                return self._m_name_as_info if hasattr(self, '_m_name_as_info') else None
+                return self._m_name_as_info
 
             self._m_name_as_info = self._root.constant_pool[(self.name_index - 1)].cp_info
-            return self._m_name_as_info if hasattr(self, '_m_name_as_info') else None
+            return getattr(self, '_m_name_as_info', None)
 
         @property
         def name_as_str(self):
             if hasattr(self, '_m_name_as_str'):
-                return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+                return self._m_name_as_str
 
             self._m_name_as_str = self.name_as_info.value
-            return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+            return getattr(self, '_m_name_as_str', None)
 
         @property
         def descriptor_as_info(self):
             if hasattr(self, '_m_descriptor_as_info'):
-                return self._m_descriptor_as_info if hasattr(self, '_m_descriptor_as_info') else None
+                return self._m_descriptor_as_info
 
             self._m_descriptor_as_info = self._root.constant_pool[(self.descriptor_index - 1)].cp_info
-            return self._m_descriptor_as_info if hasattr(self, '_m_descriptor_as_info') else None
+            return getattr(self, '_m_descriptor_as_info', None)
 
         @property
         def descriptor_as_str(self):
             if hasattr(self, '_m_descriptor_as_str'):
-                return self._m_descriptor_as_str if hasattr(self, '_m_descriptor_as_str') else None
+                return self._m_descriptor_as_str
 
             self._m_descriptor_as_str = self.descriptor_as_info.value
-            return self._m_descriptor_as_str if hasattr(self, '_m_descriptor_as_str') else None
+            return getattr(self, '_m_descriptor_as_str', None)
 
 
     class Utf8CpInfo(KaitaiStruct):
@@ -518,18 +517,18 @@ class JavaClass(KaitaiStruct):
         @property
         def class_as_info(self):
             if hasattr(self, '_m_class_as_info'):
-                return self._m_class_as_info if hasattr(self, '_m_class_as_info') else None
+                return self._m_class_as_info
 
             self._m_class_as_info = self._root.constant_pool[(self.class_index - 1)].cp_info
-            return self._m_class_as_info if hasattr(self, '_m_class_as_info') else None
+            return getattr(self, '_m_class_as_info', None)
 
         @property
         def name_and_type_as_info(self):
             if hasattr(self, '_m_name_and_type_as_info'):
-                return self._m_name_and_type_as_info if hasattr(self, '_m_name_and_type_as_info') else None
+                return self._m_name_and_type_as_info
 
             self._m_name_and_type_as_info = self._root.constant_pool[(self.name_and_type_index - 1)].cp_info
-            return self._m_name_and_type_as_info if hasattr(self, '_m_name_and_type_as_info') else None
+            return getattr(self, '_m_name_and_type_as_info', None)
 
 
     class ClassCpInfo(KaitaiStruct):
@@ -549,18 +548,18 @@ class JavaClass(KaitaiStruct):
         @property
         def name_as_info(self):
             if hasattr(self, '_m_name_as_info'):
-                return self._m_name_as_info if hasattr(self, '_m_name_as_info') else None
+                return self._m_name_as_info
 
             self._m_name_as_info = self._root.constant_pool[(self.name_index - 1)].cp_info
-            return self._m_name_as_info if hasattr(self, '_m_name_as_info') else None
+            return getattr(self, '_m_name_as_info', None)
 
         @property
         def name_as_str(self):
             if hasattr(self, '_m_name_as_str'):
-                return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+                return self._m_name_as_str
 
             self._m_name_as_str = self.name_as_info.value
-            return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+            return getattr(self, '_m_name_as_str', None)
 
 
     class ConstantPoolEntry(KaitaiStruct):
@@ -630,10 +629,10 @@ class JavaClass(KaitaiStruct):
         @property
         def is_two_entries(self):
             if hasattr(self, '_m_is_two_entries'):
-                return self._m_is_two_entries if hasattr(self, '_m_is_two_entries') else None
+                return self._m_is_two_entries
 
             self._m_is_two_entries = (False if self.is_prev_two_entries else  ((self.tag == JavaClass.ConstantPoolEntry.TagEnum.long) or (self.tag == JavaClass.ConstantPoolEntry.TagEnum.double)) )
-            return self._m_is_two_entries if hasattr(self, '_m_is_two_entries') else None
+            return getattr(self, '_m_is_two_entries', None)
 
 
     class MethodInfo(KaitaiStruct):
@@ -652,18 +651,18 @@ class JavaClass(KaitaiStruct):
             self.name_index = self._io.read_u2be()
             self.descriptor_index = self._io.read_u2be()
             self.attributes_count = self._io.read_u2be()
-            self.attributes = [None] * (self.attributes_count)
+            self.attributes = []
             for i in range(self.attributes_count):
-                self.attributes[i] = JavaClass.AttributeInfo(self._io, self, self._root)
+                self.attributes.append(JavaClass.AttributeInfo(self._io, self, self._root))
 
 
         @property
         def name_as_str(self):
             if hasattr(self, '_m_name_as_str'):
-                return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+                return self._m_name_as_str
 
             self._m_name_as_str = self._root.constant_pool[(self.name_index - 1)].cp_info.value
-            return self._m_name_as_str if hasattr(self, '_m_name_as_str') else None
+            return getattr(self, '_m_name_as_str', None)
 
 
     class IntegerCpInfo(KaitaiStruct):
@@ -699,18 +698,18 @@ class JavaClass(KaitaiStruct):
         @property
         def class_as_info(self):
             if hasattr(self, '_m_class_as_info'):
-                return self._m_class_as_info if hasattr(self, '_m_class_as_info') else None
+                return self._m_class_as_info
 
             self._m_class_as_info = self._root.constant_pool[(self.class_index - 1)].cp_info
-            return self._m_class_as_info if hasattr(self, '_m_class_as_info') else None
+            return getattr(self, '_m_class_as_info', None)
 
         @property
         def name_and_type_as_info(self):
             if hasattr(self, '_m_name_and_type_as_info'):
-                return self._m_name_and_type_as_info if hasattr(self, '_m_name_and_type_as_info') else None
+                return self._m_name_and_type_as_info
 
             self._m_name_and_type_as_info = self._root.constant_pool[(self.name_and_type_index - 1)].cp_info
-            return self._m_name_and_type_as_info if hasattr(self, '_m_name_and_type_as_info') else None
+            return getattr(self, '_m_name_and_type_as_info', None)
 
 
 

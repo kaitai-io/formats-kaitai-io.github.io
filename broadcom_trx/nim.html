@@ -254,8 +254,10 @@ a single .trx file.</p>
 <span class="k">type</span>
   <span class="n">BroadcomTrx</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">headerInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BroadcomTrx_Header</span>
-    <span class="p">`</span><span class="n">tailInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BroadcomTrx_Tail</span>
+    <span class="p">`</span><span class="n">headerInst</span><span class="p">`:</span> <span class="n">BroadcomTrx_Header</span>
+    <span class="p">`</span><span class="n">headerInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">tailInst</span><span class="p">`:</span> <span class="n">BroadcomTrx_Tail</span>
+    <span class="p">`</span><span class="n">tailInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">BroadcomTrx_Revision</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">major</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">minor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -288,10 +290,14 @@ a single .trx file.</p>
     <span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">idx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BroadcomTrx_Header</span>
-    <span class="p">`</span><span class="n">isPresentInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isLastInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">isPresentInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isPresentInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isLastInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isLastInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenBodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">BroadcomTrx_Header_Flags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">bool</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BroadcomTrx_Header</span>
@@ -338,26 +344,26 @@ a single .trx file.</p>
 
 
 <span class="k">proc </span><span class="nf">header</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BroadcomTrx</span><span class="p">):</span> <span class="n">BroadcomTrx_Header</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">headerInstExpr</span> <span class="o">=</span> <span class="n">BroadcomTrx_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">headerInst</span> <span class="o">=</span> <span class="n">headerInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">headerInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headerInst</span>
 
 <span class="k">proc </span><span class="nf">tail</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BroadcomTrx</span><span class="p">):</span> <span class="n">BroadcomTrx_Tail</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tailInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tailInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tailInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">64</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">tailInstExpr</span> <span class="o">=</span> <span class="n">BroadcomTrx_Tail</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">tailInst</span> <span class="o">=</span> <span class="n">tailInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tailInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tailInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tailInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tailInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BroadcomTrx], filename: string): BroadcomTrx =</span>
   <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -503,33 +509,33 @@ a single .trx file.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">=</span> <span class="n">ofsBodyExpr</span>
 
 <span class="k">proc </span><span class="nf">isPresent</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BroadcomTrx_Header_Partition</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresentInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresentInst</span>
   <span class="k">let</span> <span class="n">isPresentInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isPresentInst</span> <span class="o">=</span> <span class="n">isPresentInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresentInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresentInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isPresentInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresentInst</span>
 
 <span class="k">proc </span><span class="nf">isLast</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BroadcomTrx_Header_Partition</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLastInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLastInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isLastInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresent</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">isLastInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">idx</span> <span class="o">==</span> <span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">partitions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">partitions</span><span class="o">[</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">.</span><span class="n">isPresent</span><span class="p">)))</span> <span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">isLastInst</span> <span class="o">=</span> <span class="n">isLastInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLastInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isLastInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isLastInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isLastInst</span>
 
 <span class="k">proc </span><span class="nf">lenBody</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BroadcomTrx_Header_Partition</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresent</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">lenBodyInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLast</span><span class="p">:</span> <span class="p">(</span><span class="n">BroadcomTrx</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">partitions</span><span class="o">[</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">=</span> <span class="n">lenBodyInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
 
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">BroadcomTrx_Header_Partition</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPresent</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">BroadcomTrx</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -538,8 +544,8 @@ a single .trx file.</p>
     <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BroadcomTrx_Header_Partition], filename: string): BroadcomTrx_Header_Partition =</span>
   <span class="n">BroadcomTrx_Header_Partition</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

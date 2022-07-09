@@ -337,13 +337,13 @@ sub originals {
         $self->{originals} = ();
         my $n_originals = $self->num_translations();
         for (my $i = 0; $i < $n_originals; $i++) {
-            $self->{originals}[$i] = GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{originals}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
         $self->{originals} = ();
         my $n_originals = $self->num_translations();
         for (my $i = 0; $i < $n_originals; $i++) {
-            $self->{originals}[$i] = GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{originals}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
         }
     }
     $io->seek($_pos);
@@ -360,13 +360,13 @@ sub translations {
         $self->{translations} = ();
         my $n_translations = $self->num_translations();
         for (my $i = 0; $i < $n_translations; $i++) {
-            $self->{translations}[$i] = GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{translations}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
         $self->{translations} = ();
         my $n_translations = $self->num_translations();
         for (my $i = 0; $i < $n_translations; $i++) {
-            $self->{translations}[$i] = GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{translations}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
         }
     }
     $io->seek($_pos);
@@ -384,13 +384,13 @@ sub hashtable_items {
             $self->{hashtable_items} = ();
             my $n_hashtable_items = $self->num_hashtable_items();
             for (my $i = 0; $i < $n_hashtable_items; $i++) {
-                $self->{hashtable_items}[$i] = GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
+                push @{$self->{hashtable_items}}, GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
             }
         } else {
             $self->{hashtable_items} = ();
             my $n_hashtable_items = $self->num_hashtable_items();
             for (my $i = 0; $i < $n_hashtable_items; $i++) {
-                $self->{hashtable_items}[$i] = GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
+                push @{$self->{hashtable_items}}, GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
             }
         }
         $io->seek($_pos);

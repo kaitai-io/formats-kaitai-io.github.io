@@ -108,13 +108,13 @@ sub _read {
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
     $self->{m_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{m_values} = ();
     my $n_m_values = $self->number_of_points();
     for (my $i = 0; $i < $n_m_values; $i++) {
-        $self->{m_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{m_values}}, $self->{_io}->read_f8le();
     }
 }
 
@@ -279,12 +279,12 @@ sub _read {
     $self->{parts} = ();
     my $n_parts = $self->number_of_parts();
     for (my $i = 0; $i < $n_parts; $i++) {
-        $self->{parts}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{parts}}, $self->{_io}->read_s4le();
     }
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -393,12 +393,12 @@ sub _read {
     $self->{parts} = ();
     my $n_parts = $self->number_of_parts();
     for (my $i = 0; $i < $n_parts; $i++) {
-        $self->{parts}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{parts}}, $self->{_io}->read_s4le();
     }
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -462,19 +462,19 @@ sub _read {
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
     $self->{z_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{z_values} = ();
     my $n_z_values = $self->number_of_points();
     for (my $i = 0; $i < $n_z_values; $i++) {
-        $self->{z_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{z_values}}, $self->{_io}->read_f8le();
     }
     $self->{m_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{m_values} = ();
     my $n_m_values = $self->number_of_points();
     for (my $i = 0; $i < $n_m_values; $i++) {
-        $self->{m_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{m_values}}, $self->{_io}->read_f8le();
     }
 }
 
@@ -549,24 +549,24 @@ sub _read {
     $self->{parts} = ();
     my $n_parts = $self->number_of_parts();
     for (my $i = 0; $i < $n_parts; $i++) {
-        $self->{parts}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{parts}}, $self->{_io}->read_s4le();
     }
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
     $self->{z_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{z_values} = ();
     my $n_z_values = $self->number_of_points();
     for (my $i = 0; $i < $n_z_values; $i++) {
-        $self->{z_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{z_values}}, $self->{_io}->read_f8le();
     }
     $self->{m_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{m_values} = ();
     my $n_m_values = $self->number_of_points();
     for (my $i = 0; $i < $n_m_values; $i++) {
-        $self->{m_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{m_values}}, $self->{_io}->read_f8le();
     }
 }
 
@@ -651,24 +651,24 @@ sub _read {
     $self->{parts} = ();
     my $n_parts = $self->number_of_parts();
     for (my $i = 0; $i < $n_parts; $i++) {
-        $self->{parts}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{parts}}, $self->{_io}->read_s4le();
     }
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
     $self->{z_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{z_values} = ();
     my $n_z_values = $self->number_of_points();
     for (my $i = 0; $i < $n_z_values; $i++) {
-        $self->{z_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{z_values}}, $self->{_io}->read_f8le();
     }
     $self->{m_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{m_values} = ();
     my $n_m_values = $self->number_of_points();
     for (my $i = 0; $i < $n_m_values; $i++) {
-        $self->{m_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{m_values}}, $self->{_io}->read_f8le();
     }
 }
 
@@ -847,18 +847,18 @@ sub _read {
     $self->{parts} = ();
     my $n_parts = $self->number_of_parts();
     for (my $i = 0; $i < $n_parts; $i++) {
-        $self->{parts}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{parts}}, $self->{_io}->read_s4le();
     }
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
     $self->{m_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{m_values} = ();
     my $n_m_values = $self->number_of_points();
     for (my $i = 0; $i < $n_m_values; $i++) {
-        $self->{m_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{m_values}}, $self->{_io}->read_f8le();
     }
 }
 
@@ -976,7 +976,7 @@ sub _read {
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1308,29 +1308,29 @@ sub _read {
     $self->{parts} = ();
     my $n_parts = $self->number_of_parts();
     for (my $i = 0; $i < $n_parts; $i++) {
-        $self->{parts}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{parts}}, $self->{_io}->read_s4le();
     }
     $self->{part_types} = ();
     my $n_part_types = $self->number_of_parts();
     for (my $i = 0; $i < $n_part_types; $i++) {
-        $self->{part_types}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{part_types}}, $self->{_io}->read_s4le();
     }
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
     $self->{z_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{z_values} = ();
     my $n_z_values = $self->number_of_points();
     for (my $i = 0; $i < $n_z_values; $i++) {
-        $self->{z_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{z_values}}, $self->{_io}->read_f8le();
     }
     $self->{m_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{m_values} = ();
     my $n_m_values = $self->number_of_points();
     for (my $i = 0; $i < $n_m_values; $i++) {
-        $self->{m_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{m_values}}, $self->{_io}->read_f8le();
     }
 }
 
@@ -1420,18 +1420,18 @@ sub _read {
     $self->{parts} = ();
     my $n_parts = $self->number_of_parts();
     for (my $i = 0; $i < $n_parts; $i++) {
-        $self->{parts}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{parts}}, $self->{_io}->read_s4le();
     }
     $self->{points} = ();
     my $n_points = $self->number_of_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, ShapefileMain::Point->new($self->{_io}, $self, $self->{_root});
     }
     $self->{m_range} = ShapefileMain::BoundsMinMax->new($self->{_io}, $self, $self->{_root});
     $self->{m_values} = ();
     my $n_m_values = $self->number_of_points();
     for (my $i = 0; $i < $n_m_values; $i++) {
-        $self->{m_values}[$i] = $self->{_io}->read_f8le();
+        push @{$self->{m_values}}, $self->{_io}->read_f8le();
     }
 }
 

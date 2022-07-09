@@ -167,6 +167,11 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Windows MiniDump parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Windows MiniDump parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -405,7 +410,7 @@ can also be found there.</p>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
                 <span class="n">_numThreads</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_threads</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Thread</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumThreads</span><span class="p">));</span>
+                <span class="n">_threads</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Thread</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumThreads</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_threads</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
@@ -623,7 +628,7 @@ can also be found there.</p>
                 <span class="n">_addr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
                 <span class="n">_numParams</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">ulong</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">15</span><span class="p">));</span>
+                <span class="n">_params</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">ulong</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">15</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_params</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">());</span>
@@ -881,7 +886,7 @@ can also be found there.</p>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
                 <span class="n">_numMemRanges</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_memRanges</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MemoryDescriptor</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumMemRanges</span><span class="p">));</span>
+                <span class="n">_memRanges</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MemoryDescriptor</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumMemRanges</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_memRanges</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">MemoryDescriptor</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
@@ -974,7 +979,7 @@ can also be found there.</p>
                     <span class="k">return</span> <span class="n">_streams</span><span class="p">;</span>
                 <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
                 <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsStreams</span><span class="p">);</span>
-                <span class="n">_streams</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Dir</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumStreams</span><span class="p">));</span>
+                <span class="n">_streams</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Dir</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumStreams</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_streams</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Dir</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>

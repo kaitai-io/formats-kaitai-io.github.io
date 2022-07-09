@@ -347,7 +347,7 @@ public class Bmp extends KaitaiStruct {
             if (this.profileData != null)
                 return this.profileData;
             if (hasProfile()) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek((14 + ofsProfile()));
                 {
@@ -916,7 +916,7 @@ public class Bmp extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            colors = new ArrayList<RgbRecord>(((Number) (( ((numColors() > 0) && (numColors() < numColorsPresent()))  ? numColors() : numColorsPresent()))).intValue());
+            this.colors = new ArrayList<RgbRecord>();
             for (int i = 0; i < ( ((numColors() > 0) && (numColors() < numColorsPresent()))  ? numColors() : numColorsPresent()); i++) {
                 this.colors.add(new RgbRecord(this._io, this, _root, hasReservedField()));
             }

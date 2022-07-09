@@ -173,7 +173,7 @@ public class MacOsResourceSnd extends KaitaiStruct {
             this.numDataFormats = this._io.readU2be();
         }
         if (format() == 1) {
-            dataFormats = new ArrayList<DataFormat>(((Number) (numDataFormats())).intValue());
+            this.dataFormats = new ArrayList<DataFormat>();
             for (int i = 0; i < numDataFormats(); i++) {
                 this.dataFormats.add(new DataFormat(this._io, this, _root));
             }
@@ -182,7 +182,7 @@ public class MacOsResourceSnd extends KaitaiStruct {
             this.referenceCount = this._io.readU2be();
         }
         this.numSoundCommands = this._io.readU2be();
-        soundCommands = new ArrayList<SoundCommand>(((Number) (numSoundCommands())).intValue());
+        this.soundCommands = new ArrayList<SoundCommand>();
         for (int i = 0; i < numSoundCommands(); i++) {
             this.soundCommands.add(new SoundCommand(this._io, this, _root));
         }
@@ -288,7 +288,7 @@ public class MacOsResourceSnd extends KaitaiStruct {
             if (this.baseFreqeuncy != null)
                 return this.baseFreqeuncy;
             if ( ((midiNote() >= 0) && (midiNote() < 128)) ) {
-                double _tmp = (double) (_root.midiNoteToFrequency().get((int) midiNote()));
+                double _tmp = (double) (_root().midiNoteToFrequency().get((int) midiNote()));
                 this.baseFreqeuncy = _tmp;
             }
             return this.baseFreqeuncy;

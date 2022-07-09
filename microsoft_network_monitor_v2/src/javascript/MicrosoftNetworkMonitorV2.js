@@ -8,7 +8,7 @@
   } else {
     root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.EthernetFrame, root.WindowsSystemtime);
   }
-}(this, function (KaitaiStream, EthernetFrame, WindowsSystemtime) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, EthernetFrame, WindowsSystemtime) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
  * network packet sniffing and analysis tool. It can save captured

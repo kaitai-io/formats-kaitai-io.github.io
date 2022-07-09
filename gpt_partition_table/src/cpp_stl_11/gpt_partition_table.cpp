@@ -95,13 +95,10 @@ std::vector<std::unique_ptr<gpt_partition_table_t::partition_entry_t>>* gpt_part
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek((entries_start() * _root()->sector_size()));
-    int l_entries = entries_count();
     m__raw_entries = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m__raw_entries->reserve(l_entries);
     m__io__raw_entries = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-    m__io__raw_entries->reserve(l_entries);
     m_entries = std::unique_ptr<std::vector<std::unique_ptr<partition_entry_t>>>(new std::vector<std::unique_ptr<partition_entry_t>>());
-    m_entries->reserve(l_entries);
+    const int l_entries = entries_count();
     for (int i = 0; i < l_entries; i++) {
         m__raw_entries->push_back(std::move(io->read_bytes(entries_size())));
         kaitai::kstream* io__raw_entries = new kaitai::kstream(m__raw_entries->at(m__raw_entries->size() - 1));

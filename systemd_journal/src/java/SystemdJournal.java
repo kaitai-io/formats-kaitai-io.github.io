@@ -60,7 +60,7 @@ public class SystemdJournal extends KaitaiStruct {
         this._raw_header = this._io.readBytes(lenHeader());
         KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
         this.header = new Header(_io__raw_header, this, _root);
-        objects = new ArrayList<JournalObject>(((Number) (header().numObjects())).intValue());
+        this.objects = new ArrayList<JournalObject>();
         for (int i = 0; i < header().numObjects(); i++) {
             this.objects.add(new JournalObject(this._io, this, _root));
         }
@@ -314,7 +314,7 @@ public class SystemdJournal extends KaitaiStruct {
             if (this.nextHash != null)
                 return this.nextHash;
             if (ofsNextHash() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsNextHash());
                 this.nextHash = new JournalObject(io, this, _root);
@@ -327,7 +327,7 @@ public class SystemdJournal extends KaitaiStruct {
             if (this.headField != null)
                 return this.headField;
             if (ofsHeadField() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsHeadField());
                 this.headField = new JournalObject(io, this, _root);
@@ -340,7 +340,7 @@ public class SystemdJournal extends KaitaiStruct {
             if (this.entry != null)
                 return this.entry;
             if (ofsEntry() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsEntry());
                 this.entry = new JournalObject(io, this, _root);
@@ -353,7 +353,7 @@ public class SystemdJournal extends KaitaiStruct {
             if (this.entryArray != null)
                 return this.entryArray;
             if (ofsEntryArray() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsEntryArray());
                 this.entryArray = new JournalObject(io, this, _root);

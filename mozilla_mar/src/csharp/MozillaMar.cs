@@ -49,13 +49,13 @@ namespace Kaitai
             _ofsIndex = m_io.ReadU4be();
             _fileSize = m_io.ReadU8be();
             _lenSignatures = m_io.ReadU4be();
-            _signatures = new List<Signature>((int) (LenSignatures));
+            _signatures = new List<Signature>();
             for (var i = 0; i < LenSignatures; i++)
             {
                 _signatures.Add(new Signature(m_io, this, m_root));
             }
             _lenAdditionalSections = m_io.ReadU4be();
-            _additionalSections = new List<AdditionalSection>((int) (LenAdditionalSections));
+            _additionalSections = new List<AdditionalSection>();
             for (var i = 0; i < LenAdditionalSections; i++)
             {
                 _additionalSections.Add(new AdditionalSection(m_io, this, m_root));

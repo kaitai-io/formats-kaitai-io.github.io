@@ -19,12 +19,18 @@ type
     `rawFilenamesInst`*: seq[byte]
     `rawFilesInst`*: seq[byte]
     `rawExtensionsInst`*: seq[byte]
-    `filenamesInst`*: SaintsRow2VppPc_Strings
-    `ofsExtensionsInst`*: int
-    `filesInst`*: SaintsRow2VppPc_Offsets
-    `dataStartInst`*: int
-    `extensionsInst`*: SaintsRow2VppPc_Strings
-    `ofsFilenamesInst`*: int
+    `filenamesInst`: SaintsRow2VppPc_Strings
+    `filenamesInstFlag`: bool
+    `ofsExtensionsInst`: int
+    `ofsExtensionsInstFlag`: bool
+    `filesInst`: SaintsRow2VppPc_Offsets
+    `filesInstFlag`: bool
+    `dataStartInst`: int
+    `dataStartInstFlag`: bool
+    `extensionsInst`: SaintsRow2VppPc_Strings
+    `extensionsInstFlag`: bool
+    `ofsFilenamesInst`: int
+    `ofsFilenamesInstFlag`: bool
   SaintsRow2VppPc_Offsets* = ref object of KaitaiStruct
     `entries`*: seq[SaintsRow2VppPc_Offsets_Offset]
     `parent`*: SaintsRow2VppPc
@@ -37,9 +43,12 @@ type
     `alwaysMinus1`*: int32
     `alwaysZero`*: int32
     `parent`*: SaintsRow2VppPc_Offsets
-    `filenameInst`*: string
-    `extInst`*: string
-    `bodyInst`*: seq[byte]
+    `filenameInst`: string
+    `filenameInstFlag`: bool
+    `extInst`: string
+    `extInstFlag`: bool
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   SaintsRow2VppPc_Strings* = ref object of KaitaiStruct
     `entries`*: seq[string]
     `parent`*: SaintsRow2VppPc
@@ -93,7 +102,7 @@ proc read*(_: typedesc[SaintsRow2VppPc], io: KaitaiStream, root: KaitaiStruct, p
   this.smth9 = smth9Expr
 
 proc filenames(this: SaintsRow2VppPc): SaintsRow2VppPc_Strings = 
-  if this.filenamesInst != nil:
+  if this.filenamesInstFlag:
     return this.filenamesInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsFilenames))
@@ -103,19 +112,19 @@ proc filenames(this: SaintsRow2VppPc): SaintsRow2VppPc_Strings =
   let filenamesInstExpr = SaintsRow2VppPc_Strings.read(rawFilenamesInstIo, this.root, this)
   this.filenamesInst = filenamesInstExpr
   this.io.seek(pos)
-  if this.filenamesInst != nil:
-    return this.filenamesInst
+  this.filenamesInstFlag = true
+  return this.filenamesInst
 
 proc ofsExtensions(this: SaintsRow2VppPc): int = 
-  if this.ofsExtensionsInst != nil:
+  if this.ofsExtensionsInstFlag:
     return this.ofsExtensionsInst
   let ofsExtensionsInstExpr = int((((this.ofsFilenames + this.lenFilenames) and 4294965248'i64) + 2048))
   this.ofsExtensionsInst = ofsExtensionsInstExpr
-  if this.ofsExtensionsInst != nil:
-    return this.ofsExtensionsInst
+  this.ofsExtensionsInstFlag = true
+  return this.ofsExtensionsInst
 
 proc files(this: SaintsRow2VppPc): SaintsRow2VppPc_Offsets = 
-  if this.filesInst != nil:
+  if this.filesInstFlag:
     return this.filesInst
   let pos = this.io.pos()
   this.io.seek(int(2048))
@@ -125,19 +134,19 @@ proc files(this: SaintsRow2VppPc): SaintsRow2VppPc_Offsets =
   let filesInstExpr = SaintsRow2VppPc_Offsets.read(rawFilesInstIo, this.root, this)
   this.filesInst = filesInstExpr
   this.io.seek(pos)
-  if this.filesInst != nil:
-    return this.filesInst
+  this.filesInstFlag = true
+  return this.filesInst
 
 proc dataStart(this: SaintsRow2VppPc): int = 
-  if this.dataStartInst != nil:
+  if this.dataStartInstFlag:
     return this.dataStartInst
   let dataStartInstExpr = int((((this.ofsExtensions + this.lenExtensions) and 4294965248'i64) + 2048))
   this.dataStartInst = dataStartInstExpr
-  if this.dataStartInst != nil:
-    return this.dataStartInst
+  this.dataStartInstFlag = true
+  return this.dataStartInst
 
 proc extensions(this: SaintsRow2VppPc): SaintsRow2VppPc_Strings = 
-  if this.extensionsInst != nil:
+  if this.extensionsInstFlag:
     return this.extensionsInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsExtensions))
@@ -147,16 +156,16 @@ proc extensions(this: SaintsRow2VppPc): SaintsRow2VppPc_Strings =
   let extensionsInstExpr = SaintsRow2VppPc_Strings.read(rawExtensionsInstIo, this.root, this)
   this.extensionsInst = extensionsInstExpr
   this.io.seek(pos)
-  if this.extensionsInst != nil:
-    return this.extensionsInst
+  this.extensionsInstFlag = true
+  return this.extensionsInst
 
 proc ofsFilenames(this: SaintsRow2VppPc): int = 
-  if this.ofsFilenamesInst != nil:
+  if this.ofsFilenamesInstFlag:
     return this.ofsFilenamesInst
   let ofsFilenamesInstExpr = int((((2048 + this.lenOffsets) and 4294965248'i64) + 2048))
   this.ofsFilenamesInst = ofsFilenamesInstExpr
-  if this.ofsFilenamesInst != nil:
-    return this.ofsFilenamesInst
+  this.ofsFilenamesInstFlag = true
+  return this.ofsFilenamesInst
 
 proc fromFile*(_: typedesc[SaintsRow2VppPc], filename: string): SaintsRow2VppPc =
   SaintsRow2VppPc.read(newKaitaiFileStream(filename), nil, nil)
@@ -203,7 +212,7 @@ proc read*(_: typedesc[SaintsRow2VppPc_Offsets_Offset], io: KaitaiStream, root: 
   this.alwaysZero = alwaysZeroExpr
 
 proc filename(this: SaintsRow2VppPc_Offsets_Offset): string = 
-  if this.filenameInst.len != 0:
+  if this.filenameInstFlag:
     return this.filenameInst
   let io = SaintsRow2VppPc(this.root).filenames.io
   let pos = io.pos()
@@ -211,11 +220,11 @@ proc filename(this: SaintsRow2VppPc_Offsets_Offset): string =
   let filenameInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
   this.filenameInst = filenameInstExpr
   io.seek(pos)
-  if this.filenameInst.len != 0:
-    return this.filenameInst
+  this.filenameInstFlag = true
+  return this.filenameInst
 
 proc ext(this: SaintsRow2VppPc_Offsets_Offset): string = 
-  if this.extInst.len != 0:
+  if this.extInstFlag:
     return this.extInst
   let io = SaintsRow2VppPc(this.root).extensions.io
   let pos = io.pos()
@@ -223,11 +232,11 @@ proc ext(this: SaintsRow2VppPc_Offsets_Offset): string =
   let extInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
   this.extInst = extInstExpr
   io.seek(pos)
-  if this.extInst.len != 0:
-    return this.extInst
+  this.extInstFlag = true
+  return this.extInst
 
 proc body(this: SaintsRow2VppPc_Offsets_Offset): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let io = SaintsRow2VppPc(this.root).io
   let pos = io.pos()
@@ -235,8 +244,8 @@ proc body(this: SaintsRow2VppPc_Offsets_Offset): seq[byte] =
   let bodyInstExpr = io.readBytes(int(this.lenBody))
   this.bodyInst = bodyInstExpr
   io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[SaintsRow2VppPc_Offsets_Offset], filename: string): SaintsRow2VppPc_Offsets_Offset =
   SaintsRow2VppPc_Offsets_Offset.read(newKaitaiFileStream(filename), nil, nil)

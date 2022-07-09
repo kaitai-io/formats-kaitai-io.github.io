@@ -8,7 +8,7 @@
   } else {
     root.Id3v11 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
  * tag is appended to the end of file and spans exactly 128 bytes.

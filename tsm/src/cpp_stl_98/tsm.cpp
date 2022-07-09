@@ -115,9 +115,8 @@ void tsm_t::index_t::index_header_t::_read() {
     m_key = kaitai::kstream::bytes_to_str(m__io->read_bytes(key_len()), std::string("UTF-8"));
     m_type = m__io->read_u1();
     m_entry_count = m__io->read_u2be();
-    int l_index_entries = entry_count();
     m_index_entries = new std::vector<index_entry_t*>();
-    m_index_entries->reserve(l_index_entries);
+    const int l_index_entries = entry_count();
     for (int i = 0; i < l_index_entries; i++) {
         m_index_entries->push_back(new index_entry_t(m__io, this, m__root));
     }

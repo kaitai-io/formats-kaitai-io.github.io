@@ -156,7 +156,8 @@ type
     `owner`*: uint8
     `options`*: uint16
     `parent`*: Warcraft2Pud_SectionUnit
-    `resourceInst`*: int
+    `resourceInst`: int
+    `resourceInstFlag`: bool
 
 proc read*(_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Warcraft2Pud
 proc read*(_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource
@@ -454,13 +455,13 @@ proc read*(_: typedesc[Warcraft2Pud_Unit], io: KaitaiStream, root: KaitaiStruct,
   this.options = optionsExpr
 
 proc resource(this: Warcraft2Pud_Unit): int = 
-  if this.resourceInst != nil:
+  if this.resourceInstFlag:
     return this.resourceInst
   if  ((this.uType == warcraft_2_pud.gold_mine) or (this.uType == warcraft_2_pud.human_oil_well) or (this.uType == warcraft_2_pud.orc_oil_well) or (this.uType == warcraft_2_pud.oil_patch)) :
     let resourceInstExpr = int((this.options * 2500))
     this.resourceInst = resourceInstExpr
-  if this.resourceInst != nil:
-    return this.resourceInst
+  this.resourceInstFlag = true
+  return this.resourceInst
 
 proc fromFile*(_: typedesc[Warcraft2Pud_Unit], filename: string): Warcraft2Pud_Unit =
   Warcraft2Pud_Unit.read(newKaitaiFileStream(filename), nil, nil)

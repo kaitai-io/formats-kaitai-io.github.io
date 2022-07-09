@@ -628,9 +628,9 @@ function Elf.EndianElf:_read()
     self._is_le = false
   end
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -793,9 +793,9 @@ end
 
 function Elf.EndianElf.NoteSection:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -833,9 +833,9 @@ end
 
 function Elf.EndianElf.ProgramHeader:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -974,9 +974,9 @@ end
 
 function Elf.EndianElf.DynamicSectionEntry:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1098,9 +1098,9 @@ end
 
 function Elf.EndianElf.SectionHeader:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1339,9 +1339,9 @@ end
 
 function Elf.EndianElf.RelocationSection:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1379,9 +1379,9 @@ end
 
 function Elf.EndianElf.DynamicSection:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1429,9 +1429,9 @@ end
 
 function Elf.EndianElf.DynsymSection:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1479,9 +1479,9 @@ end
 
 function Elf.EndianElf.RelocationSectionEntry:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1550,9 +1550,9 @@ end
 
 function Elf.EndianElf.DynsymSectionEntry:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1711,9 +1711,9 @@ end
 
 function Elf.EndianElf.NoteSectionEntry:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -1758,9 +1758,9 @@ end
 
 function Elf.EndianElf.StringsStruct:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")

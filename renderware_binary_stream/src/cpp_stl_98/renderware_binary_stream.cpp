@@ -158,9 +158,8 @@ void renderware_binary_stream_t::struct_geometry_t::_read() {
         n_geometry = false;
         m_geometry = new geometry_non_native_t(m__io, this, m__root);
     }
-    int l_morph_targets = num_morph_targets();
     m_morph_targets = new std::vector<morph_target_t*>();
-    m_morph_targets->reserve(l_morph_targets);
+    const int l_morph_targets = num_morph_targets();
     for (int i = 0; i < l_morph_targets; i++) {
         m_morph_targets->push_back(new morph_target_t(m__io, this, m__root));
     }
@@ -240,9 +239,8 @@ void renderware_binary_stream_t::geometry_non_native_t::_read() {
     n_prelit_colors = true;
     if (_parent()->is_prelit()) {
         n_prelit_colors = false;
-        int l_prelit_colors = _parent()->num_vertices();
         m_prelit_colors = new std::vector<rgba_t*>();
-        m_prelit_colors->reserve(l_prelit_colors);
+        const int l_prelit_colors = _parent()->num_vertices();
         for (int i = 0; i < l_prelit_colors; i++) {
             m_prelit_colors->push_back(new rgba_t(m__io, this, m__root));
         }
@@ -250,16 +248,14 @@ void renderware_binary_stream_t::geometry_non_native_t::_read() {
     n_tex_coords = true;
     if ( ((_parent()->is_textured()) || (_parent()->is_textured2())) ) {
         n_tex_coords = false;
-        int l_tex_coords = _parent()->num_vertices();
         m_tex_coords = new std::vector<tex_coord_t*>();
-        m_tex_coords->reserve(l_tex_coords);
+        const int l_tex_coords = _parent()->num_vertices();
         for (int i = 0; i < l_tex_coords; i++) {
             m_tex_coords->push_back(new tex_coord_t(m__io, this, m__root));
         }
     }
-    int l_triangles = _parent()->num_triangles();
     m_triangles = new std::vector<triangle_t*>();
-    m_triangles->reserve(l_triangles);
+    const int l_triangles = _parent()->num_triangles();
     for (int i = 0; i < l_triangles; i++) {
         m_triangles->push_back(new triangle_t(m__io, this, m__root));
     }
@@ -391,9 +387,8 @@ void renderware_binary_stream_t::morph_target_t::_read() {
     n_vertices = true;
     if (has_vertices() != 0) {
         n_vertices = false;
-        int l_vertices = _parent()->num_vertices();
         m_vertices = new std::vector<vector_3d_t*>();
-        m_vertices->reserve(l_vertices);
+        const int l_vertices = _parent()->num_vertices();
         for (int i = 0; i < l_vertices; i++) {
             m_vertices->push_back(new vector_3d_t(m__io, this, m__root));
         }
@@ -401,9 +396,8 @@ void renderware_binary_stream_t::morph_target_t::_read() {
     n_normals = true;
     if (has_normals() != 0) {
         n_normals = false;
-        int l_normals = _parent()->num_vertices();
         m_normals = new std::vector<vector_3d_t*>();
-        m_normals->reserve(l_normals);
+        const int l_normals = _parent()->num_vertices();
         for (int i = 0; i < l_normals; i++) {
             m_normals->push_back(new vector_3d_t(m__io, this, m__root));
         }
@@ -476,9 +470,8 @@ renderware_binary_stream_t::struct_frame_list_t::struct_frame_list_t(kaitai::kst
 
 void renderware_binary_stream_t::struct_frame_list_t::_read() {
     m_num_frames = m__io->read_u4le();
-    int l_frames = num_frames();
     m_frames = new std::vector<frame_t*>();
-    m_frames->reserve(l_frames);
+    const int l_frames = num_frames();
     for (int i = 0; i < l_frames; i++) {
         m_frames->push_back(new frame_t(m__io, this, m__root));
     }
@@ -511,9 +504,8 @@ renderware_binary_stream_t::matrix_t::matrix_t(kaitai::kstream* p__io, renderwar
 }
 
 void renderware_binary_stream_t::matrix_t::_read() {
-    int l_entries = 3;
     m_entries = new std::vector<vector_3d_t*>();
-    m_entries->reserve(l_entries);
+    const int l_entries = 3;
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(new vector_3d_t(m__io, this, m__root));
     }

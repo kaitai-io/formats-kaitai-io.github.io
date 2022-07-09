@@ -364,9 +364,9 @@ magic header and a record.</p>
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_elements</span> <span class="o">=</span> <span class="no">PackedInt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@elements</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_elements</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@elements</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_elements</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@elements</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@elements</span> <span class="o">&lt;&lt;</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -413,9 +413,9 @@ magic header and a record.</p>
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@name</span> <span class="o">=</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@num_members</span> <span class="o">=</span> <span class="no">PackedInt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@members</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_members</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@members</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_members</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@members</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Pair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@members</span> <span class="o">&lt;&lt;</span> <span class="no">Pair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -552,9 +552,9 @@ magic header and a record.</p>
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@obj</span> <span class="o">=</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@num_vars</span> <span class="o">=</span> <span class="no">PackedInt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@vars</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_vars</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@vars</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_vars</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@vars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Pair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@vars</span> <span class="o">&lt;&lt;</span> <span class="no">Pair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -613,9 +613,9 @@ magic header and a record.</p>
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_pairs</span> <span class="o">=</span> <span class="no">PackedInt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@pairs</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_pairs</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="vi">@pairs</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_pairs</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@pairs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Pair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@pairs</span> <span class="o">&lt;&lt;</span> <span class="no">Pair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>

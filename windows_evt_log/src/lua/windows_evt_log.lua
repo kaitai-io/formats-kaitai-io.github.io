@@ -106,10 +106,10 @@ end
 
 function WindowsEvtLog.Header.Flags:_read()
   self.reserved = self._io:read_bits_int_be(28)
-  self.archive = self._io:read_bits_int_be(1)
-  self.log_full = self._io:read_bits_int_be(1)
-  self.wrap = self._io:read_bits_int_be(1)
-  self.dirty = self._io:read_bits_int_be(1)
+  self.archive = self._io:read_bits_int_be(1) ~= 0
+  self.log_full = self._io:read_bits_int_be(1) ~= 0
+  self.wrap = self._io:read_bits_int_be(1) ~= 0
+  self.dirty = self._io:read_bits_int_be(1) ~= 0
 end
 
 -- 

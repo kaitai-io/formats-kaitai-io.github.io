@@ -184,6 +184,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="go.html" title="GPT (GUID) partition table parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="GPT (GUID) partition table parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -419,11 +424,11 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PartitionEntry</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">entries</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">;</span>
-            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">().</span><span class="na">_io</span><span class="p">();</span>
             <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
-            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">entriesStart</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">()));</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_raw_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">entriesCount</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
-            <span class="n">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PartitionEntry</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">(</span><span class="n">entriesCount</span><span class="p">())).</span><span class="na">intValue</span><span class="p">());</span>
+            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">entriesStart</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">().</span><span class="na">sectorSize</span><span class="p">()));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PartitionEntry</span><span class="o">&gt;</span><span class="p">();</span>
             <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">entriesCount</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">_raw_entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">entriesSize</span><span class="p">()));</span>
                 <span class="n">KaitaiStream</span> <span class="n">_io__raw_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_entries</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">_raw_entries</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
@@ -479,9 +484,9 @@ for instructions how to add it into your project with the build tool that you us
     <span class="kd">public</span> <span class="n">PartitionHeader</span> <span class="nf">primary</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">primary</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">primary</span><span class="p">;</span>
-        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">().</span><span class="na">_io</span><span class="p">();</span>
         <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
-        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">());</span>
+        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_root</span><span class="p">().</span><span class="na">sectorSize</span><span class="p">());</span>
         <span class="k">this</span><span class="p">.</span><span class="na">primary</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PartitionHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
         <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">primary</span><span class="p">;</span>
@@ -490,9 +495,9 @@ for instructions how to add it into your project with the build tool that you us
     <span class="kd">public</span> <span class="n">PartitionHeader</span> <span class="nf">backup</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">backup</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">backup</span><span class="p">;</span>
-        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">().</span><span class="na">_io</span><span class="p">();</span>
         <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
-        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">_io</span><span class="p">().</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">()));</span>
+        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">_io</span><span class="p">().</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">_root</span><span class="p">().</span><span class="na">sectorSize</span><span class="p">()));</span>
         <span class="k">this</span><span class="p">.</span><span class="na">backup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PartitionHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
         <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">backup</span><span class="p">;</span>

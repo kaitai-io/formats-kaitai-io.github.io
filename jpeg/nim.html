@@ -368,8 +368,10 @@ dictates order and mandatory apperance of segments:</p>
     <span class="p">`</span><span class="n">samplingFactors</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">quantizationTableId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Jpeg_SegmentSof0</span>
-    <span class="p">`</span><span class="n">samplingXInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">samplingYInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">samplingXInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">samplingXInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">samplingYInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">samplingYInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Jpeg_ExifInJpeg</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">extraZero</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Exif</span>
@@ -619,20 +621,20 @@ dictates order and mandatory apperance of segments:</p>
   <span class="n">this</span><span class="p">.</span><span class="n">quantizationTableId</span> <span class="o">=</span> <span class="n">quantizationTableIdExpr</span>
 
 <span class="k">proc </span><span class="nf">samplingX</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Jpeg_SegmentSof0_Component</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingXInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingXInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingXInst</span>
   <span class="k">let</span> <span class="n">samplingXInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">samplingFactors</span> <span class="ow">and</span> <span class="mi">240</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">samplingXInst</span> <span class="o">=</span> <span class="n">samplingXInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingXInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingXInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">samplingXInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingXInst</span>
 
 <span class="k">proc </span><span class="nf">samplingY</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Jpeg_SegmentSof0_Component</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingYInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingYInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingYInst</span>
   <span class="k">let</span> <span class="n">samplingYInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">samplingFactors</span> <span class="ow">and</span> <span class="mi">15</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">samplingYInst</span> <span class="o">=</span> <span class="n">samplingYInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingYInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingYInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">samplingYInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">samplingYInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Jpeg_SegmentSof0_Component], filename: string): Jpeg_SegmentSof0_Component =</span>
   <span class="n">Jpeg_SegmentSof0_Component</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

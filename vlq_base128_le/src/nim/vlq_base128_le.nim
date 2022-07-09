@@ -5,15 +5,21 @@ type
   VlqBase128Le* = ref object of KaitaiStruct
     `groups`*: seq[VlqBase128Le_Group]
     `parent`*: KaitaiStruct
-    `lenInst`*: int
-    `valueInst`*: int
-    `signBitInst`*: int
-    `valueSignedInst`*: int
+    `lenInst`: int
+    `lenInstFlag`: bool
+    `valueInst`: int
+    `valueInstFlag`: bool
+    `signBitInst`: int
+    `signBitInstFlag`: bool
+    `valueSignedInst`: int
+    `valueSignedInstFlag`: bool
   VlqBase128Le_Group* = ref object of KaitaiStruct
     `b`*: uint8
     `parent`*: VlqBase128Le
-    `hasNextInst`*: bool
-    `valueInst`*: int
+    `hasNextInst`: bool
+    `hasNextInstFlag`: bool
+    `valueInst`: int
+    `valueInstFlag`: bool
 
 proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VlqBase128Le
 proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le): VlqBase128Le_Group
@@ -66,44 +72,44 @@ proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, pare
       inc i
 
 proc len(this: VlqBase128Le): int = 
-  if this.lenInst != nil:
+  if this.lenInstFlag:
     return this.lenInst
   let lenInstExpr = int(len(this.groups))
   this.lenInst = lenInstExpr
-  if this.lenInst != nil:
-    return this.lenInst
+  this.lenInstFlag = true
+  return this.lenInst
 
 proc value(this: VlqBase128Le): int = 
 
   ##[
   Resulting unsigned value as normal integer
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((((((((this.groups[0].value + (if this.len >= 2: (this.groups[1].value shl 7) else: 0)) + (if this.len >= 3: (this.groups[2].value shl 14) else: 0)) + (if this.len >= 4: (this.groups[3].value shl 21) else: 0)) + (if this.len >= 5: (this.groups[4].value shl 28) else: 0)) + (if this.len >= 6: (this.groups[5].value shl 35) else: 0)) + (if this.len >= 7: (this.groups[6].value shl 42) else: 0)) + (if this.len >= 8: (this.groups[7].value shl 49) else: 0)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc signBit(this: VlqBase128Le): int = 
-  if this.signBitInst != nil:
+  if this.signBitInstFlag:
     return this.signBitInst
   let signBitInstExpr = int((1 shl ((7 * this.len) - 1)))
   this.signBitInst = signBitInstExpr
-  if this.signBitInst != nil:
-    return this.signBitInst
+  this.signBitInstFlag = true
+  return this.signBitInst
 
 proc valueSigned(this: VlqBase128Le): int = 
 
   ##[
   @see <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
   ]##
-  if this.valueSignedInst != nil:
+  if this.valueSignedInstFlag:
     return this.valueSignedInst
   let valueSignedInstExpr = int(((this.value xor this.signBit) - this.signBit))
   this.valueSignedInst = valueSignedInstExpr
-  if this.valueSignedInst != nil:
-    return this.valueSignedInst
+  this.valueSignedInstFlag = true
+  return this.valueSignedInst
 
 proc fromFile*(_: typedesc[VlqBase128Le], filename: string): VlqBase128Le =
   VlqBase128Le.read(newKaitaiFileStream(filename), nil, nil)
@@ -129,24 +135,24 @@ proc hasNext(this: VlqBase128Le_Group): bool =
   ##[
   If true, then we have more bytes to read
   ]##
-  if this.hasNextInst != nil:
+  if this.hasNextInstFlag:
     return this.hasNextInst
   let hasNextInstExpr = bool((this.b and 128) != 0)
   this.hasNextInst = hasNextInstExpr
-  if this.hasNextInst != nil:
-    return this.hasNextInst
+  this.hasNextInstFlag = true
+  return this.hasNextInst
 
 proc value(this: VlqBase128Le_Group): int = 
 
   ##[
   The 7-bit (base128) numeric value chunk of this group
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((this.b and 127))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[VlqBase128Le_Group], filename: string): VlqBase128Le_Group =
   VlqBase128Le_Group.read(newKaitaiFileStream(filename), nil, nil)

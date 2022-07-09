@@ -9,7 +9,8 @@ type
     `bootloaderSize`*: uint32
     `imgHeaders`*: seq[AndroidBootldrQcom_ImgHeader]
     `parent`*: KaitaiStruct
-    `imgBodiesInst`*: seq[AndroidBootldrQcom_ImgBody]
+    `imgBodiesInst`: seq[AndroidBootldrQcom_ImgBody]
+    `imgBodiesInstFlag`: bool
   AndroidBootldrQcom_ImgHeader* = ref object of KaitaiStruct
     `name`*: string
     `lenBody`*: uint32
@@ -18,7 +19,8 @@ type
     `body`*: seq[byte]
     `idx`*: int32
     `parent`*: AndroidBootldrQcom
-    `imgHeaderInst`*: AndroidBootldrQcom_ImgHeader
+    `imgHeaderInst`: AndroidBootldrQcom_ImgHeader
+    `imgHeaderInstFlag`: bool
 
 proc read*(_: typedesc[AndroidBootldrQcom], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrQcom
 proc read*(_: typedesc[AndroidBootldrQcom_ImgHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom): AndroidBootldrQcom_ImgHeader
@@ -180,7 +182,7 @@ your application code.
     this.imgHeaders.add(it)
 
 proc imgBodies(this: AndroidBootldrQcom): seq[AndroidBootldrQcom_ImgBody] = 
-  if this.imgBodiesInst.len != 0:
+  if this.imgBodiesInstFlag:
     return this.imgBodiesInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsImgBodies))
@@ -188,8 +190,8 @@ proc imgBodies(this: AndroidBootldrQcom): seq[AndroidBootldrQcom_ImgBody] =
     let it = AndroidBootldrQcom_ImgBody.read(this.io, this.root, this, i)
     this.imgBodiesInst.add(it)
   this.io.seek(pos)
-  if this.imgBodiesInst.len != 0:
-    return this.imgBodiesInst
+  this.imgBodiesInstFlag = true
+  return this.imgBodiesInst
 
 proc fromFile*(_: typedesc[AndroidBootldrQcom], filename: string): AndroidBootldrQcom =
   AndroidBootldrQcom.read(newKaitaiFileStream(filename), nil, nil)
@@ -224,12 +226,12 @@ proc read*(_: typedesc[AndroidBootldrQcom_ImgBody], io: KaitaiStream, root: Kait
   this.body = bodyExpr
 
 proc imgHeader(this: AndroidBootldrQcom_ImgBody): AndroidBootldrQcom_ImgHeader = 
-  if this.imgHeaderInst != nil:
+  if this.imgHeaderInstFlag:
     return this.imgHeaderInst
   let imgHeaderInstExpr = AndroidBootldrQcom_ImgHeader(AndroidBootldrQcom(this.root).imgHeaders[this.idx])
   this.imgHeaderInst = imgHeaderInstExpr
-  if this.imgHeaderInst != nil:
-    return this.imgHeaderInst
+  this.imgHeaderInstFlag = true
+  return this.imgHeaderInst
 
 proc fromFile*(_: typedesc[AndroidBootldrQcom_ImgBody], filename: string): AndroidBootldrQcom_ImgBody =
   AndroidBootldrQcom_ImgBody.read(newKaitaiFileStream(filename), nil, nil)

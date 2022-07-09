@@ -723,18 +723,18 @@ sub program_headers {
         $self->{program_headers} = ();
         my $n_program_headers = $self->qty_program_header();
         for (my $i = 0; $i < $n_program_headers; $i++) {
-            $self->{_raw_program_headers}[$i] = $self->{_io}->read_bytes($self->program_header_entry_size());
+            push @{$self->{_raw_program_headers}}, $self->{_io}->read_bytes($self->program_header_entry_size());
             my $io__raw_program_headers = IO::KaitaiStruct::Stream->new($self->{_raw_program_headers}[$i]);
-            $self->{program_headers}[$i] = Elf::EndianElf::ProgramHeader->new($io__raw_program_headers, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{program_headers}}, Elf::EndianElf::ProgramHeader->new($io__raw_program_headers, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
         $self->{_raw_program_headers} = ();
         $self->{program_headers} = ();
         my $n_program_headers = $self->qty_program_header();
         for (my $i = 0; $i < $n_program_headers; $i++) {
-            $self->{_raw_program_headers}[$i] = $self->{_io}->read_bytes($self->program_header_entry_size());
+            push @{$self->{_raw_program_headers}}, $self->{_io}->read_bytes($self->program_header_entry_size());
             my $io__raw_program_headers = IO::KaitaiStruct::Stream->new($self->{_raw_program_headers}[$i]);
-            $self->{program_headers}[$i] = Elf::EndianElf::ProgramHeader->new($io__raw_program_headers, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{program_headers}}, Elf::EndianElf::ProgramHeader->new($io__raw_program_headers, $self, $self->{_root}, $self->{_is_le});
         }
     }
     $self->{_io}->seek($_pos);
@@ -751,18 +751,18 @@ sub section_headers {
         $self->{section_headers} = ();
         my $n_section_headers = $self->qty_section_header();
         for (my $i = 0; $i < $n_section_headers; $i++) {
-            $self->{_raw_section_headers}[$i] = $self->{_io}->read_bytes($self->section_header_entry_size());
+            push @{$self->{_raw_section_headers}}, $self->{_io}->read_bytes($self->section_header_entry_size());
             my $io__raw_section_headers = IO::KaitaiStruct::Stream->new($self->{_raw_section_headers}[$i]);
-            $self->{section_headers}[$i] = Elf::EndianElf::SectionHeader->new($io__raw_section_headers, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{section_headers}}, Elf::EndianElf::SectionHeader->new($io__raw_section_headers, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
         $self->{_raw_section_headers} = ();
         $self->{section_headers} = ();
         my $n_section_headers = $self->qty_section_header();
         for (my $i = 0; $i < $n_section_headers; $i++) {
-            $self->{_raw_section_headers}[$i] = $self->{_io}->read_bytes($self->section_header_entry_size());
+            push @{$self->{_raw_section_headers}}, $self->{_io}->read_bytes($self->section_header_entry_size());
             my $io__raw_section_headers = IO::KaitaiStruct::Stream->new($self->{_raw_section_headers}[$i]);
-            $self->{section_headers}[$i] = Elf::EndianElf::SectionHeader->new($io__raw_section_headers, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{section_headers}}, Elf::EndianElf::SectionHeader->new($io__raw_section_headers, $self, $self->{_root}, $self->{_is_le});
         }
     }
     $self->{_io}->seek($_pos);

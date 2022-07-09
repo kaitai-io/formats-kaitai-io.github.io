@@ -106,9 +106,8 @@ broadcom_trx_t::tail_t::tail_t(kaitai::kstream* p__io, broadcom_trx_t* p__parent
 void broadcom_trx_t::tail_t::_read() {
     m_version = new version_t(m__io, this, m__root);
     m_product_id = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(12), 0, false), std::string("utf-8"));
-    int l_comp_hw = 4;
     m_comp_hw = new std::vector<hw_comp_info_t*>();
-    m_comp_hw->reserve(l_comp_hw);
+    const int l_comp_hw = 4;
     for (int i = 0; i < l_comp_hw; i++) {
         m_comp_hw->push_back(new hw_comp_info_t(m__io, this, m__root));
     }
@@ -306,9 +305,8 @@ broadcom_trx_t::header_t::flags_t::flags_t(kaitai::kstream* p__io, broadcom_trx_
 }
 
 void broadcom_trx_t::header_t::flags_t::_read() {
-    int l_flags = 16;
     m_flags = new std::vector<bool>();
-    m_flags->reserve(l_flags);
+    const int l_flags = 16;
     for (int i = 0; i < l_flags; i++) {
         m_flags->push_back(m__io->read_bits_int_le(1));
     }

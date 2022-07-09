@@ -8,7 +8,7 @@
   } else {
     root.Cramfs = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var Cramfs = (function() {
   function Cramfs(_io, _parent, _root) {
     this._io = _io;
@@ -98,9 +98,9 @@ var Cramfs = (function() {
       this._read();
     }
     ChunkedDataInode.prototype._read = function() {
-      this.blockEndIndex = new Array(Math.floor(((this._parent.size + this._root.pageSize) - 1) / this._root.pageSize));
+      this.blockEndIndex = [];
       for (var i = 0; i < Math.floor(((this._parent.size + this._root.pageSize) - 1) / this._root.pageSize); i++) {
-        this.blockEndIndex[i] = this._io.readU4le();
+        this.blockEndIndex.push(this._io.readU4le());
       }
       this.rawBlocks = this._io.readBytesFull();
     }

@@ -153,7 +153,7 @@ function BroadcomTrx.Header:_read()
   self.partitions = {}
   local i = 0
   while true do
-    _ = BroadcomTrx.Header.Partition(i, self._io, self, self._root)
+    local _ = BroadcomTrx.Header.Partition(i, self._io, self, self._root)
     self.partitions[i + 1] = _
     if  ((i >= 4) or (not(_.is_present)))  then
       break
@@ -172,82 +172,82 @@ end
 BroadcomTrx.Header.Partition = class.class(KaitaiStruct)
 
 function BroadcomTrx.Header.Partition:_init(idx, io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self.idx = idx
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.idx = idx
+  self:_read()
 end
 
 function BroadcomTrx.Header.Partition:_read()
-self.ofs_body = self._io:read_u4le()
+  self.ofs_body = self._io:read_u4le()
 end
 
 BroadcomTrx.Header.Partition.property.is_present = {}
 function BroadcomTrx.Header.Partition.property.is_present:get()
-if self._m_is_present ~= nil then
-  return self._m_is_present
-end
+  if self._m_is_present ~= nil then
+    return self._m_is_present
+  end
 
-self._m_is_present = self.ofs_body ~= 0
-return self._m_is_present
+  self._m_is_present = self.ofs_body ~= 0
+  return self._m_is_present
 end
 
 BroadcomTrx.Header.Partition.property.is_last = {}
 function BroadcomTrx.Header.Partition.property.is_last:get()
-if self._m_is_last ~= nil then
-  return self._m_is_last
-end
+  if self._m_is_last ~= nil then
+    return self._m_is_last
+  end
 
-if self.is_present then
-  self._m_is_last =  ((self.idx == (#self._parent.partitions - 1)) or (not(self._parent.partitions[(self.idx + 1) + 1].is_present))) 
-end
-return self._m_is_last
+  if self.is_present then
+    self._m_is_last =  ((self.idx == (#self._parent.partitions - 1)) or (not(self._parent.partitions[(self.idx + 1) + 1].is_present))) 
+  end
+  return self._m_is_last
 end
 
 BroadcomTrx.Header.Partition.property.len_body = {}
 function BroadcomTrx.Header.Partition.property.len_body:get()
-if self._m_len_body ~= nil then
-  return self._m_len_body
-end
+  if self._m_len_body ~= nil then
+    return self._m_len_body
+  end
 
-if self.is_present then
-  self._m_len_body = utils.box_unwrap((self.is_last) and utils.box_wrap((self._root._io:size() - self.ofs_body)) or (self._parent.partitions[(self.idx + 1) + 1].ofs_body))
-end
-return self._m_len_body
+  if self.is_present then
+    self._m_len_body = utils.box_unwrap((self.is_last) and utils.box_wrap((self._root._io:size() - self.ofs_body)) or (self._parent.partitions[(self.idx + 1) + 1].ofs_body))
+  end
+  return self._m_len_body
 end
 
 BroadcomTrx.Header.Partition.property.body = {}
 function BroadcomTrx.Header.Partition.property.body:get()
-if self._m_body ~= nil then
-  return self._m_body
-end
+  if self._m_body ~= nil then
+    return self._m_body
+  end
 
-if self.is_present then
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.ofs_body)
-  self._m_body = _io:read_bytes(self.len_body)
-  _io:seek(_pos)
-end
-return self._m_body
+  if self.is_present then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_body)
+    self._m_body = _io:read_bytes(self.len_body)
+    _io:seek(_pos)
+  end
+  return self._m_body
 end
 
 
 BroadcomTrx.Header.Flags = class.class(KaitaiStruct)
 
 function BroadcomTrx.Header.Flags:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function BroadcomTrx.Header.Flags:_read()
-self.flags = {}
-for i = 0, 16 - 1 do
-  self.flags[i + 1] = self._io:read_bits_int_le(1)
-end
+  self.flags = {}
+  for i = 0, 16 - 1 do
+    self.flags[i + 1] = self._io:read_bits_int_le(1) ~= 0
+  end
 end
 
 

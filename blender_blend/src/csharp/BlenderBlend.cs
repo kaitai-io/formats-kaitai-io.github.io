@@ -80,7 +80,7 @@ namespace Kaitai
             {
                 _idxType = m_io.ReadU2le();
                 _numFields = m_io.ReadU2le();
-                _fields = new List<DnaField>((int) (NumFields));
+                _fields = new List<DnaField>();
                 for (var i = 0; i < NumFields; i++)
                 {
                     _fields.Add(new DnaField(m_io, this, m_root));
@@ -241,7 +241,7 @@ namespace Kaitai
                     throw new ValidationNotEqualError(new byte[] { 78, 65, 77, 69 }, NameMagic, M_Io, "/types/dna1_body/seq/1");
                 }
                 _numNames = m_io.ReadU4le();
-                _names = new List<string>((int) (NumNames));
+                _names = new List<string>();
                 for (var i = 0; i < NumNames; i++)
                 {
                     _names.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
@@ -253,7 +253,7 @@ namespace Kaitai
                     throw new ValidationNotEqualError(new byte[] { 84, 89, 80, 69 }, TypeMagic, M_Io, "/types/dna1_body/seq/5");
                 }
                 _numTypes = m_io.ReadU4le();
-                _types = new List<string>((int) (NumTypes));
+                _types = new List<string>();
                 for (var i = 0; i < NumTypes; i++)
                 {
                     _types.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
@@ -264,7 +264,7 @@ namespace Kaitai
                 {
                     throw new ValidationNotEqualError(new byte[] { 84, 76, 69, 78 }, TlenMagic, M_Io, "/types/dna1_body/seq/9");
                 }
-                _lengths = new List<ushort>((int) (NumTypes));
+                _lengths = new List<ushort>();
                 for (var i = 0; i < NumTypes; i++)
                 {
                     _lengths.Add(m_io.ReadU2le());
@@ -276,7 +276,7 @@ namespace Kaitai
                     throw new ValidationNotEqualError(new byte[] { 83, 84, 82, 67 }, StrcMagic, M_Io, "/types/dna1_body/seq/12");
                 }
                 _numStructs = m_io.ReadU4le();
-                _structs = new List<DnaStruct>((int) (NumStructs));
+                _structs = new List<DnaStruct>();
                 for (var i = 0; i < NumStructs; i++)
                 {
                     _structs.Add(new DnaStruct(m_io, this, m_root));

@@ -142,7 +142,7 @@ public class AndroidBootldrQcom extends KaitaiStruct {
         this.numImages = this._io.readU4le();
         this.ofsImgBodies = this._io.readU4le();
         this.bootloaderSize = this._io.readU4le();
-        imgHeaders = new ArrayList<ImgHeader>(((Number) (numImages())).intValue());
+        this.imgHeaders = new ArrayList<ImgHeader>();
         for (int i = 0; i < numImages(); i++) {
             this.imgHeaders.add(new ImgHeader(this._io, this, _root));
         }
@@ -203,7 +203,7 @@ public class AndroidBootldrQcom extends KaitaiStruct {
         public ImgHeader imgHeader() {
             if (this.imgHeader != null)
                 return this.imgHeader;
-            this.imgHeader = _root.imgHeaders().get((int) idx());
+            this.imgHeader = _root().imgHeaders().get((int) idx());
             return this.imgHeader;
         }
         private byte[] body;
@@ -221,7 +221,7 @@ public class AndroidBootldrQcom extends KaitaiStruct {
             return this.imgBodies;
         long _pos = this._io.pos();
         this._io.seek(ofsImgBodies());
-        imgBodies = new ArrayList<ImgBody>(((Number) (numImages())).intValue());
+        this.imgBodies = new ArrayList<ImgBody>();
         for (int i = 0; i < numImages(); i++) {
             this.imgBodies.add(new ImgBody(this._io, this, _root, i));
         }

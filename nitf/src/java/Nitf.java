@@ -43,23 +43,23 @@ public class Nitf extends KaitaiStruct {
     }
     private void _read() {
         this.header = new Header(this._io, this, _root);
-        imageSegments = new ArrayList<ImageSegment>(((Number) (Long.parseLong(header().numImageSegments(), 10))).intValue());
+        this.imageSegments = new ArrayList<ImageSegment>();
         for (int i = 0; i < Long.parseLong(header().numImageSegments(), 10); i++) {
             this.imageSegments.add(new ImageSegment(this._io, this, _root, i));
         }
-        graphicsSegments = new ArrayList<GraphicsSegment>(((Number) (Long.parseLong(header().numGraphicsSegments(), 10))).intValue());
+        this.graphicsSegments = new ArrayList<GraphicsSegment>();
         for (int i = 0; i < Long.parseLong(header().numGraphicsSegments(), 10); i++) {
             this.graphicsSegments.add(new GraphicsSegment(this._io, this, _root, i));
         }
-        textSegments = new ArrayList<TextSegment>(((Number) (Long.parseLong(header().numTextFiles(), 10))).intValue());
+        this.textSegments = new ArrayList<TextSegment>();
         for (int i = 0; i < Long.parseLong(header().numTextFiles(), 10); i++) {
             this.textSegments.add(new TextSegment(this._io, this, _root, i));
         }
-        dataExtensionSegments = new ArrayList<DataExtensionSegment>(((Number) (Long.parseLong(header().numDataExtension(), 10))).intValue());
+        this.dataExtensionSegments = new ArrayList<DataExtensionSegment>();
         for (int i = 0; i < Long.parseLong(header().numDataExtension(), 10); i++) {
             this.dataExtensionSegments.add(new DataExtensionSegment(this._io, this, _root, i));
         }
-        reservedExtensionSegments = new ArrayList<ReservedExtensionSegment>(((Number) (Long.parseLong(header().numReservedExtension(), 10))).intValue());
+        this.reservedExtensionSegments = new ArrayList<ReservedExtensionSegment>();
         for (int i = 0; i < Long.parseLong(header().numReservedExtension(), 10); i++) {
             this.reservedExtensionSegments.add(new ReservedExtensionSegment(this._io, this, _root, i));
         }
@@ -239,7 +239,7 @@ public class Nitf extends KaitaiStruct {
             if (Long.parseLong(numLuts(), 10) != 0) {
                 this.numLutEntries = new String(this._io.readBytes(5), Charset.forName("UTF-8"));
             }
-            luts = new ArrayList<byte[]>(((Number) (Long.parseLong(numLuts(), 10))).intValue());
+            this.luts = new ArrayList<byte[]>();
             for (int i = 0; i < Long.parseLong(numLuts(), 10); i++) {
                 this.luts.add(this._io.readBytes(Long.parseLong(numLutEntries(), 10)));
             }
@@ -600,13 +600,13 @@ public class Nitf extends KaitaiStruct {
             this.tpxcdlnth = this._io.readU2be();
             this.tpxcd = this._io.readBytes(tpxcdSize());
             if (hasBmr()) {
-                bmrbnd = new ArrayList<Long>(((Number) (bmrtmrCount())).intValue());
+                this.bmrbnd = new ArrayList<Long>();
                 for (int i = 0; i < bmrtmrCount(); i++) {
                     this.bmrbnd.add(this._io.readU4be());
                 }
             }
             if (hasTmr()) {
-                tmrbnd = new ArrayList<Long>(((Number) (bmrtmrCount())).intValue());
+                this.tmrbnd = new ArrayList<Long>();
                 for (int i = 0; i < bmrtmrCount(); i++) {
                     this.tmrbnd.add(this._io.readU4be());
                 }
@@ -921,7 +921,7 @@ public class Nitf extends KaitaiStruct {
             this.imageCoordinateRep = new String(this._io.readBytes(1), Charset.forName("UTF-8"));
             this.imageGeoLoc = new String(this._io.readBytes(60), Charset.forName("UTF-8"));
             this.numImgComments = new String(this._io.readBytes(1), Charset.forName("UTF-8"));
-            imgComments = new ArrayList<ImageComment>(((Number) (Long.parseLong(numImgComments(), 10))).intValue());
+            this.imgComments = new ArrayList<ImageComment>();
             for (int i = 0; i < Long.parseLong(numImgComments(), 10); i++) {
                 this.imgComments.add(new ImageComment(this._io, this, _root));
             }
@@ -931,7 +931,7 @@ public class Nitf extends KaitaiStruct {
             if (Long.parseLong(numBands(), 10) == 0) {
                 this.numMultispectralBands = new String(this._io.readBytes(5), Charset.forName("UTF-8"));
             }
-            bands = new ArrayList<BandInfo>(((Number) ((Long.parseLong(numBands(), 10) != 0 ? Long.parseLong(numBands(), 10) : Long.parseLong(numMultispectralBands(), 10)))).intValue());
+            this.bands = new ArrayList<BandInfo>();
             for (int i = 0; i < (Long.parseLong(numBands(), 10) != 0 ? Long.parseLong(numBands(), 10) : Long.parseLong(numMultispectralBands(), 10)); i++) {
                 this.bands.add(new BandInfo(this._io, this, _root));
             }
@@ -951,7 +951,7 @@ public class Nitf extends KaitaiStruct {
                 this.userDefOverflow = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
             }
             if (Long.parseLong(userDefImgDataLen(), 10) > 2) {
-                userDefImgData = new ArrayList<Integer>(((Number) ((Long.parseLong(userDefImgDataLen(), 10) - 3))).intValue());
+                this.userDefImgData = new ArrayList<Integer>();
                 for (int i = 0; i < (Long.parseLong(userDefImgDataLen(), 10) - 3); i++) {
                     this.userDefImgData.add(this._io.readU1());
                 }
@@ -1283,28 +1283,28 @@ public class Nitf extends KaitaiStruct {
             this.fileLength = new String(this._io.readBytes(12), Charset.forName("UTF-8"));
             this.fileHeaderLength = new String(this._io.readBytes(6), Charset.forName("UTF-8"));
             this.numImageSegments = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
-            linfo = new ArrayList<LengthImageInfo>(((Number) (Long.parseLong(numImageSegments(), 10))).intValue());
+            this.linfo = new ArrayList<LengthImageInfo>();
             for (int i = 0; i < Long.parseLong(numImageSegments(), 10); i++) {
                 this.linfo.add(new LengthImageInfo(this._io, this, _root));
             }
             this.numGraphicsSegments = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
-            lnnfo = new ArrayList<LengthGraphicInfo>(((Number) (Long.parseLong(numGraphicsSegments(), 10))).intValue());
+            this.lnnfo = new ArrayList<LengthGraphicInfo>();
             for (int i = 0; i < Long.parseLong(numGraphicsSegments(), 10); i++) {
                 this.lnnfo.add(new LengthGraphicInfo(this._io, this, _root));
             }
             this.reservedNumx = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
             this.numTextFiles = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
-            ltnfo = new ArrayList<LengthTextInfo>(((Number) (Long.parseLong(numTextFiles(), 10))).intValue());
+            this.ltnfo = new ArrayList<LengthTextInfo>();
             for (int i = 0; i < Long.parseLong(numTextFiles(), 10); i++) {
                 this.ltnfo.add(new LengthTextInfo(this._io, this, _root));
             }
             this.numDataExtension = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
-            ldnfo = new ArrayList<LengthDataInfo>(((Number) (Long.parseLong(numDataExtension(), 10))).intValue());
+            this.ldnfo = new ArrayList<LengthDataInfo>();
             for (int i = 0; i < Long.parseLong(numDataExtension(), 10); i++) {
                 this.ldnfo.add(new LengthDataInfo(this._io, this, _root));
             }
             this.numReservedExtension = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
-            lrnfo = new ArrayList<LengthReservedInfo>(((Number) (Long.parseLong(numReservedExtension(), 10))).intValue());
+            this.lrnfo = new ArrayList<LengthReservedInfo>();
             for (int i = 0; i < Long.parseLong(numReservedExtension(), 10); i++) {
                 this.lrnfo.add(new LengthReservedInfo(this._io, this, _root));
             }
@@ -1406,7 +1406,7 @@ public class Nitf extends KaitaiStruct {
             this.desDefinedSubheaderFieldsLen = new String(this._io.readBytes(4), Charset.forName("UTF-8"));
             this.sfhL1 = new String(this._io.readBytes(7), Charset.forName("UTF-8"));
             this.sfhDelim1 = this._io.readU4be();
-            sfhDr = new ArrayList<Integer>(((Number) (Long.parseLong(sfhL1(), 10))).intValue());
+            this.sfhDr = new ArrayList<Integer>();
             for (int i = 0; i < Long.parseLong(sfhL1(), 10); i++) {
                 this.sfhDr.add(this._io.readU1());
             }
@@ -1473,7 +1473,7 @@ public class Nitf extends KaitaiStruct {
                 this.headerOverflow = new String(this._io.readBytes(3), Charset.forName("UTF-8"));
             }
             if (Long.parseLong(headerDataLength(), 10) > 2) {
-                headerData = new ArrayList<Integer>(((Number) ((Long.parseLong(headerDataLength(), 10) - 3))).intValue());
+                this.headerData = new ArrayList<Integer>();
                 for (int i = 0; i < (Long.parseLong(headerDataLength(), 10) - 3); i++) {
                     this.headerData.add(this._io.readU1());
                 }

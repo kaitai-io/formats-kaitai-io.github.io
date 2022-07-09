@@ -35,9 +35,8 @@ void rpm_t::_read() {
         n__unnamed5 = false;
         m__unnamed5 = m__io->read_bytes(0);
     }
-    int l_signature_tags_steps = signature()->header_record()->num_index_records();
     m_signature_tags_steps = std::unique_ptr<std::vector<std::unique_ptr<signature_tags_step_t>>>(new std::vector<std::unique_ptr<signature_tags_step_t>>());
-    m_signature_tags_steps->reserve(l_signature_tags_steps);
+    const int l_signature_tags_steps = signature()->header_record()->num_index_records();
     for (int i = 0; i < l_signature_tags_steps; i++) {
         m_signature_tags_steps->push_back(std::move(std::unique_ptr<signature_tags_step_t>(new signature_tags_step_t(i, ((i < 1) ? (-1) : (signature_tags_steps()->at((i - 1))->size_tag_idx())), m__io, this, m__root))));
     }
@@ -65,9 +64,8 @@ rpm_t::record_type_string_array_t::record_type_string_array_t(uint32_t p_num_val
 }
 
 void rpm_t::record_type_string_array_t::_read() {
-    int l_values = num_values();
     m_values = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m_values->reserve(l_values);
+    const int l_values = num_values();
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8"))));
     }
@@ -119,9 +117,8 @@ rpm_t::record_type_string_t::record_type_string_t(kaitai::kstream* p__io, rpm_t:
 }
 
 void rpm_t::record_type_string_t::_read() {
-    int l_values = 1;
     m_values = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m_values->reserve(l_values);
+    const int l_values = 1;
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8"))));
     }
@@ -170,9 +167,8 @@ rpm_t::record_type_uint32_t::record_type_uint32_t(uint32_t p_num_values, kaitai:
 }
 
 void rpm_t::record_type_uint32_t::_read() {
-    int l_values = num_values();
     m_values = std::unique_ptr<std::vector<uint32_t>>(new std::vector<uint32_t>());
-    m_values->reserve(l_values);
+    const int l_values = num_values();
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(m__io->read_u4be()));
     }
@@ -194,9 +190,8 @@ rpm_t::record_type_uint16_t::record_type_uint16_t(uint32_t p_num_values, kaitai:
 }
 
 void rpm_t::record_type_uint16_t::_read() {
-    int l_values = num_values();
     m_values = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_values->reserve(l_values);
+    const int l_values = num_values();
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(m__io->read_u2be()));
     }
@@ -392,9 +387,8 @@ rpm_t::record_type_uint8_t::record_type_uint8_t(uint32_t p_num_values, kaitai::k
 }
 
 void rpm_t::record_type_uint8_t::_read() {
-    int l_values = num_values();
     m_values = std::unique_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>());
-    m_values->reserve(l_values);
+    const int l_values = num_values();
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(m__io->read_u1()));
     }
@@ -416,9 +410,8 @@ rpm_t::record_type_uint64_t::record_type_uint64_t(uint32_t p_num_values, kaitai:
 }
 
 void rpm_t::record_type_uint64_t::_read() {
-    int l_values = num_values();
     m_values = std::unique_ptr<std::vector<uint64_t>>(new std::vector<uint64_t>());
-    m_values->reserve(l_values);
+    const int l_values = num_values();
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(m__io->read_u8be()));
     }
@@ -440,9 +433,8 @@ rpm_t::record_type_bin_t::record_type_bin_t(uint32_t p_len_value, kaitai::kstrea
 }
 
 void rpm_t::record_type_bin_t::_read() {
-    int l_values = 1;
     m_values = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m_values->reserve(l_values);
+    const int l_values = 1;
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(m__io->read_bytes(len_value())));
     }
@@ -498,9 +490,8 @@ rpm_t::header_t::header_t(bool p_is_signature, kaitai::kstream* p__io, rpm_t* p_
 
 void rpm_t::header_t::_read() {
     m_header_record = std::unique_ptr<header_record_t>(new header_record_t(m__io, this, m__root));
-    int l_index_records = header_record()->num_index_records();
     m_index_records = std::unique_ptr<std::vector<std::unique_ptr<header_index_record_t>>>(new std::vector<std::unique_ptr<header_index_record_t>>());
-    m_index_records->reserve(l_index_records);
+    const int l_index_records = header_record()->num_index_records();
     for (int i = 0; i < l_index_records; i++) {
         m_index_records->push_back(std::move(std::unique_ptr<header_index_record_t>(new header_index_record_t(m__io, this, m__root))));
     }

@@ -114,9 +114,8 @@ wmf_t::params_polygon_t::params_polygon_t(kaitai::kstream* p__io, wmf_t::record_
 
 void wmf_t::params_polygon_t::_read() {
     m_num_points = m__io->read_s2le();
-    int l_points = num_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_s_t>>>(new std::vector<std::unique_ptr<point_s_t>>());
-    m_points->reserve(l_points);
+    const int l_points = num_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_s_t>(new point_s_t(m__io, this, m__root))));
     }
@@ -215,9 +214,8 @@ wmf_t::params_polyline_t::params_polyline_t(kaitai::kstream* p__io, wmf_t::recor
 
 void wmf_t::params_polyline_t::_read() {
     m_num_points = m__io->read_s2le();
-    int l_points = num_points();
     m_points = std::unique_ptr<std::vector<std::unique_ptr<point_s_t>>>(new std::vector<std::unique_ptr<point_s_t>>());
-    m_points->reserve(l_points);
+    const int l_points = num_points();
     for (int i = 0; i < l_points; i++) {
         m_points->push_back(std::move(std::unique_ptr<point_s_t>(new point_s_t(m__io, this, m__root))));
     }

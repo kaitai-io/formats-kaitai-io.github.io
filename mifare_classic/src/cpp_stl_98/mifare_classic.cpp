@@ -201,15 +201,13 @@ mifare_classic_t::sector_t::values_t::value_block_t::value_block_t(kaitai::kstre
 }
 
 void mifare_classic_t::sector_t::values_t::value_block_t::_read() {
-    int l_valuez = 3;
     m_valuez = new std::vector<uint32_t>();
-    m_valuez->reserve(l_valuez);
+    const int l_valuez = 3;
     for (int i = 0; i < l_valuez; i++) {
         m_valuez->push_back(m__io->read_u4le());
     }
-    int l_addrz = 4;
     m_addrz = new std::vector<uint8_t>();
-    m_addrz->reserve(l_addrz);
+    const int l_addrz = 4;
     for (int i = 0; i < l_addrz; i++) {
         m_addrz->push_back(m__io->read_u1());
     }
@@ -444,9 +442,8 @@ mifare_classic_t::trailer_t::access_conditions_t::access_conditions_t(kaitai::ks
 }
 
 void mifare_classic_t::trailer_t::access_conditions_t::_read() {
-    int l_raw_chunks = _parent()->ac_count_of_chunks();
     m_raw_chunks = new std::vector<uint64_t>();
-    m_raw_chunks->reserve(l_raw_chunks);
+    const int l_raw_chunks = _parent()->ac_count_of_chunks();
     for (int i = 0; i < l_raw_chunks; i++) {
         m_raw_chunks->push_back(m__io->read_bits_int_be(4));
     }
@@ -767,9 +764,8 @@ std::vector<mifare_classic_t::trailer_t::access_conditions_t::ac_t::ac_bit_t*>* 
         return m_bits;
     std::streampos _pos = m__io->pos();
     m__io->seek(0);
-    int l_bits = _parent()->_parent()->ac_bits();
     m_bits = new std::vector<ac_bit_t*>();
-    m_bits->reserve(l_bits);
+    const int l_bits = _parent()->_parent()->ac_bits();
     for (int i = 0; i < l_bits; i++) {
         m_bits->push_back(new ac_bit_t(index(), _parent()->chunks()->at(i)->chunk(), m__io, this, m__root));
     }
@@ -832,9 +828,8 @@ std::vector<mifare_classic_t::trailer_t::access_conditions_t::data_ac_t*>* mifar
         return m_data_acs;
     std::streampos _pos = m__io->pos();
     m__io->seek(0);
-    int l_data_acs = (_parent()->acs_in_sector() - 1);
     m_data_acs = new std::vector<data_ac_t*>();
-    m_data_acs->reserve(l_data_acs);
+    const int l_data_acs = (_parent()->acs_in_sector() - 1);
     for (int i = 0; i < l_data_acs; i++) {
         m_data_acs->push_back(new data_ac_t(acs_raw()->at(i), m__io, this, m__root));
     }
@@ -848,9 +843,8 @@ std::vector<mifare_classic_t::trailer_t::access_conditions_t::chunk_bit_remap_t*
         return m_remaps;
     std::streampos _pos = m__io->pos();
     m__io->seek(0);
-    int l_remaps = _parent()->ac_bits();
     m_remaps = new std::vector<chunk_bit_remap_t*>();
-    m_remaps->reserve(l_remaps);
+    const int l_remaps = _parent()->ac_bits();
     for (int i = 0; i < l_remaps; i++) {
         m_remaps->push_back(new chunk_bit_remap_t(i, m__io, this, m__root));
     }
@@ -864,9 +858,8 @@ std::vector<mifare_classic_t::trailer_t::access_conditions_t::ac_t*>* mifare_cla
         return m_acs_raw;
     std::streampos _pos = m__io->pos();
     m__io->seek(0);
-    int l_acs_raw = _parent()->acs_in_sector();
     m_acs_raw = new std::vector<ac_t*>();
-    m_acs_raw->reserve(l_acs_raw);
+    const int l_acs_raw = _parent()->acs_in_sector();
     for (int i = 0; i < l_acs_raw; i++) {
         m_acs_raw->push_back(new ac_t(i, m__io, this, m__root));
     }
@@ -891,9 +884,8 @@ std::vector<mifare_classic_t::trailer_t::access_conditions_t::valid_chunk_t*>* m
         return m_chunks;
     std::streampos _pos = m__io->pos();
     m__io->seek(0);
-    int l_chunks = _parent()->ac_bits();
     m_chunks = new std::vector<valid_chunk_t*>();
-    m_chunks->reserve(l_chunks);
+    const int l_chunks = _parent()->ac_bits();
     for (int i = 0; i < l_chunks; i++) {
         m_chunks->push_back(new valid_chunk_t(raw_chunks()->at(remaps()->at(i)->inv_chunk_no()), raw_chunks()->at(remaps()->at(i)->chunk_no()), m__io, this, m__root));
     }

@@ -5,7 +5,8 @@ type
   Luks* = ref object of KaitaiStruct
     `partitionHeader`*: Luks_PartitionHeader
     `parent`*: KaitaiStruct
-    `payloadInst`*: seq[byte]
+    `payloadInst`: seq[byte]
+    `payloadInstFlag`: bool
   Luks_PartitionHeader* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `version`*: seq[byte]
@@ -27,7 +28,8 @@ type
     `startSectorOfKeyMaterial`*: uint32
     `numberOfAntiForensicStripes`*: uint32
     `parent`*: Luks_PartitionHeader
-    `keyMaterialInst`*: seq[byte]
+    `keyMaterialInst`: seq[byte]
+    `keyMaterialInstFlag`: bool
   Luks_PartitionHeader_KeySlot_KeySlotStates* = enum
     disabled_key_slot = 57005
     enabled_key_slot = 11301363
@@ -58,15 +60,15 @@ proc read*(_: typedesc[Luks], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.partitionHeader = partitionHeaderExpr
 
 proc payload(this: Luks): seq[byte] = 
-  if this.payloadInst.len != 0:
+  if this.payloadInstFlag:
     return this.payloadInst
   let pos = this.io.pos()
   this.io.seek(int((this.partitionHeader.payloadOffset * 512)))
   let payloadInstExpr = this.io.readBytesFull()
   this.payloadInst = payloadInstExpr
   this.io.seek(pos)
-  if this.payloadInst.len != 0:
-    return this.payloadInst
+  this.payloadInstFlag = true
+  return this.payloadInst
 
 proc fromFile*(_: typedesc[Luks], filename: string): Luks =
   Luks.read(newKaitaiFileStream(filename), nil, nil)
@@ -128,15 +130,15 @@ proc read*(_: typedesc[Luks_PartitionHeader_KeySlot], io: KaitaiStream, root: Ka
   this.numberOfAntiForensicStripes = numberOfAntiForensicStripesExpr
 
 proc keyMaterial(this: Luks_PartitionHeader_KeySlot): seq[byte] = 
-  if this.keyMaterialInst.len != 0:
+  if this.keyMaterialInstFlag:
     return this.keyMaterialInst
   let pos = this.io.pos()
   this.io.seek(int((this.startSectorOfKeyMaterial * 512)))
   let keyMaterialInstExpr = this.io.readBytes(int((this.parent.numberOfKeyBytes * this.numberOfAntiForensicStripes)))
   this.keyMaterialInst = keyMaterialInstExpr
   this.io.seek(pos)
-  if this.keyMaterialInst.len != 0:
-    return this.keyMaterialInst
+  this.keyMaterialInstFlag = true
+  return this.keyMaterialInst
 
 proc fromFile*(_: typedesc[Luks_PartitionHeader_KeySlot], filename: string): Luks_PartitionHeader_KeySlot =
   Luks_PartitionHeader_KeySlot.read(newKaitaiFileStream(filename), nil, nil)

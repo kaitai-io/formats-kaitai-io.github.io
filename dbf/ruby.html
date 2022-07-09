@@ -350,9 +350,9 @@ specification of fields, and a number of fixed-size records.</p>
     <span class="vi">@_raw_header2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header1</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
     <span class="n">_io__raw_header2</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header2</span><span class="p">)</span>
     <span class="vi">@header2</span> <span class="o">=</span> <span class="no">Header2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_header2</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@records</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">num_records</span><span class="p">)</span>
+    <span class="vi">@records</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">num_records</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@records</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">len_record</span><span class="p">)</span>
+      <span class="vi">@records</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">len_record</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -369,9 +369,9 @@ specification of fields, and a number of fixed-size records.</p>
       <span class="k">if</span> <span class="n">_root</span><span class="o">.</span><span class="n">header1</span><span class="o">.</span><span class="n">dbase_level</span> <span class="o">==</span> <span class="mi">7</span>
         <span class="vi">@header_dbase_7</span> <span class="o">=</span> <span class="no">HeaderDbase7</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">end</span>
-      <span class="vi">@fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+      <span class="vi">@fields</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@fields</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Field</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@fields</span> <span class="o">&lt;&lt;</span> <span class="no">Field</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>

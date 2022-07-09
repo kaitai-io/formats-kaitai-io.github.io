@@ -8,7 +8,7 @@
   } else {
     root.Xar = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * From [Wikipedia](https://en.wikipedia.org/wiki/Xar_(archiver)):
  * 

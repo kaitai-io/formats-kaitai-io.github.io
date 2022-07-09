@@ -406,7 +406,7 @@ public class ResourceFork extends KaitaiStruct {
                 }
                 private void _read() {
                     this.numTypesM1 = this._io.readU2be();
-                    entries = new ArrayList<TypeListEntry>(((Number) (numTypes())).intValue());
+                    this.entries = new ArrayList<TypeListEntry>();
                     for (int i = 0; i < numTypes(); i++) {
                         this.entries.add(new TypeListEntry(this._io, this, _root));
                     }
@@ -561,7 +561,7 @@ public class ResourceFork extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    references = new ArrayList<Reference>(((Number) (numReferences())).intValue());
+                    this.references = new ArrayList<Reference>();
                     for (int i = 0; i < numReferences(); i++) {
                         this.references.add(new Reference(this._io, this, _root));
                     }
@@ -776,7 +776,7 @@ public class ResourceFork extends KaitaiStruct {
                         if (this.name != null)
                             return this.name;
                         if (ofsName() != 65535) {
-                            KaitaiStream io = _root.resourceMap().namesWithIo()._io();
+                            KaitaiStream io = _root().resourceMap().namesWithIo()._io();
                             long _pos = io.pos();
                             io.seek(ofsName());
                             this.name = new Name(io, this, _root);
@@ -792,7 +792,7 @@ public class ResourceFork extends KaitaiStruct {
                     public DataBlock dataBlock() {
                         if (this.dataBlock != null)
                             return this.dataBlock;
-                        KaitaiStream io = _root.dataBlocksWithIo()._io();
+                        KaitaiStream io = _root().dataBlocksWithIo()._io();
                         long _pos = io.pos();
                         io.seek(ofsDataBlock());
                         this.dataBlock = new DataBlock(io, this, _root);

@@ -29,7 +29,8 @@ type
     `lenData`*: uint32
     `checksum`*: seq[byte]
     `parent`*: HeapsPak_Header_Entry
-    `dataInst`*: seq[byte]
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
   HeapsPak_Header_Dir* = ref object of KaitaiStruct
     `numEntries`*: uint32
     `entries`*: seq[HeapsPak_Header_Entry]
@@ -151,7 +152,7 @@ proc read*(_: typedesc[HeapsPak_Header_File], io: KaitaiStream, root: KaitaiStru
   this.checksum = checksumExpr
 
 proc data(this: HeapsPak_Header_File): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let io = HeapsPak(this.root).io
   let pos = io.pos()
@@ -159,8 +160,8 @@ proc data(this: HeapsPak_Header_File): seq[byte] =
   let dataInstExpr = io.readBytes(int(this.lenData))
   this.dataInst = dataInstExpr
   io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[HeapsPak_Header_File], filename: string): HeapsPak_Header_File =
   HeapsPak_Header_File.read(newKaitaiFileStream(filename), nil, nil)

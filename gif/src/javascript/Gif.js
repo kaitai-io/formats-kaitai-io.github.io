@@ -8,7 +8,7 @@
   } else {
     root.Gif = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * GIF (Graphics Interchange Format) is an image file format, developed
  * in 1987. It became popular in 1990s as one of the main image formats
@@ -65,7 +65,7 @@ var Gif = (function() {
       var _io__raw_globalColorTable = new KaitaiStream(this._raw_globalColorTable);
       this.globalColorTable = new ColorTable(_io__raw_globalColorTable, this, this._root);
     }
-    this.blocks = []
+    this.blocks = [];
     var i = 0;
     do {
       var _ = new Block(this._io, this, this._root);
@@ -368,7 +368,7 @@ var Gif = (function() {
     }
     ExtApplication.prototype._read = function() {
       this.applicationId = new ApplicationId(this._io, this, this._root);
-      this.subblocks = []
+      this.subblocks = [];
       var i = 0;
       do {
         var _ = new Subblock(this._io, this, this._root);
@@ -389,7 +389,7 @@ var Gif = (function() {
       this._read();
     }
     Subblocks.prototype._read = function() {
-      this.entries = []
+      this.entries = [];
       var i = 0;
       do {
         var _ = new Subblock(this._io, this, this._root);

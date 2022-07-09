@@ -116,7 +116,7 @@ namespace Kaitai
                 _numArrayElements32 = m_io.ReadU4be();
             }
             if (IsArray) {
-                _arrayElements = new List<Msgpack>((int) (NumArrayElements));
+                _arrayElements = new List<Msgpack>();
                 for (var i = 0; i < NumArrayElements; i++)
                 {
                     _arrayElements.Add(new Msgpack(m_io));
@@ -129,7 +129,7 @@ namespace Kaitai
                 _numMapElements32 = m_io.ReadU4be();
             }
             if (IsMap) {
-                _mapElements = new List<MapTuple>((int) (NumMapElements));
+                _mapElements = new List<MapTuple>();
                 for (var i = 0; i < NumMapElements; i++)
                 {
                     _mapElements.Add(new MapTuple(m_io, this, m_root));

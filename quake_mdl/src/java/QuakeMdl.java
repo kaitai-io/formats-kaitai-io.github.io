@@ -29,19 +29,19 @@ public class QuakeMdl extends KaitaiStruct {
     }
     private void _read() {
         this.header = new MdlHeader(this._io, this, _root);
-        skins = new ArrayList<MdlSkin>(((Number) (header().numSkins())).intValue());
+        this.skins = new ArrayList<MdlSkin>();
         for (int i = 0; i < header().numSkins(); i++) {
             this.skins.add(new MdlSkin(this._io, this, _root));
         }
-        textureCoordinates = new ArrayList<MdlTexcoord>(((Number) (header().numVerts())).intValue());
+        this.textureCoordinates = new ArrayList<MdlTexcoord>();
         for (int i = 0; i < header().numVerts(); i++) {
             this.textureCoordinates.add(new MdlTexcoord(this._io, this, _root));
         }
-        triangles = new ArrayList<MdlTriangle>(((Number) (header().numTris())).intValue());
+        this.triangles = new ArrayList<MdlTriangle>();
         for (int i = 0; i < header().numTris(); i++) {
             this.triangles.add(new MdlTriangle(this._io, this, _root));
         }
-        frames = new ArrayList<MdlFrame>(((Number) (header().numFrames())).intValue());
+        this.frames = new ArrayList<MdlFrame>();
         for (int i = 0; i < header().numFrames(); i++) {
             this.frames.add(new MdlFrame(this._io, this, _root));
         }
@@ -66,7 +66,7 @@ public class QuakeMdl extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<Integer>(((Number) (3)).intValue());
+            this.values = new ArrayList<Integer>();
             for (int i = 0; i < 3; i++) {
                 this.values.add(this._io.readU1());
             }
@@ -231,21 +231,21 @@ public class QuakeMdl extends KaitaiStruct {
         private void _read() {
             this.group = this._io.readS4le();
             if (group() == 0) {
-                this.singleTextureData = this._io.readBytes(_root.header().skinSize());
+                this.singleTextureData = this._io.readBytes(_root().header().skinSize());
             }
             if (group() != 0) {
                 this.numFrames = this._io.readU4le();
             }
             if (group() != 0) {
-                frameTimes = new ArrayList<Float>(((Number) (numFrames())).intValue());
+                this.frameTimes = new ArrayList<Float>();
                 for (int i = 0; i < numFrames(); i++) {
                     this.frameTimes.add(this._io.readF4le());
                 }
             }
             if (group() != 0) {
-                groupTextureData = new ArrayList<byte[]>(((Number) (numFrames())).intValue());
+                this.groupTextureData = new ArrayList<byte[]>();
                 for (int i = 0; i < numFrames(); i++) {
-                    this.groupTextureData.add(this._io.readBytes(_root.header().skinSize()));
+                    this.groupTextureData.add(this._io.readBytes(_root().header().skinSize()));
                 }
             }
         }
@@ -292,12 +292,12 @@ public class QuakeMdl extends KaitaiStruct {
                 this.max = new MdlVertex(this._io, this, _root);
             }
             if (type() != 0) {
-                time = new ArrayList<Float>(((Number) (type())).intValue());
+                this.time = new ArrayList<Float>();
                 for (int i = 0; i < type(); i++) {
                     this.time.add(this._io.readF4le());
                 }
             }
-            frames = new ArrayList<MdlSimpleFrame>(((Number) (numSimpleFrames())).intValue());
+            this.frames = new ArrayList<MdlSimpleFrame>();
             for (int i = 0; i < numSimpleFrames(); i++) {
                 this.frames.add(new MdlSimpleFrame(this._io, this, _root));
             }
@@ -348,8 +348,8 @@ public class QuakeMdl extends KaitaiStruct {
             this.bboxMin = new MdlVertex(this._io, this, _root);
             this.bboxMax = new MdlVertex(this._io, this, _root);
             this.name = new String(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(16), (byte) 0), (byte) 0, false), Charset.forName("ASCII"));
-            vertices = new ArrayList<MdlVertex>(((Number) (_root.header().numVerts())).intValue());
-            for (int i = 0; i < _root.header().numVerts(); i++) {
+            this.vertices = new ArrayList<MdlVertex>();
+            for (int i = 0; i < _root().header().numVerts(); i++) {
                 this.vertices.add(new MdlVertex(this._io, this, _root));
             }
         }
@@ -387,7 +387,7 @@ public class QuakeMdl extends KaitaiStruct {
         }
         private void _read() {
             this.facesFront = this._io.readS4le();
-            vertices = new ArrayList<Integer>(((Number) (3)).intValue());
+            this.vertices = new ArrayList<Integer>();
             for (int i = 0; i < 3; i++) {
                 this.vertices.add(this._io.readS4le());
             }

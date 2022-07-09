@@ -638,7 +638,7 @@ sub _read {
     $self->{sections} = ();
     my $n_sections = $self->coff_hdr()->number_of_sections();
     for (my $i = 0; $i < $n_sections; $i++) {
-        $self->{sections}[$i] = MicrosoftPe::Section->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{sections}}, MicrosoftPe::Section->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1115,7 +1115,7 @@ sub symbol_table {
     $self->{symbol_table} = ();
     my $n_symbol_table = $self->number_of_symbols();
     for (my $i = 0; $i < $n_symbol_table; $i++) {
-        $self->{symbol_table}[$i] = MicrosoftPe::CoffSymbol->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{symbol_table}}, MicrosoftPe::CoffSymbol->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{symbol_table};

@@ -111,9 +111,9 @@ class DosMz < Kaitai::Struct::Struct
       io = header._io
       _pos = io.pos
       io.seek(header.mz.ofs_relocations)
-      @relocations = Array.new(header.mz.num_relocations)
+      @relocations = []
       (header.mz.num_relocations).times { |i|
-        @relocations[i] = Relocation.new(io, self, @_root)
+        @relocations << Relocation.new(io, self, @_root)
       }
       io.seek(_pos)
     end

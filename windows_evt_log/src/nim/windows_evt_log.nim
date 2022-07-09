@@ -49,8 +49,10 @@ type
     `lenData`*: uint32
     `ofsData`*: uint32
     `parent`*: WindowsEvtLog_Record
-    `userSidInst`*: seq[byte]
-    `dataInst`*: seq[byte]
+    `userSidInst`: seq[byte]
+    `userSidInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
   WindowsEvtLog_RecordBody_EventTypes* = enum
     error = 1
     audit_failure = 2
@@ -367,26 +369,26 @@ source of events / event type.
   this.ofsData = ofsDataExpr
 
 proc userSid(this: WindowsEvtLog_RecordBody): seq[byte] = 
-  if this.userSidInst.len != 0:
+  if this.userSidInstFlag:
     return this.userSidInst
   let pos = this.io.pos()
   this.io.seek(int((this.ofsUserSid - 8)))
   let userSidInstExpr = this.io.readBytes(int(this.lenUserSid))
   this.userSidInst = userSidInstExpr
   this.io.seek(pos)
-  if this.userSidInst.len != 0:
-    return this.userSidInst
+  this.userSidInstFlag = true
+  return this.userSidInst
 
 proc data(this: WindowsEvtLog_RecordBody): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let pos = this.io.pos()
   this.io.seek(int((this.ofsData - 8)))
   let dataInstExpr = this.io.readBytes(int(this.lenData))
   this.dataInst = dataInstExpr
   this.io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[WindowsEvtLog_RecordBody], filename: string): WindowsEvtLog_RecordBody =
   WindowsEvtLog_RecordBody.read(newKaitaiFileStream(filename), nil, nil)

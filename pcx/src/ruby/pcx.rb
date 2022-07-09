@@ -114,9 +114,9 @@ class Pcx < Kaitai::Struct::Struct
     def _read
       @magic = @_io.read_bytes(1)
       raise Kaitai::Struct::ValidationNotEqualError.new([12].pack('C*'), magic, _io, "/types/t_palette_256/seq/0") if not magic == [12].pack('C*')
-      @colors = Array.new(256)
+      @colors = []
       (256).times { |i|
-        @colors[i] = Rgb.new(@_io, self, @_root)
+        @colors << Rgb.new(@_io, self, @_root)
       }
       self
     end

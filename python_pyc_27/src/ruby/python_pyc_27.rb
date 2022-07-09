@@ -355,9 +355,9 @@ class PythonPyc27 < Kaitai::Struct::Struct
 
       def _read
         @count = @_io.read_u4le
-        @items = Array.new(count)
+        @items = []
         (count).times { |i|
-          @items[i] = PyObject.new(@_io, self, @_root)
+          @items << PyObject.new(@_io, self, @_root)
         }
         self
       end

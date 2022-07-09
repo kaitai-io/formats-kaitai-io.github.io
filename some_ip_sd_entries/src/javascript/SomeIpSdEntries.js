@@ -8,7 +8,7 @@
   } else {
     root.SomeIpSdEntries = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The entries are used to synchronize the state of services instances and the
  * Publish/-Subscribe handling.

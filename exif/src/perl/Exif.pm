@@ -179,7 +179,7 @@ sub _read_le {
     $self->{fields} = ();
     my $n_fields = $self->num_fields();
     for (my $i = 0; $i < $n_fields; $i++) {
-        $self->{fields}[$i] = Exif::ExifBody::IfdField->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+        push @{$self->{fields}}, Exif::ExifBody::IfdField->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
     }
     $self->{next_ifd_ofs} = $self->{_io}->read_u4le();
 }
@@ -191,7 +191,7 @@ sub _read_be {
     $self->{fields} = ();
     my $n_fields = $self->num_fields();
     for (my $i = 0; $i < $n_fields; $i++) {
-        $self->{fields}[$i] = Exif::ExifBody::IfdField->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+        push @{$self->{fields}}, Exif::ExifBody::IfdField->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
     }
     $self->{next_ifd_ofs} = $self->{_io}->read_u4be();
 }

@@ -8,7 +8,7 @@
   } else {
     root.RtcpPayload = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * RTCP is the Real-Time Control Protocol
  * @see {@link https://tools.ietf.org/html/rfc3550|Source}
@@ -130,9 +130,9 @@ var RtcpPayload = (function() {
       this.brExp = this._io.readBitsIntBe(6);
       this.brMantissa = this._io.readBitsIntBe(18);
       this._io.alignToByte();
-      this.ssrcList = new Array(this.numSsrc);
+      this.ssrcList = [];
       for (var i = 0; i < this.numSsrc; i++) {
-        this.ssrcList[i] = this._io.readU4be();
+        this.ssrcList.push(this._io.readU4be());
       }
     }
     Object.defineProperty(PsfbAfbRembPacket.prototype, 'maxTotalBitrate', {
@@ -162,9 +162,9 @@ var RtcpPayload = (function() {
       this.rtpTimestamp = this._io.readU4be();
       this.senderPacketCount = this._io.readU4be();
       this.senderOctetCount = this._io.readU4be();
-      this.reportBlock = new Array(this._parent.subtype);
+      this.reportBlock = [];
       for (var i = 0; i < this._parent.subtype; i++) {
-        this.reportBlock[i] = new ReportBlock(this._io, this, this._root);
+        this.reportBlock.push(new ReportBlock(this._io, this, this._root));
       }
     }
     Object.defineProperty(SrPacket.prototype, 'ntp', {
@@ -189,9 +189,9 @@ var RtcpPayload = (function() {
     }
     RrPacket.prototype._read = function() {
       this.ssrc = this._io.readU4be();
-      this.reportBlock = new Array(this._parent.subtype);
+      this.reportBlock = [];
       for (var i = 0; i < this._parent.subtype; i++) {
-        this.reportBlock[i] = new ReportBlock(this._io, this, this._root);
+        this.reportBlock.push(new ReportBlock(this._io, this, this._root));
       }
     }
 
@@ -419,9 +419,9 @@ var RtcpPayload = (function() {
       this._read();
     }
     SdesPacket.prototype._read = function() {
-      this.sourceChunk = new Array(this.sourceCount);
+      this.sourceChunk = [];
       for (var i = 0; i < this.sourceCount; i++) {
-        this.sourceChunk[i] = new SourceChunk(this._io, this, this._root);
+        this.sourceChunk.push(new SourceChunk(this._io, this, this._root));
       }
     }
     Object.defineProperty(SdesPacket.prototype, 'sourceCount', {

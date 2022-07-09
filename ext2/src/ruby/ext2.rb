@@ -78,9 +78,9 @@ class Ext2 < Kaitai::Struct::Struct
       @journal_inum = @_io.read_u4le
       @journal_dev = @_io.read_u4le
       @last_orphan = @_io.read_u4le
-      @hash_seed = Array.new(4)
+      @hash_seed = []
       (4).times { |i|
-        @hash_seed[i] = @_io.read_u4le
+        @hash_seed << @_io.read_u4le
       }
       @def_hash_version = @_io.read_u1
       self
@@ -198,9 +198,9 @@ class Ext2 < Kaitai::Struct::Struct
       @blocks = @_io.read_u4le
       @flags = @_io.read_u4le
       @osd1 = @_io.read_u4le
-      @block = Array.new(15)
+      @block = []
       (15).times { |i|
-        @block[i] = BlockPtr.new(@_io, self, @_root)
+        @block << BlockPtr.new(@_io, self, @_root)
       }
       @generation = @_io.read_u4le
       @file_acl = @_io.read_u4le
@@ -287,9 +287,9 @@ class Ext2 < Kaitai::Struct::Struct
       @_raw_super_block = @_io.read_bytes(1024)
       _io__raw_super_block = Kaitai::Struct::Stream.new(@_raw_super_block)
       @super_block = SuperBlockStruct.new(_io__raw_super_block, self, @_root)
-      @block_groups = Array.new(super_block.block_group_count)
+      @block_groups = []
       (super_block.block_group_count).times { |i|
-        @block_groups[i] = Bgd.new(@_io, self, @_root)
+        @block_groups << Bgd.new(@_io, self, @_root)
       }
       self
     end
@@ -333,9 +333,9 @@ class Ext2 < Kaitai::Struct::Struct
       return @inodes unless @inodes.nil?
       _pos = @_io.pos
       @_io.seek((inode_table_block * _root.bg1.super_block.block_size))
-      @inodes = Array.new(_root.bg1.super_block.inodes_per_group)
+      @inodes = []
       (_root.bg1.super_block.inodes_per_group).times { |i|
-        @inodes[i] = Inode.new(@_io, self, @_root)
+        @inodes << Inode.new(@_io, self, @_root)
       }
       @_io.seek(_pos)
       @inodes

@@ -8,7 +8,7 @@
   } else {
     root.BroadcomTrx = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * .trx file format is widely used for distribution of firmware
  * updates for Broadcom devices. The most well-known are ASUS routers.
@@ -84,9 +84,9 @@ var BroadcomTrx = (function() {
     Tail.prototype._read = function() {
       this.version = new Version(this._io, this, this._root);
       this.productId = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(12), 0, false), "utf-8");
-      this.compHw = new Array(4);
+      this.compHw = [];
       for (var i = 0; i < 4; i++) {
-        this.compHw[i] = new HwCompInfo(this._io, this, this._root);
+        this.compHw.push(new HwCompInfo(this._io, this, this._root));
       }
       this.reserved = this._io.readBytes(32);
     }
@@ -135,7 +135,7 @@ var BroadcomTrx = (function() {
       this.crc32 = this._io.readU4le();
       this.version = this._io.readU2le();
       this.flags = new Flags(this._io, this, this._root);
-      this.partitions = []
+      this.partitions = [];
       var i = 0;
       do {
         var _ = new Partition(this._io, this, this._root, i);
@@ -211,9 +211,9 @@ var BroadcomTrx = (function() {
         this._read();
       }
       Flags.prototype._read = function() {
-        this.flags = new Array(16);
+        this.flags = [];
         for (var i = 0; i < 16; i++) {
-          this.flags[i] = this._io.readBitsIntLe(1) != 0;
+          this.flags.push(this._io.readBitsIntLe(1) != 0);
         }
       }
 

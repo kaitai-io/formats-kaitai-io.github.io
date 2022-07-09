@@ -221,6 +221,11 @@ documented by Adobe.</p>
                 <a href="javascript.html" title="Adobe Flash (AKA Shockwave Flash, Macromedia Flash) parsing JavaScript library">JavaScript</a></li>
                 
                 
+                <li>
+                
+                <a href="lua.html" title="Adobe Flash (AKA Shockwave Flash, Macromedia Flash) parsing Lua library">Lua</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="nim.html" title="Adobe Flash (AKA Shockwave Flash, Macromedia Flash) parsing Nim library">Nim</a></li>
@@ -331,8 +336,10 @@ documented by Adobe.</p>
     <span class="p">`</span><span class="n">b1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">skip</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Swf_SwfBody</span>
-    <span class="p">`</span><span class="n">numBitsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">numBytesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numBitsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numBitsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">numBytesInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numBytesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Swf_Tag</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">recordHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Swf_RecordHeader</span>
     <span class="p">`</span><span class="n">tagBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
@@ -369,9 +376,12 @@ documented by Adobe.</p>
     <span class="p">`</span><span class="n">tagCodeAndLength</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">bigLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Swf_Tag</span>
-    <span class="p">`</span><span class="n">tagTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Swf_TagType</span>
-    <span class="p">`</span><span class="n">smallLenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">lenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">tagTypeInst</span><span class="p">`:</span> <span class="n">Swf_TagType</span>
+    <span class="p">`</span><span class="n">tagTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">smallLenInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">smallLenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">lenInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Swf_ScriptLimitsBody</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">maxRecursionDepth</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">scriptTimeoutSeconds</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -523,20 +533,20 @@ documented by Adobe.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">skip</span> <span class="o">=</span> <span class="n">skipExpr</span>
 
 <span class="k">proc </span><span class="nf">numBits</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Swf_Rect</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBitsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBitsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBitsInst</span>
   <span class="k">let</span> <span class="n">numBitsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="ow">shr</span> <span class="mi">3</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numBitsInst</span> <span class="o">=</span> <span class="n">numBitsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBitsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBitsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numBitsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBitsInst</span>
 
 <span class="k">proc </span><span class="nf">numBytes</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Swf_Rect</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBytesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBytesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBytesInst</span>
   <span class="k">let</span> <span class="n">numBytesInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((((</span><span class="n">this</span><span class="p">.</span><span class="n">numBits</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="ow">div</span> <span class="mi">8</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numBytesInst</span> <span class="o">=</span> <span class="n">numBytesInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBytesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBytesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numBytesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBytesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Swf_Rect], filename: string): Swf_Rect =</span>
   <span class="n">Swf_Rect</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -673,28 +683,28 @@ documented by Adobe.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">bigLen</span> <span class="o">=</span> <span class="n">bigLenExpr</span>
 
 <span class="k">proc </span><span class="nf">tagType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Swf_RecordHeader</span><span class="p">):</span> <span class="n">Swf_TagType</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInst</span>
   <span class="k">let</span> <span class="n">tagTypeInstExpr</span> <span class="o">=</span> <span class="n">Swf_TagType</span><span class="p">(</span><span class="n">Swf_TagType</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">tagCodeAndLength</span> <span class="ow">shr</span> <span class="mi">6</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInst</span> <span class="o">=</span> <span class="n">tagTypeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tagTypeInst</span>
 
 <span class="k">proc </span><span class="nf">smallLen</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Swf_RecordHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLenInst</span>
   <span class="k">let</span> <span class="n">smallLenInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">tagCodeAndLength</span> <span class="ow">and</span> <span class="mi">63</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">smallLenInst</span> <span class="o">=</span> <span class="n">smallLenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">smallLenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLenInst</span>
 
 <span class="k">proc </span><span class="nf">len</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Swf_RecordHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span>
   <span class="k">let</span> <span class="n">lenInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLen</span> <span class="o">==</span> <span class="mi">63</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">bigLen</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">smallLen</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span> <span class="o">=</span> <span class="n">lenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Swf_RecordHeader], filename: string): Swf_RecordHeader =</span>
   <span class="n">Swf_RecordHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

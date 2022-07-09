@@ -33,7 +33,8 @@ type
     `lenPayloadExtended2`*: uint32
     `maskKey`*: uint32
     `parent`*: KaitaiStruct
-    `lenPayloadInst`*: int
+    `lenPayloadInst`: int
+    `lenPayloadInstFlag`: bool
   Websocket_InitialFrame* = ref object of KaitaiStruct
     `header`*: Websocket_FrameHeader
     `payloadBytes`*: seq[byte]
@@ -112,12 +113,12 @@ proc read*(_: typedesc[Websocket_FrameHeader], io: KaitaiStream, root: KaitaiStr
     this.maskKey = maskKeyExpr
 
 proc lenPayload(this: Websocket_FrameHeader): int = 
-  if this.lenPayloadInst != nil:
+  if this.lenPayloadInstFlag:
     return this.lenPayloadInst
   let lenPayloadInstExpr = int((if this.lenPayloadPrimary <= 125: this.lenPayloadPrimary else: (if this.lenPayloadPrimary == 126: this.lenPayloadExtended1 else: this.lenPayloadExtended2)))
   this.lenPayloadInst = lenPayloadInstExpr
-  if this.lenPayloadInst != nil:
-    return this.lenPayloadInst
+  this.lenPayloadInstFlag = true
+  return this.lenPayloadInst
 
 proc fromFile*(_: typedesc[Websocket_FrameHeader], filename: string): Websocket_FrameHeader =
   Websocket_FrameHeader.read(newKaitaiFileStream(filename), nil, nil)

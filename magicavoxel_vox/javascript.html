@@ -326,7 +326,7 @@ section#format-index .row {
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">root</span><span class="p">.</span><span class="nx">MagicavoxelVox</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="ow">typeof</span> <span class="nx">self</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">self</span> <span class="o">:</span> <span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * @see {@link https://ephtracy.github.io/|MagicaVoxel Homepage}</span>
 <span class="cm"> * @see {@link https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt|Format Description}</span>
@@ -480,9 +480,9 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
     <span class="p">}</span>
     <span class="nx">Rgba</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">colors</span> <span class="o">=</span> <span class="ow">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mf">256</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">colors</span> <span class="o">=</span> <span class="p">[];</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mf">256</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">colors</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Color</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">colors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">Color</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
       <span class="p">}</span>
     <span class="p">}</span>
 
@@ -620,9 +620,9 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="nx">Xyzi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numVoxels</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">voxels</span> <span class="o">=</span> <span class="ow">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numVoxels</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">voxels</span> <span class="o">=</span> <span class="p">[];</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numVoxels</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">voxels</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Voxel</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">voxels</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">Voxel</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
       <span class="p">}</span>
     <span class="p">}</span>
 

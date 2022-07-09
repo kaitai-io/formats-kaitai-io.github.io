@@ -273,8 +273,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">bootSector</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Vfat_BootSector</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawRootDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">fatsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
-    <span class="p">`</span><span class="n">rootDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Vfat_RootDirectory</span>
+    <span class="p">`</span><span class="n">fatsInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+    <span class="p">`</span><span class="n">fatsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">rootDirInst</span><span class="p">`:</span> <span class="n">Vfat_RootDirectory</span>
+    <span class="p">`</span><span class="n">rootDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Vfat_ExtBiosParamBlockFat32</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lsPerFat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">hasActiveFat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
@@ -300,13 +302,20 @@ section#format-index .row {
     <span class="p">`</span><span class="n">ebpbFat16</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Vfat_ExtBiosParamBlockFat16</span>
     <span class="p">`</span><span class="n">ebpbFat32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Vfat_ExtBiosParamBlockFat32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Vfat</span>
-    <span class="p">`</span><span class="n">posFatsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">lsPerFatInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">lsPerRootDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">isFat32Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">sizeFatInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">posRootDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">sizeRootDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">posFatsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">posFatsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">lsPerFatInst</span><span class="p">`:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lsPerFatInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">lsPerRootDirInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lsPerRootDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isFat32Inst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isFat32InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">sizeFatInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sizeFatInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">posRootDirInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">posRootDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">sizeRootDirInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sizeRootDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Vfat_BiosParamBlock</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">bytesPerLs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">lsPerClus</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -340,7 +349,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">archive</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
     <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Vfat_RootDirectoryRec</span>
-    <span class="p">`</span><span class="n">longNameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">longNameInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">longNameInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Vfat_RootDirectory</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Vfat_RootDirectoryRec</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Vfat</span>
@@ -389,7 +399,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">bootSector</span> <span class="o">=</span> <span class="n">bootSectorExpr</span>
 
 <span class="k">proc </span><span class="nf">fats</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fatsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fatsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fatsInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bootSector</span><span class="p">.</span><span class="n">posFats</span><span class="p">))</span>
@@ -397,11 +407,11 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bootSector</span><span class="p">.</span><span class="n">sizeFat</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">fatsInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fatsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fatsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fatsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fatsInst</span>
 
 <span class="k">proc </span><span class="nf">rootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat</span><span class="p">):</span> <span class="n">Vfat_RootDirectory</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bootSector</span><span class="p">.</span><span class="n">posRootDir</span><span class="p">))</span>
@@ -411,8 +421,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">rootDirInstExpr</span> <span class="o">=</span> <span class="n">Vfat_RootDirectory</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawRootDirInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span> <span class="o">=</span> <span class="n">rootDirInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rootDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootDirInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat], filename: string): Vfat =</span>
   <span class="n">Vfat</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -572,20 +582,20 @@ section#format-index .row {
   <span class="sd">##[</span>
   <span class="n">Offset</span> <span class="k">of</span> <span class="n">FATs</span> <span class="ow">in</span> <span class="n">bytes</span> <span class="kn">from</span> <span class="n">start</span> <span class="k">of</span> <span class="n">filesystem</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">posFatsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span>
   <span class="k">let</span> <span class="n">posFatsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numReservedLs</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span> <span class="o">=</span> <span class="n">posFatsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">posFatsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span>
 
 <span class="k">proc </span><span class="nf">lsPerFat</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat_BootSector</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span>
   <span class="k">let</span> <span class="n">lsPerFatInstExpr</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isFat32</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">ebpbFat32</span><span class="p">.</span><span class="n">lsPerFat</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">lsPerFat</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span> <span class="o">=</span> <span class="n">lsPerFatInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span>
 
 <span class="k">proc </span><span class="nf">lsPerRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat_BootSector</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
@@ -593,12 +603,12 @@ section#format-index .row {
   <span class="n">Size</span> <span class="k">of</span> <span class="n">root</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">logical</span> <span class="n">sectors</span>
   <span class="o">@</span><span class="n">see</span> <span class="s">&quot;FAT: General Overview of On-Disk Format, section &quot;</span><span class="n">FAT</span> <span class="n">Data</span> <span class="s">Structure&quot;&quot;</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span>
   <span class="k">let</span> <span class="n">lsPerRootDirInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span> <span class="o">*</span> <span class="mi">32</span><span class="p">)</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">div</span> <span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span> <span class="o">=</span> <span class="n">lsPerRootDirInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span>
 
 <span class="k">proc </span><span class="nf">isFat32</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat_BootSector</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
 
@@ -609,48 +619,48 @@ section#format-index .row {
 <span class="p">`</span><span class="n">ext_bios_param_block_fat16</span><span class="p">`</span> <span class="ow">or</span> <span class="p">`</span><span class="n">ext_bios_param_block_fat32</span><span class="p">`.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isFat32InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span>
   <span class="k">let</span> <span class="n">isFat32InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span> <span class="o">=</span> <span class="n">isFat32InstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isFat32InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span>
 
 <span class="k">proc </span><span class="nf">sizeFat</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat_BootSector</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Size</span> <span class="k">of</span> <span class="n">one</span> <span class="n">FAT</span> <span class="ow">in</span> <span class="n">bytes</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span>
   <span class="k">let</span> <span class="n">sizeFatInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span> <span class="o">=</span> <span class="n">sizeFatInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span>
 
 <span class="k">proc </span><span class="nf">posRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat_BootSector</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Offset</span> <span class="k">of</span> <span class="n">root</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">bytes</span> <span class="kn">from</span> <span class="n">start</span> <span class="k">of</span> <span class="n">filesystem</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span>
   <span class="k">let</span> <span class="n">posRootDirInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span> <span class="o">*</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numReservedLs</span> <span class="o">+</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numFats</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span> <span class="o">=</span> <span class="n">posRootDirInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span>
 
 <span class="k">proc </span><span class="nf">sizeRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat_BootSector</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Size</span> <span class="k">of</span> <span class="n">root</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">bytes</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span>
   <span class="k">let</span> <span class="n">sizeRootDirInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDir</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span> <span class="o">=</span> <span class="n">sizeRootDirInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BootSector], filename: string): Vfat_BootSector =</span>
   <span class="n">Vfat_BootSector</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -816,12 +826,12 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
 
 <span class="k">proc </span><span class="nf">longName</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Vfat_RootDirectoryRec_AttrFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">longNameInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">longNameInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">longNameInst</span>
   <span class="k">let</span> <span class="n">longNameInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">readOnly</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">hidden</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">system</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">volumeId</span><span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">longNameInst</span> <span class="o">=</span> <span class="n">longNameInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">longNameInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">longNameInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">longNameInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">longNameInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectoryRec_AttrFlags], filename: string): Vfat_RootDirectoryRec_AttrFlags =</span>
   <span class="n">Vfat_RootDirectoryRec_AttrFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

@@ -19,9 +19,8 @@ mach_o_t::mach_o_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mach_o_t*
 void mach_o_t::_read() {
     m_magic = static_cast<mach_o_t::magic_type_t>(m__io->read_u4be());
     m_header = new mach_header_t(m__io, this, m__root);
-    int l_load_commands = header()->ncmds();
     m_load_commands = new std::vector<load_command_t*>();
-    m_load_commands->reserve(l_load_commands);
+    const int l_load_commands = header()->ncmds();
     for (int i = 0; i < l_load_commands; i++) {
         m_load_commands->push_back(new load_command_t(m__io, this, m__root));
     }
@@ -369,9 +368,8 @@ std::vector<std::string>* mach_o_t::cs_blob_t::code_directory_t::hashes() {
         return m_hashes;
     std::streampos _pos = m__io->pos();
     m__io->seek(((hash_offset() - 8) - (hash_size() * n_special_slots())));
-    int l_hashes = (n_special_slots() + n_code_slots());
     m_hashes = new std::vector<std::string>();
-    m_hashes->reserve(l_hashes);
+    const int l_hashes = (n_special_slots() + n_code_slots());
     for (int i = 0; i < l_hashes; i++) {
         m_hashes->push_back(m__io->read_bytes(hash_size()));
     }
@@ -420,9 +418,8 @@ mach_o_t::cs_blob_t::super_blob_t::super_blob_t(kaitai::kstream* p__io, mach_o_t
 
 void mach_o_t::cs_blob_t::super_blob_t::_read() {
     m_count = m__io->read_u4be();
-    int l_blobs = count();
     m_blobs = new std::vector<blob_index_t*>();
-    m_blobs->reserve(l_blobs);
+    const int l_blobs = count();
     for (int i = 0; i < l_blobs; i++) {
         m_blobs->push_back(new blob_index_t(m__io, this, m__root));
     }
@@ -966,9 +963,8 @@ mach_o_t::cs_blob_t::requirements_t::requirements_t(kaitai::kstream* p__io, mach
 
 void mach_o_t::cs_blob_t::requirements_t::_read() {
     m_count = m__io->read_u4be();
-    int l_items = count();
     m_items = new std::vector<requirements_blob_index_t*>();
-    m_items->reserve(l_items);
+    const int l_items = count();
     for (int i = 0; i < l_items; i++) {
         m_items->push_back(new requirements_blob_index_t(m__io, this, m__root));
     }
@@ -1093,9 +1089,8 @@ void mach_o_t::build_version_command_t::_read() {
     m_minos = m__io->read_u4le();
     m_sdk = m__io->read_u4le();
     m_ntools = m__io->read_u4le();
-    int l_tools = ntools();
     m_tools = new std::vector<build_tool_version_t*>();
-    m_tools->reserve(l_tools);
+    const int l_tools = ntools();
     for (int i = 0; i < l_tools; i++) {
         m_tools->push_back(new build_tool_version_t(m__io, this, m__root));
     }
@@ -1460,9 +1455,8 @@ mach_o_t::linker_option_command_t::linker_option_command_t(kaitai::kstream* p__i
 
 void mach_o_t::linker_option_command_t::_read() {
     m_num_strings = m__io->read_u4le();
-    int l_strings = num_strings();
     m_strings = new std::vector<std::string>();
-    m_strings->reserve(l_strings);
+    const int l_strings = num_strings();
     for (int i = 0; i < l_strings; i++) {
         m_strings->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("utf-8")));
     }
@@ -1503,9 +1497,8 @@ void mach_o_t::segment_command_64_t::_read() {
     m_initprot = new vm_prot_t(m__io, this, m__root);
     m_nsects = m__io->read_u4le();
     m_flags = m__io->read_u4le();
-    int l_sections = nsects();
     m_sections = new std::vector<section_64_t*>();
-    m_sections->reserve(l_sections);
+    const int l_sections = nsects();
     for (int i = 0; i < l_sections; i++) {
         m_sections->push_back(new section_64_t(m__io, this, m__root));
     }
@@ -2122,9 +2115,8 @@ std::vector<uint32_t>* mach_o_t::dysymtab_command_t::indirect_symbols() {
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek(indirect_sym_off());
-    int l_indirect_symbols = n_indirect_syms();
     m_indirect_symbols = new std::vector<uint32_t>();
-    m_indirect_symbols->reserve(l_indirect_symbols);
+    const int l_indirect_symbols = n_indirect_syms();
     for (int i = 0; i < l_indirect_symbols; i++) {
         m_indirect_symbols->push_back(io->read_u4le());
     }
@@ -2630,9 +2622,8 @@ mach_o_t::dyld_info_command_t::export_node_t::export_node_t(kaitai::kstream* p__
 void mach_o_t::dyld_info_command_t::export_node_t::_read() {
     m_terminal_size = new uleb128_t(m__io, this, m__root);
     m_children_count = m__io->read_u1();
-    int l_children = children_count();
     m_children = new std::vector<child_t*>();
-    m_children->reserve(l_children);
+    const int l_children = children_count();
     for (int i = 0; i < l_children; i++) {
         m_children->push_back(new child_t(m__io, this, m__root));
     }
@@ -2912,9 +2903,8 @@ void mach_o_t::segment_command_t::_read() {
     m_initprot = new vm_prot_t(m__io, this, m__root);
     m_nsects = m__io->read_u4le();
     m_flags = m__io->read_u4le();
-    int l_sections = nsects();
     m_sections = new std::vector<section_t*>();
-    m_sections->reserve(l_sections);
+    const int l_sections = nsects();
     for (int i = 0; i < l_sections; i++) {
         m_sections->push_back(new section_t(m__io, this, m__root));
     }
@@ -3534,9 +3524,8 @@ std::vector<kaitai::kstruct*>* mach_o_t::symtab_command_t::symbols() {
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek(sym_off());
-    int l_symbols = n_syms();
     m_symbols = new std::vector<kaitai::kstruct*>();
-    m_symbols->reserve(l_symbols);
+    const int l_symbols = n_syms();
     for (int i = 0; i < l_symbols; i++) {
         switch (_root()->magic()) {
         case mach_o_t::MAGIC_TYPE_MACHO_LE_X64: {

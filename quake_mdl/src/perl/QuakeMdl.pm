@@ -39,22 +39,22 @@ sub _read {
     $self->{skins} = ();
     my $n_skins = $self->header()->num_skins();
     for (my $i = 0; $i < $n_skins; $i++) {
-        $self->{skins}[$i] = QuakeMdl::MdlSkin->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{skins}}, QuakeMdl::MdlSkin->new($self->{_io}, $self, $self->{_root});
     }
     $self->{texture_coordinates} = ();
     my $n_texture_coordinates = $self->header()->num_verts();
     for (my $i = 0; $i < $n_texture_coordinates; $i++) {
-        $self->{texture_coordinates}[$i] = QuakeMdl::MdlTexcoord->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{texture_coordinates}}, QuakeMdl::MdlTexcoord->new($self->{_io}, $self, $self->{_root});
     }
     $self->{triangles} = ();
     my $n_triangles = $self->header()->num_tris();
     for (my $i = 0; $i < $n_triangles; $i++) {
-        $self->{triangles}[$i] = QuakeMdl::MdlTriangle->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{triangles}}, QuakeMdl::MdlTriangle->new($self->{_io}, $self, $self->{_root});
     }
     $self->{frames} = ();
     my $n_frames = $self->header()->num_frames();
     for (my $i = 0; $i < $n_frames; $i++) {
-        $self->{frames}[$i] = QuakeMdl::MdlFrame->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{frames}}, QuakeMdl::MdlFrame->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -116,7 +116,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = 3;
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = $self->{_io}->read_u1();
+        push @{$self->{values}}, $self->{_io}->read_u1();
     }
     $self->{normal_index} = $self->{_io}->read_u1();
 }
@@ -358,14 +358,14 @@ sub _read {
         $self->{frame_times} = ();
         my $n_frame_times = $self->num_frames();
         for (my $i = 0; $i < $n_frame_times; $i++) {
-            $self->{frame_times}[$i] = $self->{_io}->read_f4le();
+            push @{$self->{frame_times}}, $self->{_io}->read_f4le();
         }
     }
     if ($self->group() != 0) {
         $self->{group_texture_data} = ();
         my $n_group_texture_data = $self->num_frames();
         for (my $i = 0; $i < $n_group_texture_data; $i++) {
-            $self->{group_texture_data}[$i] = $self->{_io}->read_bytes($self->_root()->header()->skin_size());
+            push @{$self->{group_texture_data}}, $self->{_io}->read_bytes($self->_root()->header()->skin_size());
         }
     }
 }
@@ -436,13 +436,13 @@ sub _read {
         $self->{time} = ();
         my $n_time = $self->type();
         for (my $i = 0; $i < $n_time; $i++) {
-            $self->{time}[$i] = $self->{_io}->read_f4le();
+            push @{$self->{time}}, $self->{_io}->read_f4le();
         }
     }
     $self->{frames} = ();
     my $n_frames = $self->num_simple_frames();
     for (my $i = 0; $i < $n_frames; $i++) {
-        $self->{frames}[$i] = QuakeMdl::MdlSimpleFrame->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{frames}}, QuakeMdl::MdlSimpleFrame->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -514,7 +514,7 @@ sub _read {
     $self->{vertices} = ();
     my $n_vertices = $self->_root()->header()->num_verts();
     for (my $i = 0; $i < $n_vertices; $i++) {
-        $self->{vertices}[$i] = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{vertices}}, QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -572,7 +572,7 @@ sub _read {
     $self->{vertices} = ();
     my $n_vertices = 3;
     for (my $i = 0; $i < $n_vertices; $i++) {
-        $self->{vertices}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{vertices}}, $self->{_io}->read_s4le();
     }
 }
 

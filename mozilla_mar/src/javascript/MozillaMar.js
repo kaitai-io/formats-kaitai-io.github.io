@@ -8,7 +8,7 @@
   } else {
     root.MozillaMar = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Mozilla ARchive file is Mozilla's own archive format to distribute software updates.
  * Test files can be found on Mozilla's FTP site, for example:
@@ -47,14 +47,14 @@ var MozillaMar = (function() {
     this.ofsIndex = this._io.readU4be();
     this.fileSize = this._io.readU8be();
     this.lenSignatures = this._io.readU4be();
-    this.signatures = new Array(this.lenSignatures);
+    this.signatures = [];
     for (var i = 0; i < this.lenSignatures; i++) {
-      this.signatures[i] = new Signature(this._io, this, this._root);
+      this.signatures.push(new Signature(this._io, this, this._root));
     }
     this.lenAdditionalSections = this._io.readU4be();
-    this.additionalSections = new Array(this.lenAdditionalSections);
+    this.additionalSections = [];
     for (var i = 0; i < this.lenAdditionalSections; i++) {
-      this.additionalSections[i] = new AdditionalSection(this._io, this, this._root);
+      this.additionalSections.push(new AdditionalSection(this._io, this, this._root));
     }
   }
 

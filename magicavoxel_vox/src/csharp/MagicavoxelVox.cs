@@ -193,7 +193,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _colors = new List<Color>((int) (256));
+                _colors = new List<Color>();
                 for (var i = 0; i < 256; i++)
                 {
                     _colors.Add(new Color(m_io, this, m_root));
@@ -431,7 +431,7 @@ namespace Kaitai
             private void _read()
             {
                 _numVoxels = m_io.ReadU4le();
-                _voxels = new List<Voxel>((int) (NumVoxels));
+                _voxels = new List<Voxel>();
                 for (var i = 0; i < NumVoxels; i++)
                 {
                     _voxels.Add(new Voxel(m_io, this, m_root));

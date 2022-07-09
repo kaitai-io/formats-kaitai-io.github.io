@@ -494,7 +494,8 @@ any of:</p>
     <span class="p">`</span><span class="n">mesurands</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">NtMdt_Frame_FdMetaData_Calibration</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">NtMdt_Frame_FrameMain</span>
     <span class="p">`</span><span class="n">rawImageInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">imageInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">NtMdt_Frame_FdMetaData_Image</span>
+    <span class="p">`</span><span class="n">imageInst</span><span class="p">`:</span> <span class="n">NtMdt_Frame_FdMetaData_Image</span>
+    <span class="p">`</span><span class="n">imageInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">NtMdt_Frame_FdMetaData_Image</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">image</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">NtMdt_Frame_FdMetaData_Image_Vec</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">NtMdt_Frame_FdMetaData</span>
@@ -521,7 +522,8 @@ any of:</p>
     <span class="p">`</span><span class="n">unit</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">author</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">NtMdt_Frame_FdMetaData</span>
-    <span class="p">`</span><span class="n">countInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">countInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">countInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">NtMdt_Frame_FdSpectroscopy</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">vars</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">NtMdt_Frame_FdSpectroscopy_Vars</span>
     <span class="p">`</span><span class="n">fmMode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -1054,7 +1056,7 @@ any of:</p>
     <span class="n">this</span><span class="p">.</span><span class="n">mesurands</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">image</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">NtMdt_Frame_FdMetaData</span><span class="p">):</span> <span class="n">NtMdt_Frame_FdMetaData_Image</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imageInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imageInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imageInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">dataOffset</span><span class="p">))</span>
@@ -1064,8 +1066,8 @@ any of:</p>
   <span class="k">let</span> <span class="n">imageInstExpr</span> <span class="o">=</span> <span class="n">NtMdt_Frame_FdMetaData_Image</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawImageInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">imageInst</span> <span class="o">=</span> <span class="n">imageInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imageInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imageInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">imageInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imageInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[NtMdt_Frame_FdMetaData], filename: string): NtMdt_Frame_FdMetaData =</span>
   <span class="n">NtMdt_Frame_FdMetaData</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1179,12 +1181,12 @@ any of:</p>
   <span class="n">this</span><span class="p">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">authorExpr</span>
 
 <span class="k">proc </span><span class="nf">count</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">NtMdt_Frame_FdMetaData_Calibration</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">countInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">countInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">countInst</span>
   <span class="k">let</span> <span class="n">countInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">maxIndex</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">minIndex</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">countInst</span> <span class="o">=</span> <span class="n">countInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">countInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">countInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">countInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">countInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[NtMdt_Frame_FdMetaData_Calibration], filename: string): NtMdt_Frame_FdMetaData_Calibration =</span>
   <span class="n">NtMdt_Frame_FdMetaData_Calibration</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

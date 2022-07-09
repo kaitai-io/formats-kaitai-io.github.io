@@ -65,9 +65,8 @@ void microsoft_cfb_t::cfb_header_t::_read() {
     m_size_mini_fat = m__io->read_s4le();
     m_ofs_difat = m__io->read_s4le();
     m_size_difat = m__io->read_s4le();
-    int l_difat = 109;
     m_difat = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_difat->reserve(l_difat);
+    const int l_difat = 109;
     for (int i = 0; i < l_difat; i++) {
         m_difat->push_back(std::move(m__io->read_s4le()));
     }

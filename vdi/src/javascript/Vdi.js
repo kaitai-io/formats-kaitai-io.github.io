@@ -8,7 +8,7 @@
   } else {
     root.Vdi = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A native VirtualBox file format
  * Images for testing can be downloaded from
@@ -241,9 +241,9 @@ var Vdi = (function() {
       this._read();
     }
     BlocksMap.prototype._read = function() {
-      this.index = new Array(this._root.header.headerMain.blocksInImage);
+      this.index = [];
       for (var i = 0; i < this._root.header.headerMain.blocksInImage; i++) {
-        this.index[i] = new BlockIndex(this._io, this, this._root);
+        this.index.push(new BlockIndex(this._io, this, this._root));
       }
     }
 
@@ -292,9 +292,9 @@ var Vdi = (function() {
       this._read();
     }
     Disk.prototype._read = function() {
-      this.blocks = new Array(this._root.header.headerMain.blocksInImage);
+      this.blocks = [];
       for (var i = 0; i < this._root.header.headerMain.blocksInImage; i++) {
-        this.blocks[i] = new Block(this._io, this, this._root);
+        this.blocks.push(new Block(this._io, this, this._root));
       }
     }
 

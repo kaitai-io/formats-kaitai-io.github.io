@@ -38,14 +38,17 @@ type
     `firstAndSecond`*: uint8
     `rest`*: seq[byte]
     `parent`*: Asn1Der
-    `firstInst`*: int
-    `secondInst`*: int
+    `firstInst`: int
+    `firstInstFlag`: bool
+    `secondInst`: int
+    `secondInstFlag`: bool
   Asn1Der_LenEncoded* = ref object of KaitaiStruct
     `b1`*: uint8
     `int2`*: uint16
     `int1`*: uint8
     `parent`*: Asn1Der
-    `resultInst`*: uint16
+    `resultInst`: uint16
+    `resultInstFlag`: bool
   Asn1Der_BodyPrintableString* = ref object of KaitaiStruct
     `str`*: string
     `parent`*: Asn1Der
@@ -196,20 +199,20 @@ proc read*(_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStru
   this.rest = restExpr
 
 proc first(this: Asn1Der_BodyObjectId): int = 
-  if this.firstInst != nil:
+  if this.firstInstFlag:
     return this.firstInst
   let firstInstExpr = int((this.firstAndSecond div 40))
   this.firstInst = firstInstExpr
-  if this.firstInst != nil:
-    return this.firstInst
+  this.firstInstFlag = true
+  return this.firstInst
 
 proc second(this: Asn1Der_BodyObjectId): int = 
-  if this.secondInst != nil:
+  if this.secondInstFlag:
     return this.secondInst
   let secondInstExpr = int((this.firstAndSecond %%% 40))
   this.secondInst = secondInstExpr
-  if this.secondInst != nil:
-    return this.secondInst
+  this.secondInstFlag = true
+  return this.secondInst
 
 proc fromFile*(_: typedesc[Asn1Der_BodyObjectId], filename: string): Asn1Der_BodyObjectId =
   Asn1Der_BodyObjectId.read(newKaitaiFileStream(filename), nil, nil)
@@ -232,12 +235,12 @@ proc read*(_: typedesc[Asn1Der_LenEncoded], io: KaitaiStream, root: KaitaiStruct
     this.int1 = int1Expr
 
 proc result(this: Asn1Der_LenEncoded): uint16 = 
-  if this.resultInst != nil:
+  if this.resultInstFlag:
     return this.resultInst
   let resultInstExpr = uint16((if this.b1 == 129: this.int1 else: (if this.b1 == 130: this.int2 else: this.b1)))
   this.resultInst = resultInstExpr
-  if this.resultInst != nil:
-    return this.resultInst
+  this.resultInstFlag = true
+  return this.resultInst
 
 proc fromFile*(_: typedesc[Asn1Der_LenEncoded], filename: string): Asn1Der_LenEncoded =
   Asn1Der_LenEncoded.read(newKaitaiFileStream(filename), nil, nil)

@@ -400,7 +400,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _index = new List<BlockIndex>((int) (M_Root.Header.HeaderMain.BlocksInImage));
+                _index = new List<BlockIndex>();
                 for (var i = 0; i < M_Root.Header.HeaderMain.BlocksInImage; i++)
                 {
                     _index.Add(new BlockIndex(m_io, this, m_root));
@@ -482,7 +482,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _blocks = new List<Block>((int) (M_Root.Header.HeaderMain.BlocksInImage));
+                _blocks = new List<Block>();
                 for (var i = 0; i < M_Root.Header.HeaderMain.BlocksInImage; i++)
                 {
                     _blocks.Add(new Block(m_io, this, m_root));

@@ -370,7 +370,7 @@ sub _read {
     $self->{morph_targets} = ();
     my $n_morph_targets = $self->num_morph_targets();
     for (my $i = 0; $i < $n_morph_targets; $i++) {
-        $self->{morph_targets}[$i] = RenderwareBinaryStream::MorphTarget->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{morph_targets}}, RenderwareBinaryStream::MorphTarget->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -471,20 +471,20 @@ sub _read {
         $self->{prelit_colors} = ();
         my $n_prelit_colors = $self->_parent()->num_vertices();
         for (my $i = 0; $i < $n_prelit_colors; $i++) {
-            $self->{prelit_colors}[$i] = RenderwareBinaryStream::Rgba->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{prelit_colors}}, RenderwareBinaryStream::Rgba->new($self->{_io}, $self, $self->{_root});
         }
     }
     if ( (($self->_parent()->is_textured()) || ($self->_parent()->is_textured2())) ) {
         $self->{tex_coords} = ();
         my $n_tex_coords = $self->_parent()->num_vertices();
         for (my $i = 0; $i < $n_tex_coords; $i++) {
-            $self->{tex_coords}[$i] = RenderwareBinaryStream::TexCoord->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{tex_coords}}, RenderwareBinaryStream::TexCoord->new($self->{_io}, $self, $self->{_root});
         }
     }
     $self->{triangles} = ();
     my $n_triangles = $self->_parent()->num_triangles();
     for (my $i = 0; $i < $n_triangles; $i++) {
-        $self->{triangles}[$i] = RenderwareBinaryStream::Triangle->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{triangles}}, RenderwareBinaryStream::Triangle->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -690,14 +690,14 @@ sub _read {
         $self->{vertices} = ();
         my $n_vertices = $self->_parent()->num_vertices();
         for (my $i = 0; $i < $n_vertices; $i++) {
-            $self->{vertices}[$i] = RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{vertices}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
         }
     }
     if ($self->has_normals() != 0) {
         $self->{normals} = ();
         my $n_normals = $self->_parent()->num_vertices();
         for (my $i = 0; $i < $n_normals; $i++) {
-            $self->{normals}[$i] = RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{normals}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
         }
     }
 }
@@ -811,7 +811,7 @@ sub _read {
     $self->{frames} = ();
     my $n_frames = $self->num_frames();
     for (my $i = 0; $i < $n_frames; $i++) {
-        $self->{frames}[$i] = RenderwareBinaryStream::Frame->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{frames}}, RenderwareBinaryStream::Frame->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -858,7 +858,7 @@ sub _read {
     $self->{entries} = ();
     my $n_entries = 3;
     for (my $i = 0; $i < $n_entries; $i++) {
-        $self->{entries}[$i] = RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{entries}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -317,7 +317,8 @@ specification of fields, and a number of fixed-size records.</p>
     <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">lenRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf</span>
-    <span class="p">`</span><span class="n">dbaseLevelInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">dbaseLevelInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">dbaseLevelInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Dbf_HeaderDbase3</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">reserved2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -457,12 +458,12 @@ specification of fields, and a number of fixed-size records.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">lenRecord</span> <span class="o">=</span> <span class="n">lenRecordExpr</span>
 
 <span class="k">proc </span><span class="nf">dbaseLevel</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dbf_Header1</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInst</span>
   <span class="k">let</span> <span class="n">dbaseLevelInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="ow">and</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInst</span> <span class="o">=</span> <span class="n">dbaseLevelInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dbaseLevelInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_Header1], filename: string): Dbf_Header1 =</span>
   <span class="n">Dbf_Header1</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

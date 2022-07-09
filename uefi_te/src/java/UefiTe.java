@@ -55,7 +55,7 @@ public class UefiTe extends KaitaiStruct {
         this._raw_teHdr = this._io.readBytes(40);
         KaitaiStream _io__raw_teHdr = new ByteBufferKaitaiStream(_raw_teHdr);
         this.teHdr = new TeHeader(_io__raw_teHdr, this, _root);
-        sections = new ArrayList<Section>(((Number) (teHdr().numSections())).intValue());
+        this.sections = new ArrayList<Section>();
         for (int i = 0; i < teHdr().numSections(); i++) {
             this.sections.add(new Section(this._io, this, _root));
         }
@@ -280,7 +280,7 @@ public class UefiTe extends KaitaiStruct {
             if (this.body != null)
                 return this.body;
             long _pos = this._io.pos();
-            this._io.seek(((pointerToRawData() - _root.teHdr().strippedSize()) + _root.teHdr()._io().size()));
+            this._io.seek(((pointerToRawData() - _root().teHdr().strippedSize()) + _root().teHdr()._io().size()));
             this.body = this._io.readBytes(sizeOfRawData());
             this._io.seek(_pos);
             return this.body;

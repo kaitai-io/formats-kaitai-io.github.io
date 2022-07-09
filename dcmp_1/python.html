@@ -305,13 +305,12 @@ such as text.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
 <span class="kn">import</span> <span class="nn">kaitaistruct</span>
 <span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">):</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="kn">import</span> <span class="nn">dcmp_variable_length_integer</span>
@@ -426,10 +425,10 @@ such as text.</p>
 <span class="sd">                See the documentation of the `backreference_body` type for details about backreference chunks.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_do_store&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_do_store</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_do_store&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_do_store</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_do_store</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">209</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_len_literal_separate</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_do_store</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_do_store&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_do_store&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">len_literal_m1_in_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -441,22 +440,22 @@ such as text.</p>
 <span class="sd">                the length is stored in a separate byte after the tag byte and before the literal data.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal_m1_in_tag&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal_m1_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal_m1_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal_m1_in_tag</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_len_literal_separate</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal_m1_in_tag</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
 
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal_m1_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal_m1_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal_m1_in_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">is_len_literal_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="sd">&quot;&quot;&quot;Whether the length of the literal is stored separately from the tag.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_separate&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_separate</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_separate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">&gt;=</span> <span class="mi">208</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_separate&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">len_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -468,10 +467,10 @@ such as text.</p>
 <span class="sd">                as there is no use in storing a zero-length literal.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_literal_separate</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_len_literal_separate</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_literal_m1_in_tag</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_literal</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
         <span class="k">class</span> <span class="nc">BackreferenceBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -497,10 +496,10 @@ such as text.</p>
                 <span class="sd">&quot;&quot;&quot;Whether the index is stored separately from the tag.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="mi">210</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">index_in_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -508,10 +507,10 @@ such as text.</p>
 <span class="sd">                as stored in the tag byte.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_in_tag</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_in_tag</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_in_tag</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">index_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -520,12 +519,12 @@ such as text.</p>
 <span class="sd">                with the implicit offset corrected for.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_separate&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_separate</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_index_separate</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_separate</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_separate_minus</span> <span class="o">+</span> <span class="mi">176</span><span class="p">)</span>
 
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index_separate</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_separate&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_separate&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -542,10 +541,10 @@ such as text.</p>
 <span class="sd">                not ones that come after it.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_separate</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_index_separate</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_in_tag</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_index</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
         <span class="k">class</span> <span class="nc">TableLookupBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -574,10 +573,10 @@ such as text.</p>
 <span class="sd">                index 0 stands for tag 0xd5, 1 for 0xd6, etc.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_lookup_table&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_lookup_table</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_lookup_table&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_lookup_table</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_lookup_table</span> <span class="o">=</span> <span class="p">[</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x02</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x03</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x2E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x3E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x1E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xFF\xFF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x0E\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x31\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x11\x12</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x33\x32</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x12\x39</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xED\x10</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x27</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x23\x22</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x37</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x07\x06</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x17</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x23</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\xFF</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x2F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x07\x0E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xFD\x3C</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x35</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x15</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x02</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x3E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x05\xD5</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x02\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x06\x07</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x07\x08</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x30\x01</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x33</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x10</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x17\x16</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x37\x3E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x36\x37</span><span class="s2">&quot;</span><span class="p">]</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_lookup_table</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_lookup_table&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_lookup_table&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -585,10 +584,10 @@ such as text.</p>
 <span class="sd">                based on the fixed lookup table.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_table</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">-</span> <span class="mi">213</span><span class="p">)]</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
         <span class="k">class</span> <span class="nc">EndBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -648,10 +647,10 @@ such as text.</p>
 <span class="sd">                    this value must fit into an unsigned 8-bit integer.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_to_repeat&#39;</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_to_repeat</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_to_repeat&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_to_repeat</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_to_repeat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_repeat_raw</span><span class="o">.</span><span class="n">value</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_to_repeat</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_to_repeat&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_to_repeat&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">repeat_count_m1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -661,10 +660,10 @@ such as text.</p>
 <span class="sd">                    This value must not be negative.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count_m1&#39;</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count_m1</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count_m1&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count_m1</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count_m1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repeat_count_m1_raw</span><span class="o">.</span><span class="n">value</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count_m1</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count_m1&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count_m1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">repeat_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -673,10 +672,10 @@ such as text.</p>
 <span class="sd">                    This value must be positive.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count&#39;</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repeat_count_m1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_repeat_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_repeat_count&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 
         </div>

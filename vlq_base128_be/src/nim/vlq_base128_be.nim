@@ -5,13 +5,17 @@ type
   VlqBase128Be* = ref object of KaitaiStruct
     `groups`*: seq[VlqBase128Be_Group]
     `parent`*: KaitaiStruct
-    `lastInst`*: int
-    `valueInst`*: int
+    `lastInst`: int
+    `lastInstFlag`: bool
+    `valueInst`: int
+    `valueInstFlag`: bool
   VlqBase128Be_Group* = ref object of KaitaiStruct
     `b`*: uint8
     `parent`*: VlqBase128Be
-    `hasNextInst`*: bool
-    `valueInst`*: int
+    `hasNextInst`: bool
+    `hasNextInstFlag`: bool
+    `valueInst`: int
+    `valueInstFlag`: bool
 
 proc read*(_: typedesc[VlqBase128Be], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VlqBase128Be
 proc read*(_: typedesc[VlqBase128Be_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Be): VlqBase128Be_Group
@@ -57,24 +61,24 @@ proc read*(_: typedesc[VlqBase128Be], io: KaitaiStream, root: KaitaiStruct, pare
       inc i
 
 proc last(this: VlqBase128Be): int = 
-  if this.lastInst != nil:
+  if this.lastInstFlag:
     return this.lastInst
   let lastInstExpr = int((len(this.groups) - 1))
   this.lastInst = lastInstExpr
-  if this.lastInst != nil:
-    return this.lastInst
+  this.lastInstFlag = true
+  return this.lastInst
 
 proc value(this: VlqBase128Be): int = 
 
   ##[
   Resulting value as normal integer
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((((((((this.groups[this.last].value + (if this.last >= 1: (this.groups[(this.last - 1)].value shl 7) else: 0)) + (if this.last >= 2: (this.groups[(this.last - 2)].value shl 14) else: 0)) + (if this.last >= 3: (this.groups[(this.last - 3)].value shl 21) else: 0)) + (if this.last >= 4: (this.groups[(this.last - 4)].value shl 28) else: 0)) + (if this.last >= 5: (this.groups[(this.last - 5)].value shl 35) else: 0)) + (if this.last >= 6: (this.groups[(this.last - 6)].value shl 42) else: 0)) + (if this.last >= 7: (this.groups[(this.last - 7)].value shl 49) else: 0)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[VlqBase128Be], filename: string): VlqBase128Be =
   VlqBase128Be.read(newKaitaiFileStream(filename), nil, nil)
@@ -100,24 +104,24 @@ proc hasNext(this: VlqBase128Be_Group): bool =
   ##[
   If true, then we have more bytes to read
   ]##
-  if this.hasNextInst != nil:
+  if this.hasNextInstFlag:
     return this.hasNextInst
   let hasNextInstExpr = bool((this.b and 128) != 0)
   this.hasNextInst = hasNextInstExpr
-  if this.hasNextInst != nil:
-    return this.hasNextInst
+  this.hasNextInstFlag = true
+  return this.hasNextInst
 
 proc value(this: VlqBase128Be_Group): int = 
 
   ##[
   The 7-bit (base128) numeric value chunk of this group
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((this.b and 127))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[VlqBase128Be_Group], filename: string): VlqBase128Be_Group =
   VlqBase128Be_Group.read(newKaitaiFileStream(filename), nil, nil)

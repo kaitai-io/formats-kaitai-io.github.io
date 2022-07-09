@@ -8,7 +8,7 @@
   } else {
     root.BytesWithIo = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Helper type to work around Kaitai Struct not providing an `_io` member for plain byte arrays.
  */

@@ -19,14 +19,14 @@ class NtMdtPal < Kaitai::Struct::Struct
     @signature = @_io.read_bytes(26)
     raise Kaitai::Struct::ValidationNotEqualError.new([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*'), signature, _io, "/seq/0") if not signature == [78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*')
     @count = @_io.read_u4be
-    @meta = Array.new(count)
+    @meta = []
     (count).times { |i|
-      @meta[i] = Meta.new(@_io, self, @_root)
+      @meta << Meta.new(@_io, self, @_root)
     }
     @something2 = @_io.read_bytes(1)
-    @tables = Array.new(count)
+    @tables = []
     (count).times { |i|
-      @tables[i] = ColTable.new(@_io, self, @_root, i)
+      @tables << ColTable.new(@_io, self, @_root, i)
     }
     self
   end
@@ -103,9 +103,9 @@ class NtMdtPal < Kaitai::Struct::Struct
       @unkn = @_io.read_u1
       @title = (@_io.read_bytes(_root.meta[index].name_size)).force_encoding("UTF-16LE")
       @unkn1 = @_io.read_u2be
-      @colors = Array.new((_root.meta[index].colors_count - 1))
+      @colors = []
       ((_root.meta[index].colors_count - 1)).times { |i|
-        @colors[i] = Color.new(@_io, self, @_root)
+        @colors << Color.new(@_io, self, @_root)
       }
       self
     end

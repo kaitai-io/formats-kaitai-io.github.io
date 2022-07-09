@@ -8,7 +8,7 @@
   } else {
     root.Dcmp2 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Compressed resource data in `'dcmp' (2)` format,
  * as stored in compressed resources with header type `9` and decompressor ID `2`.
@@ -44,9 +44,9 @@ var Dcmp2 = (function() {
   }
   Dcmp2.prototype._read = function() {
     if (this.headerParameters.flags.hasCustomLookupTable) {
-      this.customLookupTable = new Array(this.headerParameters.numCustomLookupTableEntries);
+      this.customLookupTable = [];
       for (var i = 0; i < this.headerParameters.numCustomLookupTableEntries; i++) {
-        this.customLookupTable[i] = this._io.readBytes(2);
+        this.customLookupTable.push(this._io.readBytes(2));
       }
     }
     switch (this.headerParameters.flags.tagged) {
@@ -246,13 +246,13 @@ var Dcmp2 = (function() {
         this._read();
       }
       Chunk.prototype._read = function() {
-        this.tag = new Array(8);
+        this.tag = [];
         for (var i = 0; i < 8; i++) {
-          this.tag[i] = this._io.readBitsIntBe(1) != 0;
+          this.tag.push(this._io.readBitsIntBe(1) != 0);
         }
         this._io.alignToByte();
-        this._raw_units = []
-        this.units = []
+        this._raw_units = [];
+        this.units = [];
         var i = 0;
         do {
           switch (this.tag[i]) {

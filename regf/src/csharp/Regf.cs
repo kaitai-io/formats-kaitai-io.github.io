@@ -331,7 +331,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _count = m_io.ReadU2le();
-                    _items = new List<Item>((int) (Count));
+                    _items = new List<Item>();
                     for (var i = 0; i < Count; i++)
                     {
                         _items.Add(new Item(m_io, this, m_root));
@@ -422,7 +422,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _count = m_io.ReadU2le();
-                    _items = new List<Item>((int) (Count));
+                    _items = new List<Item>();
                     for (var i = 0; i < Count; i++)
                     {
                         _items.Add(new Item(m_io, this, m_root));
@@ -574,7 +574,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _count = m_io.ReadU2le();
-                    _items = new List<Item>((int) (Count));
+                    _items = new List<Item>();
                     for (var i = 0; i < Count; i++)
                     {
                         _items.Add(new Item(m_io, this, m_root));

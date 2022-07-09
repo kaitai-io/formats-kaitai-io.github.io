@@ -44,7 +44,7 @@ public class JavaClass extends KaitaiStruct {
             throw new KaitaiStream.ValidationLessThanError(43, versionMajor(), _io(), "/seq/2");
         }
         this.constantPoolCount = this._io.readU2be();
-        constantPool = new ArrayList<ConstantPoolEntry>(((Number) ((constantPoolCount() - 1))).intValue());
+        this.constantPool = new ArrayList<ConstantPoolEntry>();
         for (int i = 0; i < (constantPoolCount() - 1); i++) {
             this.constantPool.add(new ConstantPoolEntry(this._io, this, _root, (i != 0 ? constantPool().get((int) (i - 1)).isTwoEntries() : false)));
         }
@@ -52,22 +52,22 @@ public class JavaClass extends KaitaiStruct {
         this.thisClass = this._io.readU2be();
         this.superClass = this._io.readU2be();
         this.interfacesCount = this._io.readU2be();
-        interfaces = new ArrayList<Integer>(((Number) (interfacesCount())).intValue());
+        this.interfaces = new ArrayList<Integer>();
         for (int i = 0; i < interfacesCount(); i++) {
             this.interfaces.add(this._io.readU2be());
         }
         this.fieldsCount = this._io.readU2be();
-        fields = new ArrayList<FieldInfo>(((Number) (fieldsCount())).intValue());
+        this.fields = new ArrayList<FieldInfo>();
         for (int i = 0; i < fieldsCount(); i++) {
             this.fields.add(new FieldInfo(this._io, this, _root));
         }
         this.methodsCount = this._io.readU2be();
-        methods = new ArrayList<MethodInfo>(((Number) (methodsCount())).intValue());
+        this.methods = new ArrayList<MethodInfo>();
         for (int i = 0; i < methodsCount(); i++) {
             this.methods.add(new MethodInfo(this._io, this, _root));
         }
         this.attributesCount = this._io.readU2be();
-        attributes = new ArrayList<AttributeInfo>(((Number) (attributesCount())).intValue());
+        this.attributes = new ArrayList<AttributeInfo>();
         for (int i = 0; i < attributesCount(); i++) {
             this.attributes.add(new AttributeInfo(this._io, this, _root));
         }
@@ -191,12 +191,12 @@ public class JavaClass extends KaitaiStruct {
                 this.codeLength = this._io.readU4be();
                 this.code = this._io.readBytes(codeLength());
                 this.exceptionTableLength = this._io.readU2be();
-                exceptionTable = new ArrayList<ExceptionEntry>(((Number) (exceptionTableLength())).intValue());
+                this.exceptionTable = new ArrayList<ExceptionEntry>();
                 for (int i = 0; i < exceptionTableLength(); i++) {
                     this.exceptionTable.add(new ExceptionEntry(this._io, this, _root));
                 }
                 this.attributesCount = this._io.readU2be();
-                attributes = new ArrayList<AttributeInfo>(((Number) (attributesCount())).intValue());
+                this.attributes = new ArrayList<AttributeInfo>();
                 for (int i = 0; i < attributesCount(); i++) {
                     this.attributes.add(new AttributeInfo(this._io, this, _root));
                 }
@@ -235,7 +235,7 @@ public class JavaClass extends KaitaiStruct {
                     if (this.catchException != null)
                         return this.catchException;
                     if (catchType() != 0) {
-                        this.catchException = _root.constantPool().get((int) (catchType() - 1));
+                        this.catchException = _root().constantPool().get((int) (catchType() - 1));
                     }
                     return this.catchException;
                 }
@@ -318,7 +318,7 @@ public class JavaClass extends KaitaiStruct {
             }
             private void _read() {
                 this.numberOfExceptions = this._io.readU2be();
-                exceptions = new ArrayList<ExceptionTableEntry>(((Number) (numberOfExceptions())).intValue());
+                this.exceptions = new ArrayList<ExceptionTableEntry>();
                 for (int i = 0; i < numberOfExceptions(); i++) {
                     this.exceptions.add(new ExceptionTableEntry(this._io, this, _root));
                 }
@@ -349,7 +349,7 @@ public class JavaClass extends KaitaiStruct {
                 public JavaClass.ClassCpInfo asInfo() {
                     if (this.asInfo != null)
                         return this.asInfo;
-                    this.asInfo = ((JavaClass.ClassCpInfo) (_root.constantPool().get((int) (index() - 1)).cpInfo()));
+                    this.asInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (index() - 1)).cpInfo()));
                     return this.asInfo;
                 }
                 private String nameAsStr;
@@ -405,7 +405,7 @@ public class JavaClass extends KaitaiStruct {
             public String sourcefileAsStr() {
                 if (this.sourcefileAsStr != null)
                     return this.sourcefileAsStr;
-                this.sourcefileAsStr = ((JavaClass.Utf8CpInfo) (_root.constantPool().get((int) (sourcefileIndex() - 1)).cpInfo())).value();
+                this.sourcefileAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (sourcefileIndex() - 1)).cpInfo())).value();
                 return this.sourcefileAsStr;
             }
             private int sourcefileIndex;
@@ -440,7 +440,7 @@ public class JavaClass extends KaitaiStruct {
             }
             private void _read() {
                 this.lineNumberTableLength = this._io.readU2be();
-                lineNumberTable = new ArrayList<LineNumberTableEntry>(((Number) (lineNumberTableLength())).intValue());
+                this.lineNumberTable = new ArrayList<LineNumberTableEntry>();
                 for (int i = 0; i < lineNumberTableLength(); i++) {
                     this.lineNumberTable.add(new LineNumberTableEntry(this._io, this, _root));
                 }
@@ -490,7 +490,7 @@ public class JavaClass extends KaitaiStruct {
         public String nameAsStr() {
             if (this.nameAsStr != null)
                 return this.nameAsStr;
-            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root.constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
+            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
             return this.nameAsStr;
         }
         private int nameIndex;
@@ -537,14 +537,14 @@ public class JavaClass extends KaitaiStruct {
         public JavaClass.ClassCpInfo classAsInfo() {
             if (this.classAsInfo != null)
                 return this.classAsInfo;
-            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root.constantPool().get((int) (classIndex() - 1)).cpInfo()));
+            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (classIndex() - 1)).cpInfo()));
             return this.classAsInfo;
         }
         private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
         public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
             if (this.nameAndTypeAsInfo != null)
                 return this.nameAndTypeAsInfo;
-            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root.constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
+            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
             return this.nameAndTypeAsInfo;
         }
         private int classIndex;
@@ -584,7 +584,7 @@ public class JavaClass extends KaitaiStruct {
             this.nameIndex = this._io.readU2be();
             this.descriptorIndex = this._io.readU2be();
             this.attributesCount = this._io.readU2be();
-            attributes = new ArrayList<AttributeInfo>(((Number) (attributesCount())).intValue());
+            this.attributes = new ArrayList<AttributeInfo>();
             for (int i = 0; i < attributesCount(); i++) {
                 this.attributes.add(new AttributeInfo(this._io, this, _root));
             }
@@ -593,7 +593,7 @@ public class JavaClass extends KaitaiStruct {
         public String nameAsStr() {
             if (this.nameAsStr != null)
                 return this.nameAsStr;
-            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root.constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
+            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
             return this.nameAsStr;
         }
         private int accessFlags;
@@ -802,7 +802,7 @@ public class JavaClass extends KaitaiStruct {
         public JavaClass.Utf8CpInfo nameAsInfo() {
             if (this.nameAsInfo != null)
                 return this.nameAsInfo;
-            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root.constantPool().get((int) (nameIndex() - 1)).cpInfo()));
+            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo()));
             return this.nameAsInfo;
         }
         private String nameAsStr;
@@ -816,7 +816,7 @@ public class JavaClass extends KaitaiStruct {
         public JavaClass.Utf8CpInfo descriptorAsInfo() {
             if (this.descriptorAsInfo != null)
                 return this.descriptorAsInfo;
-            this.descriptorAsInfo = ((JavaClass.Utf8CpInfo) (_root.constantPool().get((int) (descriptorIndex() - 1)).cpInfo()));
+            this.descriptorAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (descriptorIndex() - 1)).cpInfo()));
             return this.descriptorAsInfo;
         }
         private String descriptorAsStr;
@@ -968,14 +968,14 @@ public class JavaClass extends KaitaiStruct {
         public JavaClass.ClassCpInfo classAsInfo() {
             if (this.classAsInfo != null)
                 return this.classAsInfo;
-            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root.constantPool().get((int) (classIndex() - 1)).cpInfo()));
+            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (classIndex() - 1)).cpInfo()));
             return this.classAsInfo;
         }
         private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
         public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
             if (this.nameAndTypeAsInfo != null)
                 return this.nameAndTypeAsInfo;
-            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root.constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
+            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
             return this.nameAndTypeAsInfo;
         }
         private int classIndex;
@@ -1017,7 +1017,7 @@ public class JavaClass extends KaitaiStruct {
         public JavaClass.Utf8CpInfo nameAsInfo() {
             if (this.nameAsInfo != null)
                 return this.nameAsInfo;
-            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root.constantPool().get((int) (nameIndex() - 1)).cpInfo()));
+            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo()));
             return this.nameAsInfo;
         }
         private String nameAsStr;
@@ -1199,7 +1199,7 @@ public class JavaClass extends KaitaiStruct {
             this.nameIndex = this._io.readU2be();
             this.descriptorIndex = this._io.readU2be();
             this.attributesCount = this._io.readU2be();
-            attributes = new ArrayList<AttributeInfo>(((Number) (attributesCount())).intValue());
+            this.attributes = new ArrayList<AttributeInfo>();
             for (int i = 0; i < attributesCount(); i++) {
                 this.attributes.add(new AttributeInfo(this._io, this, _root));
             }
@@ -1208,7 +1208,7 @@ public class JavaClass extends KaitaiStruct {
         public String nameAsStr() {
             if (this.nameAsStr != null)
                 return this.nameAsStr;
-            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root.constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
+            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
             return this.nameAsStr;
         }
         private int accessFlags;
@@ -1290,14 +1290,14 @@ public class JavaClass extends KaitaiStruct {
         public JavaClass.ClassCpInfo classAsInfo() {
             if (this.classAsInfo != null)
                 return this.classAsInfo;
-            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root.constantPool().get((int) (classIndex() - 1)).cpInfo()));
+            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (classIndex() - 1)).cpInfo()));
             return this.classAsInfo;
         }
         private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
         public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
             if (this.nameAndTypeAsInfo != null)
                 return this.nameAndTypeAsInfo;
-            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root.constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
+            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
             return this.nameAndTypeAsInfo;
         }
         private int classIndex;

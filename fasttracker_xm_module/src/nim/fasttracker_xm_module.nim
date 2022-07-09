@@ -21,7 +21,8 @@ type
     `minor`*: uint8
     `major`*: uint8
     `parent`*: FasttrackerXmModule_Preheader
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
   FasttrackerXmModule_Pattern* = ref object of KaitaiStruct
     `header`*: FasttrackerXmModule_Pattern_Header
     `packedData`*: seq[byte]
@@ -36,7 +37,8 @@ type
     `numRowsRaw`*: uint16
     `lenPackedPattern`*: uint16
     `parent`*: FasttrackerXmModule_Pattern_Header
-    `numRowsInst`*: int
+    `numRowsInst`: int
+    `numRowsInstFlag`: bool
   FasttrackerXmModule_Flags* = ref object of KaitaiStruct
     `reserved`*: uint64
     `freqTableType`*: bool
@@ -242,12 +244,12 @@ proc read*(_: typedesc[FasttrackerXmModule_Preheader_Version], io: KaitaiStream,
   this.major = majorExpr
 
 proc value(this: FasttrackerXmModule_Preheader_Version): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int(((this.major shl 8) or this.minor))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[FasttrackerXmModule_Preheader_Version], filename: string): FasttrackerXmModule_Preheader_Version =
   FasttrackerXmModule_Preheader_Version.read(newKaitaiFileStream(filename), nil, nil)
@@ -325,12 +327,12 @@ proc read*(_: typedesc[FasttrackerXmModule_Pattern_Header_HeaderMain], io: Kaita
   this.lenPackedPattern = lenPackedPatternExpr
 
 proc numRows(this: FasttrackerXmModule_Pattern_Header_HeaderMain): int = 
-  if this.numRowsInst != nil:
+  if this.numRowsInstFlag:
     return this.numRowsInst
   let numRowsInstExpr = int((this.numRowsRaw + (if FasttrackerXmModule(this.root).preheader.versionNumber.value == 258: 1 else: 0)))
   this.numRowsInst = numRowsInstExpr
-  if this.numRowsInst != nil:
-    return this.numRowsInst
+  this.numRowsInstFlag = true
+  return this.numRowsInst
 
 proc fromFile*(_: typedesc[FasttrackerXmModule_Pattern_Header_HeaderMain], filename: string): FasttrackerXmModule_Pattern_Header_HeaderMain =
   FasttrackerXmModule_Pattern_Header_HeaderMain.read(newKaitaiFileStream(filename), nil, nil)

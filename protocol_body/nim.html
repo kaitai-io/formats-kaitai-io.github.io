@@ -257,17 +257,18 @@ on that parameter.</p>
 <span class="kn">import</span> <span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ipv4_packet</span>
 <span class="kn">import</span> <span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ipv6_packet</span>
 
-<span class="kn">import</span> <span class="s">&quot;icmp_packet&quot;</span>
+<span class="kn">import</span> <span class="s">&quot;tcp_segment&quot;</span>
 <span class="kn">import</span> <span class="s">&quot;udp_datagram&quot;</span>
 <span class="kn">import</span> <span class="s">&quot;ipv4_packet&quot;</span>
+<span class="kn">import</span> <span class="s">&quot;icmp_packet&quot;</span>
 <span class="kn">import</span> <span class="s">&quot;ipv6_packet&quot;</span>
-<span class="kn">import</span> <span class="s">&quot;tcp_segment&quot;</span>
 <span class="k">type</span>
   <span class="n">ProtocolBody</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">protocolNum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">protocolInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">ProtocolBody_ProtocolEnum</span>
+    <span class="p">`</span><span class="n">protocolInst</span><span class="p">`:</span> <span class="n">ProtocolBody_ProtocolEnum</span>
+    <span class="p">`</span><span class="n">protocolInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">ProtocolBody_ProtocolEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">hopopt</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">icmp</span> <span class="o">=</span> <span class="mi">1</span>
@@ -480,12 +481,12 @@ on that parameter.</p>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">protocol</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">ProtocolBody</span><span class="p">):</span> <span class="n">ProtocolBody_ProtocolEnum</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">protocolInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">protocolInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">protocolInst</span>
   <span class="k">let</span> <span class="n">protocolInstExpr</span> <span class="o">=</span> <span class="n">ProtocolBody_ProtocolEnum</span><span class="p">(</span><span class="n">ProtocolBody_ProtocolEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">protocolNum</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">protocolInst</span> <span class="o">=</span> <span class="n">protocolInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">protocolInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">protocolInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">protocolInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">protocolInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ProtocolBody], filename: string): ProtocolBody =</span>
   <span class="n">ProtocolBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

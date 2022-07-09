@@ -8,7 +8,7 @@
   } else {
     root.JavaClass = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1|Source}
  */
@@ -32,32 +32,32 @@ var JavaClass = (function() {
       throw new KaitaiStream.ValidationLessThanError(43, this.versionMajor, this._io, "/seq/2");
     }
     this.constantPoolCount = this._io.readU2be();
-    this.constantPool = new Array((this.constantPoolCount - 1));
+    this.constantPool = [];
     for (var i = 0; i < (this.constantPoolCount - 1); i++) {
-      this.constantPool[i] = new ConstantPoolEntry(this._io, this, this._root, (i != 0 ? this.constantPool[(i - 1)].isTwoEntries : false));
+      this.constantPool.push(new ConstantPoolEntry(this._io, this, this._root, (i != 0 ? this.constantPool[(i - 1)].isTwoEntries : false)));
     }
     this.accessFlags = this._io.readU2be();
     this.thisClass = this._io.readU2be();
     this.superClass = this._io.readU2be();
     this.interfacesCount = this._io.readU2be();
-    this.interfaces = new Array(this.interfacesCount);
+    this.interfaces = [];
     for (var i = 0; i < this.interfacesCount; i++) {
-      this.interfaces[i] = this._io.readU2be();
+      this.interfaces.push(this._io.readU2be());
     }
     this.fieldsCount = this._io.readU2be();
-    this.fields = new Array(this.fieldsCount);
+    this.fields = [];
     for (var i = 0; i < this.fieldsCount; i++) {
-      this.fields[i] = new FieldInfo(this._io, this, this._root);
+      this.fields.push(new FieldInfo(this._io, this, this._root));
     }
     this.methodsCount = this._io.readU2be();
-    this.methods = new Array(this.methodsCount);
+    this.methods = [];
     for (var i = 0; i < this.methodsCount; i++) {
-      this.methods[i] = new MethodInfo(this._io, this, this._root);
+      this.methods.push(new MethodInfo(this._io, this, this._root));
     }
     this.attributesCount = this._io.readU2be();
-    this.attributes = new Array(this.attributesCount);
+    this.attributes = [];
     for (var i = 0; i < this.attributesCount; i++) {
-      this.attributes[i] = new AttributeInfo(this._io, this, this._root);
+      this.attributes.push(new AttributeInfo(this._io, this, this._root));
     }
   }
 
@@ -140,14 +140,14 @@ var JavaClass = (function() {
         this.codeLength = this._io.readU4be();
         this.code = this._io.readBytes(this.codeLength);
         this.exceptionTableLength = this._io.readU2be();
-        this.exceptionTable = new Array(this.exceptionTableLength);
+        this.exceptionTable = [];
         for (var i = 0; i < this.exceptionTableLength; i++) {
-          this.exceptionTable[i] = new ExceptionEntry(this._io, this, this._root);
+          this.exceptionTable.push(new ExceptionEntry(this._io, this, this._root));
         }
         this.attributesCount = this._io.readU2be();
-        this.attributes = new Array(this.attributesCount);
+        this.attributes = [];
         for (var i = 0; i < this.attributesCount; i++) {
-          this.attributes[i] = new AttributeInfo(this._io, this, this._root);
+          this.attributes.push(new AttributeInfo(this._io, this, this._root));
         }
       }
 
@@ -220,9 +220,9 @@ var JavaClass = (function() {
       }
       AttrBodyExceptions.prototype._read = function() {
         this.numberOfExceptions = this._io.readU2be();
-        this.exceptions = new Array(this.numberOfExceptions);
+        this.exceptions = [];
         for (var i = 0; i < this.numberOfExceptions; i++) {
-          this.exceptions[i] = new ExceptionTableEntry(this._io, this, this._root);
+          this.exceptions.push(new ExceptionTableEntry(this._io, this, this._root));
         }
       }
 
@@ -301,9 +301,9 @@ var JavaClass = (function() {
       }
       AttrBodyLineNumberTable.prototype._read = function() {
         this.lineNumberTableLength = this._io.readU2be();
-        this.lineNumberTable = new Array(this.lineNumberTableLength);
+        this.lineNumberTable = [];
         for (var i = 0; i < this.lineNumberTableLength; i++) {
-          this.lineNumberTable[i] = new LineNumberTableEntry(this._io, this, this._root);
+          this.lineNumberTable.push(new LineNumberTableEntry(this._io, this, this._root));
         }
       }
 
@@ -390,9 +390,9 @@ var JavaClass = (function() {
       this.nameIndex = this._io.readU2be();
       this.descriptorIndex = this._io.readU2be();
       this.attributesCount = this._io.readU2be();
-      this.attributes = new Array(this.attributesCount);
+      this.attributes = [];
       for (var i = 0; i < this.attributesCount; i++) {
-        this.attributes[i] = new AttributeInfo(this._io, this, this._root);
+        this.attributes.push(new AttributeInfo(this._io, this, this._root));
       }
     }
     Object.defineProperty(FieldInfo.prototype, 'nameAsStr', {
@@ -813,9 +813,9 @@ var JavaClass = (function() {
       this.nameIndex = this._io.readU2be();
       this.descriptorIndex = this._io.readU2be();
       this.attributesCount = this._io.readU2be();
-      this.attributes = new Array(this.attributesCount);
+      this.attributes = [];
       for (var i = 0; i < this.attributesCount; i++) {
-        this.attributes[i] = new AttributeInfo(this._io, this, this._root);
+        this.attributes.push(new AttributeInfo(this._io, this, this._root));
       }
     }
     Object.defineProperty(MethodInfo.prototype, 'nameAsStr', {

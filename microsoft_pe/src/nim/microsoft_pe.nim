@@ -5,7 +5,8 @@ type
   MicrosoftPe* = ref object of KaitaiStruct
     `mz`*: MicrosoftPe_MzPlaceholder
     `parent`*: KaitaiStruct
-    `peInst`*: MicrosoftPe_PeHeader
+    `peInst`: MicrosoftPe_PeHeader
+    `peInstFlag`: bool
   MicrosoftPe_PeFormat* = enum
     rom_image = 263
     pe32 = 267
@@ -95,8 +96,10 @@ type
     `numberOfAuxSymbols`*: uint8
     `parent`*: MicrosoftPe_CoffHeader
     `rawNameAnnoying`*: seq[byte]
-    `sectionInst`*: MicrosoftPe_Section
-    `dataInst`*: seq[byte]
+    `sectionInst`: MicrosoftPe_Section
+    `sectionInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
   MicrosoftPe_PeHeader* = ref object of KaitaiStruct
     `peSignature`*: seq[byte]
     `coffHdr`*: MicrosoftPe_CoffHeader
@@ -105,7 +108,8 @@ type
     `parent`*: MicrosoftPe
     `rawOptionalHdr`*: seq[byte]
     `rawCertificateTableInst`*: seq[byte]
-    `certificateTableInst`*: MicrosoftPe_CertificateTable
+    `certificateTableInst`: MicrosoftPe_CertificateTable
+    `certificateTableInstFlag`: bool
   MicrosoftPe_OptionalHeader* = ref object of KaitaiStruct
     `std`*: MicrosoftPe_OptionalHeaderStd
     `windows`*: MicrosoftPe_OptionalHeaderWindows
@@ -123,7 +127,8 @@ type
     `numberOfLinenumbers`*: uint16
     `characteristics`*: uint32
     `parent`*: MicrosoftPe_PeHeader
-    `bodyInst`*: seq[byte]
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   MicrosoftPe_CertificateTable* = ref object of KaitaiStruct
     `items`*: seq[MicrosoftPe_CertificateEntry]
     `parent`*: MicrosoftPe_PeHeader
@@ -152,10 +157,14 @@ type
     `sizeOfOptionalHeader`*: uint16
     `characteristics`*: uint16
     `parent`*: MicrosoftPe_PeHeader
-    `symbolTableSizeInst`*: int
-    `symbolNameTableOffsetInst`*: int
-    `symbolNameTableSizeInst`*: uint32
-    `symbolTableInst`*: seq[MicrosoftPe_CoffSymbol]
+    `symbolTableSizeInst`: int
+    `symbolTableSizeInstFlag`: bool
+    `symbolNameTableOffsetInst`: int
+    `symbolNameTableOffsetInstFlag`: bool
+    `symbolNameTableSizeInst`: uint32
+    `symbolNameTableSizeInstFlag`: bool
+    `symbolTableInst`: seq[MicrosoftPe_CoffSymbol]
+    `symbolTableInstFlag`: bool
   MicrosoftPe_CoffHeader_MachineType* = enum
     unknown = 0
     i386 = 332
@@ -185,11 +194,16 @@ type
     arm64 = 43620
   MicrosoftPe_Annoyingstring* = ref object of KaitaiStruct
     `parent`*: MicrosoftPe_CoffSymbol
-    `nameFromOffsetInst`*: string
-    `nameOffsetInst`*: uint32
-    `nameInst`*: string
-    `nameZeroesInst`*: uint32
-    `nameFromShortInst`*: string
+    `nameFromOffsetInst`: string
+    `nameFromOffsetInstFlag`: bool
+    `nameOffsetInst`: uint32
+    `nameOffsetInstFlag`: bool
+    `nameInst`: string
+    `nameInstFlag`: bool
+    `nameZeroesInst`: uint32
+    `nameZeroesInstFlag`: bool
+    `nameFromShortInst`: string
+    `nameFromShortInstFlag`: bool
 
 proc read*(_: typedesc[MicrosoftPe], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftPe
 proc read*(_: typedesc[MicrosoftPe_CertificateEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CertificateTable): MicrosoftPe_CertificateEntry
@@ -237,15 +251,15 @@ proc read*(_: typedesc[MicrosoftPe], io: KaitaiStream, root: KaitaiStruct, paren
   this.mz = mzExpr
 
 proc pe(this: MicrosoftPe): MicrosoftPe_PeHeader = 
-  if this.peInst != nil:
+  if this.peInstFlag:
     return this.peInst
   let pos = this.io.pos()
   this.io.seek(int(this.mz.ofsPe))
   let peInstExpr = MicrosoftPe_PeHeader.read(this.io, this.root, this)
   this.peInst = peInstExpr
   this.io.seek(pos)
-  if this.peInst != nil:
-    return this.peInst
+  this.peInstFlag = true
+  return this.peInst
 
 proc fromFile*(_: typedesc[MicrosoftPe], filename: string): MicrosoftPe =
   MicrosoftPe.read(newKaitaiFileStream(filename), nil, nil)
@@ -447,23 +461,23 @@ proc read*(_: typedesc[MicrosoftPe_CoffSymbol], io: KaitaiStream, root: KaitaiSt
   this.numberOfAuxSymbols = numberOfAuxSymbolsExpr
 
 proc section(this: MicrosoftPe_CoffSymbol): MicrosoftPe_Section = 
-  if this.sectionInst != nil:
+  if this.sectionInstFlag:
     return this.sectionInst
   let sectionInstExpr = MicrosoftPe_Section(MicrosoftPe(this.root).pe.sections[(this.sectionNumber - 1)])
   this.sectionInst = sectionInstExpr
-  if this.sectionInst != nil:
-    return this.sectionInst
+  this.sectionInstFlag = true
+  return this.sectionInst
 
 proc data(this: MicrosoftPe_CoffSymbol): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let pos = this.io.pos()
   this.io.seek(int((this.section.pointerToRawData + this.value)))
   let dataInstExpr = this.io.readBytes(int(1))
   this.dataInst = dataInstExpr
   this.io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[MicrosoftPe_CoffSymbol], filename: string): MicrosoftPe_CoffSymbol =
   MicrosoftPe_CoffSymbol.read(newKaitaiFileStream(filename), nil, nil)
@@ -490,7 +504,7 @@ proc read*(_: typedesc[MicrosoftPe_PeHeader], io: KaitaiStream, root: KaitaiStru
     this.sections.add(it)
 
 proc certificateTable(this: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable = 
-  if this.certificateTableInst != nil:
+  if this.certificateTableInstFlag:
     return this.certificateTableInst
   if this.optionalHdr.dataDirs.certificateTable.virtualAddress != 0:
     let pos = this.io.pos()
@@ -501,8 +515,8 @@ proc certificateTable(this: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable 
     let certificateTableInstExpr = MicrosoftPe_CertificateTable.read(rawCertificateTableInstIo, this.root, this)
     this.certificateTableInst = certificateTableInstExpr
     this.io.seek(pos)
-  if this.certificateTableInst != nil:
-    return this.certificateTableInst
+  this.certificateTableInstFlag = true
+  return this.certificateTableInst
 
 proc fromFile*(_: typedesc[MicrosoftPe_PeHeader], filename: string): MicrosoftPe_PeHeader =
   MicrosoftPe_PeHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -555,15 +569,15 @@ proc read*(_: typedesc[MicrosoftPe_Section], io: KaitaiStream, root: KaitaiStruc
   this.characteristics = characteristicsExpr
 
 proc body(this: MicrosoftPe_Section): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(this.pointerToRawData))
   let bodyInstExpr = this.io.readBytes(int(this.sizeOfRawData))
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[MicrosoftPe_Section], filename: string): MicrosoftPe_Section =
   MicrosoftPe_Section.read(newKaitaiFileStream(filename), nil, nil)
@@ -667,34 +681,34 @@ proc read*(_: typedesc[MicrosoftPe_CoffHeader], io: KaitaiStream, root: KaitaiSt
   this.characteristics = characteristicsExpr
 
 proc symbolTableSize(this: MicrosoftPe_CoffHeader): int = 
-  if this.symbolTableSizeInst != nil:
+  if this.symbolTableSizeInstFlag:
     return this.symbolTableSizeInst
   let symbolTableSizeInstExpr = int((this.numberOfSymbols * 18))
   this.symbolTableSizeInst = symbolTableSizeInstExpr
-  if this.symbolTableSizeInst != nil:
-    return this.symbolTableSizeInst
+  this.symbolTableSizeInstFlag = true
+  return this.symbolTableSizeInst
 
 proc symbolNameTableOffset(this: MicrosoftPe_CoffHeader): int = 
-  if this.symbolNameTableOffsetInst != nil:
+  if this.symbolNameTableOffsetInstFlag:
     return this.symbolNameTableOffsetInst
   let symbolNameTableOffsetInstExpr = int((this.pointerToSymbolTable + this.symbolTableSize))
   this.symbolNameTableOffsetInst = symbolNameTableOffsetInstExpr
-  if this.symbolNameTableOffsetInst != nil:
-    return this.symbolNameTableOffsetInst
+  this.symbolNameTableOffsetInstFlag = true
+  return this.symbolNameTableOffsetInst
 
 proc symbolNameTableSize(this: MicrosoftPe_CoffHeader): uint32 = 
-  if this.symbolNameTableSizeInst != nil:
+  if this.symbolNameTableSizeInstFlag:
     return this.symbolNameTableSizeInst
   let pos = this.io.pos()
   this.io.seek(int(this.symbolNameTableOffset))
   let symbolNameTableSizeInstExpr = this.io.readU4le()
   this.symbolNameTableSizeInst = symbolNameTableSizeInstExpr
   this.io.seek(pos)
-  if this.symbolNameTableSizeInst != nil:
-    return this.symbolNameTableSizeInst
+  this.symbolNameTableSizeInstFlag = true
+  return this.symbolNameTableSizeInst
 
 proc symbolTable(this: MicrosoftPe_CoffHeader): seq[MicrosoftPe_CoffSymbol] = 
-  if this.symbolTableInst.len != 0:
+  if this.symbolTableInstFlag:
     return this.symbolTableInst
   let pos = this.io.pos()
   this.io.seek(int(this.pointerToSymbolTable))
@@ -702,8 +716,8 @@ proc symbolTable(this: MicrosoftPe_CoffHeader): seq[MicrosoftPe_CoffSymbol] =
     let it = MicrosoftPe_CoffSymbol.read(this.io, this.root, this)
     this.symbolTableInst.add(it)
   this.io.seek(pos)
-  if this.symbolTableInst.len != 0:
-    return this.symbolTableInst
+  this.symbolTableInstFlag = true
+  return this.symbolTableInst
 
 proc fromFile*(_: typedesc[MicrosoftPe_CoffHeader], filename: string): MicrosoftPe_CoffHeader =
   MicrosoftPe_CoffHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -718,7 +732,7 @@ proc read*(_: typedesc[MicrosoftPe_Annoyingstring], io: KaitaiStream, root: Kait
 
 
 proc nameFromOffset(this: MicrosoftPe_Annoyingstring): string = 
-  if this.nameFromOffsetInst.len != 0:
+  if this.nameFromOffsetInstFlag:
     return this.nameFromOffsetInst
   if this.nameZeroes == 0:
     let io = MicrosoftPe(this.root).io
@@ -727,41 +741,41 @@ proc nameFromOffset(this: MicrosoftPe_Annoyingstring): string =
     let nameFromOffsetInstExpr = encode(io.readBytesTerm(0, false, true, false), "ascii")
     this.nameFromOffsetInst = nameFromOffsetInstExpr
     io.seek(pos)
-  if this.nameFromOffsetInst.len != 0:
-    return this.nameFromOffsetInst
+  this.nameFromOffsetInstFlag = true
+  return this.nameFromOffsetInst
 
 proc nameOffset(this: MicrosoftPe_Annoyingstring): uint32 = 
-  if this.nameOffsetInst != nil:
+  if this.nameOffsetInstFlag:
     return this.nameOffsetInst
   let pos = this.io.pos()
   this.io.seek(int(4))
   let nameOffsetInstExpr = this.io.readU4le()
   this.nameOffsetInst = nameOffsetInstExpr
   this.io.seek(pos)
-  if this.nameOffsetInst != nil:
-    return this.nameOffsetInst
+  this.nameOffsetInstFlag = true
+  return this.nameOffsetInst
 
 proc name(this: MicrosoftPe_Annoyingstring): string = 
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   let nameInstExpr = string((if this.nameZeroes == 0: this.nameFromOffset else: this.nameFromShort))
   this.nameInst = nameInstExpr
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc nameZeroes(this: MicrosoftPe_Annoyingstring): uint32 = 
-  if this.nameZeroesInst != nil:
+  if this.nameZeroesInstFlag:
     return this.nameZeroesInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let nameZeroesInstExpr = this.io.readU4le()
   this.nameZeroesInst = nameZeroesInstExpr
   this.io.seek(pos)
-  if this.nameZeroesInst != nil:
-    return this.nameZeroesInst
+  this.nameZeroesInstFlag = true
+  return this.nameZeroesInst
 
 proc nameFromShort(this: MicrosoftPe_Annoyingstring): string = 
-  if this.nameFromShortInst.len != 0:
+  if this.nameFromShortInstFlag:
     return this.nameFromShortInst
   if this.nameZeroes != 0:
     let pos = this.io.pos()
@@ -769,8 +783,8 @@ proc nameFromShort(this: MicrosoftPe_Annoyingstring): string =
     let nameFromShortInstExpr = encode(this.io.readBytesTerm(0, false, true, false), "ascii")
     this.nameFromShortInst = nameFromShortInstExpr
     this.io.seek(pos)
-  if this.nameFromShortInst.len != 0:
-    return this.nameFromShortInst
+  this.nameFromShortInstFlag = true
+  return this.nameFromShortInst
 
 proc fromFile*(_: typedesc[MicrosoftPe_Annoyingstring], filename: string): MicrosoftPe_Annoyingstring =
   MicrosoftPe_Annoyingstring.read(newKaitaiFileStream(filename), nil, nil)

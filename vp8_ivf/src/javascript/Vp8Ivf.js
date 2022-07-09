@@ -8,7 +8,7 @@
   } else {
     root.Vp8Ivf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * IVF is a simple container format for raw VP8 data, which is an open
  * and royalty-free video compression format, currently developed by
@@ -43,9 +43,9 @@ var Vp8Ivf = (function() {
     this.timescale = this._io.readU4le();
     this.numFrames = this._io.readU4le();
     this.unused = this._io.readU4le();
-    this.imageData = new Array(this.numFrames);
+    this.imageData = [];
     for (var i = 0; i < this.numFrames; i++) {
-      this.imageData[i] = new Blocks(this._io, this, this._root);
+      this.imageData.push(new Blocks(this._io, this, this._root));
     }
   }
 

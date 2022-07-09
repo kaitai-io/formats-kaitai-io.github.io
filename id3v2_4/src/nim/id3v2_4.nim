@@ -13,7 +13,8 @@ type
     `byte0`*: Id3v24_U1beSynchsafe
     `byte1`*: Id3v24_U1beSynchsafe
     `parent`*: Id3v24_U4beSynchsafe
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
   Id3v24_Tag* = ref object of KaitaiStruct
     `header`*: Id3v24_Header
     `headerEx`*: Id3v24_HeaderEx
@@ -25,7 +26,8 @@ type
     `short0`*: Id3v24_U2beSynchsafe
     `short1`*: Id3v24_U2beSynchsafe
     `parent`*: KaitaiStruct
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
   Id3v24_Frame* = ref object of KaitaiStruct
     `id`*: string
     `size`*: Id3v24_U4beSynchsafe
@@ -33,7 +35,8 @@ type
     `flagsFormat`*: Id3v24_Frame_FlagsFormat
     `data`*: seq[byte]
     `parent`*: Id3v24_Tag
-    `isInvalidInst`*: bool
+    `isInvalidInst`: bool
+    `isInvalidInstFlag`: bool
   Id3v24_Frame_FlagsStatus* = ref object of KaitaiStruct
     `reserved1`*: bool
     `flagDiscardAlterTag`*: bool
@@ -163,12 +166,12 @@ proc read*(_: typedesc[Id3v24_U2beSynchsafe], io: KaitaiStream, root: KaitaiStru
   this.byte1 = byte1Expr
 
 proc value(this: Id3v24_U2beSynchsafe): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int(((this.byte0.value shl 7) or this.byte1.value))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Id3v24_U2beSynchsafe], filename: string): Id3v24_U2beSynchsafe =
   Id3v24_U2beSynchsafe.read(newKaitaiFileStream(filename), nil, nil)
@@ -218,12 +221,12 @@ proc read*(_: typedesc[Id3v24_U4beSynchsafe], io: KaitaiStream, root: KaitaiStru
   this.short1 = short1Expr
 
 proc value(this: Id3v24_U4beSynchsafe): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int(((this.short0.value shl 14) or this.short1.value))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Id3v24_U4beSynchsafe], filename: string): Id3v24_U4beSynchsafe =
   Id3v24_U4beSynchsafe.read(newKaitaiFileStream(filename), nil, nil)
@@ -248,12 +251,12 @@ proc read*(_: typedesc[Id3v24_Frame], io: KaitaiStream, root: KaitaiStruct, pare
   this.data = dataExpr
 
 proc isInvalid(this: Id3v24_Frame): bool = 
-  if this.isInvalidInst != nil:
+  if this.isInvalidInstFlag:
     return this.isInvalidInst
   let isInvalidInstExpr = bool(this.id == "\000\000\000\000")
   this.isInvalidInst = isInvalidInstExpr
-  if this.isInvalidInst != nil:
-    return this.isInvalidInst
+  this.isInvalidInstFlag = true
+  return this.isInvalidInst
 
 proc fromFile*(_: typedesc[Id3v24_Frame], filename: string): Id3v24_Frame =
   Id3v24_Frame.read(newKaitaiFileStream(filename), nil, nil)

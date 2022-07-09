@@ -89,7 +89,7 @@ sub _read {
         $self->{array_elements} = ();
         my $n_array_elements = $self->num_array_elements();
         for (my $i = 0; $i < $n_array_elements; $i++) {
-            $self->{array_elements}[$i] = Msgpack->new($self->{_io});
+            push @{$self->{array_elements}}, Msgpack->new($self->{_io});
         }
     }
     if ($self->is_map_16()) {
@@ -102,7 +102,7 @@ sub _read {
         $self->{map_elements} = ();
         my $n_map_elements = $self->num_map_elements();
         for (my $i = 0; $i < $n_map_elements; $i++) {
-            $self->{map_elements}[$i] = Msgpack::MapTuple->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{map_elements}}, Msgpack::MapTuple->new($self->{_io}, $self, $self->{_root});
         }
     }
 }

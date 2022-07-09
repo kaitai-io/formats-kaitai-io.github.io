@@ -8,7 +8,7 @@
   } else {
     root.RubyMarshal = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Ruby's Marshal module allows serialization and deserialization of
  * many standard and arbitrary Ruby objects in a compact binary
@@ -89,9 +89,9 @@ var RubyMarshal = (function() {
     }
     RubyArray.prototype._read = function() {
       this.numElements = new PackedInt(this._io, this, this._root);
-      this.elements = new Array(this.numElements.value);
+      this.elements = [];
       for (var i = 0; i < this.numElements.value; i++) {
-        this.elements[i] = new Record(this._io, this, this._root);
+        this.elements.push(new Record(this._io, this, this._root));
       }
     }
 
@@ -146,9 +146,9 @@ var RubyMarshal = (function() {
     RubyStruct.prototype._read = function() {
       this.name = new Record(this._io, this, this._root);
       this.numMembers = new PackedInt(this._io, this, this._root);
-      this.members = new Array(this.numMembers.value);
+      this.members = [];
       for (var i = 0; i < this.numMembers.value; i++) {
-        this.members[i] = new Pair(this._io, this, this._root);
+        this.members.push(new Pair(this._io, this, this._root));
       }
     }
 
@@ -313,9 +313,9 @@ var RubyMarshal = (function() {
     InstanceVar.prototype._read = function() {
       this.obj = new Record(this._io, this, this._root);
       this.numVars = new PackedInt(this._io, this, this._root);
-      this.vars = new Array(this.numVars.value);
+      this.vars = [];
       for (var i = 0; i < this.numVars.value; i++) {
-        this.vars[i] = new Pair(this._io, this, this._root);
+        this.vars.push(new Pair(this._io, this, this._root));
       }
     }
 
@@ -389,9 +389,9 @@ var RubyMarshal = (function() {
     }
     RubyHash.prototype._read = function() {
       this.numPairs = new PackedInt(this._io, this, this._root);
-      this.pairs = new Array(this.numPairs.value);
+      this.pairs = [];
       for (var i = 0; i < this.numPairs.value; i++) {
-        this.pairs[i] = new Pair(this._io, this, this._root);
+        this.pairs.push(new Pair(this._io, this, this._root));
       }
     }
 

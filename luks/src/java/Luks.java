@@ -75,7 +75,7 @@ public class Luks extends KaitaiStruct {
             this.masterKeySaltParameter = this._io.readBytes(32);
             this.masterKeyIterationsParameter = this._io.readU4be();
             this.uuid = new String(this._io.readBytes(40), Charset.forName("ASCII"));
-            keySlots = new ArrayList<KeySlot>(((Number) (8)).intValue());
+            this.keySlots = new ArrayList<KeySlot>();
             for (int i = 0; i < 8; i++) {
                 this.keySlots.add(new KeySlot(this._io, this, _root));
             }

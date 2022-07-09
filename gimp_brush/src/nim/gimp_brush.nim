@@ -7,8 +7,10 @@ type
     `header`*: GimpBrush_Header
     `parent`*: KaitaiStruct
     `rawHeader`*: seq[byte]
-    `lenBodyInst`*: int
-    `bodyInst`*: seq[byte]
+    `lenBodyInst`: int
+    `lenBodyInstFlag`: bool
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   GimpBrush_ColorDepth* = enum
     grayscale = 1
     rgba = 4
@@ -30,10 +32,14 @@ type
   GimpBrush_Row_PixelGray* = ref object of KaitaiStruct
     `gray`*: uint8
     `parent`*: KaitaiStruct
-    `redInst`*: int8
-    `greenInst`*: int8
-    `blueInst`*: int8
-    `alphaInst`*: uint8
+    `redInst`: int8
+    `redInstFlag`: bool
+    `greenInst`: int8
+    `greenInstFlag`: bool
+    `blueInst`: int8
+    `blueInstFlag`: bool
+    `alphaInst`: uint8
+    `alphaInstFlag`: bool
   GimpBrush_Row_PixelRgba* = ref object of KaitaiStruct
     `red`*: uint8
     `green`*: uint8
@@ -87,23 +93,23 @@ proc read*(_: typedesc[GimpBrush], io: KaitaiStream, root: KaitaiStruct, parent:
   this.header = headerExpr
 
 proc lenBody(this: GimpBrush): int = 
-  if this.lenBodyInst != nil:
+  if this.lenBodyInstFlag:
     return this.lenBodyInst
   let lenBodyInstExpr = int(((this.header.width * this.header.height) * ord(this.header.bytesPerPixel)))
   this.lenBodyInst = lenBodyInstExpr
-  if this.lenBodyInst != nil:
-    return this.lenBodyInst
+  this.lenBodyInstFlag = true
+  return this.lenBodyInst
 
 proc body(this: GimpBrush): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(this.lenHeader))
   let bodyInstExpr = this.io.readBytes(int(this.lenBody))
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[GimpBrush], filename: string): GimpBrush =
   GimpBrush.read(newKaitaiFileStream(filename), nil, nil)
@@ -196,36 +202,36 @@ proc read*(_: typedesc[GimpBrush_Row_PixelGray], io: KaitaiStream, root: KaitaiS
   this.gray = grayExpr
 
 proc red(this: GimpBrush_Row_PixelGray): int8 = 
-  if this.redInst != nil:
+  if this.redInstFlag:
     return this.redInst
   let redInstExpr = int8(0)
   this.redInst = redInstExpr
-  if this.redInst != nil:
-    return this.redInst
+  this.redInstFlag = true
+  return this.redInst
 
 proc green(this: GimpBrush_Row_PixelGray): int8 = 
-  if this.greenInst != nil:
+  if this.greenInstFlag:
     return this.greenInst
   let greenInstExpr = int8(0)
   this.greenInst = greenInstExpr
-  if this.greenInst != nil:
-    return this.greenInst
+  this.greenInstFlag = true
+  return this.greenInst
 
 proc blue(this: GimpBrush_Row_PixelGray): int8 = 
-  if this.blueInst != nil:
+  if this.blueInstFlag:
     return this.blueInst
   let blueInstExpr = int8(0)
   this.blueInst = blueInstExpr
-  if this.blueInst != nil:
-    return this.blueInst
+  this.blueInstFlag = true
+  return this.blueInst
 
 proc alpha(this: GimpBrush_Row_PixelGray): uint8 = 
-  if this.alphaInst != nil:
+  if this.alphaInstFlag:
     return this.alphaInst
   let alphaInstExpr = uint8(this.gray)
   this.alphaInst = alphaInstExpr
-  if this.alphaInst != nil:
-    return this.alphaInst
+  this.alphaInstFlag = true
+  return this.alphaInst
 
 proc fromFile*(_: typedesc[GimpBrush_Row_PixelGray], filename: string): GimpBrush_Row_PixelGray =
   GimpBrush_Row_PixelGray.read(newKaitaiFileStream(filename), nil, nil)

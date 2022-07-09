@@ -73,9 +73,9 @@ class Exif < Kaitai::Struct::Struct
 
       def _read_le
         @num_fields = @_io.read_u2le
-        @fields = Array.new(num_fields)
+        @fields = []
         (num_fields).times { |i|
-          @fields[i] = IfdField.new(@_io, self, @_root, @_is_le)
+          @fields << IfdField.new(@_io, self, @_root, @_is_le)
         }
         @next_ifd_ofs = @_io.read_u4le
         self
@@ -83,9 +83,9 @@ class Exif < Kaitai::Struct::Struct
 
       def _read_be
         @num_fields = @_io.read_u2be
-        @fields = Array.new(num_fields)
+        @fields = []
         (num_fields).times { |i|
-          @fields[i] = IfdField.new(@_io, self, @_root, @_is_le)
+          @fields << IfdField.new(@_io, self, @_root, @_is_le)
         }
         @next_ifd_ofs = @_io.read_u4be
         self

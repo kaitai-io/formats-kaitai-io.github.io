@@ -237,7 +237,7 @@ sub _read {
     $self->{colors} = ();
     my $n_colors = 256;
     for (my $i = 0; $i < $n_colors; $i++) {
-        $self->{colors}[$i] = Pcx::Rgb->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{colors}}, Pcx::Rgb->new($self->{_io}, $self, $self->{_root});
     }
 }
 

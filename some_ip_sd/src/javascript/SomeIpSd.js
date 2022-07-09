@@ -8,7 +8,7 @@
   } else {
     root.SomeIpSd = factory(root.KaitaiStream, root.SomeIpSdEntries, root.SomeIpSdOptions);
   }
-}(this, function (KaitaiStream, SomeIpSdEntries, SomeIpSdOptions) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, SomeIpSdEntries, SomeIpSdOptions) {
 /**
  * The main tasks of the Service Discovery Protocol are communicating the
  * availability of functional entities called services in the in-vehicle

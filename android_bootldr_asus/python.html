@@ -176,6 +176,11 @@ which can be downloaded from <a href="https://developers.google.com/android/imag
                 
                 <li>
                 
+                <a href="go.html" title="ASUS Fugu bootloader.img format (version 2 and later) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="ASUS Fugu bootloader.img format (version 2 and later) parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -191,7 +196,7 @@ which can be downloaded from <a href="https://developers.google.com/android/imag
                 
                 <li>
                 
-                <a href="nim.html" title="ASUS Fugu bootloader.img format (version 2 and later) parsing Nim library">Nim</a></li>
+                <a href="lua.html" title="ASUS Fugu bootloader.img format (version 2 and later) parsing Lua library">Lua</a></li>
                 
                 
                 <li>
@@ -283,12 +288,11 @@ which can be downloaded from <a href="https://developers.google.com/android/imag
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
 <span class="kn">import</span> <span class="nn">kaitaistruct</span>
 <span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 
 
-<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">):</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span> <span class="nc">AndroidBootldrAsus</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -317,9 +321,9 @@ which can be downloaded from <a href="https://developers.google.com/android/imag
             <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationLessThanError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">revision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/seq/1&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reserved2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">AndroidBootldrAsus</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AndroidBootldrAsus</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
     <span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -346,10 +350,10 @@ which can be downloaded from <a href="https://developers.google.com/android/imag
         <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_file_name&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_file_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_file_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_file_name</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_m_file_name</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ifwi.bin&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;IFWI!!!!&quot;</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;droidboot.img&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;DROIDBT!&quot;</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;splashscreen.img&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;SPLASHS!&quot;</span> <span class="k">else</span> <span class="sa">u</span><span class="s2">&quot;&quot;</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_file_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_file_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_file_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 
         </div>

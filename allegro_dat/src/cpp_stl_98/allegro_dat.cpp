@@ -23,9 +23,8 @@ void allegro_dat_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x41\x4C\x4C\x2E", 4), dat_magic(), _io(), std::string("/seq/1"));
     }
     m_num_objects = m__io->read_u4be();
-    int l_objects = num_objects();
     m_objects = new std::vector<dat_object_t*>();
-    m_objects->reserve(l_objects);
+    const int l_objects = num_objects();
     for (int i = 0; i < l_objects; i++) {
         m_objects->push_back(new dat_object_t(m__io, this, m__root));
     }
@@ -58,9 +57,8 @@ allegro_dat_t::dat_font_16_t::dat_font_16_t(kaitai::kstream* p__io, allegro_dat_
 }
 
 void allegro_dat_t::dat_font_16_t::_read() {
-    int l_chars = 95;
     m_chars = new std::vector<std::string>();
-    m_chars->reserve(l_chars);
+    const int l_chars = 95;
     for (int i = 0; i < l_chars; i++) {
         m_chars->push_back(m__io->read_bytes(16));
     }
@@ -162,9 +160,8 @@ allegro_dat_t::dat_font_8_t::dat_font_8_t(kaitai::kstream* p__io, allegro_dat_t:
 }
 
 void allegro_dat_t::dat_font_8_t::_read() {
-    int l_chars = 95;
     m_chars = new std::vector<std::string>();
-    m_chars->reserve(l_chars);
+    const int l_chars = 95;
     for (int i = 0; i < l_chars; i++) {
         m_chars->push_back(m__io->read_bytes(8));
     }
@@ -279,9 +276,8 @@ allegro_dat_t::dat_font_3_9_t::dat_font_3_9_t(kaitai::kstream* p__io, allegro_da
 
 void allegro_dat_t::dat_font_3_9_t::_read() {
     m_num_ranges = m__io->read_s2be();
-    int l_ranges = num_ranges();
     m_ranges = new std::vector<range_t*>();
-    m_ranges->reserve(l_ranges);
+    const int l_ranges = num_ranges();
     for (int i = 0; i < l_ranges; i++) {
         m_ranges->push_back(new range_t(m__io, this, m__root));
     }
@@ -317,9 +313,8 @@ void allegro_dat_t::dat_font_3_9_t::range_t::_read() {
     m_mono = m__io->read_u1();
     m_start_char = m__io->read_u4be();
     m_end_char = m__io->read_u4be();
-    int l_chars = ((end_char() - start_char()) + 1);
     m_chars = new std::vector<font_char_t*>();
-    m_chars->reserve(l_chars);
+    const int l_chars = ((end_char() - start_char()) + 1);
     for (int i = 0; i < l_chars; i++) {
         m_chars->push_back(new font_char_t(m__io, this, m__root));
     }

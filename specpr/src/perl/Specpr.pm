@@ -95,7 +95,7 @@ sub _read {
     $self->{iband} = ();
     my $n_iband = 2;
     for (my $i = 0; $i < $n_iband; $i++) {
-        $self->{iband}[$i] = $self->{_io}->read_s4be();
+        push @{$self->{iband}}, $self->{_io}->read_s4be();
     }
     $self->{irwav} = $self->{_io}->read_s4be();
     $self->{irespt} = $self->{_io}->read_s4be();
@@ -105,7 +105,7 @@ sub _read {
     $self->{mhist} = ();
     my $n_mhist = 4;
     for (my $i = 0; $i < $n_mhist; $i++) {
-        $self->{mhist}[$i] = Encode::decode("ascii", $self->{_io}->read_bytes(74));
+        push @{$self->{mhist}}, Encode::decode("ascii", $self->{_io}->read_bytes(74));
     }
     $self->{nruns} = $self->{_io}->read_s4be();
     $self->{siangl} = Specpr::IllumAngle->new($self->{_io}, $self, $self->{_root});
@@ -120,7 +120,7 @@ sub _read {
     $self->{data} = ();
     my $n_data = 256;
     for (my $i = 0; $i < $n_data; $i++) {
-        $self->{data}[$i] = $self->{_io}->read_f4be();
+        push @{$self->{data}}, $self->{_io}->read_f4be();
     }
 }
 
@@ -435,7 +435,7 @@ sub _read {
     $self->{cdata} = ();
     my $n_cdata = 383;
     for (my $i = 0; $i < $n_cdata; $i++) {
-        $self->{cdata}[$i] = $self->{_io}->read_f4be();
+        push @{$self->{cdata}}, $self->{_io}->read_f4be();
     }
 }
 

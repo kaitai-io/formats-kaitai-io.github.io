@@ -202,7 +202,7 @@ public class Pcx extends KaitaiStruct {
             if (!(Arrays.equals(magic(), new byte[] { 12 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 12 }, magic(), _io(), "/types/t_palette_256/seq/0");
             }
-            colors = new ArrayList<Rgb>(((Number) (256)).intValue());
+            this.colors = new ArrayList<Rgb>();
             for (int i = 0; i < 256; i++) {
                 this.colors.add(new Rgb(this._io, this, _root));
             }

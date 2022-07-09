@@ -46,7 +46,7 @@ namespace Kaitai
         private void _read()
         {
             if (HeaderParameters.Flags.HasCustomLookupTable) {
-                _customLookupTable = new List<byte[]>((int) (HeaderParameters.NumCustomLookupTableEntries));
+                _customLookupTable = new List<byte[]>();
                 for (var i = 0; i < HeaderParameters.NumCustomLookupTableEntries; i++)
                 {
                     _customLookupTable.Add(m_io.ReadBytes(2));
@@ -313,7 +313,7 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _tag = new List<bool>((int) (8));
+                    _tag = new List<bool>();
                     for (var i = 0; i < 8; i++)
                     {
                         _tag.Add(m_io.ReadBitsIntBe(1) != 0);

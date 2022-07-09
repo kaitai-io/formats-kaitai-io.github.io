@@ -8,7 +8,7 @@
   } else {
     root.DoomWad = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var DoomWad = (function() {
   function DoomWad(_io, _parent, _root) {
     this._io = _io;
@@ -78,9 +78,9 @@ var DoomWad = (function() {
     }
     Texture12.prototype._read = function() {
       this.numTextures = this._io.readS4le();
-      this.textures = new Array(this.numTextures);
+      this.textures = [];
       for (var i = 0; i < this.numTextures; i++) {
-        this.textures[i] = new TextureIndex(this._io, this, this._root);
+        this.textures.push(new TextureIndex(this._io, this, this._root));
       }
     }
 
@@ -125,9 +125,9 @@ var DoomWad = (function() {
         this.height = this._io.readU2le();
         this.columnDirectory = this._io.readU4le();
         this.numPatches = this._io.readU2le();
-        this.patches = new Array(this.numPatches);
+        this.patches = [];
         for (var i = 0; i < this.numPatches; i++) {
-          this.patches[i] = new Patch(this._io, this, this._root);
+          this.patches.push(new Patch(this._io, this, this._root));
         }
       }
 
@@ -219,9 +219,9 @@ var DoomWad = (function() {
     }
     Pnames.prototype._read = function() {
       this.numPatches = this._io.readU4le();
-      this.names = new Array(this.numPatches);
+      this.names = [];
       for (var i = 0; i < this.numPatches; i++) {
-        this.names[i] = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
+        this.names.push(KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII"));
       }
     }
 
@@ -526,9 +526,9 @@ var DoomWad = (function() {
       this.originY = this._io.readS2le();
       this.numCols = this._io.readS2le();
       this.numRows = this._io.readS2le();
-      this.linedefsInBlock = new Array((this.numCols * this.numRows));
+      this.linedefsInBlock = [];
       for (var i = 0; i < (this.numCols * this.numRows); i++) {
-        this.linedefsInBlock[i] = new Blocklist(this._io, this, this._root);
+        this.linedefsInBlock.push(new Blocklist(this._io, this, this._root));
       }
     }
 
@@ -553,7 +553,7 @@ var DoomWad = (function() {
             return this._m_linedefs;
           var _pos = this._io.pos;
           this._io.seek((this.offset * 2));
-          this._m_linedefs = []
+          this._m_linedefs = [];
           var i = 0;
           do {
             var _ = this._io.readS2le();
@@ -600,9 +600,9 @@ var DoomWad = (function() {
         return this._m_index;
       var _pos = this._io.pos;
       this._io.seek(this.indexOffset);
-      this._m_index = new Array(this.numIndexEntries);
+      this._m_index = [];
       for (var i = 0; i < this.numIndexEntries; i++) {
-        this._m_index[i] = new IndexEntry(this._io, this, this._root);
+        this._m_index.push(new IndexEntry(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_index;

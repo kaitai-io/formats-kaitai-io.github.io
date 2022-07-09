@@ -68,7 +68,7 @@ namespace Kaitai
                 _sizeMiniFat = m_io.ReadS4le();
                 _ofsDifat = m_io.ReadS4le();
                 _sizeDifat = m_io.ReadS4le();
-                _difat = new List<int>((int) (109));
+                _difat = new List<int>();
                 for (var i = 0; i < 109; i++)
                 {
                     _difat.Add(m_io.ReadS4le());

@@ -70,7 +70,7 @@ public class AppleSingleDouble extends KaitaiStruct {
         this.version = this._io.readU4be();
         this.reserved = this._io.readBytes(16);
         this.numEntries = this._io.readU2be();
-        entries = new ArrayList<Entry>(((Number) (numEntries())).intValue());
+        this.entries = new ArrayList<Entry>();
         for (int i = 0; i < numEntries(); i++) {
             this.entries.add(new Entry(this._io, this, _root));
         }

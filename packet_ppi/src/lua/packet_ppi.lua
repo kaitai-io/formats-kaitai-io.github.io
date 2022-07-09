@@ -209,14 +209,14 @@ function PacketPpi.MacFlags:_init(io, parent, root)
 end
 
 function PacketPpi.MacFlags:_read()
-  self.unused1 = self._io:read_bits_int_be(1)
-  self.aggregate_delimiter = self._io:read_bits_int_be(1)
-  self.more_aggregates = self._io:read_bits_int_be(1)
-  self.aggregate = self._io:read_bits_int_be(1)
-  self.dup_rx = self._io:read_bits_int_be(1)
-  self.rx_short_guard = self._io:read_bits_int_be(1)
-  self.is_ht_40 = self._io:read_bits_int_be(1)
-  self.greenfield = self._io:read_bits_int_be(1)
+  self.unused1 = self._io:read_bits_int_be(1) ~= 0
+  self.aggregate_delimiter = self._io:read_bits_int_be(1) ~= 0
+  self.more_aggregates = self._io:read_bits_int_be(1) ~= 0
+  self.aggregate = self._io:read_bits_int_be(1) ~= 0
+  self.dup_rx = self._io:read_bits_int_be(1) ~= 0
+  self.rx_short_guard = self._io:read_bits_int_be(1) ~= 0
+  self.is_ht_40 = self._io:read_bits_int_be(1) ~= 0
+  self.greenfield = self._io:read_bits_int_be(1) ~= 0
   self._io:align_to_byte()
   self.unused2 = self._io:read_bytes(3)
 end
@@ -379,15 +379,15 @@ function PacketPpi.Radio80211nMacPhyExtBody.ChannelFlags:_init(io, parent, root)
 end
 
 function PacketPpi.Radio80211nMacPhyExtBody.ChannelFlags:_read()
-  self.spectrum_2ghz = self._io:read_bits_int_be(1)
-  self.ofdm = self._io:read_bits_int_be(1)
-  self.cck = self._io:read_bits_int_be(1)
-  self.turbo = self._io:read_bits_int_be(1)
+  self.spectrum_2ghz = self._io:read_bits_int_be(1) ~= 0
+  self.ofdm = self._io:read_bits_int_be(1) ~= 0
+  self.cck = self._io:read_bits_int_be(1) ~= 0
+  self.turbo = self._io:read_bits_int_be(1) ~= 0
   self.unused = self._io:read_bits_int_be(8)
-  self.gfsk = self._io:read_bits_int_be(1)
-  self.dyn_cck_ofdm = self._io:read_bits_int_be(1)
-  self.only_passive_scan = self._io:read_bits_int_be(1)
-  self.spectrum_5ghz = self._io:read_bits_int_be(1)
+  self.gfsk = self._io:read_bits_int_be(1) ~= 0
+  self.dyn_cck_ofdm = self._io:read_bits_int_be(1) ~= 0
+  self.only_passive_scan = self._io:read_bits_int_be(1) ~= 0
+  self.spectrum_5ghz = self._io:read_bits_int_be(1) ~= 0
 end
 
 -- 

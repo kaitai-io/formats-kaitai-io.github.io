@@ -109,7 +109,7 @@ namespace Kaitai
             private void _read()
             {
                 _numTextures = m_io.ReadS4le();
-                _textures = new List<TextureIndex>((int) (NumTextures));
+                _textures = new List<TextureIndex>();
                 for (var i = 0; i < NumTextures; i++)
                 {
                     _textures.Add(new TextureIndex(m_io, this, m_root));
@@ -177,7 +177,7 @@ namespace Kaitai
                     _height = m_io.ReadU2le();
                     _columnDirectory = m_io.ReadU4le();
                     _numPatches = m_io.ReadU2le();
-                    _patches = new List<Patch>((int) (NumPatches));
+                    _patches = new List<Patch>();
                     for (var i = 0; i < NumPatches; i++)
                     {
                         _patches.Add(new Patch(m_io, this, m_root));
@@ -337,7 +337,7 @@ namespace Kaitai
             private void _read()
             {
                 _numPatches = m_io.ReadU4le();
-                _names = new List<string>((int) (NumPatches));
+                _names = new List<string>();
                 for (var i = 0; i < NumPatches; i++)
                 {
                     _names.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0)));
@@ -764,7 +764,7 @@ namespace Kaitai
                 _originY = m_io.ReadS2le();
                 _numCols = m_io.ReadS2le();
                 _numRows = m_io.ReadS2le();
-                _linedefsInBlock = new List<Blocklist>((int) ((NumCols * NumRows)));
+                _linedefsInBlock = new List<Blocklist>();
                 for (var i = 0; i < (NumCols * NumRows); i++)
                 {
                     _linedefsInBlock.Add(new Blocklist(m_io, this, m_root));
@@ -873,7 +873,7 @@ namespace Kaitai
                     return _index;
                 long _pos = m_io.Pos;
                 m_io.Seek(IndexOffset);
-                _index = new List<IndexEntry>((int) (NumIndexEntries));
+                _index = new List<IndexEntry>();
                 for (var i = 0; i < NumIndexEntries; i++)
                 {
                     _index.Add(new IndexEntry(m_io, this, m_root));

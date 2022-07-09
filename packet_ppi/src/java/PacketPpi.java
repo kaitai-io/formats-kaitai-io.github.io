@@ -564,21 +564,21 @@ public class PacketPpi extends KaitaiStruct {
             this.mcs = this._io.readU1();
             this.numStreams = this._io.readU1();
             this.rssiCombined = this._io.readU1();
-            rssiAntCtl = new ArrayList<Integer>(((Number) (4)).intValue());
+            this.rssiAntCtl = new ArrayList<Integer>();
             for (int i = 0; i < 4; i++) {
                 this.rssiAntCtl.add(this._io.readU1());
             }
-            rssiAntExt = new ArrayList<Integer>(((Number) (4)).intValue());
+            this.rssiAntExt = new ArrayList<Integer>();
             for (int i = 0; i < 4; i++) {
                 this.rssiAntExt.add(this._io.readU1());
             }
             this.extChannelFreq = this._io.readU2le();
             this.extChannelFlags = new ChannelFlags(this._io, this, _root);
-            rfSignalNoise = new ArrayList<SignalNoise>(((Number) (4)).intValue());
+            this.rfSignalNoise = new ArrayList<SignalNoise>();
             for (int i = 0; i < 4; i++) {
                 this.rfSignalNoise.add(new SignalNoise(this._io, this, _root));
             }
-            evm = new ArrayList<Long>(((Number) (4)).intValue());
+            this.evm = new ArrayList<Long>();
             for (int i = 0; i < 4; i++) {
                 this.evm.add(this._io.readU4le());
             }

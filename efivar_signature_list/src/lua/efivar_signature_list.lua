@@ -284,14 +284,14 @@ function EfivarSignatureList.EfiVarAttr:_init(io, parent, root)
 end
 
 function EfivarSignatureList.EfiVarAttr:_read()
-  self.enhanced_authenticated_access = self._io:read_bits_int_be(1)
-  self.append_write = self._io:read_bits_int_be(1)
-  self.time_based_authenticated_write_access = self._io:read_bits_int_be(1)
-  self.authenticated_write_access = self._io:read_bits_int_be(1)
-  self.hardware_error_record = self._io:read_bits_int_be(1)
-  self.runtime_access = self._io:read_bits_int_be(1)
-  self.bootservice_access = self._io:read_bits_int_be(1)
-  self.non_volatile = self._io:read_bits_int_be(1)
+  self.enhanced_authenticated_access = self._io:read_bits_int_be(1) ~= 0
+  self.append_write = self._io:read_bits_int_be(1) ~= 0
+  self.time_based_authenticated_write_access = self._io:read_bits_int_be(1) ~= 0
+  self.authenticated_write_access = self._io:read_bits_int_be(1) ~= 0
+  self.hardware_error_record = self._io:read_bits_int_be(1) ~= 0
+  self.runtime_access = self._io:read_bits_int_be(1) ~= 0
+  self.bootservice_access = self._io:read_bits_int_be(1) ~= 0
+  self.non_volatile = self._io:read_bits_int_be(1) ~= 0
   self.reserved1 = self._io:read_bits_int_be(24)
 end
 

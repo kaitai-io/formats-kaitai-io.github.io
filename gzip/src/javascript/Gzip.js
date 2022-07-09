@@ -8,7 +8,7 @@
   } else {
     root.Gzip = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Gzip is a popular and standard single-file archiving format. It
  * essentially provides a container that stores original file name,

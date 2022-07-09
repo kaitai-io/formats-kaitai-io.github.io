@@ -64,9 +64,8 @@ void luks_t::partition_header_t::_read() {
     m_master_key_salt_parameter = m__io->read_bytes(32);
     m_master_key_iterations_parameter = m__io->read_u4be();
     m_uuid = kaitai::kstream::bytes_to_str(m__io->read_bytes(40), std::string("ASCII"));
-    int l_key_slots = 8;
     m_key_slots = new std::vector<key_slot_t*>();
-    m_key_slots->reserve(l_key_slots);
+    const int l_key_slots = 8;
     for (int i = 0; i < l_key_slots; i++) {
         m_key_slots->push_back(new key_slot_t(m__io, this, m__root));
     }

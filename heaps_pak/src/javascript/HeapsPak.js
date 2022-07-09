@@ -8,7 +8,7 @@
   } else {
     root.HeapsPak = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://github.com/HeapsIO/heaps/blob/2bbc2b386952dfd8856c04a854bb706a52cb4b58/hxd/fmt/pak/Reader.hx|Source}
  */
@@ -134,9 +134,9 @@ var HeapsPak = (function() {
       }
       Dir.prototype._read = function() {
         this.numEntries = this._io.readU4le();
-        this.entries = new Array(this.numEntries);
+        this.entries = [];
         for (var i = 0; i < this.numEntries; i++) {
-          this.entries[i] = new Entry(this._io, this, this._root);
+          this.entries.push(new Entry(this._io, this, this._root));
         }
       }
 

@@ -8,7 +8,7 @@
   } else {
     root.Dcmp0 = factory(root.KaitaiStream, root.DcmpVariableLengthInteger);
   }
-}(this, function (KaitaiStream, DcmpVariableLengthInteger) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DcmpVariableLengthInteger) {
 /**
  * Compressed resource data in `'dcmp' (0)` format,
  * as stored in compressed resources with header type `8` and decompressor ID `0`.
@@ -48,7 +48,7 @@ var Dcmp0 = (function() {
     this._read();
   }
   Dcmp0.prototype._read = function() {
-    this.chunks = []
+    this.chunks = [];
     var i = 0;
     do {
       var _ = new Chunk(this._io, this, this._root);
@@ -502,9 +502,9 @@ var Dcmp0 = (function() {
         JumpTableBody.prototype._read = function() {
           this.segmentNumberRaw = new DcmpVariableLengthInteger(this._io, this, null);
           this.numAddressesRaw = new DcmpVariableLengthInteger(this._io, this, null);
-          this.addressesRaw = new Array(this.numAddresses);
+          this.addressesRaw = [];
           for (var i = 0; i < this.numAddresses; i++) {
-            this.addressesRaw[i] = new DcmpVariableLengthInteger(this._io, this, null);
+            this.addressesRaw.push(new DcmpVariableLengthInteger(this._io, this, null));
           }
         }
 
@@ -681,9 +681,9 @@ var Dcmp0 = (function() {
         DeltaEncoding16BitBody.prototype._read = function() {
           this.firstValueRaw = new DcmpVariableLengthInteger(this._io, this, null);
           this.numDeltasRaw = new DcmpVariableLengthInteger(this._io, this, null);
-          this.deltas = new Array(this.numDeltas);
+          this.deltas = [];
           for (var i = 0; i < this.numDeltas; i++) {
-            this.deltas[i] = this._io.readS1();
+            this.deltas.push(this._io.readS1());
           }
         }
 
@@ -756,9 +756,9 @@ var Dcmp0 = (function() {
         DeltaEncoding32BitBody.prototype._read = function() {
           this.firstValueRaw = new DcmpVariableLengthInteger(this._io, this, null);
           this.numDeltasRaw = new DcmpVariableLengthInteger(this._io, this, null);
-          this.deltasRaw = new Array(this.numDeltas);
+          this.deltasRaw = [];
           for (var i = 0; i < this.numDeltas; i++) {
-            this.deltasRaw[i] = new DcmpVariableLengthInteger(this._io, this, null);
+            this.deltasRaw.push(new DcmpVariableLengthInteger(this._io, this, null));
           }
         }
 

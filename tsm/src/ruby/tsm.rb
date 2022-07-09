@@ -62,9 +62,9 @@ class Tsm < Kaitai::Struct::Struct
         @key = (@_io.read_bytes(key_len)).force_encoding("UTF-8")
         @type = @_io.read_u1
         @entry_count = @_io.read_u2be
-        @index_entries = Array.new(entry_count)
+        @index_entries = []
         (entry_count).times { |i|
-          @index_entries[i] = IndexEntry.new(@_io, self, @_root)
+          @index_entries << IndexEntry.new(@_io, self, @_root)
         }
         self
       end

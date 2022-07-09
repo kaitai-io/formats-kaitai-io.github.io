@@ -44,8 +44,8 @@ namespace Kaitai
             _featuresFlags = m_io.ReadU1();
             _chromacity = new ChromacityInfo(m_io, this, m_root);
             _estTimings = new EstTimingsInfo(m_io, this, m_root);
-            __raw_stdTimings = new List<byte[]>((int) (8));
-            _stdTimings = new List<StdTiming>((int) (8));
+            __raw_stdTimings = new List<byte[]>();
+            _stdTimings = new List<StdTiming>();
             for (var i = 0; i < 8; i++)
             {
                 __raw_stdTimings.Add(m_io.ReadBytes(2));

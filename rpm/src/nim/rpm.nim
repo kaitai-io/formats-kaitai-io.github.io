@@ -11,13 +11,20 @@ type
     `unnamed5`*: seq[byte]
     `signatureTagsSteps`*: seq[Rpm_SignatureTagsStep]
     `parent`*: KaitaiStruct
-    `hasSignatureSizeTagInst`*: bool
-    `signatureSizeTagInst`*: Rpm_HeaderIndexRecord
-    `lenPayloadInst`*: int
-    `payloadInst`*: seq[byte]
-    `lenHeaderInst`*: int
-    `ofsHeaderInst`*: int
-    `ofsPayloadInst`*: int
+    `hasSignatureSizeTagInst`: bool
+    `hasSignatureSizeTagInstFlag`: bool
+    `signatureSizeTagInst`: Rpm_HeaderIndexRecord
+    `signatureSizeTagInstFlag`: bool
+    `lenPayloadInst`: int
+    `lenPayloadInstFlag`: bool
+    `payloadInst`: seq[byte]
+    `payloadInstFlag`: bool
+    `lenHeaderInst`: int
+    `lenHeaderInstFlag`: bool
+    `ofsHeaderInst`: int
+    `ofsHeaderInstFlag`: bool
+    `ofsPayloadInst`: int
+    `ofsPayloadInstFlag`: bool
   Rpm_OperatingSystems* = enum
     linux = 1
     irix = 2
@@ -397,7 +404,8 @@ type
     `idx`*: int32
     `prevSizeTagIdx`*: int32
     `parent`*: Rpm
-    `sizeTagIdxInst`*: int
+    `sizeTagIdxInst`: int
+    `sizeTagIdxInstFlag`: bool
   Rpm_RecordTypeUint32* = ref object of KaitaiStruct
     `values`*: seq[uint32]
     `numValues`*: uint32
@@ -412,11 +420,16 @@ type
     `ofsBody`*: uint32
     `count`*: uint32
     `parent`*: Rpm_Header
-    `numValuesInst`*: uint32
-    `bodyInst`*: KaitaiStruct
-    `signatureTagInst`*: Rpm_SignatureTags
-    `lenValueInst`*: uint32
-    `headerTagInst`*: Rpm_HeaderTags
+    `numValuesInst`: uint32
+    `numValuesInstFlag`: bool
+    `bodyInst`: KaitaiStruct
+    `bodyInstFlag`: bool
+    `signatureTagInst`: Rpm_SignatureTags
+    `signatureTagInstFlag`: bool
+    `lenValueInst`: uint32
+    `lenValueInstFlag`: bool
+    `headerTagInst`: Rpm_HeaderTags
+    `headerTagInstFlag`: bool
   Rpm_RpmVersion* = ref object of KaitaiStruct
     `major`*: uint8
     `minor`*: uint8
@@ -448,7 +461,8 @@ type
     `isSignature`*: bool
     `parent`*: Rpm
     `rawStorageSection`*: seq[byte]
-    `isHeaderInst`*: bool
+    `isHeaderInst`: bool
+    `isHeaderInstFlag`: bool
 
 proc read*(_: typedesc[Rpm], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rpm
 proc read*(_: typedesc[Rpm_RecordTypeStringArray], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_HeaderIndexRecord, numValues: any): Rpm_RecordTypeStringArray
@@ -521,33 +535,33 @@ proc read*(_: typedesc[Rpm], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
     this.signatureTagsSteps.add(it)
 
 proc hasSignatureSizeTag(this: Rpm): bool = 
-  if this.hasSignatureSizeTagInst != nil:
+  if this.hasSignatureSizeTagInstFlag:
     return this.hasSignatureSizeTagInst
   let hasSignatureSizeTagInstExpr = bool(this.signatureTagsSteps[^1].sizeTagIdx != -1)
   this.hasSignatureSizeTagInst = hasSignatureSizeTagInstExpr
-  if this.hasSignatureSizeTagInst != nil:
-    return this.hasSignatureSizeTagInst
+  this.hasSignatureSizeTagInstFlag = true
+  return this.hasSignatureSizeTagInst
 
 proc signatureSizeTag(this: Rpm): Rpm_HeaderIndexRecord = 
-  if this.signatureSizeTagInst != nil:
+  if this.signatureSizeTagInstFlag:
     return this.signatureSizeTagInst
   if this.hasSignatureSizeTag:
     let signatureSizeTagInstExpr = Rpm_HeaderIndexRecord(this.signature.indexRecords[this.signatureTagsSteps[^1].sizeTagIdx])
     this.signatureSizeTagInst = signatureSizeTagInstExpr
-  if this.signatureSizeTagInst != nil:
-    return this.signatureSizeTagInst
+  this.signatureSizeTagInstFlag = true
+  return this.signatureSizeTagInst
 
 proc lenPayload(this: Rpm): int = 
-  if this.lenPayloadInst != nil:
+  if this.lenPayloadInstFlag:
     return this.lenPayloadInst
   if this.hasSignatureSizeTag:
     let lenPayloadInstExpr = int(((Rpm_RecordTypeUint32(this.signatureSizeTag.body)).values[0] - this.lenHeader))
     this.lenPayloadInst = lenPayloadInstExpr
-  if this.lenPayloadInst != nil:
-    return this.lenPayloadInst
+  this.lenPayloadInstFlag = true
+  return this.lenPayloadInst
 
 proc payload(this: Rpm): seq[byte] = 
-  if this.payloadInst.len != 0:
+  if this.payloadInstFlag:
     return this.payloadInst
   if this.hasSignatureSizeTag:
     let pos = this.io.pos()
@@ -555,32 +569,32 @@ proc payload(this: Rpm): seq[byte] =
     let payloadInstExpr = this.io.readBytes(int(this.lenPayload))
     this.payloadInst = payloadInstExpr
     this.io.seek(pos)
-  if this.payloadInst.len != 0:
-    return this.payloadInst
+  this.payloadInstFlag = true
+  return this.payloadInst
 
 proc lenHeader(this: Rpm): int = 
-  if this.lenHeaderInst != nil:
+  if this.lenHeaderInstFlag:
     return this.lenHeaderInst
   let lenHeaderInstExpr = int((this.ofsPayload - this.ofsHeader))
   this.lenHeaderInst = lenHeaderInstExpr
-  if this.lenHeaderInst != nil:
-    return this.lenHeaderInst
+  this.lenHeaderInstFlag = true
+  return this.lenHeaderInst
 
 proc ofsHeader(this: Rpm): int = 
-  if this.ofsHeaderInst != nil:
+  if this.ofsHeaderInstFlag:
     return this.ofsHeaderInst
   let ofsHeaderInstExpr = int(this.io.pos)
   this.ofsHeaderInst = ofsHeaderInstExpr
-  if this.ofsHeaderInst != nil:
-    return this.ofsHeaderInst
+  this.ofsHeaderInstFlag = true
+  return this.ofsHeaderInst
 
 proc ofsPayload(this: Rpm): int = 
-  if this.ofsPayloadInst != nil:
+  if this.ofsPayloadInstFlag:
     return this.ofsPayloadInst
   let ofsPayloadInstExpr = int(this.io.pos)
   this.ofsPayloadInst = ofsPayloadInstExpr
-  if this.ofsPayloadInst != nil:
-    return this.ofsPayloadInst
+  this.ofsPayloadInstFlag = true
+  return this.ofsPayloadInst
 
 proc fromFile*(_: typedesc[Rpm], filename: string): Rpm =
   Rpm.read(newKaitaiFileStream(filename), nil, nil)
@@ -676,12 +690,12 @@ proc read*(_: typedesc[Rpm_SignatureTagsStep], io: KaitaiStream, root: KaitaiStr
 
 
 proc sizeTagIdx(this: Rpm_SignatureTagsStep): int = 
-  if this.sizeTagIdxInst != nil:
+  if this.sizeTagIdxInstFlag:
     return this.sizeTagIdxInst
   let sizeTagIdxInstExpr = int((if this.prevSizeTagIdx != -1: this.prevSizeTagIdx else: (if  ((this.parent.signature.indexRecords[this.idx].signatureTag == rpm.size) and (this.parent.signature.indexRecords[this.idx].recordType == rpm.uint32) and (this.parent.signature.indexRecords[this.idx].numValues >= 1)) : this.idx else: -1)))
   this.sizeTagIdxInst = sizeTagIdxInstExpr
-  if this.sizeTagIdxInst != nil:
-    return this.sizeTagIdxInst
+  this.sizeTagIdxInstFlag = true
+  return this.sizeTagIdxInst
 
 proc fromFile*(_: typedesc[Rpm_SignatureTagsStep], filename: string): Rpm_SignatureTagsStep =
   Rpm_SignatureTagsStep.read(newKaitaiFileStream(filename), nil, nil)
@@ -746,16 +760,16 @@ proc read*(_: typedesc[Rpm_HeaderIndexRecord], io: KaitaiStream, root: KaitaiStr
   this.count = countExpr
 
 proc numValues(this: Rpm_HeaderIndexRecord): uint32 = 
-  if this.numValuesInst != nil:
+  if this.numValuesInstFlag:
     return this.numValuesInst
   if this.recordType != rpm.bin:
     let numValuesInstExpr = uint32(this.count)
     this.numValuesInst = numValuesInstExpr
-  if this.numValuesInst != nil:
-    return this.numValuesInst
+  this.numValuesInstFlag = true
+  return this.numValuesInst
 
 proc body(this: Rpm_HeaderIndexRecord): KaitaiStruct = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let io = this.parent.storageSection.io
   let pos = io.pos()
@@ -790,35 +804,35 @@ proc body(this: Rpm_HeaderIndexRecord): KaitaiStruct =
       let bodyInstExpr = Rpm_RecordTypeStringArray.read(io, this.root, this, this.numValues)
       this.bodyInst = bodyInstExpr
   io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc signatureTag(this: Rpm_HeaderIndexRecord): Rpm_SignatureTags = 
-  if this.signatureTagInst != nil:
+  if this.signatureTagInstFlag:
     return this.signatureTagInst
   if this.parent.isSignature:
     let signatureTagInstExpr = Rpm_SignatureTags(Rpm_SignatureTags(this.tagRaw))
     this.signatureTagInst = signatureTagInstExpr
-  if this.signatureTagInst != nil:
-    return this.signatureTagInst
+  this.signatureTagInstFlag = true
+  return this.signatureTagInst
 
 proc lenValue(this: Rpm_HeaderIndexRecord): uint32 = 
-  if this.lenValueInst != nil:
+  if this.lenValueInstFlag:
     return this.lenValueInst
   if this.recordType == rpm.bin:
     let lenValueInstExpr = uint32(this.count)
     this.lenValueInst = lenValueInstExpr
-  if this.lenValueInst != nil:
-    return this.lenValueInst
+  this.lenValueInstFlag = true
+  return this.lenValueInst
 
 proc headerTag(this: Rpm_HeaderIndexRecord): Rpm_HeaderTags = 
-  if this.headerTagInst != nil:
+  if this.headerTagInstFlag:
     return this.headerTagInst
   if this.parent.isHeader:
     let headerTagInstExpr = Rpm_HeaderTags(Rpm_HeaderTags(this.tagRaw))
     this.headerTagInst = headerTagInstExpr
-  if this.headerTagInst != nil:
-    return this.headerTagInst
+  this.headerTagInstFlag = true
+  return this.headerTagInst
 
 proc fromFile*(_: typedesc[Rpm_HeaderIndexRecord], filename: string): Rpm_HeaderIndexRecord =
   Rpm_HeaderIndexRecord.read(newKaitaiFileStream(filename), nil, nil)
@@ -961,12 +975,12 @@ proc read*(_: typedesc[Rpm_Header], io: KaitaiStream, root: KaitaiStruct, parent
   this.storageSection = storageSectionExpr
 
 proc isHeader(this: Rpm_Header): bool = 
-  if this.isHeaderInst != nil:
+  if this.isHeaderInstFlag:
     return this.isHeaderInst
   let isHeaderInstExpr = bool(not(this.isSignature))
   this.isHeaderInst = isHeaderInstExpr
-  if this.isHeaderInst != nil:
-    return this.isHeaderInst
+  this.isHeaderInstFlag = true
+  return this.isHeaderInst
 
 proc fromFile*(_: typedesc[Rpm_Header], filename: string): Rpm_Header =
   Rpm_Header.read(newKaitaiFileStream(filename), nil, nil)

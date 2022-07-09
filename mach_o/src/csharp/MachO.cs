@@ -125,7 +125,7 @@ namespace Kaitai
         {
             _magic = ((MagicType) m_io.ReadU4be());
             _header = new MachHeader(m_io, this, m_root);
-            _loadCommands = new List<LoadCommand>((int) (Header.Ncmds));
+            _loadCommands = new List<LoadCommand>();
             for (var i = 0; i < Header.Ncmds; i++)
             {
                 _loadCommands.Add(new LoadCommand(m_io, this, m_root));
@@ -428,7 +428,7 @@ namespace Kaitai
                             return _hashes;
                         long _pos = m_io.Pos;
                         m_io.Seek(((HashOffset - 8) - (HashSize * NSpecialSlots)));
-                        _hashes = new List<byte[]>((int) ((NSpecialSlots + NCodeSlots)));
+                        _hashes = new List<byte[]>();
                         for (var i = 0; i < (NSpecialSlots + NCodeSlots); i++)
                         {
                             _hashes.Add(m_io.ReadBytes(HashSize));
@@ -517,7 +517,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _count = m_io.ReadU4be();
-                    _blobs = new List<BlobIndex>((int) (Count));
+                    _blobs = new List<BlobIndex>();
                     for (var i = 0; i < Count; i++)
                     {
                         _blobs.Add(new BlobIndex(m_io, this, m_root));
@@ -1064,7 +1064,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _count = m_io.ReadU4be();
-                    _items = new List<RequirementsBlobIndex>((int) (Count));
+                    _items = new List<RequirementsBlobIndex>();
                     for (var i = 0; i < Count; i++)
                     {
                         _items.Add(new RequirementsBlobIndex(m_io, this, m_root));
@@ -1211,7 +1211,7 @@ namespace Kaitai
                 _minos = m_io.ReadU4le();
                 _sdk = m_io.ReadU4le();
                 _ntools = m_io.ReadU4le();
-                _tools = new List<BuildToolVersion>((int) (Ntools));
+                _tools = new List<BuildToolVersion>();
                 for (var i = 0; i < Ntools; i++)
                 {
                     _tools.Add(new BuildToolVersion(m_io, this, m_root));
@@ -1806,7 +1806,7 @@ namespace Kaitai
             private void _read()
             {
                 _numStrings = m_io.ReadU4le();
-                _strings = new List<string>((int) (NumStrings));
+                _strings = new List<string>();
                 for (var i = 0; i < NumStrings; i++)
                 {
                     _strings.Add(System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
@@ -1845,7 +1845,7 @@ namespace Kaitai
                 _initprot = new VmProt(m_io, this, m_root);
                 _nsects = m_io.ReadU4le();
                 _flags = m_io.ReadU4le();
-                _sections = new List<Section64>((int) (Nsects));
+                _sections = new List<Section64>();
                 for (var i = 0; i < Nsects; i++)
                 {
                     _sections.Add(new Section64(m_io, this, m_root));
@@ -2496,7 +2496,7 @@ namespace Kaitai
                     KaitaiStream io = M_Root.M_Io;
                     long _pos = io.Pos;
                     io.Seek(IndirectSymOff);
-                    _indirectSymbols = new List<uint>((int) (NIndirectSyms));
+                    _indirectSymbols = new List<uint>();
                     for (var i = 0; i < NIndirectSyms; i++)
                     {
                         _indirectSymbols.Add(io.ReadU4le());
@@ -3039,7 +3039,7 @@ namespace Kaitai
                 {
                     _terminalSize = new Uleb128(m_io, this, m_root);
                     _childrenCount = m_io.ReadU1();
-                    _children = new List<Child>((int) (ChildrenCount));
+                    _children = new List<Child>();
                     for (var i = 0; i < ChildrenCount; i++)
                     {
                         _children.Add(new Child(m_io, this, m_root));
@@ -3360,7 +3360,7 @@ namespace Kaitai
                 _initprot = new VmProt(m_io, this, m_root);
                 _nsects = m_io.ReadU4le();
                 _flags = m_io.ReadU4le();
-                _sections = new List<Section>((int) (Nsects));
+                _sections = new List<Section>();
                 for (var i = 0; i < Nsects; i++)
                 {
                     _sections.Add(new Section(m_io, this, m_root));
@@ -3970,7 +3970,7 @@ namespace Kaitai
                     KaitaiStream io = M_Root.M_Io;
                     long _pos = io.Pos;
                     io.Seek(SymOff);
-                    _symbols = new List<KaitaiStruct>((int) (NSyms));
+                    _symbols = new List<KaitaiStruct>();
                     for (var i = 0; i < NSyms; i++)
                     {
                         switch (M_Root.Magic) {

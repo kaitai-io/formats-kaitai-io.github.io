@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class ChromePak(KaitaiStruct):
@@ -46,13 +45,13 @@ class ChromePak(KaitaiStruct):
         if self.version == 5:
             self.v5_part = ChromePak.HeaderV5Part(self._io, self, self._root)
 
-        self.resources = [None] * ((self.num_resources + 1))
+        self.resources = []
         for i in range((self.num_resources + 1)):
-            self.resources[i] = ChromePak.Resource(i, i < self.num_resources, self._io, self, self._root)
+            self.resources.append(ChromePak.Resource(i, i < self.num_resources, self._io, self, self._root))
 
-        self.aliases = [None] * (self.num_aliases)
+        self.aliases = []
         for i in range(self.num_aliases):
-            self.aliases[i] = ChromePak.Alias(self._io, self, self._root)
+            self.aliases.append(ChromePak.Alias(self._io, self, self._root))
 
 
     class HeaderV5Part(KaitaiStruct):
@@ -85,18 +84,18 @@ class ChromePak(KaitaiStruct):
         def len_body(self):
             """MUST NOT be accessed until the next `resource` is parsed."""
             if hasattr(self, '_m_len_body'):
-                return self._m_len_body if hasattr(self, '_m_len_body') else None
+                return self._m_len_body
 
             if self.has_body:
                 self._m_len_body = (self._parent.resources[(self.idx + 1)].ofs_body - self.ofs_body)
 
-            return self._m_len_body if hasattr(self, '_m_len_body') else None
+            return getattr(self, '_m_len_body', None)
 
         @property
         def body(self):
             """MUST NOT be accessed until the next `resource` is parsed."""
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             if self.has_body:
                 _pos = self._io.pos()
@@ -104,7 +103,7 @@ class ChromePak(KaitaiStruct):
                 self._m_body = self._io.read_bytes(self.len_body)
                 self._io.seek(_pos)
 
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     class Alias(KaitaiStruct):
@@ -123,26 +122,26 @@ class ChromePak(KaitaiStruct):
         @property
         def resource(self):
             if hasattr(self, '_m_resource'):
-                return self._m_resource if hasattr(self, '_m_resource') else None
+                return self._m_resource
 
             self._m_resource = self._parent.resources[self.resource_idx]
-            return self._m_resource if hasattr(self, '_m_resource') else None
+            return getattr(self, '_m_resource', None)
 
 
     @property
     def num_resources(self):
         if hasattr(self, '_m_num_resources'):
-            return self._m_num_resources if hasattr(self, '_m_num_resources') else None
+            return self._m_num_resources
 
         self._m_num_resources = (self.v5_part.num_resources if self.version == 5 else self.num_resources_v4)
-        return self._m_num_resources if hasattr(self, '_m_num_resources') else None
+        return getattr(self, '_m_num_resources', None)
 
     @property
     def num_aliases(self):
         if hasattr(self, '_m_num_aliases'):
-            return self._m_num_aliases if hasattr(self, '_m_num_aliases') else None
+            return self._m_num_aliases
 
         self._m_num_aliases = (self.v5_part.num_aliases if self.version == 5 else 0)
-        return self._m_num_aliases if hasattr(self, '_m_num_aliases') else None
+        return getattr(self, '_m_num_aliases', None)
 
 

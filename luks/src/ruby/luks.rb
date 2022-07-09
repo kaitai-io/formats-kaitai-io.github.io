@@ -41,9 +41,9 @@ class Luks < Kaitai::Struct::Struct
       @master_key_salt_parameter = @_io.read_bytes(32)
       @master_key_iterations_parameter = @_io.read_u4be
       @uuid = (@_io.read_bytes(40)).force_encoding("ASCII")
-      @key_slots = Array.new(8)
+      @key_slots = []
       (8).times { |i|
-        @key_slots[i] = KeySlot.new(@_io, self, @_root)
+        @key_slots << KeySlot.new(@_io, self, @_root)
       }
       self
     end

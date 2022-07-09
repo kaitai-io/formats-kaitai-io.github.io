@@ -5,15 +5,15 @@
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
-#include "ethernet_frame.h"
 #include "packet_ppi.h"
+#include "ethernet_frame.h"
 #include <vector>
 
 #if KAITAI_STRUCT_VERSION < 9000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
-class ethernet_frame_t;
 class packet_ppi_t;
+class ethernet_frame_t;
 
 /**
  * PCAP (named after libpcap / winpcap) is a popular format for saving

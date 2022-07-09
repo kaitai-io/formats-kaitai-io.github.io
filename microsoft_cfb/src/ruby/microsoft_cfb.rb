@@ -43,9 +43,9 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       @size_mini_fat = @_io.read_s4le
       @ofs_difat = @_io.read_s4le
       @size_difat = @_io.read_s4le
-      @difat = Array.new(109)
+      @difat = []
       (109).times { |i|
-        @difat[i] = @_io.read_s4le
+        @difat << @_io.read_s4le
       }
       self
     end

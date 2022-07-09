@@ -8,7 +8,7 @@
   } else {
     root.UdpDatagram = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * UDP is a simple stateless transport layer (AKA OSI layer 4)
  * protocol, one of the core Internet protocols. It provides source and

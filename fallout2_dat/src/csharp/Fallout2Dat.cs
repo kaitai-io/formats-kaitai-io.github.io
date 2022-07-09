@@ -98,7 +98,7 @@ namespace Kaitai
             private void _read()
             {
                 _fileCount = m_io.ReadU4le();
-                _files = new List<File>((int) (FileCount));
+                _files = new List<File>();
                 for (var i = 0; i < FileCount; i++)
                 {
                     _files.Add(new File(m_io, this, m_root));

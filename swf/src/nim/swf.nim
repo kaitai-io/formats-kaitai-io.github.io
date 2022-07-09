@@ -56,8 +56,10 @@ type
     `b1`*: uint8
     `skip`*: seq[byte]
     `parent`*: Swf_SwfBody
-    `numBitsInst`*: int
-    `numBytesInst`*: int
+    `numBitsInst`: int
+    `numBitsInstFlag`: bool
+    `numBytesInst`: int
+    `numBytesInstFlag`: bool
   Swf_Tag* = ref object of KaitaiStruct
     `recordHeader`*: Swf_RecordHeader
     `tagBody`*: KaitaiStruct
@@ -94,9 +96,12 @@ type
     `tagCodeAndLength`*: uint16
     `bigLen`*: int32
     `parent`*: Swf_Tag
-    `tagTypeInst`*: Swf_TagType
-    `smallLenInst`*: int
-    `lenInst`*: int
+    `tagTypeInst`: Swf_TagType
+    `tagTypeInstFlag`: bool
+    `smallLenInst`: int
+    `smallLenInstFlag`: bool
+    `lenInst`: int
+    `lenInstFlag`: bool
   Swf_ScriptLimitsBody* = ref object of KaitaiStruct
     `maxRecursionDepth`*: uint16
     `scriptTimeoutSeconds`*: uint16
@@ -248,20 +253,20 @@ proc read*(_: typedesc[Swf_Rect], io: KaitaiStream, root: KaitaiStruct, parent: 
   this.skip = skipExpr
 
 proc numBits(this: Swf_Rect): int = 
-  if this.numBitsInst != nil:
+  if this.numBitsInstFlag:
     return this.numBitsInst
   let numBitsInstExpr = int((this.b1 shr 3))
   this.numBitsInst = numBitsInstExpr
-  if this.numBitsInst != nil:
-    return this.numBitsInst
+  this.numBitsInstFlag = true
+  return this.numBitsInst
 
 proc numBytes(this: Swf_Rect): int = 
-  if this.numBytesInst != nil:
+  if this.numBytesInstFlag:
     return this.numBytesInst
   let numBytesInstExpr = int(((((this.numBits * 4) - 3) + 7) div 8))
   this.numBytesInst = numBytesInstExpr
-  if this.numBytesInst != nil:
-    return this.numBytesInst
+  this.numBytesInstFlag = true
+  return this.numBytesInst
 
 proc fromFile*(_: typedesc[Swf_Rect], filename: string): Swf_Rect =
   Swf_Rect.read(newKaitaiFileStream(filename), nil, nil)
@@ -398,28 +403,28 @@ proc read*(_: typedesc[Swf_RecordHeader], io: KaitaiStream, root: KaitaiStruct, 
     this.bigLen = bigLenExpr
 
 proc tagType(this: Swf_RecordHeader): Swf_TagType = 
-  if this.tagTypeInst != nil:
+  if this.tagTypeInstFlag:
     return this.tagTypeInst
   let tagTypeInstExpr = Swf_TagType(Swf_TagType((this.tagCodeAndLength shr 6)))
   this.tagTypeInst = tagTypeInstExpr
-  if this.tagTypeInst != nil:
-    return this.tagTypeInst
+  this.tagTypeInstFlag = true
+  return this.tagTypeInst
 
 proc smallLen(this: Swf_RecordHeader): int = 
-  if this.smallLenInst != nil:
+  if this.smallLenInstFlag:
     return this.smallLenInst
   let smallLenInstExpr = int((this.tagCodeAndLength and 63))
   this.smallLenInst = smallLenInstExpr
-  if this.smallLenInst != nil:
-    return this.smallLenInst
+  this.smallLenInstFlag = true
+  return this.smallLenInst
 
 proc len(this: Swf_RecordHeader): int = 
-  if this.lenInst != nil:
+  if this.lenInstFlag:
     return this.lenInst
   let lenInstExpr = int((if this.smallLen == 63: this.bigLen else: this.smallLen))
   this.lenInst = lenInstExpr
-  if this.lenInst != nil:
-    return this.lenInst
+  this.lenInstFlag = true
+  return this.lenInst
 
 proc fromFile*(_: typedesc[Swf_RecordHeader], filename: string): Swf_RecordHeader =
   Swf_RecordHeader.read(newKaitaiFileStream(filename), nil, nil)

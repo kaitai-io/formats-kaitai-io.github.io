@@ -1576,20 +1576,20 @@ class Elf < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(program_header_offset)
       if @_is_le
-        @_raw_program_headers = Array.new(qty_program_header)
-        @program_headers = Array.new(qty_program_header)
+        @_raw_program_headers = []
+        @program_headers = []
         (qty_program_header).times { |i|
-          @_raw_program_headers[i] = @_io.read_bytes(program_header_entry_size)
+          @_raw_program_headers << @_io.read_bytes(program_header_entry_size)
           _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
-          @program_headers[i] = ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
+          @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
       else
-        @_raw_program_headers = Array.new(qty_program_header)
-        @program_headers = Array.new(qty_program_header)
+        @_raw_program_headers = []
+        @program_headers = []
         (qty_program_header).times { |i|
-          @_raw_program_headers[i] = @_io.read_bytes(program_header_entry_size)
+          @_raw_program_headers << @_io.read_bytes(program_header_entry_size)
           _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
-          @program_headers[i] = ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
+          @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
       end
       @_io.seek(_pos)
@@ -1600,20 +1600,20 @@ class Elf < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(section_header_offset)
       if @_is_le
-        @_raw_section_headers = Array.new(qty_section_header)
-        @section_headers = Array.new(qty_section_header)
+        @_raw_section_headers = []
+        @section_headers = []
         (qty_section_header).times { |i|
-          @_raw_section_headers[i] = @_io.read_bytes(section_header_entry_size)
+          @_raw_section_headers << @_io.read_bytes(section_header_entry_size)
           _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
-          @section_headers[i] = SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
+          @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
       else
-        @_raw_section_headers = Array.new(qty_section_header)
-        @section_headers = Array.new(qty_section_header)
+        @_raw_section_headers = []
+        @section_headers = []
         (qty_section_header).times { |i|
-          @_raw_section_headers[i] = @_io.read_bytes(section_header_entry_size)
+          @_raw_section_headers << @_io.read_bytes(section_header_entry_size)
           _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
-          @section_headers[i] = SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
+          @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
       end
       @_io.seek(_pos)

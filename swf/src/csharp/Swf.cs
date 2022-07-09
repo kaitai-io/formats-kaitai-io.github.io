@@ -331,7 +331,7 @@ namespace Kaitai
             private void _read()
             {
                 _numSymbols = m_io.ReadU2le();
-                _symbols = new List<Symbol>((int) (NumSymbols));
+                _symbols = new List<Symbol>();
                 for (var i = 0; i < NumSymbols; i++)
                 {
                     _symbols.Add(new Symbol(m_io, this, m_root));

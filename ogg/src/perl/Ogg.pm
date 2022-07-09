@@ -90,12 +90,12 @@ sub _read {
     $self->{len_segments} = ();
     my $n_len_segments = $self->num_segments();
     for (my $i = 0; $i < $n_len_segments; $i++) {
-        $self->{len_segments}[$i] = $self->{_io}->read_u1();
+        push @{$self->{len_segments}}, $self->{_io}->read_u1();
     }
     $self->{segments} = ();
     my $n_segments = $self->num_segments();
     for (my $i = 0; $i < $n_segments; $i++) {
-        $self->{segments}[$i] = $self->{_io}->read_bytes(@{$self->len_segments()}[$i]);
+        push @{$self->{segments}}, $self->{_io}->read_bytes(@{$self->len_segments()}[$i]);
     }
 }
 

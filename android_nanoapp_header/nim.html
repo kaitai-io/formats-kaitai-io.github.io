@@ -261,9 +261,12 @@ section#format-index .row {
     <span class="p">`</span><span class="n">chreApiMinorVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">isSignedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isEncryptedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isTcmCapableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isSignedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isSignedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isEncryptedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isEncryptedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isTcmCapableInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isTcmCapableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidNanoappHeader], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidNanoappHeader</span>
 
@@ -303,28 +306,28 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
 
 <span class="k">proc </span><span class="nf">isSigned</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidNanoappHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isSignedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isSignedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isSignedInst</span>
   <span class="k">let</span> <span class="n">isSignedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isSignedInst</span> <span class="o">=</span> <span class="n">isSignedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isSignedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isSignedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isSignedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isSignedInst</span>
 
 <span class="k">proc </span><span class="nf">isEncrypted</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidNanoappHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInst</span>
   <span class="k">let</span> <span class="n">isEncryptedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInst</span> <span class="o">=</span> <span class="n">isEncryptedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isEncryptedInst</span>
 
 <span class="k">proc </span><span class="nf">isTcmCapable</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidNanoappHeader</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInst</span>
   <span class="k">let</span> <span class="n">isTcmCapableInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInst</span> <span class="o">=</span> <span class="n">isTcmCapableInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTcmCapableInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidNanoappHeader], filename: string): AndroidNanoappHeader =</span>
   <span class="n">AndroidNanoappHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

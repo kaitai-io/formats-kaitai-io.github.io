@@ -327,14 +327,17 @@ as:</p>
     <span class="p">`</span><span class="n">firstAndSecond</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">rest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
-    <span class="p">`</span><span class="n">firstInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">secondInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">firstInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">firstInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">secondInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">secondInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Asn1Der_LenEncoded</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">b1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">int2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">int1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
-    <span class="p">`</span><span class="n">resultInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">resultInst</span><span class="p">`:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">resultInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Asn1Der_BodyPrintableString</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">str</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Asn1Der</span>
@@ -485,20 +488,20 @@ as:</p>
   <span class="n">this</span><span class="p">.</span><span class="n">rest</span> <span class="o">=</span> <span class="n">restExpr</span>
 
 <span class="k">proc </span><span class="nf">first</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_BodyObjectId</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span>
   <span class="k">let</span> <span class="n">firstInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">firstAndSecond</span> <span class="ow">div</span> <span class="mi">40</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span> <span class="o">=</span> <span class="n">firstInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">firstInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstInst</span>
 
 <span class="k">proc </span><span class="nf">second</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_BodyObjectId</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
   <span class="k">let</span> <span class="n">secondInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">firstAndSecond</span> <span class="o">%%%</span> <span class="mi">40</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">=</span> <span class="n">secondInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">secondInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">secondInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_BodyObjectId], filename: string): Asn1Der_BodyObjectId =</span>
   <span class="n">Asn1Der_BodyObjectId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -521,12 +524,12 @@ as:</p>
     <span class="n">this</span><span class="p">.</span><span class="n">int1</span> <span class="o">=</span> <span class="n">int1Expr</span>
 
 <span class="k">proc </span><span class="nf">result</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Asn1Der_LenEncoded</span><span class="p">):</span> <span class="n">uint16</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span>
   <span class="k">let</span> <span class="n">resultInstExpr</span> <span class="o">=</span> <span class="n">uint16</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">129</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">int1</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="o">==</span> <span class="mi">130</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">int2</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span> <span class="o">=</span> <span class="n">resultInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">resultInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resultInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Asn1Der_LenEncoded], filename: string): Asn1Der_LenEncoded =</span>
   <span class="n">Asn1Der_LenEncoded</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

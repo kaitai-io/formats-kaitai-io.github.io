@@ -96,25 +96,25 @@ public class DnsPacket extends KaitaiStruct {
             this.arcount = this._io.readU2be();
         }
         if (flags().isOpcodeValid()) {
-            queries = new ArrayList<Query>(((Number) (qdcount())).intValue());
+            this.queries = new ArrayList<Query>();
             for (int i = 0; i < qdcount(); i++) {
                 this.queries.add(new Query(this._io, this, _root));
             }
         }
         if (flags().isOpcodeValid()) {
-            answers = new ArrayList<Answer>(((Number) (ancount())).intValue());
+            this.answers = new ArrayList<Answer>();
             for (int i = 0; i < ancount(); i++) {
                 this.answers.add(new Answer(this._io, this, _root));
             }
         }
         if (flags().isOpcodeValid()) {
-            authorities = new ArrayList<Answer>(((Number) (nscount())).intValue());
+            this.authorities = new ArrayList<Answer>();
             for (int i = 0; i < nscount(); i++) {
                 this.authorities.add(new Answer(this._io, this, _root));
             }
         }
         if (flags().isOpcodeValid()) {
-            additionals = new ArrayList<Answer>(((Number) (arcount())).intValue());
+            this.additionals = new ArrayList<Answer>();
             for (int i = 0; i < arcount(); i++) {
                 this.additionals.add(new Answer(this._io, this, _root));
             }
@@ -178,7 +178,7 @@ public class DnsPacket extends KaitaiStruct {
         public DomainName contents() {
             if (this.contents != null)
                 return this.contents;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek((value() + ((_parent().length() - 192) << 8)));
             this.contents = new DomainName(io, this, _root);

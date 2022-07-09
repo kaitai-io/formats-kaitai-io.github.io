@@ -339,9 +339,8 @@ dcmp_0_t::chunk_t::extended_body_t::jump_table_body_t::jump_table_body_t(kaitai:
 void dcmp_0_t::chunk_t::extended_body_t::jump_table_body_t::_read() {
     m_segment_number_raw = std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io));
     m_num_addresses_raw = std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io));
-    int l_addresses_raw = num_addresses();
     m_addresses_raw = std::unique_ptr<std::vector<std::unique_ptr<dcmp_variable_length_integer_t>>>(new std::vector<std::unique_ptr<dcmp_variable_length_integer_t>>());
-    m_addresses_raw->reserve(l_addresses_raw);
+    const int l_addresses_raw = num_addresses();
     for (int i = 0; i < l_addresses_raw; i++) {
         m_addresses_raw->push_back(std::move(std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io))));
     }
@@ -441,9 +440,8 @@ dcmp_0_t::chunk_t::extended_body_t::delta_encoding_16_bit_body_t::delta_encoding
 void dcmp_0_t::chunk_t::extended_body_t::delta_encoding_16_bit_body_t::_read() {
     m_first_value_raw = std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io));
     m_num_deltas_raw = std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io));
-    int l_deltas = num_deltas();
     m_deltas = std::unique_ptr<std::vector<int8_t>>(new std::vector<int8_t>());
-    m_deltas->reserve(l_deltas);
+    const int l_deltas = num_deltas();
     for (int i = 0; i < l_deltas; i++) {
         m_deltas->push_back(std::move(m__io->read_s1()));
     }
@@ -486,9 +484,8 @@ dcmp_0_t::chunk_t::extended_body_t::delta_encoding_32_bit_body_t::delta_encoding
 void dcmp_0_t::chunk_t::extended_body_t::delta_encoding_32_bit_body_t::_read() {
     m_first_value_raw = std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io));
     m_num_deltas_raw = std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io));
-    int l_deltas_raw = num_deltas();
     m_deltas_raw = std::unique_ptr<std::vector<std::unique_ptr<dcmp_variable_length_integer_t>>>(new std::vector<std::unique_ptr<dcmp_variable_length_integer_t>>());
-    m_deltas_raw->reserve(l_deltas_raw);
+    const int l_deltas_raw = num_deltas();
     for (int i = 0; i < l_deltas_raw; i++) {
         m_deltas_raw->push_back(std::move(std::unique_ptr<dcmp_variable_length_integer_t>(new dcmp_variable_length_integer_t(m__io))));
     }

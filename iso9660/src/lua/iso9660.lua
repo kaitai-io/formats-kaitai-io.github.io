@@ -236,7 +236,7 @@ function Iso9660.DirEntries:_read()
   self.entries = {}
   local i = 0
   while true do
-    _ = Iso9660.DirEntry(self._io, self, self._root)
+    local _ = Iso9660.DirEntry(self._io, self, self._root)
     self.entries[i + 1] = _
     if _.len == 0 then
       break
@@ -249,30 +249,30 @@ end
 Iso9660.U4bi = class.class(KaitaiStruct)
 
 function Iso9660.U4bi:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Iso9660.U4bi:_read()
-self.le = self._io:read_u4le()
-self.be = self._io:read_u4be()
+  self.le = self._io:read_u4le()
+  self.be = self._io:read_u4be()
 end
 
 
 Iso9660.U2bi = class.class(KaitaiStruct)
 
 function Iso9660.U2bi:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Iso9660.U2bi:_read()
-self.le = self._io:read_u2le()
-self.be = self._io:read_u2be()
+  self.le = self._io:read_u2le()
+  self.be = self._io:read_u2be()
 end
 
 
@@ -281,19 +281,19 @@ end
 Iso9660.PathTableLe = class.class(KaitaiStruct)
 
 function Iso9660.PathTableLe:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Iso9660.PathTableLe:_read()
-self.entries = {}
-local i = 0
-while not self._io:is_eof() do
-  self.entries[i + 1] = Iso9660.PathTableEntryLe(self._io, self, self._root)
-  i = i + 1
-end
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Iso9660.PathTableEntryLe(self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 
@@ -302,82 +302,82 @@ end
 Iso9660.DecDatetime = class.class(KaitaiStruct)
 
 function Iso9660.DecDatetime:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Iso9660.DecDatetime:_read()
-self.year = str_decode.decode(self._io:read_bytes(4), "ASCII")
-self.month = str_decode.decode(self._io:read_bytes(2), "ASCII")
-self.day = str_decode.decode(self._io:read_bytes(2), "ASCII")
-self.hour = str_decode.decode(self._io:read_bytes(2), "ASCII")
-self.minute = str_decode.decode(self._io:read_bytes(2), "ASCII")
-self.sec = str_decode.decode(self._io:read_bytes(2), "ASCII")
-self.sec_hundreds = str_decode.decode(self._io:read_bytes(2), "ASCII")
-self.timezone = self._io:read_u1()
+  self.year = str_decode.decode(self._io:read_bytes(4), "ASCII")
+  self.month = str_decode.decode(self._io:read_bytes(2), "ASCII")
+  self.day = str_decode.decode(self._io:read_bytes(2), "ASCII")
+  self.hour = str_decode.decode(self._io:read_bytes(2), "ASCII")
+  self.minute = str_decode.decode(self._io:read_bytes(2), "ASCII")
+  self.sec = str_decode.decode(self._io:read_bytes(2), "ASCII")
+  self.sec_hundreds = str_decode.decode(self._io:read_bytes(2), "ASCII")
+  self.timezone = self._io:read_u1()
 end
 
 
 Iso9660.DirEntryBody = class.class(KaitaiStruct)
 
 function Iso9660.DirEntryBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Iso9660.DirEntryBody:_read()
-self.len_ext_attr_rec = self._io:read_u1()
-self.lba_extent = Iso9660.U4bi(self._io, self, self._root)
-self.size_extent = Iso9660.U4bi(self._io, self, self._root)
-self.datetime = Iso9660.Datetime(self._io, self, self._root)
-self.file_flags = self._io:read_u1()
-self.file_unit_size = self._io:read_u1()
-self.interleave_gap_size = self._io:read_u1()
-self.vol_seq_num = Iso9660.U2bi(self._io, self, self._root)
-self.len_file_name = self._io:read_u1()
-self.file_name = str_decode.decode(self._io:read_bytes(self.len_file_name), "UTF-8")
-if (self.len_file_name % 2) == 0 then
-  self.padding = self._io:read_u1()
-end
-self.rest = self._io:read_bytes_full()
+  self.len_ext_attr_rec = self._io:read_u1()
+  self.lba_extent = Iso9660.U4bi(self._io, self, self._root)
+  self.size_extent = Iso9660.U4bi(self._io, self, self._root)
+  self.datetime = Iso9660.Datetime(self._io, self, self._root)
+  self.file_flags = self._io:read_u1()
+  self.file_unit_size = self._io:read_u1()
+  self.interleave_gap_size = self._io:read_u1()
+  self.vol_seq_num = Iso9660.U2bi(self._io, self, self._root)
+  self.len_file_name = self._io:read_u1()
+  self.file_name = str_decode.decode(self._io:read_bytes(self.len_file_name), "UTF-8")
+  if (self.len_file_name % 2) == 0 then
+    self.padding = self._io:read_u1()
+  end
+  self.rest = self._io:read_bytes_full()
 end
 
 Iso9660.DirEntryBody.property.extent_as_dir = {}
 function Iso9660.DirEntryBody.property.extent_as_dir:get()
-if self._m_extent_as_dir ~= nil then
-  return self._m_extent_as_dir
-end
+  if self._m_extent_as_dir ~= nil then
+    return self._m_extent_as_dir
+  end
 
-if (self.file_flags & 2) ~= 0 then
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek((self.lba_extent.le * self._root.sector_size))
-  self._raw__m_extent_as_dir = _io:read_bytes(self.size_extent.le)
-  local _io = KaitaiStream(stringstream(self._raw__m_extent_as_dir))
-  self._m_extent_as_dir = Iso9660.DirEntries(_io, self, self._root)
-  _io:seek(_pos)
-end
-return self._m_extent_as_dir
+  if (self.file_flags & 2) ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek((self.lba_extent.le * self._root.sector_size))
+    self._raw__m_extent_as_dir = _io:read_bytes(self.size_extent.le)
+    local _io = KaitaiStream(stringstream(self._raw__m_extent_as_dir))
+    self._m_extent_as_dir = Iso9660.DirEntries(_io, self, self._root)
+    _io:seek(_pos)
+  end
+  return self._m_extent_as_dir
 end
 
 Iso9660.DirEntryBody.property.extent_as_file = {}
 function Iso9660.DirEntryBody.property.extent_as_file:get()
-if self._m_extent_as_file ~= nil then
-  return self._m_extent_as_file
-end
+  if self._m_extent_as_file ~= nil then
+    return self._m_extent_as_file
+  end
 
-if (self.file_flags & 2) == 0 then
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek((self.lba_extent.le * self._root.sector_size))
-  self._m_extent_as_file = _io:read_bytes(self.size_extent.le)
-  _io:seek(_pos)
-end
-return self._m_extent_as_file
+  if (self.file_flags & 2) == 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek((self.lba_extent.le * self._root.sector_size))
+    self._m_extent_as_file = _io:read_bytes(self.size_extent.le)
+    _io:seek(_pos)
+  end
+  return self._m_extent_as_file
 end
 
 

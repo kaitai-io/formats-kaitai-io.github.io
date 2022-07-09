@@ -38,7 +38,7 @@ sub _read {
     $self->{entries} = ();
     my $n_entries = $self->header()->dt_entry_count();
     for (my $i = 0; $i < $n_entries; $i++) {
-        $self->{entries}[$i] = AndroidDto::DtTableEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{entries}}, AndroidDto::DtTableEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -169,7 +169,7 @@ sub _read {
     $self->{custom} = ();
     my $n_custom = 4;
     for (my $i = 0; $i < $n_custom; $i++) {
-        $self->{custom}[$i] = $self->{_io}->read_u4be();
+        push @{$self->{custom}}, $self->{_io}->read_u4be();
     }
 }
 

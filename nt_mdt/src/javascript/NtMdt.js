@@ -8,7 +8,7 @@
   } else {
     root.NtMdt = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A native file format of NT-MDT scientific software. Usually contains
  * any of:
@@ -352,9 +352,9 @@ var NtMdt = (function() {
       this._read();
     }
     Uuid.prototype._read = function() {
-      this.data = new Array(16);
+      this.data = [];
       for (var i = 0; i < 16; i++) {
-        this.data[i] = this._io.readU1();
+        this.data.push(this._io.readU1());
       }
     }
 
@@ -370,9 +370,9 @@ var NtMdt = (function() {
       this._read();
     }
     Framez.prototype._read = function() {
-      this.frames = new Array((this._root.lastFrame + 1));
+      this.frames = [];
       for (var i = 0; i < (this._root.lastFrame + 1); i++) {
-        this.frames[i] = new Frame(this._io, this, this._root);
+        this.frames.push(new Frame(this._io, this, this._root));
       }
     }
 
@@ -427,13 +427,13 @@ var NtMdt = (function() {
         if (this.fmNdots > 0) {
           this.coordHeader = new DotsHeader(this._io, this, this._root);
         }
-        this.coordinates = new Array(this.fmNdots);
+        this.coordinates = [];
         for (var i = 0; i < this.fmNdots; i++) {
-          this.coordinates[i] = new DotsData(this._io, this, this._root);
+          this.coordinates.push(new DotsData(this._io, this, this._root));
         }
-        this.data = new Array(this.fmNdots);
+        this.data = [];
         for (var i = 0; i < this.fmNdots; i++) {
-          this.data[i] = new DataLinez(this._io, this, this._root, i);
+          this.data.push(new DataLinez(this._io, this, this._root, i));
         }
       }
 
@@ -500,13 +500,13 @@ var NtMdt = (function() {
           this._read();
         }
         DataLinez.prototype._read = function() {
-          this.forward = new Array(this._parent.coordinates[this.index].forwardSize);
+          this.forward = [];
           for (var i = 0; i < this._parent.coordinates[this.index].forwardSize; i++) {
-            this.forward[i] = this._io.readS2le();
+            this.forward.push(this._io.readS2le());
           }
-          this.backward = new Array(this._parent.coordinates[this.index].backwardSize);
+          this.backward = [];
           for (var i = 0; i < this._parent.coordinates[this.index].backwardSize; i++) {
-            this.backward[i] = this._io.readS2le();
+            this.backward.push(this._io.readS2le());
           }
         }
 
@@ -586,17 +586,17 @@ var NtMdt = (function() {
       }
       FdCurvesNew.prototype._read = function() {
         this.blockCount = this._io.readU4le();
-        this.blocksHeaders = new Array(this.blockCount);
+        this.blocksHeaders = [];
         for (var i = 0; i < this.blockCount; i++) {
-          this.blocksHeaders[i] = new BlockDescr(this._io, this, this._root);
+          this.blocksHeaders.push(new BlockDescr(this._io, this, this._root));
         }
-        this.blocksNames = new Array(this.blockCount);
+        this.blocksNames = [];
         for (var i = 0; i < this.blockCount; i++) {
-          this.blocksNames[i] = KaitaiStream.bytesToStr(this._io.readBytes(this.blocksHeaders[i].nameLen), "UTF-8");
+          this.blocksNames.push(KaitaiStream.bytesToStr(this._io.readBytes(this.blocksHeaders[i].nameLen), "UTF-8"));
         }
-        this.blocksData = new Array(this.blockCount);
+        this.blocksData = [];
         for (var i = 0; i < this.blockCount; i++) {
-          this.blocksData[i] = this._io.readBytes(this.blocksHeaders[i].len);
+          this.blocksData.push(this._io.readBytes(this.blocksHeaders[i].len));
         }
       }
 
@@ -630,9 +630,9 @@ var NtMdt = (function() {
       FdMetaData.prototype._read = function() {
         this.headSize = this._io.readU4le();
         this.totLen = this._io.readU4le();
-        this.guids = new Array(2);
+        this.guids = [];
         for (var i = 0; i < 2; i++) {
-          this.guids[i] = new Uuid(this._io, this, this._root);
+          this.guids.push(new Uuid(this._io, this, this._root));
         }
         this.frameStatus = this._io.readBytes(4);
         this.nameSize = this._io.readU4le();
@@ -650,13 +650,13 @@ var NtMdt = (function() {
         this.cellSize = this._io.readU4le();
         this.nDimensions = this._io.readU4le();
         this.nMesurands = this._io.readU4le();
-        this.dimensions = new Array(this.nDimensions);
+        this.dimensions = [];
         for (var i = 0; i < this.nDimensions; i++) {
-          this.dimensions[i] = new Calibration(this._io, this, this._root);
+          this.dimensions.push(new Calibration(this._io, this, this._root));
         }
-        this.mesurands = new Array(this.nMesurands);
+        this.mesurands = [];
         for (var i = 0; i < this.nMesurands; i++) {
-          this.mesurands[i] = new Calibration(this._io, this, this._root);
+          this.mesurands.push(new Calibration(this._io, this, this._root));
         }
       }
 
@@ -686,38 +686,38 @@ var NtMdt = (function() {
             this._read();
           }
           Vec.prototype._read = function() {
-            this.items = new Array(this._parent._parent.nMesurands);
+            this.items = [];
             for (var i = 0; i < this._parent._parent.nMesurands; i++) {
               switch (this._parent._parent.mesurands[i].dataType) {
               case NtMdt.DataType.UINT64:
-                this.items[i] = this._io.readU8le();
+                this.items.push(this._io.readU8le());
                 break;
               case NtMdt.DataType.UINT8:
-                this.items[i] = this._io.readU1();
+                this.items.push(this._io.readU1());
                 break;
               case NtMdt.DataType.FLOAT32:
-                this.items[i] = this._io.readF4le();
+                this.items.push(this._io.readF4le());
                 break;
               case NtMdt.DataType.INT8:
-                this.items[i] = this._io.readS1();
+                this.items.push(this._io.readS1());
                 break;
               case NtMdt.DataType.UINT16:
-                this.items[i] = this._io.readU2le();
+                this.items.push(this._io.readU2le());
                 break;
               case NtMdt.DataType.INT64:
-                this.items[i] = this._io.readS8le();
+                this.items.push(this._io.readS8le());
                 break;
               case NtMdt.DataType.UINT32:
-                this.items[i] = this._io.readU4le();
+                this.items.push(this._io.readU4le());
                 break;
               case NtMdt.DataType.FLOAT64:
-                this.items[i] = this._io.readF8le();
+                this.items.push(this._io.readF8le());
                 break;
               case NtMdt.DataType.INT16:
-                this.items[i] = this._io.readS2le();
+                this.items.push(this._io.readS2le());
                 break;
               case NtMdt.DataType.INT32:
-                this.items[i] = this._io.readS4le();
+                this.items.push(this._io.readS4le());
                 break;
               }
             }
@@ -801,9 +801,9 @@ var NtMdt = (function() {
         this.fmXres = this._io.readU2le();
         this.fmYres = this._io.readU2le();
         this.dots = new Dots(this._io, this, this._root);
-        this.data = new Array((this.fmXres * this.fmYres));
+        this.data = [];
         for (var i = 0; i < (this.fmXres * this.fmYres); i++) {
-          this.data[i] = this._io.readS2le();
+          this.data.push(this._io.readS2le());
         }
         this.title = new Title(this._io, this, this._root);
         this.xml = new Xml(this._io, this, this._root);
@@ -1017,9 +1017,9 @@ var NtMdt = (function() {
         this.fmXres = this._io.readU2le();
         this.fmYres = this._io.readU2le();
         this.dots = new Dots(this._io, this, this._root);
-        this.image = new Array((this.fmXres * this.fmYres));
+        this.image = [];
         for (var i = 0; i < (this.fmXres * this.fmYres); i++) {
-          this.image[i] = this._io.readS2le();
+          this.image.push(this._io.readS2le());
         }
         this.title = new Title(this._io, this, this._root);
         this.xml = new Xml(this._io, this, this._root);

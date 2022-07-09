@@ -111,9 +111,9 @@ class HeapsPak < Kaitai::Struct::Struct
 
       def _read
         @num_entries = @_io.read_u4le
-        @entries = Array.new(num_entries)
+        @entries = []
         (num_entries).times { |i|
-          @entries[i] = Entry.new(@_io, self, @_root)
+          @entries << Entry.new(@_io, self, @_root)
         }
         self
       end

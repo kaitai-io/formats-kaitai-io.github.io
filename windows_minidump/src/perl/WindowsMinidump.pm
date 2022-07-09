@@ -103,7 +103,7 @@ sub streams {
     $self->{streams} = ();
     my $n_streams = $self->num_streams();
     for (my $i = 0; $i < $n_streams; $i++) {
-        $self->{streams}[$i] = WindowsMinidump::Dir->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{streams}}, WindowsMinidump::Dir->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{streams};
@@ -183,7 +183,7 @@ sub _read {
     $self->{threads} = ();
     my $n_threads = $self->num_threads();
     for (my $i = 0; $i < $n_threads; $i++) {
-        $self->{threads}[$i] = WindowsMinidump::Thread->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{threads}}, WindowsMinidump::Thread->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -458,7 +458,7 @@ sub _read {
     $self->{params} = ();
     my $n_params = 15;
     for (my $i = 0; $i < $n_params; $i++) {
-        $self->{params}[$i] = $self->{_io}->read_u8le();
+        push @{$self->{params}}, $self->{_io}->read_u8le();
     }
 }
 
@@ -796,7 +796,7 @@ sub _read {
     $self->{mem_ranges} = ();
     my $n_mem_ranges = $self->num_mem_ranges();
     for (my $i = 0; $i < $n_mem_ranges; $i++) {
-        $self->{mem_ranges}[$i] = WindowsMinidump::MemoryDescriptor->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{mem_ranges}}, WindowsMinidump::MemoryDescriptor->new($self->{_io}, $self, $self->{_root});
     }
 }
 

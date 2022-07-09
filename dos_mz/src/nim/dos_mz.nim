@@ -6,12 +6,14 @@ type
     `header`*: DosMz_ExeHeader
     `body`*: seq[byte]
     `parent`*: KaitaiStruct
-    `relocationsInst`*: seq[DosMz_Relocation]
+    `relocationsInst`: seq[DosMz_Relocation]
+    `relocationsInstFlag`: bool
   DosMz_ExeHeader* = ref object of KaitaiStruct
     `mz`*: DosMz_MzHeader
     `restOfHeader`*: seq[byte]
     `parent`*: DosMz
-    `lenBodyInst`*: int
+    `lenBodyInst`: int
+    `lenBodyInstFlag`: bool
   DosMz_MzHeader* = ref object of KaitaiStruct
     `magic`*: string
     `lastPageExtraBytes`*: uint16
@@ -28,7 +30,8 @@ type
     `ofsRelocations`*: uint16
     `overlayId`*: uint16
     `parent`*: DosMz_ExeHeader
-    `lenHeaderInst`*: int
+    `lenHeaderInst`: int
+    `lenHeaderInstFlag`: bool
   DosMz_Relocation* = ref object of KaitaiStruct
     `ofs`*: uint16
     `seg`*: uint16
@@ -70,7 +73,7 @@ proc read*(_: typedesc[DosMz], io: KaitaiStream, root: KaitaiStruct, parent: Kai
   this.body = bodyExpr
 
 proc relocations(this: DosMz): seq[DosMz_Relocation] = 
-  if this.relocationsInst.len != 0:
+  if this.relocationsInstFlag:
     return this.relocationsInst
   if this.header.mz.ofsRelocations != 0:
     let io = this.header.io
@@ -80,8 +83,8 @@ proc relocations(this: DosMz): seq[DosMz_Relocation] =
       let it = DosMz_Relocation.read(io, this.root, this)
       this.relocationsInst.add(it)
     io.seek(pos)
-  if this.relocationsInst.len != 0:
-    return this.relocationsInst
+  this.relocationsInstFlag = true
+  return this.relocationsInst
 
 proc fromFile*(_: typedesc[DosMz], filename: string): DosMz =
   DosMz.read(newKaitaiFileStream(filename), nil, nil)
@@ -100,12 +103,12 @@ proc read*(_: typedesc[DosMz_ExeHeader], io: KaitaiStream, root: KaitaiStruct, p
   this.restOfHeader = restOfHeaderExpr
 
 proc lenBody(this: DosMz_ExeHeader): int = 
-  if this.lenBodyInst != nil:
+  if this.lenBodyInstFlag:
     return this.lenBodyInst
   let lenBodyInstExpr = int(((if this.mz.lastPageExtraBytes == 0: (this.mz.numPages * 512) else: (((this.mz.numPages - 1) * 512) + this.mz.lastPageExtraBytes)) - this.mz.lenHeader))
   this.lenBodyInst = lenBodyInstExpr
-  if this.lenBodyInst != nil:
-    return this.lenBodyInst
+  this.lenBodyInstFlag = true
+  return this.lenBodyInst
 
 proc fromFile*(_: typedesc[DosMz_ExeHeader], filename: string): DosMz_ExeHeader =
   DosMz_ExeHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -148,12 +151,12 @@ proc read*(_: typedesc[DosMz_MzHeader], io: KaitaiStream, root: KaitaiStruct, pa
   this.overlayId = overlayIdExpr
 
 proc lenHeader(this: DosMz_MzHeader): int = 
-  if this.lenHeaderInst != nil:
+  if this.lenHeaderInstFlag:
     return this.lenHeaderInst
   let lenHeaderInstExpr = int((this.headerSize * 16))
   this.lenHeaderInst = lenHeaderInstExpr
-  if this.lenHeaderInst != nil:
-    return this.lenHeaderInst
+  this.lenHeaderInstFlag = true
+  return this.lenHeaderInst
 
 proc fromFile*(_: typedesc[DosMz_MzHeader], filename: string): DosMz_MzHeader =
   DosMz_MzHeader.read(newKaitaiFileStream(filename), nil, nil)

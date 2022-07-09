@@ -8,7 +8,7 @@
   } else {
     root.BitcoinTransaction = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://bitcoin.org/en/developer-guide#transactions
  * https://en.bitcoin.it/wiki/Transaction
@@ -26,14 +26,14 @@ var BitcoinTransaction = (function() {
   BitcoinTransaction.prototype._read = function() {
     this.version = this._io.readU4le();
     this.numVins = this._io.readU1();
-    this.vins = new Array(this.numVins);
+    this.vins = [];
     for (var i = 0; i < this.numVins; i++) {
-      this.vins[i] = new Vin(this._io, this, this._root);
+      this.vins.push(new Vin(this._io, this, this._root));
     }
     this.numVouts = this._io.readU1();
-    this.vouts = new Array(this.numVouts);
+    this.vouts = [];
     for (var i = 0; i < this.numVouts; i++) {
-      this.vouts[i] = new Vout(this._io, this, this._root);
+      this.vouts.push(new Vout(this._io, this, this._root));
     }
     this.locktime = this._io.readU4le();
   }

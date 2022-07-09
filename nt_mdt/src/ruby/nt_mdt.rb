@@ -210,9 +210,9 @@ class NtMdt < Kaitai::Struct::Struct
     end
 
     def _read
-      @data = Array.new(16)
+      @data = []
       (16).times { |i|
-        @data[i] = @_io.read_u1
+        @data << @_io.read_u1
       }
       self
     end
@@ -225,9 +225,9 @@ class NtMdt < Kaitai::Struct::Struct
     end
 
     def _read
-      @frames = Array.new((_root.last_frame + 1))
+      @frames = []
       ((_root.last_frame + 1)).times { |i|
-        @frames[i] = Frame.new(@_io, self, @_root)
+        @frames << Frame.new(@_io, self, @_root)
       }
       self
     end
@@ -269,13 +269,13 @@ class NtMdt < Kaitai::Struct::Struct
         if fm_ndots > 0
           @coord_header = DotsHeader.new(@_io, self, @_root)
         end
-        @coordinates = Array.new(fm_ndots)
+        @coordinates = []
         (fm_ndots).times { |i|
-          @coordinates[i] = DotsData.new(@_io, self, @_root)
+          @coordinates << DotsData.new(@_io, self, @_root)
         }
-        @data = Array.new(fm_ndots)
+        @data = []
         (fm_ndots).times { |i|
-          @data[i] = DataLinez.new(@_io, self, @_root, i)
+          @data << DataLinez.new(@_io, self, @_root, i)
         }
         self
       end
@@ -338,13 +338,13 @@ class NtMdt < Kaitai::Struct::Struct
         end
 
         def _read
-          @forward = Array.new(_parent.coordinates[index].forward_size)
+          @forward = []
           (_parent.coordinates[index].forward_size).times { |i|
-            @forward[i] = @_io.read_s2le
+            @forward << @_io.read_s2le
           }
-          @backward = Array.new(_parent.coordinates[index].backward_size)
+          @backward = []
           (_parent.coordinates[index].backward_size).times { |i|
-            @backward[i] = @_io.read_s2le
+            @backward << @_io.read_s2le
           }
           self
         end
@@ -418,17 +418,17 @@ class NtMdt < Kaitai::Struct::Struct
 
       def _read
         @block_count = @_io.read_u4le
-        @blocks_headers = Array.new(block_count)
+        @blocks_headers = []
         (block_count).times { |i|
-          @blocks_headers[i] = BlockDescr.new(@_io, self, @_root)
+          @blocks_headers << BlockDescr.new(@_io, self, @_root)
         }
-        @blocks_names = Array.new(block_count)
+        @blocks_names = []
         (block_count).times { |i|
-          @blocks_names[i] = (@_io.read_bytes(blocks_headers[i].name_len)).force_encoding("UTF-8")
+          @blocks_names << (@_io.read_bytes(blocks_headers[i].name_len)).force_encoding("UTF-8")
         }
-        @blocks_data = Array.new(block_count)
+        @blocks_data = []
         (block_count).times { |i|
-          @blocks_data[i] = @_io.read_bytes(blocks_headers[i].len)
+          @blocks_data << @_io.read_bytes(blocks_headers[i].len)
         }
         self
       end
@@ -460,9 +460,9 @@ class NtMdt < Kaitai::Struct::Struct
       def _read
         @head_size = @_io.read_u4le
         @tot_len = @_io.read_u4le
-        @guids = Array.new(2)
+        @guids = []
         (2).times { |i|
-          @guids[i] = Uuid.new(@_io, self, @_root)
+          @guids << Uuid.new(@_io, self, @_root)
         }
         @frame_status = @_io.read_bytes(4)
         @name_size = @_io.read_u4le
@@ -480,13 +480,13 @@ class NtMdt < Kaitai::Struct::Struct
         @cell_size = @_io.read_u4le
         @n_dimensions = @_io.read_u4le
         @n_mesurands = @_io.read_u4le
-        @dimensions = Array.new(n_dimensions)
+        @dimensions = []
         (n_dimensions).times { |i|
-          @dimensions[i] = Calibration.new(@_io, self, @_root)
+          @dimensions << Calibration.new(@_io, self, @_root)
         }
-        @mesurands = Array.new(n_mesurands)
+        @mesurands = []
         (n_mesurands).times { |i|
-          @mesurands[i] = Calibration.new(@_io, self, @_root)
+          @mesurands << Calibration.new(@_io, self, @_root)
         }
         self
       end
@@ -512,29 +512,29 @@ class NtMdt < Kaitai::Struct::Struct
           end
 
           def _read
-            @items = Array.new(_parent._parent.n_mesurands)
+            @items = []
             (_parent._parent.n_mesurands).times { |i|
               case _parent._parent.mesurands[i].data_type
               when :data_type_uint64
-                @items[i] = @_io.read_u8le
+                @items << @_io.read_u8le
               when :data_type_uint8
-                @items[i] = @_io.read_u1
+                @items << @_io.read_u1
               when :data_type_float32
-                @items[i] = @_io.read_f4le
+                @items << @_io.read_f4le
               when :data_type_int8
-                @items[i] = @_io.read_s1
+                @items << @_io.read_s1
               when :data_type_uint16
-                @items[i] = @_io.read_u2le
+                @items << @_io.read_u2le
               when :data_type_int64
-                @items[i] = @_io.read_s8le
+                @items << @_io.read_s8le
               when :data_type_uint32
-                @items[i] = @_io.read_u4le
+                @items << @_io.read_u4le
               when :data_type_float64
-                @items[i] = @_io.read_f8le
+                @items << @_io.read_f8le
               when :data_type_int16
-                @items[i] = @_io.read_s2le
+                @items << @_io.read_s2le
               when :data_type_int32
-                @items[i] = @_io.read_s4le
+                @items << @_io.read_s4le
               end
             }
             self
@@ -641,9 +641,9 @@ class NtMdt < Kaitai::Struct::Struct
         @fm_xres = @_io.read_u2le
         @fm_yres = @_io.read_u2le
         @dots = Dots.new(@_io, self, @_root)
-        @data = Array.new((fm_xres * fm_yres))
+        @data = []
         ((fm_xres * fm_yres)).times { |i|
-          @data[i] = @_io.read_s2le
+          @data << @_io.read_s2le
         }
         @title = Title.new(@_io, self, @_root)
         @xml = Xml.new(@_io, self, @_root)
@@ -853,9 +853,9 @@ class NtMdt < Kaitai::Struct::Struct
         @fm_xres = @_io.read_u2le
         @fm_yres = @_io.read_u2le
         @dots = Dots.new(@_io, self, @_root)
-        @image = Array.new((fm_xres * fm_yres))
+        @image = []
         ((fm_xres * fm_yres)).times { |i|
-          @image[i] = @_io.read_s2le
+          @image << @_io.read_s2le
         }
         @title = Title.new(@_io, self, @_root)
         @xml = Xml.new(@_io, self, @_root)

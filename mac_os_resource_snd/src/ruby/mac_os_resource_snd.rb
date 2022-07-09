@@ -101,18 +101,18 @@ class MacOsResourceSnd < Kaitai::Struct::Struct
       @num_data_formats = @_io.read_u2be
     end
     if format == 1
-      @data_formats = Array.new(num_data_formats)
+      @data_formats = []
       (num_data_formats).times { |i|
-        @data_formats[i] = DataFormat.new(@_io, self, @_root)
+        @data_formats << DataFormat.new(@_io, self, @_root)
       }
     end
     if format == 2
       @reference_count = @_io.read_u2be
     end
     @num_sound_commands = @_io.read_u2be
-    @sound_commands = Array.new(num_sound_commands)
+    @sound_commands = []
     (num_sound_commands).times { |i|
-      @sound_commands[i] = SoundCommand.new(@_io, self, @_root)
+      @sound_commands << SoundCommand.new(@_io, self, @_root)
     }
     self
   end

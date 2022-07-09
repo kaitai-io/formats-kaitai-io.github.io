@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Ogg(KaitaiStruct):
@@ -60,13 +59,13 @@ class Ogg(KaitaiStruct):
             self.page_seq_num = self._io.read_u4le()
             self.crc32 = self._io.read_u4le()
             self.num_segments = self._io.read_u1()
-            self.len_segments = [None] * (self.num_segments)
+            self.len_segments = []
             for i in range(self.num_segments):
-                self.len_segments[i] = self._io.read_u1()
+                self.len_segments.append(self._io.read_u1())
 
-            self.segments = [None] * (self.num_segments)
+            self.segments = []
             for i in range(self.num_segments):
-                self.segments[i] = self._io.read_bytes(self.len_segments[i])
+                self.segments.append(self._io.read_bytes(self.len_segments[i]))
 
 
 

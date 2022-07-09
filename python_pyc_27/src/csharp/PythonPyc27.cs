@@ -495,7 +495,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _count = m_io.ReadU4le();
-                    _items = new List<PyObject>((int) (Count));
+                    _items = new List<PyObject>();
                     for (var i = 0; i < Count; i++)
                     {
                         _items.Add(new PyObject(m_io, this, m_root));

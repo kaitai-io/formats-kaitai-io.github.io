@@ -11,22 +11,28 @@ type
     `headerParametersWithIo`*: BytesWithIo
     `parent`*: KaitaiStruct
     `rawData`*: seq[byte]
-    `headerParametersInst`*: Dcmp2_HeaderParameters
-    `isLenDecompressedOddInst`*: bool
-    `defaultLookupTableInst`*: seq[seq[byte]]
-    `lookupTableInst`*: seq[seq[byte]]
+    `headerParametersInst`: Dcmp2_HeaderParameters
+    `headerParametersInstFlag`: bool
+    `isLenDecompressedOddInst`: bool
+    `isLenDecompressedOddInstFlag`: bool
+    `defaultLookupTableInst`: seq[seq[byte]]
+    `defaultLookupTableInstFlag`: bool
+    `lookupTableInst`: seq[seq[byte]]
+    `lookupTableInstFlag`: bool
   Dcmp2_HeaderParameters* = ref object of KaitaiStruct
     `unknown`*: uint16
     `numCustomLookupTableEntriesM1`*: uint8
     `flags`*: Dcmp2_HeaderParameters_Flags
     `parent`*: Dcmp2
-    `numCustomLookupTableEntriesInst`*: int
+    `numCustomLookupTableEntriesInst`: int
+    `numCustomLookupTableEntriesInstFlag`: bool
   Dcmp2_HeaderParameters_Flags* = ref object of KaitaiStruct
     `reserved`*: uint64
     `tagged`*: bool
     `hasCustomLookupTable`*: bool
     `parent`*: Dcmp2_HeaderParameters
-    `asIntInst`*: uint8
+    `asIntInst`: uint8
+    `asIntInstFlag`: bool
   Dcmp2_UntaggedData* = ref object of KaitaiStruct
     `tableReferences`*: seq[uint8]
     `parent`*: Dcmp2
@@ -138,7 +144,7 @@ proc headerParameters(this: Dcmp2): Dcmp2_HeaderParameters =
   The parsed decompressor-specific parameters from the compressed resource header.
 
   ]##
-  if this.headerParametersInst != nil:
+  if this.headerParametersInstFlag:
     return this.headerParametersInst
   let io = this.headerParametersWithIo.io
   let pos = io.pos()
@@ -146,8 +152,8 @@ proc headerParameters(this: Dcmp2): Dcmp2_HeaderParameters =
   let headerParametersInstExpr = Dcmp2_HeaderParameters.read(io, this.root, this)
   this.headerParametersInst = headerParametersInstExpr
   io.seek(pos)
-  if this.headerParametersInst != nil:
-    return this.headerParametersInst
+  this.headerParametersInstFlag = true
+  return this.headerParametersInst
 
 proc isLenDecompressedOdd(this: Dcmp2): bool = 
 
@@ -156,12 +162,12 @@ proc isLenDecompressedOdd(this: Dcmp2): bool =
 This affects the meaning of the last byte of the compressed data.
 
   ]##
-  if this.isLenDecompressedOddInst != nil:
+  if this.isLenDecompressedOddInstFlag:
     return this.isLenDecompressedOddInst
   let isLenDecompressedOddInstExpr = bool((this.lenDecompressed %%% 2) != 0)
   this.isLenDecompressedOddInst = isLenDecompressedOddInstExpr
-  if this.isLenDecompressedOddInst != nil:
-    return this.isLenDecompressedOddInst
+  this.isLenDecompressedOddInstFlag = true
+  return this.isLenDecompressedOddInst
 
 proc defaultLookupTable(this: Dcmp2): seq[seq[byte]] = 
 
@@ -170,12 +176,12 @@ proc defaultLookupTable(this: Dcmp2): seq[seq[byte]] =
 which is used if no custom lookup table is included with the compressed data.
 
   ]##
-  if this.defaultLookupTableInst.len != 0:
+  if this.defaultLookupTableInstFlag:
     return this.defaultLookupTableInst
-  let defaultLookupTableInstExpr = seq[seq[byte]](@[seq[byte](@[0'u8, 0'u8]), seq[byte](@[0'u8, 8'u8]), seq[byte](@[78'u8, -70'u8]), seq[byte](@[32'u8, 110'u8]), seq[byte](@[78'u8, 117'u8]), seq[byte](@[0'u8, 12'u8]), seq[byte](@[0'u8, 4'u8]), seq[byte](@[112'u8, 0'u8]), seq[byte](@[0'u8, 16'u8]), seq[byte](@[0'u8, 2'u8]), seq[byte](@[72'u8, 110'u8]), seq[byte](@[-1'u8, -4'u8]), seq[byte](@[96'u8, 0'u8]), seq[byte](@[0'u8, 1'u8]), seq[byte](@[72'u8, -25'u8]), seq[byte](@[47'u8, 46'u8]), seq[byte](@[78'u8, 86'u8]), seq[byte](@[0'u8, 6'u8]), seq[byte](@[78'u8, 94'u8]), seq[byte](@[47'u8, 0'u8]), seq[byte](@[97'u8, 0'u8]), seq[byte](@[-1'u8, -8'u8]), seq[byte](@[47'u8, 11'u8]), seq[byte](@[-1'u8, -1'u8]), seq[byte](@[0'u8, 20'u8]), seq[byte](@[0'u8, 10'u8]), seq[byte](@[0'u8, 24'u8]), seq[byte](@[32'u8, 95'u8]), seq[byte](@[0'u8, 14'u8]), seq[byte](@[32'u8, 80'u8]), seq[byte](@[63'u8, 60'u8]), seq[byte](@[-1'u8, -12'u8]), seq[byte](@[76'u8, -18'u8]), seq[byte](@[48'u8, 46'u8]), seq[byte](@[103'u8, 0'u8]), seq[byte](@[76'u8, -33'u8]), seq[byte](@[38'u8, 110'u8]), seq[byte](@[0'u8, 18'u8]), seq[byte](@[0'u8, 28'u8]), seq[byte](@[66'u8, 103'u8]), seq[byte](@[-1'u8, -16'u8]), seq[byte](@[48'u8, 60'u8]), seq[byte](@[47'u8, 12'u8]), seq[byte](@[0'u8, 3'u8]), seq[byte](@[78'u8, -48'u8]), seq[byte](@[0'u8, 32'u8]), seq[byte](@[112'u8, 1'u8]), seq[byte](@[0'u8, 22'u8]), seq[byte](@[45'u8, 64'u8]), seq[byte](@[72'u8, -64'u8]), seq[byte](@[32'u8, 120'u8]), seq[byte](@[114'u8, 0'u8]), seq[byte](@[88'u8, -113'u8]), seq[byte](@[102'u8, 0'u8]), seq[byte](@[79'u8, -17'u8]), seq[byte](@[66'u8, -89'u8]), seq[byte](@[103'u8, 6'u8]), seq[byte](@[-1'u8, -6'u8]), seq[byte](@[85'u8, -113'u8]), seq[byte](@[40'u8, 110'u8]), seq[byte](@[63'u8, 0'u8]), seq[byte](@[-1'u8, -2'u8]), seq[byte](@[47'u8, 60'u8]), seq[byte](@[103'u8, 4'u8]), seq[byte](@[89'u8, -113'u8]), seq[byte](@[32'u8, 107'u8]), seq[byte](@[0'u8, 36'u8]), seq[byte](@[32'u8, 31'u8]), seq[byte](@[65'u8, -6'u8]), seq[byte](@[-127'u8, -31'u8]), seq[byte](@[102'u8, 4'u8]), seq[byte](@[103'u8, 8'u8]), seq[byte](@[0'u8, 26'u8]), seq[byte](@[78'u8, -71'u8]), seq[byte](@[80'u8, -113'u8]), seq[byte](@[32'u8, 46'u8]), seq[byte](@[0'u8, 7'u8]), seq[byte](@[78'u8, -80'u8]), seq[byte](@[-1'u8, -14'u8]), seq[byte](@[61'u8, 64'u8]), seq[byte](@[0'u8, 30'u8]), seq[byte](@[32'u8, 104'u8]), seq[byte](@[102'u8, 6'u8]), seq[byte](@[-1'u8, -10'u8]), seq[byte](@[78'u8, -7'u8]), seq[byte](@[8'u8, 0'u8]), seq[byte](@[12'u8, 64'u8]), seq[byte](@[61'u8, 124'u8]), seq[byte](@[-1'u8, -20'u8]), seq[byte](@[0'u8, 5'u8]), seq[byte](@[32'u8, 60'u8]), seq[byte](@[-1'u8, -24'u8]), seq[byte](@[-34'u8, -4'u8]), seq[byte](@[74'u8, 46'u8]), seq[byte](@[0'u8, 48'u8]), seq[byte](@[0'u8, 40'u8]), seq[byte](@[47'u8, 8'u8]), seq[byte](@[32'u8, 11'u8]), seq[byte](@[96'u8, 2'u8]), seq[byte](@[66'u8, 110'u8]), seq[byte](@[45'u8, 72'u8]), seq[byte](@[32'u8, 83'u8]), seq[byte](@[32'u8, 64'u8]), seq[byte](@[24'u8, 0'u8]), seq[byte](@[96'u8, 4'u8]), seq[byte](@[65'u8, -18'u8]), seq[byte](@[47'u8, 40'u8]), seq[byte](@[47'u8, 1'u8]), seq[byte](@[103'u8, 10'u8]), seq[byte](@[72'u8, 64'u8]), seq[byte](@[32'u8, 7'u8]), seq[byte](@[102'u8, 8'u8]), seq[byte](@[1'u8, 24'u8]), seq[byte](@[47'u8, 7'u8]), seq[byte](@[48'u8, 40'u8]), seq[byte](@[63'u8, 46'u8]), seq[byte](@[48'u8, 43'u8]), seq[byte](@[34'u8, 110'u8]), seq[byte](@[47'u8, 43'u8]), seq[byte](@[0'u8, 44'u8]), seq[byte](@[103'u8, 12'u8]), seq[byte](@[34'u8, 95'u8]), seq[byte](@[96'u8, 6'u8]), seq[byte](@[0'u8, -1'u8]), seq[byte](@[48'u8, 7'u8]), seq[byte](@[-1'u8, -18'u8]), seq[byte](@[83'u8, 64'u8]), seq[byte](@[0'u8, 64'u8]), seq[byte](@[-1'u8, -28'u8]), seq[byte](@[74'u8, 64'u8]), seq[byte](@[102'u8, 10'u8]), seq[byte](@[0'u8, 15'u8]), seq[byte](@[78'u8, -83'u8]), seq[byte](@[112'u8, -1'u8]), seq[byte](@[34'u8, -40'u8]), seq[byte](@[72'u8, 107'u8]), seq[byte](@[0'u8, 34'u8]), seq[byte](@[32'u8, 75'u8]), seq[byte](@[103'u8, 14'u8]), seq[byte](@[74'u8, -82'u8]), seq[byte](@[78'u8, -112'u8]), seq[byte](@[-1'u8, -32'u8]), seq[byte](@[-1'u8, -64'u8]), seq[byte](@[0'u8, 42'u8]), seq[byte](@[39'u8, 64'u8]), seq[byte](@[103'u8, 2'u8]), seq[byte](@[81'u8, -56'u8]), seq[byte](@[2'u8, -74'u8]), seq[byte](@[72'u8, 122'u8]), seq[byte](@[34'u8, 120'u8]), seq[byte](@[-80'u8, 110'u8]), seq[byte](@[-1'u8, -26'u8]), seq[byte](@[0'u8, 9'u8]), seq[byte](@[50'u8, 46'u8]), seq[byte](@[62'u8, 0'u8]), seq[byte](@[72'u8, 65'u8]), seq[byte](@[-1'u8, -22'u8]), seq[byte](@[67'u8, -18'u8]), seq[byte](@[78'u8, 113'u8]), seq[byte](@[116'u8, 0'u8]), seq[byte](@[47'u8, 44'u8]), seq[byte](@[32'u8, 108'u8]), seq[byte](@[0'u8, 60'u8]), seq[byte](@[0'u8, 38'u8]), seq[byte](@[0'u8, 80'u8]), seq[byte](@[24'u8, -128'u8]), seq[byte](@[48'u8, 31'u8]), seq[byte](@[34'u8, 0'u8]), seq[byte](@[102'u8, 12'u8]), seq[byte](@[-1'u8, -38'u8]), seq[byte](@[0'u8, 56'u8]), seq[byte](@[102'u8, 2'u8]), seq[byte](@[48'u8, 44'u8]), seq[byte](@[32'u8, 12'u8]), seq[byte](@[45'u8, 110'u8]), seq[byte](@[66'u8, 64'u8]), seq[byte](@[-1'u8, -30'u8]), seq[byte](@[-87'u8, -16'u8]), seq[byte](@[-1'u8, 0'u8]), seq[byte](@[55'u8, 124'u8]), seq[byte](@[-27'u8, -128'u8]), seq[byte](@[-1'u8, -36'u8]), seq[byte](@[72'u8, 104'u8]), seq[byte](@[89'u8, 79'u8]), seq[byte](@[0'u8, 52'u8]), seq[byte](@[62'u8, 31'u8]), seq[byte](@[96'u8, 8'u8]), seq[byte](@[47'u8, 6'u8]), seq[byte](@[-1'u8, -34'u8]), seq[byte](@[96'u8, 10'u8]), seq[byte](@[112'u8, 2'u8]), seq[byte](@[0'u8, 50'u8]), seq[byte](@[-1'u8, -52'u8]), seq[byte](@[0'u8, -128'u8]), seq[byte](@[34'u8, 81'u8]), seq[byte](@[16'u8, 31'u8]), seq[byte](@[49'u8, 124'u8]), seq[byte](@[-96'u8, 41'u8]), seq[byte](@[-1'u8, -40'u8]), seq[byte](@[82'u8, 64'u8]), seq[byte](@[1'u8, 0'u8]), seq[byte](@[103'u8, 16'u8]), seq[byte](@[-96'u8, 35'u8]), seq[byte](@[-1'u8, -50'u8]), seq[byte](@[-1'u8, -44'u8]), seq[byte](@[32'u8, 6'u8]), seq[byte](@[72'u8, 120'u8]), seq[byte](@[0'u8, 46'u8]), seq[byte](@[80'u8, 79'u8]), seq[byte](@[67'u8, -6'u8]), seq[byte](@[103'u8, 18'u8]), seq[byte](@[118'u8, 0'u8]), seq[byte](@[65'u8, -24'u8]), seq[byte](@[74'u8, 110'u8]), seq[byte](@[32'u8, -39'u8]), seq[byte](@[0'u8, 90'u8]), seq[byte](@[127'u8, -1'u8]), seq[byte](@[81'u8, -54'u8]), seq[byte](@[0'u8, 92'u8]), seq[byte](@[46'u8, 0'u8]), seq[byte](@[2'u8, 64'u8]), seq[byte](@[72'u8, -57'u8]), seq[byte](@[103'u8, 20'u8]), seq[byte](@[12'u8, -128'u8]), seq[byte](@[46'u8, -97'u8]), seq[byte](@[-1'u8, -42'u8]), seq[byte](@[-128'u8, 0'u8]), seq[byte](@[16'u8, 0'u8]), seq[byte](@[72'u8, 66'u8]), seq[byte](@[74'u8, 107'u8]), seq[byte](@[-1'u8, -46'u8]), seq[byte](@[0'u8, 72'u8]), seq[byte](@[74'u8, 71'u8]), seq[byte](@[78'u8, -47'u8]), seq[byte](@[32'u8, 111'u8]), seq[byte](@[0'u8, 65'u8]), seq[byte](@[96'u8, 12'u8]), seq[byte](@[42'u8, 120'u8]), seq[byte](@[66'u8, 46'u8]), seq[byte](@[50'u8, 0'u8]), seq[byte](@[101'u8, 116'u8]), seq[byte](@[103'u8, 22'u8]), seq[byte](@[0'u8, 68'u8]), seq[byte](@[72'u8, 109'u8]), seq[byte](@[32'u8, 8'u8]), seq[byte](@[72'u8, 108'u8]), seq[byte](@[11'u8, 124'u8]), seq[byte](@[38'u8, 64'u8]), seq[byte](@[4'u8, 0'u8]), seq[byte](@[0'u8, 104'u8]), seq[byte](@[32'u8, 109'u8]), seq[byte](@[0'u8, 13'u8]), seq[byte](@[42'u8, 64'u8]), seq[byte](@[0'u8, 11'u8]), seq[byte](@[0'u8, 62'u8]), seq[byte](@[2'u8, 32'u8])])
+  let defaultLookupTableInstExpr = seq[seq[byte]](@[seq[byte](@[0'u8, 0'u8]), seq[byte](@[0'u8, 8'u8]), seq[byte](@[78'u8, 186'u8]), seq[byte](@[32'u8, 110'u8]), seq[byte](@[78'u8, 117'u8]), seq[byte](@[0'u8, 12'u8]), seq[byte](@[0'u8, 4'u8]), seq[byte](@[112'u8, 0'u8]), seq[byte](@[0'u8, 16'u8]), seq[byte](@[0'u8, 2'u8]), seq[byte](@[72'u8, 110'u8]), seq[byte](@[255'u8, 252'u8]), seq[byte](@[96'u8, 0'u8]), seq[byte](@[0'u8, 1'u8]), seq[byte](@[72'u8, 231'u8]), seq[byte](@[47'u8, 46'u8]), seq[byte](@[78'u8, 86'u8]), seq[byte](@[0'u8, 6'u8]), seq[byte](@[78'u8, 94'u8]), seq[byte](@[47'u8, 0'u8]), seq[byte](@[97'u8, 0'u8]), seq[byte](@[255'u8, 248'u8]), seq[byte](@[47'u8, 11'u8]), seq[byte](@[255'u8, 255'u8]), seq[byte](@[0'u8, 20'u8]), seq[byte](@[0'u8, 10'u8]), seq[byte](@[0'u8, 24'u8]), seq[byte](@[32'u8, 95'u8]), seq[byte](@[0'u8, 14'u8]), seq[byte](@[32'u8, 80'u8]), seq[byte](@[63'u8, 60'u8]), seq[byte](@[255'u8, 244'u8]), seq[byte](@[76'u8, 238'u8]), seq[byte](@[48'u8, 46'u8]), seq[byte](@[103'u8, 0'u8]), seq[byte](@[76'u8, 223'u8]), seq[byte](@[38'u8, 110'u8]), seq[byte](@[0'u8, 18'u8]), seq[byte](@[0'u8, 28'u8]), seq[byte](@[66'u8, 103'u8]), seq[byte](@[255'u8, 240'u8]), seq[byte](@[48'u8, 60'u8]), seq[byte](@[47'u8, 12'u8]), seq[byte](@[0'u8, 3'u8]), seq[byte](@[78'u8, 208'u8]), seq[byte](@[0'u8, 32'u8]), seq[byte](@[112'u8, 1'u8]), seq[byte](@[0'u8, 22'u8]), seq[byte](@[45'u8, 64'u8]), seq[byte](@[72'u8, 192'u8]), seq[byte](@[32'u8, 120'u8]), seq[byte](@[114'u8, 0'u8]), seq[byte](@[88'u8, 143'u8]), seq[byte](@[102'u8, 0'u8]), seq[byte](@[79'u8, 239'u8]), seq[byte](@[66'u8, 167'u8]), seq[byte](@[103'u8, 6'u8]), seq[byte](@[255'u8, 250'u8]), seq[byte](@[85'u8, 143'u8]), seq[byte](@[40'u8, 110'u8]), seq[byte](@[63'u8, 0'u8]), seq[byte](@[255'u8, 254'u8]), seq[byte](@[47'u8, 60'u8]), seq[byte](@[103'u8, 4'u8]), seq[byte](@[89'u8, 143'u8]), seq[byte](@[32'u8, 107'u8]), seq[byte](@[0'u8, 36'u8]), seq[byte](@[32'u8, 31'u8]), seq[byte](@[65'u8, 250'u8]), seq[byte](@[129'u8, 225'u8]), seq[byte](@[102'u8, 4'u8]), seq[byte](@[103'u8, 8'u8]), seq[byte](@[0'u8, 26'u8]), seq[byte](@[78'u8, 185'u8]), seq[byte](@[80'u8, 143'u8]), seq[byte](@[32'u8, 46'u8]), seq[byte](@[0'u8, 7'u8]), seq[byte](@[78'u8, 176'u8]), seq[byte](@[255'u8, 242'u8]), seq[byte](@[61'u8, 64'u8]), seq[byte](@[0'u8, 30'u8]), seq[byte](@[32'u8, 104'u8]), seq[byte](@[102'u8, 6'u8]), seq[byte](@[255'u8, 246'u8]), seq[byte](@[78'u8, 249'u8]), seq[byte](@[8'u8, 0'u8]), seq[byte](@[12'u8, 64'u8]), seq[byte](@[61'u8, 124'u8]), seq[byte](@[255'u8, 236'u8]), seq[byte](@[0'u8, 5'u8]), seq[byte](@[32'u8, 60'u8]), seq[byte](@[255'u8, 232'u8]), seq[byte](@[222'u8, 252'u8]), seq[byte](@[74'u8, 46'u8]), seq[byte](@[0'u8, 48'u8]), seq[byte](@[0'u8, 40'u8]), seq[byte](@[47'u8, 8'u8]), seq[byte](@[32'u8, 11'u8]), seq[byte](@[96'u8, 2'u8]), seq[byte](@[66'u8, 110'u8]), seq[byte](@[45'u8, 72'u8]), seq[byte](@[32'u8, 83'u8]), seq[byte](@[32'u8, 64'u8]), seq[byte](@[24'u8, 0'u8]), seq[byte](@[96'u8, 4'u8]), seq[byte](@[65'u8, 238'u8]), seq[byte](@[47'u8, 40'u8]), seq[byte](@[47'u8, 1'u8]), seq[byte](@[103'u8, 10'u8]), seq[byte](@[72'u8, 64'u8]), seq[byte](@[32'u8, 7'u8]), seq[byte](@[102'u8, 8'u8]), seq[byte](@[1'u8, 24'u8]), seq[byte](@[47'u8, 7'u8]), seq[byte](@[48'u8, 40'u8]), seq[byte](@[63'u8, 46'u8]), seq[byte](@[48'u8, 43'u8]), seq[byte](@[34'u8, 110'u8]), seq[byte](@[47'u8, 43'u8]), seq[byte](@[0'u8, 44'u8]), seq[byte](@[103'u8, 12'u8]), seq[byte](@[34'u8, 95'u8]), seq[byte](@[96'u8, 6'u8]), seq[byte](@[0'u8, 255'u8]), seq[byte](@[48'u8, 7'u8]), seq[byte](@[255'u8, 238'u8]), seq[byte](@[83'u8, 64'u8]), seq[byte](@[0'u8, 64'u8]), seq[byte](@[255'u8, 228'u8]), seq[byte](@[74'u8, 64'u8]), seq[byte](@[102'u8, 10'u8]), seq[byte](@[0'u8, 15'u8]), seq[byte](@[78'u8, 173'u8]), seq[byte](@[112'u8, 255'u8]), seq[byte](@[34'u8, 216'u8]), seq[byte](@[72'u8, 107'u8]), seq[byte](@[0'u8, 34'u8]), seq[byte](@[32'u8, 75'u8]), seq[byte](@[103'u8, 14'u8]), seq[byte](@[74'u8, 174'u8]), seq[byte](@[78'u8, 144'u8]), seq[byte](@[255'u8, 224'u8]), seq[byte](@[255'u8, 192'u8]), seq[byte](@[0'u8, 42'u8]), seq[byte](@[39'u8, 64'u8]), seq[byte](@[103'u8, 2'u8]), seq[byte](@[81'u8, 200'u8]), seq[byte](@[2'u8, 182'u8]), seq[byte](@[72'u8, 122'u8]), seq[byte](@[34'u8, 120'u8]), seq[byte](@[176'u8, 110'u8]), seq[byte](@[255'u8, 230'u8]), seq[byte](@[0'u8, 9'u8]), seq[byte](@[50'u8, 46'u8]), seq[byte](@[62'u8, 0'u8]), seq[byte](@[72'u8, 65'u8]), seq[byte](@[255'u8, 234'u8]), seq[byte](@[67'u8, 238'u8]), seq[byte](@[78'u8, 113'u8]), seq[byte](@[116'u8, 0'u8]), seq[byte](@[47'u8, 44'u8]), seq[byte](@[32'u8, 108'u8]), seq[byte](@[0'u8, 60'u8]), seq[byte](@[0'u8, 38'u8]), seq[byte](@[0'u8, 80'u8]), seq[byte](@[24'u8, 128'u8]), seq[byte](@[48'u8, 31'u8]), seq[byte](@[34'u8, 0'u8]), seq[byte](@[102'u8, 12'u8]), seq[byte](@[255'u8, 218'u8]), seq[byte](@[0'u8, 56'u8]), seq[byte](@[102'u8, 2'u8]), seq[byte](@[48'u8, 44'u8]), seq[byte](@[32'u8, 12'u8]), seq[byte](@[45'u8, 110'u8]), seq[byte](@[66'u8, 64'u8]), seq[byte](@[255'u8, 226'u8]), seq[byte](@[169'u8, 240'u8]), seq[byte](@[255'u8, 0'u8]), seq[byte](@[55'u8, 124'u8]), seq[byte](@[229'u8, 128'u8]), seq[byte](@[255'u8, 220'u8]), seq[byte](@[72'u8, 104'u8]), seq[byte](@[89'u8, 79'u8]), seq[byte](@[0'u8, 52'u8]), seq[byte](@[62'u8, 31'u8]), seq[byte](@[96'u8, 8'u8]), seq[byte](@[47'u8, 6'u8]), seq[byte](@[255'u8, 222'u8]), seq[byte](@[96'u8, 10'u8]), seq[byte](@[112'u8, 2'u8]), seq[byte](@[0'u8, 50'u8]), seq[byte](@[255'u8, 204'u8]), seq[byte](@[0'u8, 128'u8]), seq[byte](@[34'u8, 81'u8]), seq[byte](@[16'u8, 31'u8]), seq[byte](@[49'u8, 124'u8]), seq[byte](@[160'u8, 41'u8]), seq[byte](@[255'u8, 216'u8]), seq[byte](@[82'u8, 64'u8]), seq[byte](@[1'u8, 0'u8]), seq[byte](@[103'u8, 16'u8]), seq[byte](@[160'u8, 35'u8]), seq[byte](@[255'u8, 206'u8]), seq[byte](@[255'u8, 212'u8]), seq[byte](@[32'u8, 6'u8]), seq[byte](@[72'u8, 120'u8]), seq[byte](@[0'u8, 46'u8]), seq[byte](@[80'u8, 79'u8]), seq[byte](@[67'u8, 250'u8]), seq[byte](@[103'u8, 18'u8]), seq[byte](@[118'u8, 0'u8]), seq[byte](@[65'u8, 232'u8]), seq[byte](@[74'u8, 110'u8]), seq[byte](@[32'u8, 217'u8]), seq[byte](@[0'u8, 90'u8]), seq[byte](@[127'u8, 255'u8]), seq[byte](@[81'u8, 202'u8]), seq[byte](@[0'u8, 92'u8]), seq[byte](@[46'u8, 0'u8]), seq[byte](@[2'u8, 64'u8]), seq[byte](@[72'u8, 199'u8]), seq[byte](@[103'u8, 20'u8]), seq[byte](@[12'u8, 128'u8]), seq[byte](@[46'u8, 159'u8]), seq[byte](@[255'u8, 214'u8]), seq[byte](@[128'u8, 0'u8]), seq[byte](@[16'u8, 0'u8]), seq[byte](@[72'u8, 66'u8]), seq[byte](@[74'u8, 107'u8]), seq[byte](@[255'u8, 210'u8]), seq[byte](@[0'u8, 72'u8]), seq[byte](@[74'u8, 71'u8]), seq[byte](@[78'u8, 209'u8]), seq[byte](@[32'u8, 111'u8]), seq[byte](@[0'u8, 65'u8]), seq[byte](@[96'u8, 12'u8]), seq[byte](@[42'u8, 120'u8]), seq[byte](@[66'u8, 46'u8]), seq[byte](@[50'u8, 0'u8]), seq[byte](@[101'u8, 116'u8]), seq[byte](@[103'u8, 22'u8]), seq[byte](@[0'u8, 68'u8]), seq[byte](@[72'u8, 109'u8]), seq[byte](@[32'u8, 8'u8]), seq[byte](@[72'u8, 108'u8]), seq[byte](@[11'u8, 124'u8]), seq[byte](@[38'u8, 64'u8]), seq[byte](@[4'u8, 0'u8]), seq[byte](@[0'u8, 104'u8]), seq[byte](@[32'u8, 109'u8]), seq[byte](@[0'u8, 13'u8]), seq[byte](@[42'u8, 64'u8]), seq[byte](@[0'u8, 11'u8]), seq[byte](@[0'u8, 62'u8]), seq[byte](@[2'u8, 32'u8])])
   this.defaultLookupTableInst = defaultLookupTableInstExpr
-  if this.defaultLookupTableInst.len != 0:
-    return this.defaultLookupTableInst
+  this.defaultLookupTableInstFlag = true
+  return this.defaultLookupTableInst
 
 proc lookupTable(this: Dcmp2): seq[seq[byte]] = 
 
@@ -183,12 +189,12 @@ proc lookupTable(this: Dcmp2): seq[seq[byte]] =
   The lookup table to be used for this compressed data.
 
   ]##
-  if this.lookupTableInst.len != 0:
+  if this.lookupTableInstFlag:
     return this.lookupTableInst
   let lookupTableInstExpr = seq[seq[byte]]((if this.headerParameters.flags.hasCustomLookupTable: this.customLookupTable else: this.defaultLookupTable))
   this.lookupTableInst = lookupTableInstExpr
-  if this.lookupTableInst.len != 0:
-    return this.lookupTableInst
+  this.lookupTableInstFlag = true
+  return this.lookupTableInst
 
 proc fromFile*(_: typedesc[Dcmp2], filename: string): Dcmp2 =
   Dcmp2.read(newKaitaiFileStream(filename), nil, nil)
@@ -246,13 +252,13 @@ proc numCustomLookupTableEntries(this: Dcmp2_HeaderParameters): int =
 Only used if a custom lookup table is present.
 
   ]##
-  if this.numCustomLookupTableEntriesInst != nil:
+  if this.numCustomLookupTableEntriesInstFlag:
     return this.numCustomLookupTableEntriesInst
   if this.flags.hasCustomLookupTable:
     let numCustomLookupTableEntriesInstExpr = int((this.numCustomLookupTableEntriesM1 + 1))
     this.numCustomLookupTableEntriesInst = numCustomLookupTableEntriesInstExpr
-  if this.numCustomLookupTableEntriesInst != nil:
-    return this.numCustomLookupTableEntriesInst
+  this.numCustomLookupTableEntriesInstFlag = true
+  return this.numCustomLookupTableEntriesInst
 
 proc fromFile*(_: typedesc[Dcmp2_HeaderParameters], filename: string): Dcmp2_HeaderParameters =
   Dcmp2_HeaderParameters.read(newKaitaiFileStream(filename), nil, nil)
@@ -302,15 +308,15 @@ proc asInt(this: Dcmp2_HeaderParameters_Flags): uint8 =
 as they are stored in the data.
 
   ]##
-  if this.asIntInst != nil:
+  if this.asIntInstFlag:
     return this.asIntInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let asIntInstExpr = this.io.readU1()
   this.asIntInst = asIntInstExpr
   this.io.seek(pos)
-  if this.asIntInst != nil:
-    return this.asIntInst
+  this.asIntInstFlag = true
+  return this.asIntInst
 
 proc fromFile*(_: typedesc[Dcmp2_HeaderParameters_Flags], filename: string): Dcmp2_HeaderParameters_Flags =
   Dcmp2_HeaderParameters_Flags.read(newKaitaiFileStream(filename), nil, nil)

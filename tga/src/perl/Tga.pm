@@ -63,7 +63,7 @@ sub _read {
         $self->{color_map} = ();
         my $n_color_map = $self->num_color_map();
         for (my $i = 0; $i < $n_color_map; $i++) {
-            $self->{color_map}[$i] = $self->{_io}->read_bytes(int(($self->color_map_depth() + 7) / 8));
+            push @{$self->{color_map}}, $self->{_io}->read_bytes(int(($self->color_map_depth() + 7) / 8));
         }
     }
 }
@@ -252,7 +252,7 @@ sub _read {
     $self->{comments} = ();
     my $n_comments = 4;
     for (my $i = 0; $i < $n_comments; $i++) {
-        $self->{comments}[$i] = Encode::decode("ASCII", $self->{_io}->read_bytes(81));
+        push @{$self->{comments}}, Encode::decode("ASCII", $self->{_io}->read_bytes(81));
     }
     $self->{timestamp} = $self->{_io}->read_bytes(12);
     $self->{job_id} = Encode::decode("ASCII", $self->{_io}->read_bytes(41));

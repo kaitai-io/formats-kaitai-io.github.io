@@ -54,7 +54,7 @@ function S3m:_read()
   self.global_volume = self._io:read_u1()
   self.initial_speed = self._io:read_u1()
   self.initial_tempo = self._io:read_u1()
-  self.is_stereo = self._io:read_bits_int_be(1)
+  self.is_stereo = self._io:read_bits_int_be(1) ~= 0
   self.master_volume = self._io:read_bits_int_be(7)
   self._io:align_to_byte()
   self.ultra_click_removal = self._io:read_u1()
@@ -106,8 +106,8 @@ end
 
 function S3m.ChannelPan:_read()
   self.reserved1 = self._io:read_bits_int_be(2)
-  self.has_custom_pan = self._io:read_bits_int_be(1)
-  self.reserved2 = self._io:read_bits_int_be(1)
+  self.has_custom_pan = self._io:read_bits_int_be(1) ~= 0
+  self.reserved2 = self._io:read_bits_int_be(1) ~= 0
   self.pan = self._io:read_bits_int_be(4)
 end
 
@@ -126,9 +126,9 @@ function S3m.PatternCell:_init(io, parent, root)
 end
 
 function S3m.PatternCell:_read()
-  self.has_fx = self._io:read_bits_int_be(1)
-  self.has_volume = self._io:read_bits_int_be(1)
-  self.has_note_and_instrument = self._io:read_bits_int_be(1)
+  self.has_fx = self._io:read_bits_int_be(1) ~= 0
+  self.has_volume = self._io:read_bits_int_be(1) ~= 0
+  self.has_note_and_instrument = self._io:read_bits_int_be(1) ~= 0
   self.channel_num = self._io:read_bits_int_be(5)
   self._io:align_to_byte()
   if self.has_note_and_instrument then
@@ -178,7 +178,7 @@ function S3m.Channel:_init(io, parent, root)
 end
 
 function S3m.Channel:_read()
-  self.is_disabled = self._io:read_bits_int_be(1)
+  self.is_disabled = self._io:read_bits_int_be(1) ~= 0
   self.ch_type = self._io:read_bits_int_be(7)
 end
 

@@ -8,7 +8,7 @@
   } else {
     root.Avi = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)|Source}
  */

@@ -205,12 +205,12 @@ end
 
 function Specpr.Icflag:_read()
   self.reserved = self._io:read_bits_int_be(26)
-  self.isctb_type = self._io:read_bits_int_be(1)
-  self.iscta_type = self._io:read_bits_int_be(1)
-  self.coordinate_mode = self._io:read_bits_int_be(1)
-  self.errors = self._io:read_bits_int_be(1)
-  self.text = self._io:read_bits_int_be(1)
-  self.continuation = self._io:read_bits_int_be(1)
+  self.isctb_type = self._io:read_bits_int_be(1) ~= 0
+  self.iscta_type = self._io:read_bits_int_be(1) ~= 0
+  self.coordinate_mode = self._io:read_bits_int_be(1) ~= 0
+  self.errors = self._io:read_bits_int_be(1) ~= 0
+  self.text = self._io:read_bits_int_be(1) ~= 0
+  self.continuation = self._io:read_bits_int_be(1) ~= 0
 end
 
 Specpr.Icflag.property.type = {}

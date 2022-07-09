@@ -41,7 +41,7 @@ sub _read {
     $self->{sections} = ();
     my $n_sections = $self->te_hdr()->num_sections();
     for (my $i = 0; $i < $n_sections; $i++) {
-        $self->{sections}[$i] = UefiTe::Section->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{sections}}, UefiTe::Section->new($self->{_io}, $self, $self->{_root});
     }
 }
 

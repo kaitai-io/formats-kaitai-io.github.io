@@ -474,7 +474,7 @@ sub _read {
     $self->{entries} = ();
     my $n_entries = $self->num_types();
     for (my $i = 0; $i < $n_entries; $i++) {
-        $self->{entries}[$i] = ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{entries}}, ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -596,7 +596,7 @@ sub _read {
     $self->{references} = ();
     my $n_references = $self->num_references();
     for (my $i = 0; $i < $n_references; $i++) {
-        $self->{references}[$i] = ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList::Reference->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{references}}, ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList::Reference->new($self->{_io}, $self, $self->{_root});
     }
 }
 

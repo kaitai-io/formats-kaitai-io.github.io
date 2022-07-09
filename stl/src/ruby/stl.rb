@@ -33,9 +33,9 @@ class Stl < Kaitai::Struct::Struct
   def _read
     @header = @_io.read_bytes(80)
     @num_triangles = @_io.read_u4le
-    @triangles = Array.new(num_triangles)
+    @triangles = []
     (num_triangles).times { |i|
-      @triangles[i] = Triangle.new(@_io, self, @_root)
+      @triangles << Triangle.new(@_io, self, @_root)
     }
     self
   end
@@ -52,9 +52,9 @@ class Stl < Kaitai::Struct::Struct
 
     def _read
       @normal = Vec3d.new(@_io, self, @_root)
-      @vertices = Array.new(3)
+      @vertices = []
       (3).times { |i|
-        @vertices[i] = Vec3d.new(@_io, self, @_root)
+        @vertices << Vec3d.new(@_io, self, @_root)
       }
       @abr = @_io.read_u2le
       self

@@ -8,7 +8,7 @@
   } else {
     root.Zip = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream, DosDatetime) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
 /**
  * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
  * and originally implemented in PKZIP utility by PKWARE.

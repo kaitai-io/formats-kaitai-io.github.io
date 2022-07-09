@@ -47,13 +47,13 @@ sub _read {
     $self->{signatures} = ();
     my $n_signatures = $self->len_signatures();
     for (my $i = 0; $i < $n_signatures; $i++) {
-        $self->{signatures}[$i] = MozillaMar::Signature->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{signatures}}, MozillaMar::Signature->new($self->{_io}, $self, $self->{_root});
     }
     $self->{len_additional_sections} = $self->{_io}->read_u4be();
     $self->{additional_sections} = ();
     my $n_additional_sections = $self->len_additional_sections();
     for (my $i = 0; $i < $n_additional_sections; $i++) {
-        $self->{additional_sections}[$i] = MozillaMar::AdditionalSection->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{additional_sections}}, MozillaMar::AdditionalSection->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -7,9 +7,12 @@ type
     `objects`*: seq[SystemdJournal_JournalObject]
     `parent`*: KaitaiStruct
     `rawHeader`*: seq[byte]
-    `lenHeaderInst`*: uint64
-    `dataHashTableInst`*: seq[byte]
-    `fieldHashTableInst`*: seq[byte]
+    `lenHeaderInst`: uint64
+    `lenHeaderInstFlag`: bool
+    `dataHashTableInst`: seq[byte]
+    `dataHashTableInstFlag`: bool
+    `fieldHashTableInst`: seq[byte]
+    `fieldHashTableInstFlag`: bool
   SystemdJournal_State* = enum
     offline = 0
     online = 1
@@ -71,10 +74,14 @@ type
     `numEntries`*: uint64
     `payload`*: seq[byte]
     `parent`*: SystemdJournal_JournalObject
-    `nextHashInst`*: SystemdJournal_JournalObject
-    `headFieldInst`*: SystemdJournal_JournalObject
-    `entryInst`*: SystemdJournal_JournalObject
-    `entryArrayInst`*: SystemdJournal_JournalObject
+    `nextHashInst`: SystemdJournal_JournalObject
+    `nextHashInstFlag`: bool
+    `headFieldInst`: SystemdJournal_JournalObject
+    `headFieldInstFlag`: bool
+    `entryInst`: SystemdJournal_JournalObject
+    `entryInstFlag`: bool
+    `entryArrayInst`: SystemdJournal_JournalObject
+    `entryArrayInstFlag`: bool
 
 proc read*(_: typedesc[SystemdJournal], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SystemdJournal
 proc read*(_: typedesc[SystemdJournal_Header], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal): SystemdJournal_Header
@@ -126,37 +133,37 @@ proc lenHeader(this: SystemdJournal): uint64 =
 prior to declaration of header.
 
   ]##
-  if this.lenHeaderInst != nil:
+  if this.lenHeaderInstFlag:
     return this.lenHeaderInst
   let pos = this.io.pos()
   this.io.seek(int(88))
   let lenHeaderInstExpr = this.io.readU8le()
   this.lenHeaderInst = lenHeaderInstExpr
   this.io.seek(pos)
-  if this.lenHeaderInst != nil:
-    return this.lenHeaderInst
+  this.lenHeaderInstFlag = true
+  return this.lenHeaderInst
 
 proc dataHashTable(this: SystemdJournal): seq[byte] = 
-  if this.dataHashTableInst.len != 0:
+  if this.dataHashTableInstFlag:
     return this.dataHashTableInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.ofsDataHashTable))
   let dataHashTableInstExpr = this.io.readBytes(int(this.header.lenDataHashTable))
   this.dataHashTableInst = dataHashTableInstExpr
   this.io.seek(pos)
-  if this.dataHashTableInst.len != 0:
-    return this.dataHashTableInst
+  this.dataHashTableInstFlag = true
+  return this.dataHashTableInst
 
 proc fieldHashTable(this: SystemdJournal): seq[byte] = 
-  if this.fieldHashTableInst.len != 0:
+  if this.fieldHashTableInstFlag:
     return this.fieldHashTableInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.ofsFieldHashTable))
   let fieldHashTableInstExpr = this.io.readBytes(int(this.header.lenFieldHashTable))
   this.fieldHashTableInst = fieldHashTableInstExpr
   this.io.seek(pos)
-  if this.fieldHashTableInst.len != 0:
-    return this.fieldHashTableInst
+  this.fieldHashTableInstFlag = true
+  return this.fieldHashTableInst
 
 proc fromFile*(_: typedesc[SystemdJournal], filename: string): SystemdJournal =
   SystemdJournal.read(newKaitaiFileStream(filename), nil, nil)
@@ -301,7 +308,7 @@ proc read*(_: typedesc[SystemdJournal_DataObject], io: KaitaiStream, root: Kaita
   this.payload = payloadExpr
 
 proc nextHash(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.nextHashInst != nil:
+  if this.nextHashInstFlag:
     return this.nextHashInst
   if this.ofsNextHash != 0:
     let io = SystemdJournal(this.root).io
@@ -310,11 +317,11 @@ proc nextHash(this: SystemdJournal_DataObject): SystemdJournal_JournalObject =
     let nextHashInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
     this.nextHashInst = nextHashInstExpr
     io.seek(pos)
-  if this.nextHashInst != nil:
-    return this.nextHashInst
+  this.nextHashInstFlag = true
+  return this.nextHashInst
 
 proc headField(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.headFieldInst != nil:
+  if this.headFieldInstFlag:
     return this.headFieldInst
   if this.ofsHeadField != 0:
     let io = SystemdJournal(this.root).io
@@ -323,11 +330,11 @@ proc headField(this: SystemdJournal_DataObject): SystemdJournal_JournalObject =
     let headFieldInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
     this.headFieldInst = headFieldInstExpr
     io.seek(pos)
-  if this.headFieldInst != nil:
-    return this.headFieldInst
+  this.headFieldInstFlag = true
+  return this.headFieldInst
 
 proc entry(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.entryInst != nil:
+  if this.entryInstFlag:
     return this.entryInst
   if this.ofsEntry != 0:
     let io = SystemdJournal(this.root).io
@@ -336,11 +343,11 @@ proc entry(this: SystemdJournal_DataObject): SystemdJournal_JournalObject =
     let entryInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
     this.entryInst = entryInstExpr
     io.seek(pos)
-  if this.entryInst != nil:
-    return this.entryInst
+  this.entryInstFlag = true
+  return this.entryInst
 
 proc entryArray(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.entryArrayInst != nil:
+  if this.entryArrayInstFlag:
     return this.entryArrayInst
   if this.ofsEntryArray != 0:
     let io = SystemdJournal(this.root).io
@@ -349,8 +356,8 @@ proc entryArray(this: SystemdJournal_DataObject): SystemdJournal_JournalObject =
     let entryArrayInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
     this.entryArrayInst = entryArrayInstExpr
     io.seek(pos)
-  if this.entryArrayInst != nil:
-    return this.entryArrayInst
+  this.entryArrayInstFlag = true
+  return this.entryArrayInst
 
 proc fromFile*(_: typedesc[SystemdJournal_DataObject], filename: string): SystemdJournal_DataObject =
   SystemdJournal_DataObject.read(newKaitaiFileStream(filename), nil, nil)

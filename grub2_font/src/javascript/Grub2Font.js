@@ -8,7 +8,7 @@
   } else {
     root.Grub2Font = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Bitmap font format for the GRUB 2 bootloader.
  * @see {@link https://grub.gibibit.com/New_font_format|Source}
@@ -27,7 +27,7 @@ var Grub2Font = (function() {
     if (!((KaitaiStream.byteArrayCompare(this.magic, [70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50]) == 0))) {
       throw new KaitaiStream.ValidationNotEqualError([70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50], this.magic, this._io, "/seq/0");
     }
-    this.sections = []
+    this.sections = [];
     var i = 0;
     do {
       var _ = new Section(this._io, this, this._root);

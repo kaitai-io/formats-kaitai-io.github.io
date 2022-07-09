@@ -175,9 +175,8 @@ magicavoxel_vox_t::rgba_t::rgba_t(kaitai::kstream* p__io, magicavoxel_vox_t::chu
 }
 
 void magicavoxel_vox_t::rgba_t::_read() {
-    int l_colors = 256;
     m_colors = new std::vector<color_t*>();
-    m_colors->reserve(l_colors);
+    const int l_colors = 256;
     for (int i = 0; i < l_colors; i++) {
         m_colors->push_back(new color_t(m__io, this, m__root));
     }
@@ -388,9 +387,8 @@ magicavoxel_vox_t::xyzi_t::xyzi_t(kaitai::kstream* p__io, magicavoxel_vox_t::chu
 
 void magicavoxel_vox_t::xyzi_t::_read() {
     m_num_voxels = m__io->read_u4le();
-    int l_voxels = num_voxels();
     m_voxels = new std::vector<voxel_t*>();
-    m_voxels->reserve(l_voxels);
+    const int l_voxels = num_voxels();
     for (int i = 0; i < l_voxels; i++) {
         m_voxels->push_back(new voxel_t(m__io, this, m__root));
     }

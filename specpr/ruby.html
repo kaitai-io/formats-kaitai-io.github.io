@@ -352,18 +352,18 @@ ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.l
       <span class="vi">@itchan</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@irmas</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@revs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
-      <span class="vi">@iband</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="vi">@iband</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@iband</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+        <span class="vi">@iband</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="p">}</span>
       <span class="vi">@irwav</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@irespt</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@irecno</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@itpntr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@ihist</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-      <span class="vi">@mhist</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@mhist</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@mhist</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">74</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+        <span class="vi">@mhist</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">74</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="vi">@nruns</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
       <span class="vi">@siangl</span> <span class="o">=</span> <span class="no">IllumAngle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -375,9 +375,9 @@ ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.l
       <span class="vi">@scatim</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
       <span class="vi">@timint</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
       <span class="vi">@tempd</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
-      <span class="vi">@data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">256</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
+        <span class="vi">@data</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -595,9 +595,9 @@ ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.l
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@cdata</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">383</span><span class="p">)</span>
+      <span class="vi">@cdata</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">383</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@cdata</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
+        <span class="vi">@cdata</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>

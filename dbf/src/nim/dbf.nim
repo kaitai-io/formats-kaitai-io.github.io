@@ -34,7 +34,8 @@ type
     `lenHeader`*: uint16
     `lenRecord`*: uint16
     `parent`*: Dbf
-    `dbaseLevelInst`*: int
+    `dbaseLevelInst`: int
+    `dbaseLevelInstFlag`: bool
   Dbf_HeaderDbase3* = ref object of KaitaiStruct
     `reserved1`*: seq[byte]
     `reserved2`*: seq[byte]
@@ -174,12 +175,12 @@ proc read*(_: typedesc[Dbf_Header1], io: KaitaiStream, root: KaitaiStruct, paren
   this.lenRecord = lenRecordExpr
 
 proc dbaseLevel(this: Dbf_Header1): int = 
-  if this.dbaseLevelInst != nil:
+  if this.dbaseLevelInstFlag:
     return this.dbaseLevelInst
   let dbaseLevelInstExpr = int((this.version and 7))
   this.dbaseLevelInst = dbaseLevelInstExpr
-  if this.dbaseLevelInst != nil:
-    return this.dbaseLevelInst
+  this.dbaseLevelInstFlag = true
+  return this.dbaseLevelInst
 
 proc fromFile*(_: typedesc[Dbf_Header1], filename: string): Dbf_Header1 =
   Dbf_Header1.read(newKaitaiFileStream(filename), nil, nil)

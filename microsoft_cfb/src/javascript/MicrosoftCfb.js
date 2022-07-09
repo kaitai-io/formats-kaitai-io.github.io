@@ -8,7 +8,7 @@
   } else {
     root.MicrosoftCfb = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var MicrosoftCfb = (function() {
   function MicrosoftCfb(_io, _parent, _root) {
     this._io = _io;
@@ -56,9 +56,9 @@ var MicrosoftCfb = (function() {
       this.sizeMiniFat = this._io.readS4le();
       this.ofsDifat = this._io.readS4le();
       this.sizeDifat = this._io.readS4le();
-      this.difat = new Array(109);
+      this.difat = [];
       for (var i = 0; i < 109; i++) {
-        this.difat[i] = this._io.readS4le();
+        this.difat.push(this._io.readS4le());
       }
     }
 

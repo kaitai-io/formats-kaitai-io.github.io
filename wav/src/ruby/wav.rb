@@ -550,9 +550,9 @@ class Wav < Kaitai::Struct::Struct
 
     def _read
       @dw_cue_points = @_io.read_u4le
-      @cue_points = Array.new(dw_cue_points)
+      @cue_points = []
       (dw_cue_points).times { |i|
-        @cue_points[i] = CuePointType.new(@_io, self, @_root)
+        @cue_points << CuePointType.new(@_io, self, @_root)
       }
       self
     end

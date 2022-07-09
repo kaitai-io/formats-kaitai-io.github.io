@@ -97,7 +97,7 @@ sub _read {
     $self->{elements} = ();
     my $n_elements = $self->num_elements()->value();
     for (my $i = 0; $i < $n_elements; $i++) {
-        $self->{elements}[$i] = RubyMarshal::Record->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{elements}}, RubyMarshal::Record->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -196,7 +196,7 @@ sub _read {
     $self->{members} = ();
     my $n_members = $self->num_members()->value();
     for (my $i = 0; $i < $n_members; $i++) {
-        $self->{members}[$i] = RubyMarshal::Pair->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{members}}, RubyMarshal::Pair->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -432,7 +432,7 @@ sub _read {
     $self->{vars} = ();
     my $n_vars = $self->num_vars()->value();
     for (my $i = 0; $i < $n_vars; $i++) {
-        $self->{vars}[$i] = RubyMarshal::Pair->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{vars}}, RubyMarshal::Pair->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -559,7 +559,7 @@ sub _read {
     $self->{pairs} = ();
     my $n_pairs = $self->num_pairs()->value();
     for (my $i = 0; $i < $n_pairs; $i++) {
-        $self->{pairs}[$i] = RubyMarshal::Pair->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{pairs}}, RubyMarshal::Pair->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -273,9 +273,9 @@ class ResourceFork < Kaitai::Struct::Struct
 
         def _read
           @num_types_m1 = @_io.read_u2be
-          @entries = Array.new(num_types)
+          @entries = []
           (num_types).times { |i|
-            @entries[i] = TypeListEntry.new(@_io, self, @_root)
+            @entries << TypeListEntry.new(@_io, self, @_root)
           }
           self
         end
@@ -376,9 +376,9 @@ class ResourceFork < Kaitai::Struct::Struct
         end
 
         def _read
-          @references = Array.new(num_references)
+          @references = []
           (num_references).times { |i|
-            @references[i] = Reference.new(@_io, self, @_root)
+            @references << Reference.new(@_io, self, @_root)
           }
           self
         end

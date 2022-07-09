@@ -314,7 +314,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">ofsDefinition</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Grub2Font_ChixSection</span>
-    <span class="p">`</span><span class="n">definitionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Grub2Font_ChixSection_CharacterDefinition</span>
+    <span class="p">`</span><span class="n">definitionInst</span><span class="p">`:</span> <span class="n">Grub2Font_ChixSection_CharacterDefinition</span>
+    <span class="p">`</span><span class="n">definitionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Grub2Font_ChixSection_CharacterDefinition</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">width</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">height</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -594,7 +595,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">ofsDefinition</span> <span class="o">=</span> <span class="n">ofsDefinitionExpr</span>
 
 <span class="k">proc </span><span class="nf">definition</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Grub2Font_ChixSection_Character</span><span class="p">):</span> <span class="n">Grub2Font_ChixSection_CharacterDefinition</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">definitionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">definitionInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">definitionInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Grub2Font</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -602,8 +603,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">definitionInstExpr</span> <span class="o">=</span> <span class="n">Grub2Font_ChixSection_CharacterDefinition</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">definitionInst</span> <span class="o">=</span> <span class="n">definitionInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">definitionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">definitionInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">definitionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">definitionInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Grub2Font_ChixSection_Character], filename: string): Grub2Font_ChixSection_Character =</span>
   <span class="n">Grub2Font_ChixSection_Character</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

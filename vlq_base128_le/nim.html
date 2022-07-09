@@ -263,15 +263,21 @@ https://avro.apache.org/docs/current/spec.html#binary_encode_primitive</li>
   <span class="n">VlqBase128Le</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">groups</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">VlqBase128Le_Group</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">lenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">signBitInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">valueSignedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">signBitInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">signBitInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">valueSignedInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueSignedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">VlqBase128Le_Group</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">b</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Le</span>
-    <span class="p">`</span><span class="n">hasNextInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">hasNextInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasNextInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VlqBase128Le</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le): VlqBase128Le_Group</span>
@@ -324,44 +330,44 @@ https://avro.apache.org/docs/current/spec.html#binary_encode_primitive</li>
       <span class="n">inc</span> <span class="n">i</span>
 
 <span class="k">proc </span><span class="nf">len</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">VlqBase128Le</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span>
   <span class="k">let</span> <span class="n">lenInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span> <span class="o">=</span> <span class="n">lenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenInst</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">VlqBase128Le</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Resulting</span> <span class="n">unsigned</span> <span class="n">value</span> <span class="k">as</span> <span class="n">normal</span> <span class="n">integer</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((((((((</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">7</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">14</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">21</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">4</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">28</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">5</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">35</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">7</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">6</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">42</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">8</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">groups</span><span class="o">[</span><span class="mi">7</span><span class="o">]</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">49</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">signBit</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">VlqBase128Le</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">signBitInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">signBitInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">signBitInst</span>
   <span class="k">let</span> <span class="n">signBitInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="mi">1</span> <span class="ow">shl</span> <span class="p">((</span><span class="mi">7</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">signBitInst</span> <span class="o">=</span> <span class="n">signBitInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">signBitInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">signBitInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">signBitInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">signBitInst</span>
 
 <span class="k">proc </span><span class="nf">valueSigned</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">VlqBase128Le</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInst</span>
   <span class="k">let</span> <span class="n">valueSignedInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">xor</span> <span class="n">this</span><span class="p">.</span><span class="n">signBit</span><span class="p">)</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">signBit</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInst</span> <span class="o">=</span> <span class="n">valueSignedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueSignedInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[VlqBase128Le], filename: string): VlqBase128Le =</span>
   <span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -387,24 +393,24 @@ https://avro.apache.org/docs/current/spec.html#binary_encode_primitive</li>
   <span class="sd">##[</span>
   <span class="k">If</span> <span class="kp">true</span><span class="p">,</span> <span class="n">then</span> <span class="n">we</span> <span class="n">have</span> <span class="n">more</span> <span class="n">bytes</span> <span class="n">to</span> <span class="n">read</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasNextInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasNextInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasNextInst</span>
   <span class="k">let</span> <span class="n">hasNextInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b</span> <span class="ow">and</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">hasNextInst</span> <span class="o">=</span> <span class="n">hasNextInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasNextInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasNextInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasNextInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasNextInst</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">VlqBase128Le_Group</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">The</span> <span class="mi">7</span><span class="o">-</span><span class="n">bit</span> <span class="p">(</span><span class="n">base128</span><span class="p">)</span> <span class="n">numeric</span> <span class="n">value</span> <span class="n">chunk</span> <span class="k">of</span> <span class="n">this</span> <span class="n">group</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b</span> <span class="ow">and</span> <span class="mi">127</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[VlqBase128Le_Group], filename: string): VlqBase128Le_Group =</span>
   <span class="n">VlqBase128Le_Group</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

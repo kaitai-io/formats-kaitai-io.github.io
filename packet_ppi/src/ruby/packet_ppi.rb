@@ -349,23 +349,23 @@ class PacketPpi < Kaitai::Struct::Struct
       @mcs = @_io.read_u1
       @num_streams = @_io.read_u1
       @rssi_combined = @_io.read_u1
-      @rssi_ant_ctl = Array.new(4)
+      @rssi_ant_ctl = []
       (4).times { |i|
-        @rssi_ant_ctl[i] = @_io.read_u1
+        @rssi_ant_ctl << @_io.read_u1
       }
-      @rssi_ant_ext = Array.new(4)
+      @rssi_ant_ext = []
       (4).times { |i|
-        @rssi_ant_ext[i] = @_io.read_u1
+        @rssi_ant_ext << @_io.read_u1
       }
       @ext_channel_freq = @_io.read_u2le
       @ext_channel_flags = ChannelFlags.new(@_io, self, @_root)
-      @rf_signal_noise = Array.new(4)
+      @rf_signal_noise = []
       (4).times { |i|
-        @rf_signal_noise[i] = SignalNoise.new(@_io, self, @_root)
+        @rf_signal_noise << SignalNoise.new(@_io, self, @_root)
       }
-      @evm = Array.new(4)
+      @evm = []
       (4).times { |i|
-        @evm[i] = @_io.read_u4le
+        @evm << @_io.read_u4le
       }
       self
     end

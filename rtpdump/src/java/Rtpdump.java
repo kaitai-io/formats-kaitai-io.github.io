@@ -72,8 +72,8 @@ public class Rtpdump extends KaitaiStruct {
             if (!(Arrays.equals(space(), new byte[] { 32 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 32 }, space(), _io(), "/types/header_t/seq/1");
             }
-            this.ip = new String(this._io.readBytesTerm(47, false, true, true), Charset.forName("ascii"));
-            this.port = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
+            this.ip = new String(this._io.readBytesTerm((byte) 47, false, true, true), Charset.forName("ascii"));
+            this.port = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
             this.startSec = this._io.readU4be();
             this.startUsec = this._io.readU4be();
             this.ip2 = this._io.readU4be();

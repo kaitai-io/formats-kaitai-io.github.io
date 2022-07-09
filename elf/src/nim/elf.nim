@@ -12,12 +12,18 @@ type
     `pad`*: seq[byte]
     `header`*: Elf_EndianElf
     `parent`*: KaitaiStruct
-    `shIdxLoOsInst`*: int
-    `shIdxLoReservedInst`*: int
-    `shIdxHiProcInst`*: int
-    `shIdxLoProcInst`*: int
-    `shIdxHiOsInst`*: int
-    `shIdxHiReservedInst`*: int
+    `shIdxLoOsInst`: int
+    `shIdxLoOsInstFlag`: bool
+    `shIdxLoReservedInst`: int
+    `shIdxLoReservedInstFlag`: bool
+    `shIdxHiProcInst`: int
+    `shIdxHiProcInstFlag`: bool
+    `shIdxLoProcInst`: int
+    `shIdxLoProcInstFlag`: bool
+    `shIdxHiOsInst`: int
+    `shIdxHiOsInstFlag`: bool
+    `shIdxHiReservedInst`: int
+    `shIdxHiReservedInstFlag`: bool
   Elf_SymbolVisibility* = enum
     default = 0
     internal = 1
@@ -504,9 +510,12 @@ type
     `rawProgramHeadersInst`*: seq[seq[byte]]
     `rawSectionHeadersInst`*: seq[seq[byte]]
     `rawSectionNamesInst`*: seq[byte]
-    `programHeadersInst`*: seq[Elf_EndianElf_ProgramHeader]
-    `sectionHeadersInst`*: seq[Elf_EndianElf_SectionHeader]
-    `sectionNamesInst`*: Elf_EndianElf_StringsStruct
+    `programHeadersInst`: seq[Elf_EndianElf_ProgramHeader]
+    `programHeadersInstFlag`: bool
+    `sectionHeadersInst`: seq[Elf_EndianElf_SectionHeader]
+    `sectionHeadersInstFlag`: bool
+    `sectionNamesInst`: Elf_EndianElf_StringsStruct
+    `sectionNamesInstFlag`: bool
     isLe: bool
   Elf_EndianElf_NoteSection* = ref object of KaitaiStruct
     `entries`*: seq[Elf_EndianElf_NoteSectionEntry]
@@ -523,17 +532,23 @@ type
     `flags32`*: uint32
     `align`*: uint64
     `parent`*: Elf_EndianElf
-    `flagsObjInst`*: Elf_PhdrTypeFlags
+    `flagsObjInst`: Elf_PhdrTypeFlags
+    `flagsObjInstFlag`: bool
     isLe: bool
   Elf_EndianElf_DynamicSectionEntry* = ref object of KaitaiStruct
     `tag`*: uint64
     `valueOrPtr`*: uint64
     `parent`*: Elf_EndianElf_DynamicSection
-    `flag1ValuesInst`*: Elf_DtFlag1Values
-    `valueStrInst`*: string
-    `tagEnumInst`*: Elf_DynamicArrayTags
-    `flagValuesInst`*: Elf_DtFlagValues
-    `isValueStrInst`*: bool
+    `flag1ValuesInst`: Elf_DtFlag1Values
+    `flag1ValuesInstFlag`: bool
+    `valueStrInst`: string
+    `valueStrInstFlag`: bool
+    `tagEnumInst`: Elf_DynamicArrayTags
+    `tagEnumInstFlag`: bool
+    `flagValuesInst`: Elf_DtFlagValues
+    `flagValuesInstFlag`: bool
+    `isValueStrInst`: bool
+    `isValueStrInstFlag`: bool
     isLe: bool
   Elf_EndianElf_SectionHeader* = ref object of KaitaiStruct
     `ofsName`*: uint32
@@ -548,10 +563,14 @@ type
     `entrySize`*: uint64
     `parent`*: Elf_EndianElf
     `rawBodyInst`*: seq[byte]
-    `bodyInst`*: KaitaiStruct
-    `linkedSectionInst`*: Elf_EndianElf_SectionHeader
-    `nameInst`*: string
-    `flagsObjInst`*: Elf_SectionHeaderFlags
+    `bodyInst`: KaitaiStruct
+    `bodyInstFlag`: bool
+    `linkedSectionInst`: Elf_EndianElf_SectionHeader
+    `linkedSectionInstFlag`: bool
+    `nameInst`: string
+    `nameInstFlag`: bool
+    `flagsObjInst`: Elf_SectionHeaderFlags
+    `flagsObjInstFlag`: bool
     isLe: bool
   Elf_EndianElf_RelocationSection* = ref object of KaitaiStruct
     `entries`*: seq[Elf_EndianElf_RelocationSectionEntry]
@@ -561,12 +580,14 @@ type
   Elf_EndianElf_DynamicSection* = ref object of KaitaiStruct
     `entries`*: seq[Elf_EndianElf_DynamicSectionEntry]
     `parent`*: Elf_EndianElf_SectionHeader
-    `isStringTableLinkedInst`*: bool
+    `isStringTableLinkedInst`: bool
+    `isStringTableLinkedInstFlag`: bool
     isLe: bool
   Elf_EndianElf_DynsymSection* = ref object of KaitaiStruct
     `entries`*: seq[Elf_EndianElf_DynsymSectionEntry]
     `parent`*: Elf_EndianElf_SectionHeader
-    `isStringTableLinkedInst`*: bool
+    `isStringTableLinkedInst`: bool
+    `isStringTableLinkedInstFlag`: bool
     isLe: bool
   Elf_EndianElf_RelocationSectionEntry* = ref object of KaitaiStruct
     `offset`*: uint64
@@ -585,14 +606,22 @@ type
     `valueB64`*: uint64
     `sizeB64`*: uint64
     `parent`*: Elf_EndianElf_DynsymSection
-    `isShIdxReservedInst`*: bool
-    `isShIdxOsInst`*: bool
-    `isShIdxProcInst`*: bool
-    `sizeInst`*: uint64
-    `visibilityInst`*: Elf_SymbolVisibility
-    `valueInst`*: uint64
-    `nameInst`*: string
-    `shIdxSpecialInst`*: Elf_SectionHeaderIdxSpecial
+    `isShIdxReservedInst`: bool
+    `isShIdxReservedInstFlag`: bool
+    `isShIdxOsInst`: bool
+    `isShIdxOsInstFlag`: bool
+    `isShIdxProcInst`: bool
+    `isShIdxProcInstFlag`: bool
+    `sizeInst`: uint64
+    `sizeInstFlag`: bool
+    `visibilityInst`: Elf_SymbolVisibility
+    `visibilityInstFlag`: bool
+    `valueInst`: uint64
+    `valueInstFlag`: bool
+    `nameInst`: string
+    `nameInstFlag`: bool
+    `shIdxSpecialInst`: Elf_SectionHeaderIdxSpecial
+    `shIdxSpecialInstFlag`: bool
     isLe: bool
   Elf_EndianElf_NoteSectionEntry* = ref object of KaitaiStruct
     `lenName`*: uint32
@@ -611,66 +640,117 @@ type
   Elf_DtFlag1Values* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: Elf_EndianElf_DynamicSectionEntry
-    `singletonInst`*: bool
-    `ignmuldefInst`*: bool
-    `loadfltrInst`*: bool
-    `initfirstInst`*: bool
-    `symintposeInst`*: bool
-    `norelocInst`*: bool
-    `confaltInst`*: bool
-    `dispreldneInst`*: bool
-    `rtldGlobalInst`*: bool
-    `nodeleteInst`*: bool
-    `transInst`*: bool
-    `originInst`*: bool
-    `nowInst`*: bool
-    `nohdrInst`*: bool
-    `endfilteeInst`*: bool
-    `nodirectInst`*: bool
-    `globauditInst`*: bool
-    `noksymsInst`*: bool
-    `interposeInst`*: bool
-    `nodumpInst`*: bool
-    `disprelpndInst`*: bool
-    `noopenInst`*: bool
-    `stubInst`*: bool
-    `directInst`*: bool
-    `editedInst`*: bool
-    `groupInst`*: bool
-    `pieInst`*: bool
-    `nodeflibInst`*: bool
+    `singletonInst`: bool
+    `singletonInstFlag`: bool
+    `ignmuldefInst`: bool
+    `ignmuldefInstFlag`: bool
+    `loadfltrInst`: bool
+    `loadfltrInstFlag`: bool
+    `initfirstInst`: bool
+    `initfirstInstFlag`: bool
+    `symintposeInst`: bool
+    `symintposeInstFlag`: bool
+    `norelocInst`: bool
+    `norelocInstFlag`: bool
+    `confaltInst`: bool
+    `confaltInstFlag`: bool
+    `dispreldneInst`: bool
+    `dispreldneInstFlag`: bool
+    `rtldGlobalInst`: bool
+    `rtldGlobalInstFlag`: bool
+    `nodeleteInst`: bool
+    `nodeleteInstFlag`: bool
+    `transInst`: bool
+    `transInstFlag`: bool
+    `originInst`: bool
+    `originInstFlag`: bool
+    `nowInst`: bool
+    `nowInstFlag`: bool
+    `nohdrInst`: bool
+    `nohdrInstFlag`: bool
+    `endfilteeInst`: bool
+    `endfilteeInstFlag`: bool
+    `nodirectInst`: bool
+    `nodirectInstFlag`: bool
+    `globauditInst`: bool
+    `globauditInstFlag`: bool
+    `noksymsInst`: bool
+    `noksymsInstFlag`: bool
+    `interposeInst`: bool
+    `interposeInstFlag`: bool
+    `nodumpInst`: bool
+    `nodumpInstFlag`: bool
+    `disprelpndInst`: bool
+    `disprelpndInstFlag`: bool
+    `noopenInst`: bool
+    `noopenInstFlag`: bool
+    `stubInst`: bool
+    `stubInstFlag`: bool
+    `directInst`: bool
+    `directInstFlag`: bool
+    `editedInst`: bool
+    `editedInstFlag`: bool
+    `groupInst`: bool
+    `groupInstFlag`: bool
+    `pieInst`: bool
+    `pieInstFlag`: bool
+    `nodeflibInst`: bool
+    `nodeflibInstFlag`: bool
   Elf_SectionHeaderFlags* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: Elf_EndianElf_SectionHeader
-    `mergeInst`*: bool
-    `maskOsInst`*: bool
-    `excludeInst`*: bool
-    `maskProcInst`*: bool
-    `stringsInst`*: bool
-    `osNonConformingInst`*: bool
-    `allocInst`*: bool
-    `execInstrInst`*: bool
-    `infoLinkInst`*: bool
-    `writeInst`*: bool
-    `linkOrderInst`*: bool
-    `orderedInst`*: bool
-    `tlsInst`*: bool
-    `groupInst`*: bool
+    `mergeInst`: bool
+    `mergeInstFlag`: bool
+    `maskOsInst`: bool
+    `maskOsInstFlag`: bool
+    `excludeInst`: bool
+    `excludeInstFlag`: bool
+    `maskProcInst`: bool
+    `maskProcInstFlag`: bool
+    `stringsInst`: bool
+    `stringsInstFlag`: bool
+    `osNonConformingInst`: bool
+    `osNonConformingInstFlag`: bool
+    `allocInst`: bool
+    `allocInstFlag`: bool
+    `execInstrInst`: bool
+    `execInstrInstFlag`: bool
+    `infoLinkInst`: bool
+    `infoLinkInstFlag`: bool
+    `writeInst`: bool
+    `writeInstFlag`: bool
+    `linkOrderInst`: bool
+    `linkOrderInstFlag`: bool
+    `orderedInst`: bool
+    `orderedInstFlag`: bool
+    `tlsInst`: bool
+    `tlsInstFlag`: bool
+    `groupInst`: bool
+    `groupInstFlag`: bool
   Elf_PhdrTypeFlags* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: Elf_EndianElf_ProgramHeader
-    `readInst`*: bool
-    `writeInst`*: bool
-    `executeInst`*: bool
-    `maskProcInst`*: bool
+    `readInst`: bool
+    `readInstFlag`: bool
+    `writeInst`: bool
+    `writeInstFlag`: bool
+    `executeInst`: bool
+    `executeInstFlag`: bool
+    `maskProcInst`: bool
+    `maskProcInstFlag`: bool
   Elf_DtFlagValues* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: Elf_EndianElf_DynamicSectionEntry
-    `bindNowInst`*: bool
-    `originInst`*: bool
-    `textrelInst`*: bool
-    `staticTlsInst`*: bool
-    `symbolicInst`*: bool
+    `bindNowInst`: bool
+    `bindNowInstFlag`: bool
+    `originInst`: bool
+    `originInstFlag`: bool
+    `textrelInst`: bool
+    `textrelInstFlag`: bool
+    `staticTlsInst`: bool
+    `staticTlsInstFlag`: bool
+    `symbolicInst`: bool
+    `symbolicInstFlag`: bool
 
 proc read*(_: typedesc[Elf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf
 proc read*(_: typedesc[Elf_EndianElf], io: KaitaiStream, root: KaitaiStruct, parent: Elf): Elf_EndianElf
@@ -834,52 +914,52 @@ depends on `abi` attribute.
   this.header = headerExpr
 
 proc shIdxLoOs(this: Elf): int = 
-  if this.shIdxLoOsInst != nil:
+  if this.shIdxLoOsInstFlag:
     return this.shIdxLoOsInst
   let shIdxLoOsInstExpr = int(65312)
   this.shIdxLoOsInst = shIdxLoOsInstExpr
-  if this.shIdxLoOsInst != nil:
-    return this.shIdxLoOsInst
+  this.shIdxLoOsInstFlag = true
+  return this.shIdxLoOsInst
 
 proc shIdxLoReserved(this: Elf): int = 
-  if this.shIdxLoReservedInst != nil:
+  if this.shIdxLoReservedInstFlag:
     return this.shIdxLoReservedInst
   let shIdxLoReservedInstExpr = int(65280)
   this.shIdxLoReservedInst = shIdxLoReservedInstExpr
-  if this.shIdxLoReservedInst != nil:
-    return this.shIdxLoReservedInst
+  this.shIdxLoReservedInstFlag = true
+  return this.shIdxLoReservedInst
 
 proc shIdxHiProc(this: Elf): int = 
-  if this.shIdxHiProcInst != nil:
+  if this.shIdxHiProcInstFlag:
     return this.shIdxHiProcInst
   let shIdxHiProcInstExpr = int(65311)
   this.shIdxHiProcInst = shIdxHiProcInstExpr
-  if this.shIdxHiProcInst != nil:
-    return this.shIdxHiProcInst
+  this.shIdxHiProcInstFlag = true
+  return this.shIdxHiProcInst
 
 proc shIdxLoProc(this: Elf): int = 
-  if this.shIdxLoProcInst != nil:
+  if this.shIdxLoProcInstFlag:
     return this.shIdxLoProcInst
   let shIdxLoProcInstExpr = int(65280)
   this.shIdxLoProcInst = shIdxLoProcInstExpr
-  if this.shIdxLoProcInst != nil:
-    return this.shIdxLoProcInst
+  this.shIdxLoProcInstFlag = true
+  return this.shIdxLoProcInst
 
 proc shIdxHiOs(this: Elf): int = 
-  if this.shIdxHiOsInst != nil:
+  if this.shIdxHiOsInstFlag:
     return this.shIdxHiOsInst
   let shIdxHiOsInstExpr = int(65343)
   this.shIdxHiOsInst = shIdxHiOsInstExpr
-  if this.shIdxHiOsInst != nil:
-    return this.shIdxHiOsInst
+  this.shIdxHiOsInstFlag = true
+  return this.shIdxHiOsInst
 
 proc shIdxHiReserved(this: Elf): int = 
-  if this.shIdxHiReservedInst != nil:
+  if this.shIdxHiReservedInstFlag:
     return this.shIdxHiReservedInst
   let shIdxHiReservedInstExpr = int(65535)
   this.shIdxHiReservedInst = shIdxHiReservedInstExpr
-  if this.shIdxHiReservedInst != nil:
-    return this.shIdxHiReservedInst
+  this.shIdxHiReservedInstFlag = true
+  return this.shIdxHiReservedInst
 
 proc fromFile*(_: typedesc[Elf], filename: string): Elf =
   Elf.read(newKaitaiFileStream(filename), nil, nil)
@@ -1002,7 +1082,7 @@ proc read*(_: typedesc[Elf_EndianElf], io: KaitaiStream, root: KaitaiStruct, par
     readBe(this)
 
 proc programHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_ProgramHeader] = 
-  if this.programHeadersInst.len != 0:
+  if this.programHeadersInstFlag:
     return this.programHeadersInst
   let pos = this.io.pos()
   this.io.seek(int(this.programHeaderOffset))
@@ -1021,11 +1101,11 @@ proc programHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_ProgramHeader] =
       let it = Elf_EndianElf_ProgramHeader.read(rawProgramHeadersInstIo, this.root, this)
       this.programHeadersInst.add(it)
   this.io.seek(pos)
-  if this.programHeadersInst.len != 0:
-    return this.programHeadersInst
+  this.programHeadersInstFlag = true
+  return this.programHeadersInst
 
 proc sectionHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_SectionHeader] = 
-  if this.sectionHeadersInst.len != 0:
+  if this.sectionHeadersInstFlag:
     return this.sectionHeadersInst
   let pos = this.io.pos()
   this.io.seek(int(this.sectionHeaderOffset))
@@ -1044,11 +1124,11 @@ proc sectionHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_SectionHeader] =
       let it = Elf_EndianElf_SectionHeader.read(rawSectionHeadersInstIo, this.root, this)
       this.sectionHeadersInst.add(it)
   this.io.seek(pos)
-  if this.sectionHeadersInst.len != 0:
-    return this.sectionHeadersInst
+  this.sectionHeadersInstFlag = true
+  return this.sectionHeadersInst
 
 proc sectionNames(this: Elf_EndianElf): Elf_EndianElf_StringsStruct = 
-  if this.sectionNamesInst != nil:
+  if this.sectionNamesInstFlag:
     return this.sectionNamesInst
   if  ((this.sectionNamesIdx != ord(elf.undefined)) and (this.sectionNamesIdx < Elf(this.root).header.qtySectionHeader)) :
     let pos = this.io.pos()
@@ -1066,8 +1146,8 @@ proc sectionNames(this: Elf_EndianElf): Elf_EndianElf_StringsStruct =
       let sectionNamesInstExpr = Elf_EndianElf_StringsStruct.read(rawSectionNamesInstIo, this.root, this)
       this.sectionNamesInst = sectionNamesInstExpr
     this.io.seek(pos)
-  if this.sectionNamesInst != nil:
-    return this.sectionNamesInst
+  this.sectionNamesInstFlag = true
+  return this.sectionNamesInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf], filename: string): Elf_EndianElf =
   Elf_EndianElf.read(newKaitaiFileStream(filename), nil, nil)
@@ -1242,7 +1322,7 @@ proc read*(_: typedesc[Elf_EndianElf_ProgramHeader], io: KaitaiStream, root: Kai
     readBe(this)
 
 proc flagsObj(this: Elf_EndianElf_ProgramHeader): Elf_PhdrTypeFlags = 
-  if this.flagsObjInst != nil:
+  if this.flagsObjInstFlag:
     return this.flagsObjInst
   if this.isLe:
     block:
@@ -1262,8 +1342,8 @@ proc flagsObj(this: Elf_EndianElf_ProgramHeader): Elf_PhdrTypeFlags =
       elif on == elf.b64:
         let flagsObjInstExpr = Elf_PhdrTypeFlags.read(this.io, this.root, this, this.flags64)
         this.flagsObjInst = flagsObjInstExpr
-  if this.flagsObjInst != nil:
-    return this.flagsObjInst
+  this.flagsObjInstFlag = true
+  return this.flagsObjInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_ProgramHeader], filename: string): Elf_EndianElf_ProgramHeader =
   Elf_EndianElf_ProgramHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -1327,7 +1407,7 @@ proc read*(_: typedesc[Elf_EndianElf_DynamicSectionEntry], io: KaitaiStream, roo
     readBe(this)
 
 proc flag1Values(this: Elf_EndianElf_DynamicSectionEntry): Elf_DtFlag1Values = 
-  if this.flag1ValuesInst != nil:
+  if this.flag1ValuesInstFlag:
     return this.flag1ValuesInst
   if this.tagEnum == elf.flags_1:
     if this.isLe:
@@ -1336,11 +1416,11 @@ proc flag1Values(this: Elf_EndianElf_DynamicSectionEntry): Elf_DtFlag1Values =
     else:
       let flag1ValuesInstExpr = Elf_DtFlag1Values.read(this.io, this.root, this, this.valueOrPtr)
       this.flag1ValuesInst = flag1ValuesInstExpr
-  if this.flag1ValuesInst != nil:
-    return this.flag1ValuesInst
+  this.flag1ValuesInstFlag = true
+  return this.flag1ValuesInst
 
 proc valueStr(this: Elf_EndianElf_DynamicSectionEntry): string = 
-  if this.valueStrInst.len != 0:
+  if this.valueStrInstFlag:
     return this.valueStrInst
   if  ((this.isValueStr) and (this.parent.isStringTableLinked)) :
     let io = (Elf_EndianElf_StringsStruct(this.parent.parent.linkedSection.body)).io
@@ -1353,19 +1433,19 @@ proc valueStr(this: Elf_EndianElf_DynamicSectionEntry): string =
       let valueStrInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
       this.valueStrInst = valueStrInstExpr
     io.seek(pos)
-  if this.valueStrInst.len != 0:
-    return this.valueStrInst
+  this.valueStrInstFlag = true
+  return this.valueStrInst
 
 proc tagEnum(this: Elf_EndianElf_DynamicSectionEntry): Elf_DynamicArrayTags = 
-  if this.tagEnumInst != nil:
+  if this.tagEnumInstFlag:
     return this.tagEnumInst
   let tagEnumInstExpr = Elf_DynamicArrayTags(Elf_DynamicArrayTags(this.tag))
   this.tagEnumInst = tagEnumInstExpr
-  if this.tagEnumInst != nil:
-    return this.tagEnumInst
+  this.tagEnumInstFlag = true
+  return this.tagEnumInst
 
 proc flagValues(this: Elf_EndianElf_DynamicSectionEntry): Elf_DtFlagValues = 
-  if this.flagValuesInst != nil:
+  if this.flagValuesInstFlag:
     return this.flagValuesInst
   if this.tagEnum == elf.flags:
     if this.isLe:
@@ -1374,16 +1454,16 @@ proc flagValues(this: Elf_EndianElf_DynamicSectionEntry): Elf_DtFlagValues =
     else:
       let flagValuesInstExpr = Elf_DtFlagValues.read(this.io, this.root, this, this.valueOrPtr)
       this.flagValuesInst = flagValuesInstExpr
-  if this.flagValuesInst != nil:
-    return this.flagValuesInst
+  this.flagValuesInstFlag = true
+  return this.flagValuesInst
 
 proc isValueStr(this: Elf_EndianElf_DynamicSectionEntry): bool = 
-  if this.isValueStrInst != nil:
+  if this.isValueStrInstFlag:
     return this.isValueStrInst
   let isValueStrInstExpr = bool( ((this.valueOrPtr != 0) and ( ((this.tagEnum == elf.needed) or (this.tagEnum == elf.soname) or (this.tagEnum == elf.rpath) or (this.tagEnum == elf.runpath) or (this.tagEnum == elf.sunw_auxiliary) or (this.tagEnum == elf.sunw_filter) or (this.tagEnum == elf.auxiliary) or (this.tagEnum == elf.filter) or (this.tagEnum == elf.config) or (this.tagEnum == elf.depaudit) or (this.tagEnum == elf.audit)) )) )
   this.isValueStrInst = isValueStrInstExpr
-  if this.isValueStrInst != nil:
-    return this.isValueStrInst
+  this.isValueStrInstFlag = true
+  return this.isValueStrInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_DynamicSectionEntry], filename: string): Elf_EndianElf_DynamicSectionEntry =
   Elf_EndianElf_DynamicSectionEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -1522,7 +1602,7 @@ proc read*(_: typedesc[Elf_EndianElf_SectionHeader], io: KaitaiStream, root: Kai
     readBe(this)
 
 proc body(this: Elf_EndianElf_SectionHeader): KaitaiStruct = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   if this.type != elf.nobits:
     let io = Elf(this.root).io
@@ -1625,8 +1705,8 @@ proc body(this: Elf_EndianElf_SectionHeader): KaitaiStruct =
           let bodyInstExpr = io.readBytes(int(this.lenBody))
           this.bodyInst = bodyInstExpr
     io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc linkedSection(this: Elf_EndianElf_SectionHeader): Elf_EndianElf_SectionHeader = 
 
@@ -1634,16 +1714,16 @@ proc linkedSection(this: Elf_EndianElf_SectionHeader): Elf_EndianElf_SectionHead
   may reference a later section header, so don't try to access too early (use only lazy `instances`)
   @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link">Source</a>
   ]##
-  if this.linkedSectionInst != nil:
+  if this.linkedSectionInstFlag:
     return this.linkedSectionInst
   if  ((this.linkedSectionIdx != ord(elf.undefined)) and (this.linkedSectionIdx < Elf(this.root).header.qtySectionHeader)) :
     let linkedSectionInstExpr = Elf_EndianElf_SectionHeader(Elf(this.root).header.sectionHeaders[this.linkedSectionIdx])
     this.linkedSectionInst = linkedSectionInstExpr
-  if this.linkedSectionInst != nil:
-    return this.linkedSectionInst
+  this.linkedSectionInstFlag = true
+  return this.linkedSectionInst
 
 proc name(this: Elf_EndianElf_SectionHeader): string = 
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   let io = Elf(this.root).header.sectionNames.io
   let pos = io.pos()
@@ -1655,11 +1735,11 @@ proc name(this: Elf_EndianElf_SectionHeader): string =
     let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
     this.nameInst = nameInstExpr
   io.seek(pos)
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc flagsObj(this: Elf_EndianElf_SectionHeader): Elf_SectionHeaderFlags = 
-  if this.flagsObjInst != nil:
+  if this.flagsObjInstFlag:
     return this.flagsObjInst
   if this.isLe:
     let flagsObjInstExpr = Elf_SectionHeaderFlags.read(this.io, this.root, this, this.flags)
@@ -1667,8 +1747,8 @@ proc flagsObj(this: Elf_EndianElf_SectionHeader): Elf_SectionHeaderFlags =
   else:
     let flagsObjInstExpr = Elf_SectionHeaderFlags.read(this.io, this.root, this, this.flags)
     this.flagsObjInst = flagsObjInstExpr
-  if this.flagsObjInst != nil:
-    return this.flagsObjInst
+  this.flagsObjInstFlag = true
+  return this.flagsObjInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_SectionHeader], filename: string): Elf_EndianElf_SectionHeader =
   Elf_EndianElf_SectionHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -1750,12 +1830,12 @@ proc read*(_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: Ka
     readBe(this)
 
 proc isStringTableLinked(this: Elf_EndianElf_DynamicSection): bool = 
-  if this.isStringTableLinkedInst != nil:
+  if this.isStringTableLinkedInstFlag:
     return this.isStringTableLinkedInst
   let isStringTableLinkedInstExpr = bool(this.parent.linkedSection.type == elf.strtab)
   this.isStringTableLinkedInst = isStringTableLinkedInstExpr
-  if this.isStringTableLinkedInst != nil:
-    return this.isStringTableLinkedInst
+  this.isStringTableLinkedInstFlag = true
+  return this.isStringTableLinkedInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_DynamicSection], filename: string): Elf_EndianElf_DynamicSection =
   Elf_EndianElf_DynamicSection.read(newKaitaiFileStream(filename), nil, nil)
@@ -1794,12 +1874,12 @@ proc read*(_: typedesc[Elf_EndianElf_DynsymSection], io: KaitaiStream, root: Kai
     readBe(this)
 
 proc isStringTableLinked(this: Elf_EndianElf_DynsymSection): bool = 
-  if this.isStringTableLinkedInst != nil:
+  if this.isStringTableLinkedInstFlag:
     return this.isStringTableLinkedInst
   let isStringTableLinkedInstExpr = bool(this.parent.linkedSection.type == elf.strtab)
   this.isStringTableLinkedInst = isStringTableLinkedInstExpr
-  if this.isStringTableLinkedInst != nil:
-    return this.isStringTableLinkedInst
+  this.isStringTableLinkedInstFlag = true
+  return this.isStringTableLinkedInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_DynsymSection], filename: string): Elf_EndianElf_DynsymSection =
   Elf_EndianElf_DynsymSection.read(newKaitaiFileStream(filename), nil, nil)
@@ -1967,55 +2047,55 @@ proc read*(_: typedesc[Elf_EndianElf_DynsymSectionEntry], io: KaitaiStream, root
     readBe(this)
 
 proc isShIdxReserved(this: Elf_EndianElf_DynsymSectionEntry): bool = 
-  if this.isShIdxReservedInst != nil:
+  if this.isShIdxReservedInstFlag:
     return this.isShIdxReservedInst
   let isShIdxReservedInstExpr = bool( ((this.shIdx >= Elf(this.root).shIdxLoReserved) and (this.shIdx <= Elf(this.root).shIdxHiReserved)) )
   this.isShIdxReservedInst = isShIdxReservedInstExpr
-  if this.isShIdxReservedInst != nil:
-    return this.isShIdxReservedInst
+  this.isShIdxReservedInstFlag = true
+  return this.isShIdxReservedInst
 
 proc isShIdxOs(this: Elf_EndianElf_DynsymSectionEntry): bool = 
-  if this.isShIdxOsInst != nil:
+  if this.isShIdxOsInstFlag:
     return this.isShIdxOsInst
   let isShIdxOsInstExpr = bool( ((this.shIdx >= Elf(this.root).shIdxLoOs) and (this.shIdx <= Elf(this.root).shIdxHiOs)) )
   this.isShIdxOsInst = isShIdxOsInstExpr
-  if this.isShIdxOsInst != nil:
-    return this.isShIdxOsInst
+  this.isShIdxOsInstFlag = true
+  return this.isShIdxOsInst
 
 proc isShIdxProc(this: Elf_EndianElf_DynsymSectionEntry): bool = 
-  if this.isShIdxProcInst != nil:
+  if this.isShIdxProcInstFlag:
     return this.isShIdxProcInst
   let isShIdxProcInstExpr = bool( ((this.shIdx >= Elf(this.root).shIdxLoProc) and (this.shIdx <= Elf(this.root).shIdxHiProc)) )
   this.isShIdxProcInst = isShIdxProcInstExpr
-  if this.isShIdxProcInst != nil:
-    return this.isShIdxProcInst
+  this.isShIdxProcInstFlag = true
+  return this.isShIdxProcInst
 
 proc size(this: Elf_EndianElf_DynsymSectionEntry): uint64 = 
-  if this.sizeInst != nil:
+  if this.sizeInstFlag:
     return this.sizeInst
   let sizeInstExpr = uint64((if Elf(this.root).bits == elf.b32: this.sizeB32 else: (if Elf(this.root).bits == elf.b64: this.sizeB64 else: 0)))
   this.sizeInst = sizeInstExpr
-  if this.sizeInst != nil:
-    return this.sizeInst
+  this.sizeInstFlag = true
+  return this.sizeInst
 
 proc visibility(this: Elf_EndianElf_DynsymSectionEntry): Elf_SymbolVisibility = 
-  if this.visibilityInst != nil:
+  if this.visibilityInstFlag:
     return this.visibilityInst
   let visibilityInstExpr = Elf_SymbolVisibility(Elf_SymbolVisibility((this.other and 3)))
   this.visibilityInst = visibilityInstExpr
-  if this.visibilityInst != nil:
-    return this.visibilityInst
+  this.visibilityInstFlag = true
+  return this.visibilityInst
 
 proc value(this: Elf_EndianElf_DynsymSectionEntry): uint64 = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = uint64((if Elf(this.root).bits == elf.b32: this.valueB32 else: (if Elf(this.root).bits == elf.b64: this.valueB64 else: 0)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc name(this: Elf_EndianElf_DynsymSectionEntry): string = 
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   if  ((this.ofsName != 0) and (this.parent.isStringTableLinked)) :
     let io = (Elf_EndianElf_StringsStruct(this.parent.parent.linkedSection.body)).io
@@ -2028,16 +2108,16 @@ proc name(this: Elf_EndianElf_DynsymSectionEntry): string =
       let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
       this.nameInst = nameInstExpr
     io.seek(pos)
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc shIdxSpecial(this: Elf_EndianElf_DynsymSectionEntry): Elf_SectionHeaderIdxSpecial = 
-  if this.shIdxSpecialInst != nil:
+  if this.shIdxSpecialInstFlag:
     return this.shIdxSpecialInst
   let shIdxSpecialInstExpr = Elf_SectionHeaderIdxSpecial(Elf_SectionHeaderIdxSpecial(this.shIdx))
   this.shIdxSpecialInst = shIdxSpecialInstExpr
-  if this.shIdxSpecialInst != nil:
-    return this.shIdxSpecialInst
+  this.shIdxSpecialInstFlag = true
+  return this.shIdxSpecialInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_DynsymSectionEntry], filename: string): Elf_EndianElf_DynsymSectionEntry =
   Elf_EndianElf_DynsymSectionEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -2167,308 +2247,308 @@ proc singleton(this: Elf_DtFlag1Values): bool =
   ##[
   Singleton symbols are used.
   ]##
-  if this.singletonInst != nil:
+  if this.singletonInstFlag:
     return this.singletonInst
   let singletonInstExpr = bool((this.value and 33554432) != 0)
   this.singletonInst = singletonInstExpr
-  if this.singletonInst != nil:
-    return this.singletonInst
+  this.singletonInstFlag = true
+  return this.singletonInst
 
 proc ignmuldef(this: Elf_DtFlag1Values): bool = 
-  if this.ignmuldefInst != nil:
+  if this.ignmuldefInstFlag:
     return this.ignmuldefInst
   let ignmuldefInstExpr = bool((this.value and 262144) != 0)
   this.ignmuldefInst = ignmuldefInstExpr
-  if this.ignmuldefInst != nil:
-    return this.ignmuldefInst
+  this.ignmuldefInstFlag = true
+  return this.ignmuldefInst
 
 proc loadfltr(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Trigger filtee loading at runtime.
   ]##
-  if this.loadfltrInst != nil:
+  if this.loadfltrInstFlag:
     return this.loadfltrInst
   let loadfltrInstExpr = bool((this.value and 16) != 0)
   this.loadfltrInst = loadfltrInstExpr
-  if this.loadfltrInst != nil:
-    return this.loadfltrInst
+  this.loadfltrInstFlag = true
+  return this.loadfltrInst
 
 proc initfirst(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Set RTLD_INITFIRST for this object
   ]##
-  if this.initfirstInst != nil:
+  if this.initfirstInstFlag:
     return this.initfirstInst
   let initfirstInstExpr = bool((this.value and 32) != 0)
   this.initfirstInst = initfirstInstExpr
-  if this.initfirstInst != nil:
-    return this.initfirstInst
+  this.initfirstInstFlag = true
+  return this.initfirstInst
 
 proc symintpose(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Object has individual interposers.
   ]##
-  if this.symintposeInst != nil:
+  if this.symintposeInstFlag:
     return this.symintposeInst
   let symintposeInstExpr = bool((this.value and 8388608) != 0)
   this.symintposeInst = symintposeInstExpr
-  if this.symintposeInst != nil:
-    return this.symintposeInst
+  this.symintposeInstFlag = true
+  return this.symintposeInst
 
 proc noreloc(this: Elf_DtFlag1Values): bool = 
-  if this.norelocInst != nil:
+  if this.norelocInstFlag:
     return this.norelocInst
   let norelocInstExpr = bool((this.value and 4194304) != 0)
   this.norelocInst = norelocInstExpr
-  if this.norelocInst != nil:
-    return this.norelocInst
+  this.norelocInstFlag = true
+  return this.norelocInst
 
 proc confalt(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Configuration alternative created.
   ]##
-  if this.confaltInst != nil:
+  if this.confaltInstFlag:
     return this.confaltInst
   let confaltInstExpr = bool((this.value and 8192) != 0)
   this.confaltInst = confaltInstExpr
-  if this.confaltInst != nil:
-    return this.confaltInst
+  this.confaltInstFlag = true
+  return this.confaltInst
 
 proc dispreldne(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Disp reloc applied at build time.
   ]##
-  if this.dispreldneInst != nil:
+  if this.dispreldneInstFlag:
     return this.dispreldneInst
   let dispreldneInstExpr = bool((this.value and 32768) != 0)
   this.dispreldneInst = dispreldneInstExpr
-  if this.dispreldneInst != nil:
-    return this.dispreldneInst
+  this.dispreldneInstFlag = true
+  return this.dispreldneInst
 
 proc rtldGlobal(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Set RTLD_GLOBAL for this object.
   ]##
-  if this.rtldGlobalInst != nil:
+  if this.rtldGlobalInstFlag:
     return this.rtldGlobalInst
   let rtldGlobalInstExpr = bool((this.value and 2) != 0)
   this.rtldGlobalInst = rtldGlobalInstExpr
-  if this.rtldGlobalInst != nil:
-    return this.rtldGlobalInst
+  this.rtldGlobalInstFlag = true
+  return this.rtldGlobalInst
 
 proc nodelete(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Set RTLD_NODELETE for this object.
   ]##
-  if this.nodeleteInst != nil:
+  if this.nodeleteInstFlag:
     return this.nodeleteInst
   let nodeleteInstExpr = bool((this.value and 8) != 0)
   this.nodeleteInst = nodeleteInstExpr
-  if this.nodeleteInst != nil:
-    return this.nodeleteInst
+  this.nodeleteInstFlag = true
+  return this.nodeleteInst
 
 proc trans(this: Elf_DtFlag1Values): bool = 
-  if this.transInst != nil:
+  if this.transInstFlag:
     return this.transInst
   let transInstExpr = bool((this.value and 512) != 0)
   this.transInst = transInstExpr
-  if this.transInst != nil:
-    return this.transInst
+  this.transInstFlag = true
+  return this.transInst
 
 proc origin(this: Elf_DtFlag1Values): bool = 
 
   ##[
   $ORIGIN must be handled.
   ]##
-  if this.originInst != nil:
+  if this.originInstFlag:
     return this.originInst
   let originInstExpr = bool((this.value and 128) != 0)
   this.originInst = originInstExpr
-  if this.originInst != nil:
-    return this.originInst
+  this.originInstFlag = true
+  return this.originInst
 
 proc now(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Set RTLD_NOW for this object.
   ]##
-  if this.nowInst != nil:
+  if this.nowInstFlag:
     return this.nowInst
   let nowInstExpr = bool((this.value and 1) != 0)
   this.nowInst = nowInstExpr
-  if this.nowInst != nil:
-    return this.nowInst
+  this.nowInstFlag = true
+  return this.nowInst
 
 proc nohdr(this: Elf_DtFlag1Values): bool = 
-  if this.nohdrInst != nil:
+  if this.nohdrInstFlag:
     return this.nohdrInst
   let nohdrInstExpr = bool((this.value and 1048576) != 0)
   this.nohdrInst = nohdrInstExpr
-  if this.nohdrInst != nil:
-    return this.nohdrInst
+  this.nohdrInstFlag = true
+  return this.nohdrInst
 
 proc endfiltee(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Filtee terminates filters search.
   ]##
-  if this.endfilteeInst != nil:
+  if this.endfilteeInstFlag:
     return this.endfilteeInst
   let endfilteeInstExpr = bool((this.value and 16384) != 0)
   this.endfilteeInst = endfilteeInstExpr
-  if this.endfilteeInst != nil:
-    return this.endfilteeInst
+  this.endfilteeInstFlag = true
+  return this.endfilteeInst
 
 proc nodirect(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Object has no-direct binding.
   ]##
-  if this.nodirectInst != nil:
+  if this.nodirectInstFlag:
     return this.nodirectInst
   let nodirectInstExpr = bool((this.value and 131072) != 0)
   this.nodirectInst = nodirectInstExpr
-  if this.nodirectInst != nil:
-    return this.nodirectInst
+  this.nodirectInstFlag = true
+  return this.nodirectInst
 
 proc globaudit(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Global auditing required.
   ]##
-  if this.globauditInst != nil:
+  if this.globauditInstFlag:
     return this.globauditInst
   let globauditInstExpr = bool((this.value and 16777216) != 0)
   this.globauditInst = globauditInstExpr
-  if this.globauditInst != nil:
-    return this.globauditInst
+  this.globauditInstFlag = true
+  return this.globauditInst
 
 proc noksyms(this: Elf_DtFlag1Values): bool = 
-  if this.noksymsInst != nil:
+  if this.noksymsInstFlag:
     return this.noksymsInst
   let noksymsInstExpr = bool((this.value and 524288) != 0)
   this.noksymsInst = noksymsInstExpr
-  if this.noksymsInst != nil:
-    return this.noksymsInst
+  this.noksymsInstFlag = true
+  return this.noksymsInst
 
 proc interpose(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Object is used to interpose.
   ]##
-  if this.interposeInst != nil:
+  if this.interposeInstFlag:
     return this.interposeInst
   let interposeInstExpr = bool((this.value and 1024) != 0)
   this.interposeInst = interposeInstExpr
-  if this.interposeInst != nil:
-    return this.interposeInst
+  this.interposeInstFlag = true
+  return this.interposeInst
 
 proc nodump(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Object can't be dldump'ed.
   ]##
-  if this.nodumpInst != nil:
+  if this.nodumpInstFlag:
     return this.nodumpInst
   let nodumpInstExpr = bool((this.value and 4096) != 0)
   this.nodumpInst = nodumpInstExpr
-  if this.nodumpInst != nil:
-    return this.nodumpInst
+  this.nodumpInstFlag = true
+  return this.nodumpInst
 
 proc disprelpnd(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Disp reloc applied at run-time.
   ]##
-  if this.disprelpndInst != nil:
+  if this.disprelpndInstFlag:
     return this.disprelpndInst
   let disprelpndInstExpr = bool((this.value and 65536) != 0)
   this.disprelpndInst = disprelpndInstExpr
-  if this.disprelpndInst != nil:
-    return this.disprelpndInst
+  this.disprelpndInstFlag = true
+  return this.disprelpndInst
 
 proc noopen(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Set RTLD_NOOPEN for this object.
   ]##
-  if this.noopenInst != nil:
+  if this.noopenInstFlag:
     return this.noopenInst
   let noopenInstExpr = bool((this.value and 64) != 0)
   this.noopenInst = noopenInstExpr
-  if this.noopenInst != nil:
-    return this.noopenInst
+  this.noopenInstFlag = true
+  return this.noopenInst
 
 proc stub(this: Elf_DtFlag1Values): bool = 
-  if this.stubInst != nil:
+  if this.stubInstFlag:
     return this.stubInst
   let stubInstExpr = bool((this.value and 67108864) != 0)
   this.stubInst = stubInstExpr
-  if this.stubInst != nil:
-    return this.stubInst
+  this.stubInstFlag = true
+  return this.stubInst
 
 proc direct(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Direct binding enabled.
   ]##
-  if this.directInst != nil:
+  if this.directInstFlag:
     return this.directInst
   let directInstExpr = bool((this.value and 256) != 0)
   this.directInst = directInstExpr
-  if this.directInst != nil:
-    return this.directInst
+  this.directInstFlag = true
+  return this.directInst
 
 proc edited(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Object is modified after built.
   ]##
-  if this.editedInst != nil:
+  if this.editedInstFlag:
     return this.editedInst
   let editedInstExpr = bool((this.value and 2097152) != 0)
   this.editedInst = editedInstExpr
-  if this.editedInst != nil:
-    return this.editedInst
+  this.editedInstFlag = true
+  return this.editedInst
 
 proc group(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Set RTLD_GROUP for this object.
   ]##
-  if this.groupInst != nil:
+  if this.groupInstFlag:
     return this.groupInst
   let groupInstExpr = bool((this.value and 4) != 0)
   this.groupInst = groupInstExpr
-  if this.groupInst != nil:
-    return this.groupInst
+  this.groupInstFlag = true
+  return this.groupInst
 
 proc pie(this: Elf_DtFlag1Values): bool = 
-  if this.pieInst != nil:
+  if this.pieInstFlag:
     return this.pieInst
   let pieInstExpr = bool((this.value and 134217728) != 0)
   this.pieInst = pieInstExpr
-  if this.pieInst != nil:
-    return this.pieInst
+  this.pieInstFlag = true
+  return this.pieInst
 
 proc nodeflib(this: Elf_DtFlag1Values): bool = 
 
   ##[
   Ignore default lib search path.
   ]##
-  if this.nodeflibInst != nil:
+  if this.nodeflibInstFlag:
     return this.nodeflibInst
   let nodeflibInstExpr = bool((this.value and 2048) != 0)
   this.nodeflibInst = nodeflibInstExpr
-  if this.nodeflibInst != nil:
-    return this.nodeflibInst
+  this.nodeflibInstFlag = true
+  return this.nodeflibInst
 
 proc fromFile*(_: typedesc[Elf_DtFlag1Values], filename: string): Elf_DtFlag1Values =
   Elf_DtFlag1Values.read(newKaitaiFileStream(filename), nil, nil)
@@ -2489,168 +2569,168 @@ proc merge(this: Elf_SectionHeaderFlags): bool =
   ##[
   might be merged
   ]##
-  if this.mergeInst != nil:
+  if this.mergeInstFlag:
     return this.mergeInst
   let mergeInstExpr = bool((this.value and 16) != 0)
   this.mergeInst = mergeInstExpr
-  if this.mergeInst != nil:
-    return this.mergeInst
+  this.mergeInstFlag = true
+  return this.mergeInst
 
 proc maskOs(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   OS-specific
   ]##
-  if this.maskOsInst != nil:
+  if this.maskOsInstFlag:
     return this.maskOsInst
   let maskOsInstExpr = bool((this.value and 267386880) != 0)
   this.maskOsInst = maskOsInstExpr
-  if this.maskOsInst != nil:
-    return this.maskOsInst
+  this.maskOsInstFlag = true
+  return this.maskOsInst
 
 proc exclude(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   section is excluded unless referenced or allocated (Solaris)
   ]##
-  if this.excludeInst != nil:
+  if this.excludeInstFlag:
     return this.excludeInst
   let excludeInstExpr = bool((this.value and 134217728) != 0)
   this.excludeInst = excludeInstExpr
-  if this.excludeInst != nil:
-    return this.excludeInst
+  this.excludeInstFlag = true
+  return this.excludeInst
 
 proc maskProc(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   Processor-specific
   ]##
-  if this.maskProcInst != nil:
+  if this.maskProcInstFlag:
     return this.maskProcInst
   let maskProcInstExpr = bool((this.value and 4026531840'i64) != 0)
   this.maskProcInst = maskProcInstExpr
-  if this.maskProcInst != nil:
-    return this.maskProcInst
+  this.maskProcInstFlag = true
+  return this.maskProcInst
 
 proc strings(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   contains nul-terminated strings
   ]##
-  if this.stringsInst != nil:
+  if this.stringsInstFlag:
     return this.stringsInst
   let stringsInstExpr = bool((this.value and 32) != 0)
   this.stringsInst = stringsInstExpr
-  if this.stringsInst != nil:
-    return this.stringsInst
+  this.stringsInstFlag = true
+  return this.stringsInst
 
 proc osNonConforming(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   non-standard OS specific handling required
   ]##
-  if this.osNonConformingInst != nil:
+  if this.osNonConformingInstFlag:
     return this.osNonConformingInst
   let osNonConformingInstExpr = bool((this.value and 256) != 0)
   this.osNonConformingInst = osNonConformingInstExpr
-  if this.osNonConformingInst != nil:
-    return this.osNonConformingInst
+  this.osNonConformingInstFlag = true
+  return this.osNonConformingInst
 
 proc alloc(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   occupies memory during execution
   ]##
-  if this.allocInst != nil:
+  if this.allocInstFlag:
     return this.allocInst
   let allocInstExpr = bool((this.value and 2) != 0)
   this.allocInst = allocInstExpr
-  if this.allocInst != nil:
-    return this.allocInst
+  this.allocInstFlag = true
+  return this.allocInst
 
 proc execInstr(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   executable
   ]##
-  if this.execInstrInst != nil:
+  if this.execInstrInstFlag:
     return this.execInstrInst
   let execInstrInstExpr = bool((this.value and 4) != 0)
   this.execInstrInst = execInstrInstExpr
-  if this.execInstrInst != nil:
-    return this.execInstrInst
+  this.execInstrInstFlag = true
+  return this.execInstrInst
 
 proc infoLink(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   'sh_info' contains SHT index
   ]##
-  if this.infoLinkInst != nil:
+  if this.infoLinkInstFlag:
     return this.infoLinkInst
   let infoLinkInstExpr = bool((this.value and 64) != 0)
   this.infoLinkInst = infoLinkInstExpr
-  if this.infoLinkInst != nil:
-    return this.infoLinkInst
+  this.infoLinkInstFlag = true
+  return this.infoLinkInst
 
 proc write(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   writable
   ]##
-  if this.writeInst != nil:
+  if this.writeInstFlag:
     return this.writeInst
   let writeInstExpr = bool((this.value and 1) != 0)
   this.writeInst = writeInstExpr
-  if this.writeInst != nil:
-    return this.writeInst
+  this.writeInstFlag = true
+  return this.writeInst
 
 proc linkOrder(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   preserve order after combining
   ]##
-  if this.linkOrderInst != nil:
+  if this.linkOrderInstFlag:
     return this.linkOrderInst
   let linkOrderInstExpr = bool((this.value and 128) != 0)
   this.linkOrderInst = linkOrderInstExpr
-  if this.linkOrderInst != nil:
-    return this.linkOrderInst
+  this.linkOrderInstFlag = true
+  return this.linkOrderInst
 
 proc ordered(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   special ordering requirement (Solaris)
   ]##
-  if this.orderedInst != nil:
+  if this.orderedInstFlag:
     return this.orderedInst
   let orderedInstExpr = bool((this.value and 67108864) != 0)
   this.orderedInst = orderedInstExpr
-  if this.orderedInst != nil:
-    return this.orderedInst
+  this.orderedInstFlag = true
+  return this.orderedInst
 
 proc tls(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   section hold thread-local data
   ]##
-  if this.tlsInst != nil:
+  if this.tlsInstFlag:
     return this.tlsInst
   let tlsInstExpr = bool((this.value and 1024) != 0)
   this.tlsInst = tlsInstExpr
-  if this.tlsInst != nil:
-    return this.tlsInst
+  this.tlsInstFlag = true
+  return this.tlsInst
 
 proc group(this: Elf_SectionHeaderFlags): bool = 
 
   ##[
   section is member of a group
   ]##
-  if this.groupInst != nil:
+  if this.groupInstFlag:
     return this.groupInst
   let groupInstExpr = bool((this.value and 512) != 0)
   this.groupInst = groupInstExpr
-  if this.groupInst != nil:
-    return this.groupInst
+  this.groupInstFlag = true
+  return this.groupInst
 
 proc fromFile*(_: typedesc[Elf_SectionHeaderFlags], filename: string): Elf_SectionHeaderFlags =
   Elf_SectionHeaderFlags.read(newKaitaiFileStream(filename), nil, nil)
@@ -2667,36 +2747,36 @@ proc read*(_: typedesc[Elf_PhdrTypeFlags], io: KaitaiStream, root: KaitaiStruct,
 
 
 proc read(this: Elf_PhdrTypeFlags): bool = 
-  if this.readInst != nil:
+  if this.readInstFlag:
     return this.readInst
   let readInstExpr = bool((this.value and 4) != 0)
   this.readInst = readInstExpr
-  if this.readInst != nil:
-    return this.readInst
+  this.readInstFlag = true
+  return this.readInst
 
 proc write(this: Elf_PhdrTypeFlags): bool = 
-  if this.writeInst != nil:
+  if this.writeInstFlag:
     return this.writeInst
   let writeInstExpr = bool((this.value and 2) != 0)
   this.writeInst = writeInstExpr
-  if this.writeInst != nil:
-    return this.writeInst
+  this.writeInstFlag = true
+  return this.writeInst
 
 proc execute(this: Elf_PhdrTypeFlags): bool = 
-  if this.executeInst != nil:
+  if this.executeInstFlag:
     return this.executeInst
   let executeInstExpr = bool((this.value and 1) != 0)
   this.executeInst = executeInstExpr
-  if this.executeInst != nil:
-    return this.executeInst
+  this.executeInstFlag = true
+  return this.executeInst
 
 proc maskProc(this: Elf_PhdrTypeFlags): bool = 
-  if this.maskProcInst != nil:
+  if this.maskProcInstFlag:
     return this.maskProcInst
   let maskProcInstExpr = bool((this.value and 4026531840'i64) != 0)
   this.maskProcInst = maskProcInstExpr
-  if this.maskProcInst != nil:
-    return this.maskProcInst
+  this.maskProcInstFlag = true
+  return this.maskProcInst
 
 proc fromFile*(_: typedesc[Elf_PhdrTypeFlags], filename: string): Elf_PhdrTypeFlags =
   Elf_PhdrTypeFlags.read(newKaitaiFileStream(filename), nil, nil)
@@ -2725,60 +2805,60 @@ proc bindNow(this: Elf_DtFlagValues): bool =
 control to the program
 
   ]##
-  if this.bindNowInst != nil:
+  if this.bindNowInstFlag:
     return this.bindNowInst
   let bindNowInstExpr = bool((this.value and 8) != 0)
   this.bindNowInst = bindNowInstExpr
-  if this.bindNowInst != nil:
-    return this.bindNowInst
+  this.bindNowInstFlag = true
+  return this.bindNowInst
 
 proc origin(this: Elf_DtFlagValues): bool = 
 
   ##[
   object may reference the $ORIGIN substitution string
   ]##
-  if this.originInst != nil:
+  if this.originInstFlag:
     return this.originInst
   let originInstExpr = bool((this.value and 1) != 0)
   this.originInst = originInstExpr
-  if this.originInst != nil:
-    return this.originInst
+  this.originInstFlag = true
+  return this.originInst
 
 proc textrel(this: Elf_DtFlagValues): bool = 
 
   ##[
   relocation entries might request modifications to a non-writable segment
   ]##
-  if this.textrelInst != nil:
+  if this.textrelInstFlag:
     return this.textrelInst
   let textrelInstExpr = bool((this.value and 4) != 0)
   this.textrelInst = textrelInstExpr
-  if this.textrelInst != nil:
-    return this.textrelInst
+  this.textrelInstFlag = true
+  return this.textrelInst
 
 proc staticTls(this: Elf_DtFlagValues): bool = 
 
   ##[
   object uses static thread-local storage scheme
   ]##
-  if this.staticTlsInst != nil:
+  if this.staticTlsInstFlag:
     return this.staticTlsInst
   let staticTlsInstExpr = bool((this.value and 16) != 0)
   this.staticTlsInst = staticTlsInstExpr
-  if this.staticTlsInst != nil:
-    return this.staticTlsInst
+  this.staticTlsInstFlag = true
+  return this.staticTlsInst
 
 proc symbolic(this: Elf_DtFlagValues): bool = 
 
   ##[
   symbolic linking
   ]##
-  if this.symbolicInst != nil:
+  if this.symbolicInstFlag:
     return this.symbolicInst
   let symbolicInstExpr = bool((this.value and 2) != 0)
   this.symbolicInst = symbolicInstExpr
-  if this.symbolicInst != nil:
-    return this.symbolicInst
+  this.symbolicInstFlag = true
+  return this.symbolicInst
 
 proc fromFile*(_: typedesc[Elf_DtFlagValues], filename: string): Elf_DtFlagValues =
   Elf_DtFlagValues.read(newKaitaiFileStream(filename), nil, nil)

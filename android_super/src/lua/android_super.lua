@@ -154,7 +154,7 @@ function AndroidSuper.Metadata.BlockDevice:_read()
   self.alignment_offset = self._io:read_u4le()
   self.size = self._io:read_u8le()
   self.partition_name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(36), 0, false), "UTF-8")
-  self.flag_slot_suffixed = self._io:read_bits_int_le(1)
+  self.flag_slot_suffixed = self._io:read_bits_int_le(1) ~= 0
   self.flags_reserved = self._io:read_bits_int_le(31)
 end
 
@@ -245,10 +245,10 @@ end
 
 function AndroidSuper.Metadata.Partition:_read()
   self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(36), 0, false), "UTF-8")
-  self.attr_readonly = self._io:read_bits_int_le(1)
-  self.attr_slot_suffixed = self._io:read_bits_int_le(1)
-  self.attr_updated = self._io:read_bits_int_le(1)
-  self.attr_disabled = self._io:read_bits_int_le(1)
+  self.attr_readonly = self._io:read_bits_int_le(1) ~= 0
+  self.attr_slot_suffixed = self._io:read_bits_int_le(1) ~= 0
+  self.attr_updated = self._io:read_bits_int_le(1) ~= 0
+  self.attr_disabled = self._io:read_bits_int_le(1) ~= 0
   self.attrs_reserved = self._io:read_bits_int_le(28)
   self._io:align_to_byte()
   self.first_extent_index = self._io:read_u4le()
@@ -268,7 +268,7 @@ end
 
 function AndroidSuper.Metadata.Group:_read()
   self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(36), 0, false), "UTF-8")
-  self.flag_slot_suffixed = self._io:read_bits_int_le(1)
+  self.flag_slot_suffixed = self._io:read_bits_int_le(1) ~= 0
   self.flags_reserved = self._io:read_bits_int_le(31)
   self._io:align_to_byte()
   self.maximum_size = self._io:read_u8le()

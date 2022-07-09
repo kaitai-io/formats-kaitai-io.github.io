@@ -162,7 +162,7 @@ namespace Kaitai
             private void _read()
             {
                 _len = m_io.ReadU2be();
-                _cipherSuites = new List<ushort>((int) ((Len / 2)));
+                _cipherSuites = new List<ushort>();
                 for (var i = 0; i < (Len / 2); i++)
                 {
                     _cipherSuites.Add(m_io.ReadU2be());

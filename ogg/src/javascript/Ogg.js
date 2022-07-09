@@ -8,7 +8,7 @@
   } else {
     root.Ogg = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Ogg is a popular media container format, which provides basic
  * streaming / buffering mechanisms and is content-agnostic. Most
@@ -70,13 +70,13 @@ var Ogg = (function() {
       this.pageSeqNum = this._io.readU4le();
       this.crc32 = this._io.readU4le();
       this.numSegments = this._io.readU1();
-      this.lenSegments = new Array(this.numSegments);
+      this.lenSegments = [];
       for (var i = 0; i < this.numSegments; i++) {
-        this.lenSegments[i] = this._io.readU1();
+        this.lenSegments.push(this._io.readU1());
       }
-      this.segments = new Array(this.numSegments);
+      this.segments = [];
       for (var i = 0; i < this.numSegments; i++) {
-        this.segments[i] = this._io.readBytes(this.lenSegments[i]);
+        this.segments.push(this._io.readBytes(this.lenSegments[i]));
       }
     }
 

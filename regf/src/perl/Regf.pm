@@ -451,7 +451,7 @@ sub _read {
     $self->{items} = ();
     my $n_items = $self->count();
     for (my $i = 0; $i < $n_items; $i++) {
-        $self->{items}[$i] = Regf::HiveBinCell::SubKeyListLhLf::Item->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{items}}, Regf::HiveBinCell::SubKeyListLhLf::Item->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -599,7 +599,7 @@ sub _read {
     $self->{items} = ();
     my $n_items = $self->count();
     for (my $i = 0; $i < $n_items; $i++) {
-        $self->{items}[$i] = Regf::HiveBinCell::SubKeyListLi::Item->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{items}}, Regf::HiveBinCell::SubKeyListLi::Item->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -850,7 +850,7 @@ sub _read {
     $self->{items} = ();
     my $n_items = $self->count();
     for (my $i = 0; $i < $n_items; $i++) {
-        $self->{items}[$i] = Regf::HiveBinCell::SubKeyListRi::Item->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{items}}, Regf::HiveBinCell::SubKeyListRi::Item->new($self->{_io}, $self, $self->{_root});
     }
 }
 

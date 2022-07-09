@@ -157,62 +157,62 @@ function WindowsResourceFile.UnicodeOrId:_read()
     self.rest = {}
     local i = 0
     while true do
-      _ = self._io:read_u2le()
+      local _ = self._io:read_u2le()
       self.rest[i + 1] = _
       if _ == 0 then
         break
       end
       i = i + 1
     end
-end
-if  ((self.is_string) and (self.save_pos2 >= 0))  then
-  self.noop = self._io:read_bytes(0)
-end
+  end
+  if  ((self.is_string) and (self.save_pos2 >= 0))  then
+    self.noop = self._io:read_bytes(0)
+  end
 end
 
 WindowsResourceFile.UnicodeOrId.property.save_pos1 = {}
 function WindowsResourceFile.UnicodeOrId.property.save_pos1:get()
-if self._m_save_pos1 ~= nil then
-  return self._m_save_pos1
-end
+  if self._m_save_pos1 ~= nil then
+    return self._m_save_pos1
+  end
 
-self._m_save_pos1 = self._io:pos()
-return self._m_save_pos1
+  self._m_save_pos1 = self._io:pos()
+  return self._m_save_pos1
 end
 
 WindowsResourceFile.UnicodeOrId.property.save_pos2 = {}
 function WindowsResourceFile.UnicodeOrId.property.save_pos2:get()
-if self._m_save_pos2 ~= nil then
-  return self._m_save_pos2
-end
+  if self._m_save_pos2 ~= nil then
+    return self._m_save_pos2
+  end
 
-self._m_save_pos2 = self._io:pos()
-return self._m_save_pos2
+  self._m_save_pos2 = self._io:pos()
+  return self._m_save_pos2
 end
 
 WindowsResourceFile.UnicodeOrId.property.is_string = {}
 function WindowsResourceFile.UnicodeOrId.property.is_string:get()
-if self._m_is_string ~= nil then
-  return self._m_is_string
-end
+  if self._m_is_string ~= nil then
+    return self._m_is_string
+  end
 
-self._m_is_string = self.first ~= 65535
-return self._m_is_string
+  self._m_is_string = self.first ~= 65535
+  return self._m_is_string
 end
 
 WindowsResourceFile.UnicodeOrId.property.as_string = {}
 function WindowsResourceFile.UnicodeOrId.property.as_string:get()
-if self._m_as_string ~= nil then
-  return self._m_as_string
-end
+  if self._m_as_string ~= nil then
+    return self._m_as_string
+  end
 
-if self.is_string then
-  local _pos = self._io:pos()
-  self._io:seek(self.save_pos1)
-  self._m_as_string = str_decode.decode(self._io:read_bytes(((self.save_pos2 - self.save_pos1) - 2)), "UTF-16LE")
-  self._io:seek(_pos)
-end
-return self._m_as_string
+  if self.is_string then
+    local _pos = self._io:pos()
+    self._io:seek(self.save_pos1)
+    self._m_as_string = str_decode.decode(self._io:read_bytes(((self.save_pos2 - self.save_pos1) - 2)), "UTF-16LE")
+    self._io:seek(_pos)
+  end
+  return self._m_as_string
 end
 
 

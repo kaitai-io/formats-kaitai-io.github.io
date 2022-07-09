@@ -928,7 +928,7 @@ sub _read {
     $self->{colors} = ();
     my $n_colors = ( (($self->num_colors() > 0) && ($self->num_colors() < $self->num_colors_present()))  ? $self->num_colors() : $self->num_colors_present());
     for (my $i = 0; $i < $n_colors; $i++) {
-        $self->{colors}[$i] = Bmp::RgbRecord->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{colors}}, Bmp::RgbRecord->new($self->{_io}, $self, $self->{_root});
     }
 }
 

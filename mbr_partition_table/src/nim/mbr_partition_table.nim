@@ -20,8 +20,10 @@ type
     `b2`*: uint8
     `b3`*: uint8
     `parent`*: MbrPartitionTable_PartitionEntry
-    `sectorInst`*: int
-    `cylinderInst`*: int
+    `sectorInst`: int
+    `sectorInstFlag`: bool
+    `cylinderInst`: int
+    `cylinderInstFlag`: bool
 
 proc read*(_: typedesc[MbrPartitionTable], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MbrPartitionTable
 proc read*(_: typedesc[MbrPartitionTable_PartitionEntry], io: KaitaiStream, root: KaitaiStruct, parent: MbrPartitionTable): MbrPartitionTable_PartitionEntry
@@ -102,20 +104,20 @@ proc read*(_: typedesc[MbrPartitionTable_Chs], io: KaitaiStream, root: KaitaiStr
   this.b3 = b3Expr
 
 proc sector(this: MbrPartitionTable_Chs): int = 
-  if this.sectorInst != nil:
+  if this.sectorInstFlag:
     return this.sectorInst
   let sectorInstExpr = int((this.b2 and 63))
   this.sectorInst = sectorInstExpr
-  if this.sectorInst != nil:
-    return this.sectorInst
+  this.sectorInstFlag = true
+  return this.sectorInst
 
 proc cylinder(this: MbrPartitionTable_Chs): int = 
-  if this.cylinderInst != nil:
+  if this.cylinderInstFlag:
     return this.cylinderInst
   let cylinderInstExpr = int((this.b3 + ((this.b2 and 192) shl 2)))
   this.cylinderInst = cylinderInstExpr
-  if this.cylinderInst != nil:
-    return this.cylinderInst
+  this.cylinderInstFlag = true
+  return this.cylinderInst
 
 proc fromFile*(_: typedesc[MbrPartitionTable_Chs], filename: string): MbrPartitionTable_Chs =
   MbrPartitionTable_Chs.read(newKaitaiFileStream(filename), nil, nil)

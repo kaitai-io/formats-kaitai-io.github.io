@@ -6,7 +6,8 @@ type
     `first`*: uint8
     `more`*: int32
     `parent`*: KaitaiStruct
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
 
 proc read*(_: typedesc[DcmpVariableLengthInteger], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DcmpVariableLengthInteger
 
@@ -90,12 +91,12 @@ proc value(this: DcmpVariableLengthInteger): int =
   The decoded value of the variable-length integer.
 
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((if this.first == 255: this.more else: (if this.first >= 128: (((this.first shl 8) or this.more) - 49152) else: this.first)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[DcmpVariableLengthInteger], filename: string): DcmpVariableLengthInteger =
   DcmpVariableLengthInteger.read(newKaitaiFileStream(filename), nil, nil)

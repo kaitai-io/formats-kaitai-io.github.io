@@ -8,7 +8,7 @@
   } else {
     root.AppleSingleDouble = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * AppleSingle and AppleDouble files are used by certain Mac
  * applications (e.g. Finder) to store Mac-specific file attributes on
@@ -53,9 +53,9 @@ var AppleSingleDouble = (function() {
     this.version = this._io.readU4be();
     this.reserved = this._io.readBytes(16);
     this.numEntries = this._io.readU2be();
-    this.entries = new Array(this.numEntries);
+    this.entries = [];
     for (var i = 0; i < this.numEntries; i++) {
-      this.entries[i] = new Entry(this._io, this, this._root);
+      this.entries.push(new Entry(this._io, this, this._root));
     }
   }
 

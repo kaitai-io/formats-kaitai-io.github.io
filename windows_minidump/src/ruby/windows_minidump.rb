@@ -100,9 +100,9 @@ class WindowsMinidump < Kaitai::Struct::Struct
 
     def _read
       @num_threads = @_io.read_u4le
-      @threads = Array.new(num_threads)
+      @threads = []
       (num_threads).times { |i|
-        @threads[i] = Thread.new(@_io, self, @_root)
+        @threads << Thread.new(@_io, self, @_root)
       }
       self
     end
@@ -229,9 +229,9 @@ class WindowsMinidump < Kaitai::Struct::Struct
       @addr = @_io.read_u8le
       @num_params = @_io.read_u4le
       @reserved = @_io.read_u4le
-      @params = Array.new(15)
+      @params = []
       (15).times { |i|
-        @params[i] = @_io.read_u8le
+        @params << @_io.read_u8le
       }
       self
     end
@@ -384,9 +384,9 @@ class WindowsMinidump < Kaitai::Struct::Struct
 
     def _read
       @num_mem_ranges = @_io.read_u4le
-      @mem_ranges = Array.new(num_mem_ranges)
+      @mem_ranges = []
       (num_mem_ranges).times { |i|
-        @mem_ranges[i] = MemoryDescriptor.new(@_io, self, @_root)
+        @mem_ranges << MemoryDescriptor.new(@_io, self, @_root)
       }
       self
     end
@@ -435,9 +435,9 @@ class WindowsMinidump < Kaitai::Struct::Struct
     return @streams unless @streams.nil?
     _pos = @_io.pos
     @_io.seek(ofs_streams)
-    @streams = Array.new(num_streams)
+    @streams = []
     (num_streams).times { |i|
-      @streams[i] = Dir.new(@_io, self, @_root)
+      @streams << Dir.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @streams

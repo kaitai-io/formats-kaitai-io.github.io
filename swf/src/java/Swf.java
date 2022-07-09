@@ -167,7 +167,7 @@ public class Swf extends KaitaiStruct {
         }
         private void _read() {
             this.flags = this._io.readU4le();
-            this.name = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.name = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
             this.abcdata = this._io.readBytesFull();
         }
         private long flags;
@@ -204,7 +204,7 @@ public class Swf extends KaitaiStruct {
             this.rect = new Rect(this._io, this, _root);
             this.frameRate = this._io.readU2le();
             this.frameCount = this._io.readU2le();
-            if (_root.version() >= 8) {
+            if (_root().version() >= 8) {
                 this.fileAttributesTag = new Tag(this._io, this, _root);
             }
             this.tags = new ArrayList<Tag>();
@@ -382,7 +382,7 @@ public class Swf extends KaitaiStruct {
         }
         private void _read() {
             this.numSymbols = this._io.readU2le();
-            symbols = new ArrayList<Symbol>(((Number) (numSymbols())).intValue());
+            this.symbols = new ArrayList<Symbol>();
             for (int i = 0; i < numSymbols(); i++) {
                 this.symbols.add(new Symbol(this._io, this, _root));
             }
@@ -408,7 +408,7 @@ public class Swf extends KaitaiStruct {
             }
             private void _read() {
                 this.tag = this._io.readU2le();
-                this.name = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                this.name = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
             }
             private int tag;
             private String name;

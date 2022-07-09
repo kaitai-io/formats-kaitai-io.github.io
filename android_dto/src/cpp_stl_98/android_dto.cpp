@@ -19,9 +19,8 @@ android_dto_t::android_dto_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent,
 
 void android_dto_t::_read() {
     m_header = new dt_table_header_t(m__io, this, m__root);
-    int l_entries = header()->dt_entry_count();
     m_entries = new std::vector<dt_table_entry_t*>();
-    m_entries->reserve(l_entries);
+    const int l_entries = header()->dt_entry_count();
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(new dt_table_entry_t(m__io, this, m__root));
     }
@@ -95,9 +94,8 @@ void android_dto_t::dt_table_entry_t::_read() {
     m_dt_offset = m__io->read_u4be();
     m_id = m__io->read_u4be();
     m_rev = m__io->read_u4be();
-    int l_custom = 4;
     m_custom = new std::vector<uint32_t>();
-    m_custom->reserve(l_custom);
+    const int l_custom = 4;
     for (int i = 0; i < l_custom; i++) {
         m_custom->push_back(m__io->read_u4be());
     }

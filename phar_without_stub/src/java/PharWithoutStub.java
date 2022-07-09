@@ -94,7 +94,7 @@ public class PharWithoutStub extends KaitaiStruct {
     }
     private void _read() {
         this.manifest = new Manifest(this._io, this, _root);
-        files = new ArrayList<byte[]>(((Number) (manifest().numFiles())).intValue());
+        this.files = new ArrayList<byte[]>();
         for (int i = 0; i < manifest().numFiles(); i++) {
             this.files.add(this._io.readBytes(manifest().fileEntries().get((int) i).lenDataCompressed()));
         }
@@ -443,7 +443,7 @@ public class PharWithoutStub extends KaitaiStruct {
                 KaitaiStream _io__raw_metadata = new ByteBufferKaitaiStream(_raw_metadata);
                 this.metadata = new SerializedValue(_io__raw_metadata, this, _root);
             }
-            fileEntries = new ArrayList<FileEntry>(((Number) (numFiles())).intValue());
+            this.fileEntries = new ArrayList<FileEntry>();
             for (int i = 0; i < numFiles(); i++) {
                 this.fileEntries.add(new FileEntry(this._io, this, _root));
             }

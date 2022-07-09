@@ -8,7 +8,7 @@
   } else {
     root.AndroidDto = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Format for Android DTB/DTBO partitions. It's kind of archive with
  * dtb/dtbo files. Used only when there is a separate unique partition
@@ -31,9 +31,9 @@ var AndroidDto = (function() {
   }
   AndroidDto.prototype._read = function() {
     this.header = new DtTableHeader(this._io, this, this._root);
-    this.entries = new Array(this.header.dtEntryCount);
+    this.entries = [];
     for (var i = 0; i < this.header.dtEntryCount; i++) {
-      this.entries[i] = new DtTableEntry(this._io, this, this._root);
+      this.entries.push(new DtTableEntry(this._io, this, this._root));
     }
   }
 
@@ -103,9 +103,9 @@ var AndroidDto = (function() {
       this.dtOffset = this._io.readU4be();
       this.id = this._io.readU4be();
       this.rev = this._io.readU4be();
-      this.custom = new Array(4);
+      this.custom = [];
       for (var i = 0; i < 4; i++) {
-        this.custom[i] = this._io.readU4be();
+        this.custom.push(this._io.readU4be());
       }
     }
 

@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Windows MiniDump: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Windows-specific</li>
+        <li class="active">Windows MiniDump</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Windows MiniDump:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Windows MiniDump (MDMP) file provides a concise way to store process
+core dumps, which is useful for debugging. Given its small size,
+modularity, some cross-platform features and native support in some
+debuggers, it is particularly useful for crash reporting, and is
+used for that purpose in Windows and Google Chrome projects.</p>
+<p>The file itself is a container, which contains a number of typed
+&quot;streams&quot;, which contain some data according to its type attribute.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Windows MiniDump
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Windows MiniDump parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Windows MiniDump parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Windows MiniDump parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Windows MiniDump parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="Windows MiniDump parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Windows MiniDump parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Windows MiniDump parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Windows MiniDump parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Windows MiniDump parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Windows MiniDump parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Windows MiniDump parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Windows MiniDump parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Windows MiniDump parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Windows MiniDump parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse Windows MiniDump
+            
+        </h2>
+
+        
+
+        <h3>windows_minidump.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/windows_minidump.go" download="windows_minidump.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// Code generated by kaitai-struct-compiler from a .ksy source file. DO NOT EDIT.</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
+	<span class="s">&quot;io&quot;</span>
+	<span class="s">&quot;golang.org/x/text/encoding/unicode&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * Windows MiniDump (MDMP) file provides a concise way to store process</span>
+<span class="cm"> * core dumps, which is useful for debugging. Given its small size,</span>
+<span class="cm"> * modularity, some cross-platform features and native support in some</span>
+<span class="cm"> * debuggers, it is particularly useful for crash reporting, and is</span>
+<span class="cm"> * used for that purpose in Windows and Google Chrome projects.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The file itself is a container, which contains a number of typed</span>
+<span class="cm"> * &quot;streams&quot;, which contain some data according to its type attribute.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">WindowsMinidump_StreamTypes__Unused</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">WindowsMinidump_StreamTypes__Reserved0</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">WindowsMinidump_StreamTypes__Reserved1</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">WindowsMinidump_StreamTypes__ThreadList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">WindowsMinidump_StreamTypes__ModuleList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">4</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MemoryList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">5</span>
+	<span class="nx">WindowsMinidump_StreamTypes__Exception</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">6</span>
+	<span class="nx">WindowsMinidump_StreamTypes__SystemInfo</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">7</span>
+	<span class="nx">WindowsMinidump_StreamTypes__ThreadExList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">8</span>
+	<span class="nx">WindowsMinidump_StreamTypes__Memory64List</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">9</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CommentA</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">10</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CommentW</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">11</span>
+	<span class="nx">WindowsMinidump_StreamTypes__HandleData</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">12</span>
+	<span class="nx">WindowsMinidump_StreamTypes__FunctionTable</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">13</span>
+	<span class="nx">WindowsMinidump_StreamTypes__UnloadedModuleList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">14</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MiscInfo</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">15</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MemoryInfoList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">16</span>
+	<span class="nx">WindowsMinidump_StreamTypes__ThreadInfoList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">17</span>
+	<span class="nx">WindowsMinidump_StreamTypes__HandleOperationList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">18</span>
+	<span class="nx">WindowsMinidump_StreamTypes__Token</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">19</span>
+	<span class="nx">WindowsMinidump_StreamTypes__JavaScriptData</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">20</span>
+	<span class="nx">WindowsMinidump_StreamTypes__SystemMemoryInfo</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">21</span>
+	<span class="nx">WindowsMinidump_StreamTypes__ProcessVmCounters</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">22</span>
+	<span class="nx">WindowsMinidump_StreamTypes__IptTrace</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">23</span>
+	<span class="nx">WindowsMinidump_StreamTypes__ThreadNames</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">24</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeNull</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32768</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeSystemInfo</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32769</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeException</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32770</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeModuleList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32771</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeProcessList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32772</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeThreadList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32773</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeThreadContextList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32774</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeThreadCallStackList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32775</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeMemoryVirtualList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32776</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeMemoryPhysicalList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32777</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeBucketParameters</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32778</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeProcessModuleMap</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32779</span>
+	<span class="nx">WindowsMinidump_StreamTypes__CeDiagnosisList</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">32780</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdCrashpadInfoStream</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1129316353</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdRawBreakpadInfo</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932545</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdRawAssertionInfo</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932546</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxCpuInfo</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932547</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxProcStatus</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932548</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxLsbRelease</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932549</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxCmdLine</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932550</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxEnviron</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932551</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxAuxv</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932552</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxMaps</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932553</span>
+	<span class="nx">WindowsMinidump_StreamTypes__MdLinuxDsoDebug</span> <span class="nx">WindowsMinidump_StreamTypes</span> <span class="p">=</span> <span class="mi">1197932554</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic1</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Magic2</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Version</span> <span class="kt">uint16</span>
+	<span class="nx">NumStreams</span> <span class="kt">uint32</span>
+	<span class="nx">OfsStreams</span> <span class="kt">uint32</span>
+	<span class="nx">Checksum</span> <span class="kt">uint32</span>
+	<span class="nx">Timestamp</span> <span class="kt">uint32</span>
+	<span class="nx">Flags</span> <span class="kt">uint64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_streams</span> <span class="kt">bool</span>
+	<span class="nx">streams</span> <span class="p">[]</span><span class="o">*</span><span class="nx">WindowsMinidump_Dir</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp1</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp1</span> <span class="p">=</span> <span class="nx">tmp1</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span> <span class="p">=</span> <span class="nx">tmp1</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic1</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp2</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic2</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic2</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">147</span><span class="p">,</span> <span class="mi">167</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">147</span><span class="p">,</span> <span class="mi">167</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic2</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/seq/1&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp3</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp3</span><span class="p">)</span>
+	<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumStreams</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp4</span><span class="p">)</span>
+	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsStreams</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
+	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Checksum</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp6</span><span class="p">)</span>
+	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Timestamp</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
+	<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="nx">Streams</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_streams</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">streams</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsStreams</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumStreams</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
+		<span class="nx">tmp9</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_Dir</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp9</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">streams</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">streams</span><span class="p">,</span> <span class="nx">tmp9</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_streams</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_streams</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">streams</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_ThreadList</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">NumThreads</span> <span class="kt">uint32</span>
+	<span class="nx">Threads</span> <span class="p">[]</span><span class="o">*</span><span class="nx">WindowsMinidump_Thread</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_ThreadList</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_ThreadList</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_ThreadList</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_ThreadList</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumThreads</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumThreads</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
+		<span class="nx">tmp11</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_Thread</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp11</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Threads</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Threads</span><span class="p">,</span> <span class="nx">tmp11</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_LocationDescriptor</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">LenData</span> <span class="kt">uint32</span>
+	<span class="nx">OfsData</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_data</span> <span class="kt">bool</span>
+	<span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_LocationDescriptor</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_LocationDescriptor</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_LocationDescriptor</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_LocationDescriptor</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
+	<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsData</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_LocationDescriptor</span><span class="p">)</span> <span class="nx">Data</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">thisIo</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsData</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp14</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp14</span> <span class="p">=</span> <span class="nx">tmp14</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">tmp14</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_data</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_data</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Specific string serialization scheme used in MiniDump format is</span>
+<span class="cm"> * actually a simple 32-bit length-prefixed UTF-16 string.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_MinidumpString</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">LenStr</span> <span class="kt">uint32</span>
+	<span class="nx">Str</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_SystemInfo</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_MinidumpString</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_MinidumpString</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_MinidumpString</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_MinidumpString</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_SystemInfo</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp15</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenStr</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span>
+	<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenStr</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp16</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesToStr</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">,</span> <span class="nx">unicode</span><span class="p">.</span><span class="nx">UTF16</span><span class="p">(</span><span class="nx">unicode</span><span class="p">.</span><span class="nx">LittleEndian</span><span class="p">,</span> <span class="nx">unicode</span><span class="p">.</span><span class="nx">IgnoreBOM</span><span class="p">).</span><span class="nx">NewDecoder</span><span class="p">())</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Str</span> <span class="p">=</span> <span class="nx">tmp17</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &quot;System info&quot; stream provides basic information about the</span>
+<span class="cm"> * hardware and operating system which produces this dump.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">WindowsMinidump_SystemInfo_CpuArchs__Intel</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">WindowsMinidump_SystemInfo_CpuArchs__Arm</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span> <span class="p">=</span> <span class="mi">5</span>
+	<span class="nx">WindowsMinidump_SystemInfo_CpuArchs__Ia64</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span> <span class="p">=</span> <span class="mi">6</span>
+	<span class="nx">WindowsMinidump_SystemInfo_CpuArchs__Amd64</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span> <span class="p">=</span> <span class="mi">9</span>
+	<span class="nx">WindowsMinidump_SystemInfo_CpuArchs__Unknown</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span> <span class="p">=</span> <span class="mi">65535</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_SystemInfo</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">CpuArch</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span>
+	<span class="nx">CpuLevel</span> <span class="kt">uint16</span>
+	<span class="nx">CpuRevision</span> <span class="kt">uint16</span>
+	<span class="nx">NumCpus</span> <span class="kt">uint8</span>
+	<span class="nx">OsType</span> <span class="kt">uint8</span>
+	<span class="nx">OsVerMajor</span> <span class="kt">uint32</span>
+	<span class="nx">OsVerMinor</span> <span class="kt">uint32</span>
+	<span class="nx">OsBuild</span> <span class="kt">uint32</span>
+	<span class="nx">OsPlatform</span> <span class="kt">uint32</span>
+	<span class="nx">OfsServicePack</span> <span class="kt">uint32</span>
+	<span class="nx">OsSuiteMask</span> <span class="kt">uint16</span>
+	<span class="nx">Reserved2</span> <span class="kt">uint16</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span>
+	<span class="nx">_f_servicePack</span> <span class="kt">bool</span>
+	<span class="nx">servicePack</span> <span class="o">*</span><span class="nx">WindowsMinidump_MinidumpString</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_SystemInfo</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_SystemInfo</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_SystemInfo</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_SystemInfo</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuArch</span> <span class="p">=</span> <span class="nx">WindowsMinidump_SystemInfo_CpuArchs</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuLevel</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span>
+	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuRevision</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp20</span><span class="p">)</span>
+	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumCpus</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OsType</span> <span class="p">=</span> <span class="nx">tmp22</span>
+	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OsVerMajor</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp23</span><span class="p">)</span>
+	<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OsVerMinor</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">)</span>
+	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OsBuild</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
+	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OsPlatform</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsServicePack</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OsSuiteMask</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
+	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_SystemInfo</span><span class="p">)</span> <span class="nx">ServicePack</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><span class="nx">WindowsMinidump_MinidumpString</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_servicePack</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">servicePack</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsServicePack</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">thisIo</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span>
+		<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsServicePack</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp30</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_MinidumpString</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp30</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">servicePack</span> <span class="p">=</span> <span class="nx">tmp30</span>
+		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_f_servicePack</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_servicePack</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">servicePack</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_ExceptionRecord</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Code</span> <span class="kt">uint32</span>
+	<span class="nx">Flags</span> <span class="kt">uint32</span>
+	<span class="nx">InnerException</span> <span class="kt">uint64</span>
+	<span class="nx">Addr</span> <span class="kt">uint64</span>
+	<span class="nx">NumParams</span> <span class="kt">uint32</span>
+	<span class="nx">Reserved</span> <span class="kt">uint32</span>
+	<span class="nx">Params</span> <span class="p">[]</span><span class="kt">uint64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_ExceptionStream</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_ExceptionRecord</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_ExceptionRecord</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_ExceptionRecord</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_ExceptionRecord</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_ExceptionStream</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Code</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
+	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">InnerException</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp33</span><span class="p">)</span>
+	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Addr</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp34</span><span class="p">)</span>
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumParams</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
+	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
+		<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Params</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Params</span><span class="p">,</span> <span class="nx">tmp37</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Memory address where exception has occurred</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Additional parameters passed along with exception raise</span>
+<span class="cm"> * function (for WinAPI, that is `RaiseException`). Meaning is</span>
+<span class="cm"> * exception-specific. Given that this type is originally</span>
+<span class="cm"> * defined by a C structure, it is described there as array of</span>
+<span class="cm"> * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =</span>
+<span class="cm"> * 15), but in reality only first `num_params` would be used.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_MiscInfo</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">LenInfo</span> <span class="kt">uint32</span>
+	<span class="nx">Flags1</span> <span class="kt">uint32</span>
+	<span class="nx">ProcessId</span> <span class="kt">uint32</span>
+	<span class="nx">ProcessCreateTime</span> <span class="kt">uint32</span>
+	<span class="nx">ProcessUserTime</span> <span class="kt">uint32</span>
+	<span class="nx">ProcessKernelTime</span> <span class="kt">uint32</span>
+	<span class="nx">CpuMaxMhz</span> <span class="kt">uint32</span>
+	<span class="nx">CpuCurMhz</span> <span class="kt">uint32</span>
+	<span class="nx">CpuLimitMhz</span> <span class="kt">uint32</span>
+	<span class="nx">CpuMaxIdleState</span> <span class="kt">uint32</span>
+	<span class="nx">CpuCurIdleState</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_MiscInfo</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_MiscInfo</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_MiscInfo</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_MiscInfo</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenInfo</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp38</span><span class="p">)</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Flags1</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">)</span>
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ProcessId</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp40</span><span class="p">)</span>
+	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ProcessCreateTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp41</span><span class="p">)</span>
+	<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ProcessUserTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">)</span>
+	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ProcessKernelTime</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp43</span><span class="p">)</span>
+	<span class="nx">tmp44</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuMaxMhz</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp44</span><span class="p">)</span>
+	<span class="nx">tmp45</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuCurMhz</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp45</span><span class="p">)</span>
+	<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuLimitMhz</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp46</span><span class="p">)</span>
+	<span class="nx">tmp47</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuMaxIdleState</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp47</span><span class="p">)</span>
+	<span class="nx">tmp48</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CpuCurIdleState</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp48</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_Dir</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">StreamType</span> <span class="nx">WindowsMinidump_StreamTypes</span>
+	<span class="nx">LenData</span> <span class="kt">uint32</span>
+	<span class="nx">OfsData</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_raw_data</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_f_data</span> <span class="kt">bool</span>
+	<span class="nx">data</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_Dir</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_Dir</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">StreamType</span> <span class="p">=</span> <span class="nx">WindowsMinidump_StreamTypes</span><span class="p">(</span><span class="nx">tmp49</span><span class="p">)</span>
+	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp50</span><span class="p">)</span>
+	<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OfsData</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp51</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">)</span> <span class="nx">Data</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_data</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsData</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">StreamType</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">WindowsMinidump_StreamTypes__MemoryList</span><span class="p">:</span>
+		<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp52</span> <span class="p">=</span> <span class="nx">tmp52</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="p">=</span> <span class="nx">tmp52</span>
+		<span class="nx">_io__raw_data</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">))</span>
+		<span class="nx">tmp53</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_MemoryList</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp53</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">tmp53</span>
+	<span class="k">case</span> <span class="nx">WindowsMinidump_StreamTypes__MiscInfo</span><span class="p">:</span>
+		<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp54</span> <span class="p">=</span> <span class="nx">tmp54</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="p">=</span> <span class="nx">tmp54</span>
+		<span class="nx">_io__raw_data</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">))</span>
+		<span class="nx">tmp55</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_MiscInfo</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp55</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">tmp55</span>
+	<span class="k">case</span> <span class="nx">WindowsMinidump_StreamTypes__ThreadList</span><span class="p">:</span>
+		<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp56</span> <span class="p">=</span> <span class="nx">tmp56</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="p">=</span> <span class="nx">tmp56</span>
+		<span class="nx">_io__raw_data</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">))</span>
+		<span class="nx">tmp57</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_ThreadList</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp57</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">tmp57</span>
+	<span class="k">case</span> <span class="nx">WindowsMinidump_StreamTypes__Exception</span><span class="p">:</span>
+		<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp58</span> <span class="p">=</span> <span class="nx">tmp58</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="p">=</span> <span class="nx">tmp58</span>
+		<span class="nx">_io__raw_data</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">))</span>
+		<span class="nx">tmp59</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_ExceptionStream</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp59</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">tmp59</span>
+	<span class="k">case</span> <span class="nx">WindowsMinidump_StreamTypes__SystemInfo</span><span class="p">:</span>
+		<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp60</span> <span class="p">=</span> <span class="nx">tmp60</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="p">=</span> <span class="nx">tmp60</span>
+		<span class="nx">_io__raw_data</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">))</span>
+		<span class="nx">tmp61</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_SystemInfo</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp61</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">data</span> <span class="p">=</span> <span class="nx">tmp61</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="nx">tmp62</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp62</span> <span class="p">=</span> <span class="nx">tmp62</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="p">=</span> <span class="nx">tmp62</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_data</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_data</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_Thread</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ThreadId</span> <span class="kt">uint32</span>
+	<span class="nx">SuspendCount</span> <span class="kt">uint32</span>
+	<span class="nx">PriorityClass</span> <span class="kt">uint32</span>
+	<span class="nx">Priority</span> <span class="kt">uint32</span>
+	<span class="nx">Teb</span> <span class="kt">uint64</span>
+	<span class="nx">Stack</span> <span class="o">*</span><span class="nx">WindowsMinidump_MemoryDescriptor</span>
+	<span class="nx">ThreadContext</span> <span class="o">*</span><span class="nx">WindowsMinidump_LocationDescriptor</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_ThreadList</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_Thread</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_Thread</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_Thread</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_Thread</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_ThreadList</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp63</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ThreadId</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp63</span><span class="p">)</span>
+	<span class="nx">tmp64</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">SuspendCount</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp64</span><span class="p">)</span>
+	<span class="nx">tmp65</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">PriorityClass</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp65</span><span class="p">)</span>
+	<span class="nx">tmp66</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Priority</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp66</span><span class="p">)</span>
+	<span class="nx">tmp67</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Teb</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp67</span><span class="p">)</span>
+	<span class="nx">tmp68</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_MemoryDescriptor</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp68</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Stack</span> <span class="p">=</span> <span class="nx">tmp68</span>
+	<span class="nx">tmp69</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_LocationDescriptor</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp69</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ThreadContext</span> <span class="p">=</span> <span class="nx">tmp69</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Thread Environment Block</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_MemoryList</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">NumMemRanges</span> <span class="kt">uint32</span>
+	<span class="nx">MemRanges</span> <span class="p">[]</span><span class="o">*</span><span class="nx">WindowsMinidump_MemoryDescriptor</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_MemoryList</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_MemoryList</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_MemoryList</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_MemoryList</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp70</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumMemRanges</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp70</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumMemRanges</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
+		<span class="nx">tmp71</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_MemoryDescriptor</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp71</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">MemRanges</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">MemRanges</span><span class="p">,</span> <span class="nx">tmp71</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_MemoryDescriptor</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">AddrMemoryRange</span> <span class="kt">uint64</span>
+	<span class="nx">Memory</span> <span class="o">*</span><span class="nx">WindowsMinidump_LocationDescriptor</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_MemoryDescriptor</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_MemoryDescriptor</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_MemoryDescriptor</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_MemoryDescriptor</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp72</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AddrMemoryRange</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp72</span><span class="p">)</span>
+	<span class="nx">tmp73</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_LocationDescriptor</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp73</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Memory</span> <span class="p">=</span> <span class="nx">tmp73</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">WindowsMinidump_ExceptionStream</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ThreadId</span> <span class="kt">uint32</span>
+	<span class="nx">Reserved</span> <span class="kt">uint32</span>
+	<span class="nx">ExceptionRec</span> <span class="o">*</span><span class="nx">WindowsMinidump_ExceptionRecord</span>
+	<span class="nx">ThreadContext</span> <span class="o">*</span><span class="nx">WindowsMinidump_LocationDescriptor</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWindowsMinidump_ExceptionStream</span><span class="p">()</span> <span class="o">*</span><span class="nx">WindowsMinidump_ExceptionStream</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">WindowsMinidump_ExceptionStream</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">WindowsMinidump_ExceptionStream</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">WindowsMinidump_Dir</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">WindowsMinidump</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp74</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ThreadId</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp74</span><span class="p">)</span>
+	<span class="nx">tmp75</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp75</span><span class="p">)</span>
+	<span class="nx">tmp76</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_ExceptionRecord</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp76</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ExceptionRec</span> <span class="p">=</span> <span class="nx">tmp76</span>
+	<span class="nx">tmp77</span> <span class="o">:=</span> <span class="nx">NewWindowsMinidump_LocationDescriptor</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp77</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ThreadContext</span> <span class="p">=</span> <span class="nx">tmp77</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

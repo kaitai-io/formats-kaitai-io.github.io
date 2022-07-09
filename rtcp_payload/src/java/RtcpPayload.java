@@ -153,7 +153,7 @@ public class RtcpPayload extends KaitaiStruct {
             this.brExp = this._io.readBitsIntBe(6);
             this.brMantissa = this._io.readBitsIntBe(18);
             this._io.alignToByte();
-            ssrcList = new ArrayList<Long>(((Number) (numSsrc())).intValue());
+            this.ssrcList = new ArrayList<Long>();
             for (int i = 0; i < numSsrc(); i++) {
                 this.ssrcList.add(this._io.readU4be());
             }
@@ -205,7 +205,7 @@ public class RtcpPayload extends KaitaiStruct {
             this.rtpTimestamp = this._io.readU4be();
             this.senderPacketCount = this._io.readU4be();
             this.senderOctetCount = this._io.readU4be();
-            reportBlock = new ArrayList<ReportBlock>(((Number) (_parent().subtype())).intValue());
+            this.reportBlock = new ArrayList<ReportBlock>();
             for (int i = 0; i < _parent().subtype(); i++) {
                 this.reportBlock.add(new ReportBlock(this._io, this, _root));
             }
@@ -258,7 +258,7 @@ public class RtcpPayload extends KaitaiStruct {
         }
         private void _read() {
             this.ssrc = this._io.readU4be();
-            reportBlock = new ArrayList<ReportBlock>(((Number) (_parent().subtype())).intValue());
+            this.reportBlock = new ArrayList<ReportBlock>();
             for (int i = 0; i < _parent().subtype(); i++) {
                 this.reportBlock.add(new ReportBlock(this._io, this, _root));
             }
@@ -649,7 +649,7 @@ public class RtcpPayload extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            sourceChunk = new ArrayList<SourceChunk>(((Number) (sourceCount())).intValue());
+            this.sourceChunk = new ArrayList<SourceChunk>();
             for (int i = 0; i < sourceCount(); i++) {
                 this.sourceChunk.add(new SourceChunk(this._io, this, _root));
             }

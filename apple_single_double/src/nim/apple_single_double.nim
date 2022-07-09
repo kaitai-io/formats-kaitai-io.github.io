@@ -18,7 +18,8 @@ type
     `lenBody`*: uint32
     `parent`*: AppleSingleDouble
     `rawBodyInst`*: seq[byte]
-    `bodyInst`*: KaitaiStruct
+    `bodyInst`: KaitaiStruct
+    `bodyInstFlag`: bool
   AppleSingleDouble_Entry_Types* = enum
     data_fork = 1
     resource_fork = 2
@@ -120,7 +121,7 @@ proc read*(_: typedesc[AppleSingleDouble_Entry], io: KaitaiStream, root: KaitaiS
   this.lenBody = lenBodyExpr
 
 proc body(this: AppleSingleDouble_Entry): KaitaiStruct = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsBody))
@@ -136,8 +137,8 @@ proc body(this: AppleSingleDouble_Entry): KaitaiStruct =
       let bodyInstExpr = this.io.readBytes(int(this.lenBody))
       this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[AppleSingleDouble_Entry], filename: string): AppleSingleDouble_Entry =
   AppleSingleDouble_Entry.read(newKaitaiFileStream(filename), nil, nil)

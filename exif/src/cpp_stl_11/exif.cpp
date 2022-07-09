@@ -94,9 +94,8 @@ void exif_t::exif_body_t::ifd_t::_read() {
 
 void exif_t::exif_body_t::ifd_t::_read_le() {
     m_num_fields = m__io->read_u2le();
-    int l_fields = num_fields();
     m_fields = std::unique_ptr<std::vector<std::unique_ptr<ifd_field_t>>>(new std::vector<std::unique_ptr<ifd_field_t>>());
-    m_fields->reserve(l_fields);
+    const int l_fields = num_fields();
     for (int i = 0; i < l_fields; i++) {
         m_fields->push_back(std::move(std::unique_ptr<ifd_field_t>(new ifd_field_t(m__io, this, m__root, m__is_le))));
     }
@@ -105,9 +104,8 @@ void exif_t::exif_body_t::ifd_t::_read_le() {
 
 void exif_t::exif_body_t::ifd_t::_read_be() {
     m_num_fields = m__io->read_u2be();
-    int l_fields = num_fields();
     m_fields = std::unique_ptr<std::vector<std::unique_ptr<ifd_field_t>>>(new std::vector<std::unique_ptr<ifd_field_t>>());
-    m_fields->reserve(l_fields);
+    const int l_fields = num_fields();
     for (int i = 0; i < l_fields; i++) {
         m_fields->push_back(std::move(std::unique_ptr<ifd_field_t>(new ifd_field_t(m__io, this, m__root, m__is_le))));
     }

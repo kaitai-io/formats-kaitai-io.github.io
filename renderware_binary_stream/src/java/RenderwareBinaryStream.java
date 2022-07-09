@@ -343,7 +343,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             if (!(isNative())) {
                 this.geometry = new GeometryNonNative(this._io, this, _root);
             }
-            morphTargets = new ArrayList<MorphTarget>(((Number) (numMorphTargets())).intValue());
+            this.morphTargets = new ArrayList<MorphTarget>();
             for (int i = 0; i < numMorphTargets(); i++) {
                 this.morphTargets.add(new MorphTarget(this._io, this, _root));
             }
@@ -420,18 +420,18 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
         private void _read() {
             if (_parent().isPrelit()) {
-                prelitColors = new ArrayList<Rgba>(((Number) (_parent().numVertices())).intValue());
+                this.prelitColors = new ArrayList<Rgba>();
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.prelitColors.add(new Rgba(this._io, this, _root));
                 }
             }
             if ( ((_parent().isTextured()) || (_parent().isTextured2())) ) {
-                texCoords = new ArrayList<TexCoord>(((Number) (_parent().numVertices())).intValue());
+                this.texCoords = new ArrayList<TexCoord>();
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.texCoords.add(new TexCoord(this._io, this, _root));
                 }
             }
-            triangles = new ArrayList<Triangle>(((Number) (_parent().numTriangles())).intValue());
+            this.triangles = new ArrayList<Triangle>();
             for (int i = 0; i < _parent().numTriangles(); i++) {
                 this.triangles.add(new Triangle(this._io, this, _root));
             }
@@ -580,13 +580,13 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             this.hasVertices = this._io.readU4le();
             this.hasNormals = this._io.readU4le();
             if (hasVertices() != 0) {
-                vertices = new ArrayList<Vector3d>(((Number) (_parent().numVertices())).intValue());
+                this.vertices = new ArrayList<Vector3d>();
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.vertices.add(new Vector3d(this._io, this, _root));
                 }
             }
             if (hasNormals() != 0) {
-                normals = new ArrayList<Vector3d>(((Number) (_parent().numVertices())).intValue());
+                this.normals = new ArrayList<Vector3d>();
                 for (int i = 0; i < _parent().numVertices(); i++) {
                     this.normals.add(new Vector3d(this._io, this, _root));
                 }
@@ -671,7 +671,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         }
         private void _read() {
             this.numFrames = this._io.readU4le();
-            frames = new ArrayList<Frame>(((Number) (numFrames())).intValue());
+            this.frames = new ArrayList<Frame>();
             for (int i = 0; i < numFrames(); i++) {
                 this.frames.add(new Frame(this._io, this, _root));
             }
@@ -709,7 +709,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            entries = new ArrayList<Vector3d>(((Number) (3)).intValue());
+            this.entries = new ArrayList<Vector3d>();
             for (int i = 0; i < 3; i++) {
                 this.entries.add(new Vector3d(this._io, this, _root));
             }

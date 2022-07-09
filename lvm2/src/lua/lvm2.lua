@@ -135,23 +135,23 @@ function Lvm2.PhysicalVolume.Label.VolumeHeader:_read()
   self.data_area_descriptors = {}
   local i = 0
   while true do
-    _ = Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor(self._io, self, self._root)
+    local _ = Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor(self._io, self, self._root)
     self.data_area_descriptors[i + 1] = _
     if  ((_.size ~= 0) and (_.offset ~= 0))  then
       break
     end
     i = i + 1
   end
-self.metadata_area_descriptors = {}
-local i = 0
-while true do
-  _ = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor(self._io, self, self._root)
-  self.metadata_area_descriptors[i + 1] = _
-  if  ((_.size ~= 0) and (_.offset ~= 0))  then
-    break
+  self.metadata_area_descriptors = {}
+  local i = 0
+  while true do
+    local _ = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor(self._io, self, self._root)
+    self.metadata_area_descriptors[i + 1] = _
+    if  ((_.size ~= 0) and (_.offset ~= 0))  then
+      break
+    end
+    i = i + 1
   end
-  i = i + 1
-end
 end
 
 -- 
@@ -164,30 +164,30 @@ end
 Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor = class.class(KaitaiStruct)
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor:_read()
-self.offset = self._io:read_u8le()
-self.size = self._io:read_u8le()
+  self.offset = self._io:read_u8le()
+  self.size = self._io:read_u8le()
 end
 
 Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor.property.data = {}
 function Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor.property.data:get()
-if self._m_data ~= nil then
-return self._m_data
-end
+  if self._m_data ~= nil then
+    return self._m_data
+  end
 
-if self.size ~= 0 then
-local _pos = self._io:pos()
-self._io:seek(self.offset)
-self._m_data = str_decode.decode(self._io:read_bytes(self.size), "ascii")
-self._io:seek(_pos)
-end
-return self._m_data
+  if self.size ~= 0 then
+    local _pos = self._io:pos()
+    self._io:seek(self.offset)
+    self._m_data = str_decode.decode(self._io:read_bytes(self.size), "ascii")
+    self._io:seek(_pos)
+  end
+  return self._m_data
 end
 
 -- 
@@ -198,32 +198,32 @@ end
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor = class.class(KaitaiStruct)
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor:_read()
-self.offset = self._io:read_u8le()
-self.size = self._io:read_u8le()
+  self.offset = self._io:read_u8le()
+  self.size = self._io:read_u8le()
 end
 
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor.property.data = {}
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor.property.data:get()
-if self._m_data ~= nil then
-return self._m_data
-end
+  if self._m_data ~= nil then
+    return self._m_data
+  end
 
-if self.size ~= 0 then
-local _pos = self._io:pos()
-self._io:seek(self.offset)
-self._raw__m_data = self._io:read_bytes(self.size)
-local _io = KaitaiStream(stringstream(self._raw__m_data))
-self._m_data = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io, self, self._root)
-self._io:seek(_pos)
-end
-return self._m_data
+  if self.size ~= 0 then
+    local _pos = self._io:pos()
+    self._io:seek(self.offset)
+    self._raw__m_data = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io, self, self._root)
+    self._io:seek(_pos)
+  end
+  return self._m_data
 end
 
 -- 
@@ -236,58 +236,58 @@ end
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea = class.class(KaitaiStruct)
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea:_read()
-self.header = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader(self._io, self, self._root)
+  self.header = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader(self._io, self, self._root)
 end
 
 
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader = class.class(KaitaiStruct)
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader:_read()
-self.checksum = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader(self._io, self, self._root)
-self.signature = self._io:read_bytes(16)
-if not(self.signature == "\032\076\086\077\050\032\120\091\053\065\037\114\048\078\042\062") then
-error("not equal, expected " ..  "\032\076\086\077\050\032\120\091\053\065\037\114\048\078\042\062" .. ", but got " .. self.signature)
-end
-self.version = self._io:read_u4le()
-self.metadata_area_offset = self._io:read_u8le()
-self.metadata_area_size = self._io:read_u8le()
-self.raw_location_descriptors = {}
-local i = 0
-while true do
-_ = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor(self._io, self, self._root)
-self.raw_location_descriptors[i + 1] = _
-if  ((_.offset ~= 0) and (_.size ~= 0) and (_.checksum ~= 0))  then
-  break
-end
-i = i + 1
-end
+  self.checksum = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader(self._io, self, self._root)
+  self.signature = self._io:read_bytes(16)
+  if not(self.signature == "\032\076\086\077\050\032\120\091\053\065\037\114\048\078\042\062") then
+    error("not equal, expected " ..  "\032\076\086\077\050\032\120\091\053\065\037\114\048\078\042\062" .. ", but got " .. self.signature)
+  end
+  self.version = self._io:read_u4le()
+  self.metadata_area_offset = self._io:read_u8le()
+  self.metadata_area_size = self._io:read_u8le()
+  self.raw_location_descriptors = {}
+  local i = 0
+  while true do
+    local _ = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor(self._io, self, self._root)
+    self.raw_location_descriptors[i + 1] = _
+    if  ((_.offset ~= 0) and (_.size ~= 0) and (_.checksum ~= 0))  then
+      break
+    end
+    i = i + 1
+  end
 end
 
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.property.metadata = {}
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.property.metadata:get()
-if self._m_metadata ~= nil then
-return self._m_metadata
-end
+  if self._m_metadata ~= nil then
+    return self._m_metadata
+  end
 
-local _pos = self._io:pos()
-self._io:seek(self.metadata_area_offset)
-self._m_metadata = self._io:read_bytes(self.metadata_area_size)
-self._io:seek(_pos)
-return self._m_metadata
+  local _pos = self._io:pos()
+  self._io:seek(self.metadata_area_offset)
+  self._m_metadata = self._io:read_bytes(self.metadata_area_size)
+  self._io:seek(_pos)
+  return self._m_metadata
 end
 
 -- 
@@ -302,21 +302,21 @@ end
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor = class.class(KaitaiStruct)
 
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor.RawLocationDescriptorFlags = enum.Enum {
-raw_location_ignored = 1,
+  raw_location_ignored = 1,
 }
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor:_read()
-self.offset = self._io:read_u8le()
-self.size = self._io:read_u8le()
-self.checksum = self._io:read_u4le()
-self.flags = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor.RawLocationDescriptorFlags(self._io:read_u4le())
+  self.offset = self._io:read_u8le()
+  self.size = self._io:read_u8le()
+  self.checksum = self._io:read_u4le()
+  self.flags = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor.RawLocationDescriptorFlags(self._io:read_u4le())
 end
 
 -- 

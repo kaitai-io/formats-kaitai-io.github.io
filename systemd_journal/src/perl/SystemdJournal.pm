@@ -44,7 +44,7 @@ sub _read {
     $self->{objects} = ();
     my $n_objects = $self->header()->num_objects();
     for (my $i = 0; $i < $n_objects; $i++) {
-        $self->{objects}[$i] = SystemdJournal::JournalObject->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{objects}}, SystemdJournal::JournalObject->new($self->{_io}, $self, $self->{_root});
     }
 }
 

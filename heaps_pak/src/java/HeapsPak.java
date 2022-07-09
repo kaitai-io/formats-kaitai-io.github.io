@@ -179,9 +179,9 @@ public class HeapsPak extends KaitaiStruct {
             public byte[] data() {
                 if (this.data != null)
                     return this.data;
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((_root.header().lenHeader() + ofsData()));
+                io.seek((_root().header().lenHeader() + ofsData()));
                 this.data = io.readBytes(lenData());
                 io.seek(_pos);
                 return this.data;
@@ -218,7 +218,7 @@ public class HeapsPak extends KaitaiStruct {
             }
             private void _read() {
                 this.numEntries = this._io.readU4le();
-                entries = new ArrayList<Entry>(((Number) (numEntries())).intValue());
+                this.entries = new ArrayList<Entry>();
                 for (int i = 0; i < numEntries(); i++) {
                     this.entries.add(new Entry(this._io, this, _root));
                 }

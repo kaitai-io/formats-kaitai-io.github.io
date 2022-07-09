@@ -8,7 +8,7 @@
   } else {
     root.Riff = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The Resource Interchange File Format (RIFF) is a generic file container format
  * for storing data in tagged chunks. It is primarily used to store multimedia

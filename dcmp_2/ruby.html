@@ -342,9 +342,9 @@ to differentiate literals and table references.</p>
 
   <span class="k">def</span> <span class="n">_read</span>
     <span class="k">if</span> <span class="n">header_parameters</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_custom_lookup_table</span>
-      <span class="vi">@custom_lookup_table</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header_parameters</span><span class="o">.</span><span class="n">num_custom_lookup_table_entries</span><span class="p">)</span>
+      <span class="vi">@custom_lookup_table</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">header_parameters</span><span class="o">.</span><span class="n">num_custom_lookup_table_entries</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@custom_lookup_table</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="vi">@custom_lookup_table</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
       <span class="p">}</span>
     <span class="k">end</span>
     <span class="k">case</span> <span class="n">header_parameters</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">tagged</span>
@@ -513,9 +513,9 @@ to differentiate literals and table references.</p>
       <span class="k">end</span>
 
       <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@tag</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="vi">@tag</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@tag</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+          <span class="vi">@tag</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
         <span class="p">}</span>
         <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
         <span class="vi">@_raw_units</span> <span class="o">=</span> <span class="o">[]</span>

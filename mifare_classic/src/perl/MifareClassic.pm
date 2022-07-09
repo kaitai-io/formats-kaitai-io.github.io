@@ -268,12 +268,12 @@ sub _read {
     $self->{valuez} = ();
     my $n_valuez = 3;
     for (my $i = 0; $i < $n_valuez; $i++) {
-        $self->{valuez}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{valuez}}, $self->{_io}->read_u4le();
     }
     $self->{addrz} = ();
     my $n_addrz = 4;
     for (my $i = 0; $i < $n_addrz; $i++) {
-        $self->{addrz}[$i] = $self->{_io}->read_u1();
+        push @{$self->{addrz}}, $self->{_io}->read_u1();
     }
 }
 
@@ -543,7 +543,7 @@ sub _read {
     $self->{raw_chunks} = ();
     my $n_raw_chunks = $self->_parent()->ac_count_of_chunks();
     for (my $i = 0; $i < $n_raw_chunks; $i++) {
-        $self->{raw_chunks}[$i] = $self->{_io}->read_bits_int_be(4);
+        push @{$self->{raw_chunks}}, $self->{_io}->read_bits_int_be(4);
     }
 }
 
@@ -555,7 +555,7 @@ sub data_acs {
     $self->{data_acs} = ();
     my $n_data_acs = ($self->_parent()->acs_in_sector() - 1);
     for (my $i = 0; $i < $n_data_acs; $i++) {
-        $self->{data_acs}[$i] = MifareClassic::Trailer::AccessConditions::DataAc->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{data_acs}}, MifareClassic::Trailer::AccessConditions::DataAc->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{data_acs};
@@ -569,7 +569,7 @@ sub remaps {
     $self->{remaps} = ();
     my $n_remaps = $self->_parent()->ac_bits();
     for (my $i = 0; $i < $n_remaps; $i++) {
-        $self->{remaps}[$i] = MifareClassic::Trailer::AccessConditions::ChunkBitRemap->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{remaps}}, MifareClassic::Trailer::AccessConditions::ChunkBitRemap->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{remaps};
@@ -583,7 +583,7 @@ sub acs_raw {
     $self->{acs_raw} = ();
     my $n_acs_raw = $self->_parent()->acs_in_sector();
     for (my $i = 0; $i < $n_acs_raw; $i++) {
-        $self->{acs_raw}[$i] = MifareClassic::Trailer::AccessConditions::Ac->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{acs_raw}}, MifareClassic::Trailer::AccessConditions::Ac->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{acs_raw};
@@ -607,7 +607,7 @@ sub chunks {
     $self->{chunks} = ();
     my $n_chunks = $self->_parent()->ac_bits();
     for (my $i = 0; $i < $n_chunks; $i++) {
-        $self->{chunks}[$i] = MifareClassic::Trailer::AccessConditions::ValidChunk->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{chunks}}, MifareClassic::Trailer::AccessConditions::ValidChunk->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{chunks};
@@ -860,7 +860,7 @@ sub bits {
     $self->{bits} = ();
     my $n_bits = $self->_parent()->_parent()->ac_bits();
     for (my $i = 0; $i < $n_bits; $i++) {
-        $self->{bits}[$i] = MifareClassic::Trailer::AccessConditions::Ac::AcBit->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{bits}}, MifareClassic::Trailer::AccessConditions::Ac::AcBit->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{bits};

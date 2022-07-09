@@ -8,7 +8,7 @@
   } else {
     root.ShapefileIndex = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var ShapefileIndex = (function() {
   ShapefileIndex.ShapeType = Object.freeze({
     NULL_SHAPE: 0,

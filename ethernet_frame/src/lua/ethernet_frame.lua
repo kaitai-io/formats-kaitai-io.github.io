@@ -96,7 +96,7 @@ end
 
 function EthernetFrame.TagControlInfo:_read()
   self.priority = self._io:read_bits_int_be(3)
-  self.drop_eligible = self._io:read_bits_int_be(1)
+  self.drop_eligible = self._io:read_bits_int_be(1) ~= 0
   self.vlan_id = self._io:read_bits_int_be(12)
 end
 

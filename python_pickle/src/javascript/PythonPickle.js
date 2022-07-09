@@ -8,7 +8,7 @@
   } else {
     root.PythonPickle = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Python Pickle format serializes Python objects to a byte stream, as a sequence
  * of operations to run on the Pickle Virtual Machine.
@@ -187,7 +187,7 @@ var PythonPickle = (function() {
     this._read();
   }
   PythonPickle.prototype._read = function() {
-    this.ops = []
+    this.ops = [];
     var i = 0;
     do {
       var _ = new Op(this._io, this, this._root);

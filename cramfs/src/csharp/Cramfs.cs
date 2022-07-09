@@ -160,7 +160,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _blockEndIndex = new List<uint>((int) ((((M_Parent.Size + M_Root.PageSize) - 1) / M_Root.PageSize)));
+                _blockEndIndex = new List<uint>();
                 for (var i = 0; i < (((M_Parent.Size + M_Root.PageSize) - 1) / M_Root.PageSize); i++)
                 {
                     _blockEndIndex.Add(m_io.ReadU4le());

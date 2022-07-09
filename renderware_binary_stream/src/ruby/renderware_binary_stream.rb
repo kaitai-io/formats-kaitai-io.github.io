@@ -263,9 +263,9 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       if !(is_native)
         @geometry = GeometryNonNative.new(@_io, self, @_root)
       end
-      @morph_targets = Array.new(num_morph_targets)
+      @morph_targets = []
       (num_morph_targets).times { |i|
-        @morph_targets[i] = MorphTarget.new(@_io, self, @_root)
+        @morph_targets << MorphTarget.new(@_io, self, @_root)
       }
       self
     end
@@ -305,20 +305,20 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
 
     def _read
       if _parent.is_prelit
-        @prelit_colors = Array.new(_parent.num_vertices)
+        @prelit_colors = []
         (_parent.num_vertices).times { |i|
-          @prelit_colors[i] = Rgba.new(@_io, self, @_root)
+          @prelit_colors << Rgba.new(@_io, self, @_root)
         }
       end
       if  ((_parent.is_textured) || (_parent.is_textured2)) 
-        @tex_coords = Array.new(_parent.num_vertices)
+        @tex_coords = []
         (_parent.num_vertices).times { |i|
-          @tex_coords[i] = TexCoord.new(@_io, self, @_root)
+          @tex_coords << TexCoord.new(@_io, self, @_root)
         }
       end
-      @triangles = Array.new(_parent.num_triangles)
+      @triangles = []
       (_parent.num_triangles).times { |i|
-        @triangles[i] = Triangle.new(@_io, self, @_root)
+        @triangles << Triangle.new(@_io, self, @_root)
       }
       self
     end
@@ -388,15 +388,15 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       @has_vertices = @_io.read_u4le
       @has_normals = @_io.read_u4le
       if has_vertices != 0
-        @vertices = Array.new(_parent.num_vertices)
+        @vertices = []
         (_parent.num_vertices).times { |i|
-          @vertices[i] = Vector3d.new(@_io, self, @_root)
+          @vertices << Vector3d.new(@_io, self, @_root)
         }
       end
       if has_normals != 0
-        @normals = Array.new(_parent.num_vertices)
+        @normals = []
         (_parent.num_vertices).times { |i|
-          @normals[i] = Vector3d.new(@_io, self, @_root)
+          @normals << Vector3d.new(@_io, self, @_root)
         }
       end
       self
@@ -437,9 +437,9 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
 
     def _read
       @num_frames = @_io.read_u4le
-      @frames = Array.new(num_frames)
+      @frames = []
       (num_frames).times { |i|
-        @frames[i] = Frame.new(@_io, self, @_root)
+        @frames << Frame.new(@_io, self, @_root)
       }
       self
     end
@@ -456,9 +456,9 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     end
 
     def _read
-      @entries = Array.new(3)
+      @entries = []
       (3).times { |i|
-        @entries[i] = Vector3d.new(@_io, self, @_root)
+        @entries << Vector3d.new(@_io, self, @_root)
       }
       self
     end

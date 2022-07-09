@@ -8,10 +8,14 @@ type
     `bitsPerDigit`*: uint8
     `isLe`*: bool
     `parent`*: KaitaiStruct
-    `asIntInst`*: int
-    `asIntLeInst`*: int
-    `lastIdxInst`*: int
-    `asIntBeInst`*: int
+    `asIntInst`: int
+    `asIntInstFlag`: bool
+    `asIntLeInst`: int
+    `asIntLeInstFlag`: bool
+    `lastIdxInst`: int
+    `lastIdxInstFlag`: bool
+    `asIntBeInst`: int
+    `asIntBeInstFlag`: bool
 
 proc read*(_: typedesc[Bcd], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct, numDigits: any, bitsPerDigit: any, isLe: any): Bcd
 
@@ -80,48 +84,48 @@ proc asInt(this: Bcd): int =
   ##[
   Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.
   ]##
-  if this.asIntInst != nil:
+  if this.asIntInstFlag:
     return this.asIntInst
   let asIntInstExpr = int((if this.isLe: this.asIntLe else: this.asIntBe))
   this.asIntInst = asIntInstExpr
-  if this.asIntInst != nil:
-    return this.asIntInst
+  this.asIntInstFlag = true
+  return this.asIntInst
 
 proc asIntLe(this: Bcd): int = 
 
   ##[
   Value of this BCD number as integer (treating digit order as little-endian).
   ]##
-  if this.asIntLeInst != nil:
+  if this.asIntLeInstFlag:
     return this.asIntLeInst
   let asIntLeInstExpr = int((this.digits[0] + (if this.numDigits < 2: 0 else: ((this.digits[1] * 10) + (if this.numDigits < 3: 0 else: ((this.digits[2] * 100) + (if this.numDigits < 4: 0 else: ((this.digits[3] * 1000) + (if this.numDigits < 5: 0 else: ((this.digits[4] * 10000) + (if this.numDigits < 6: 0 else: ((this.digits[5] * 100000) + (if this.numDigits < 7: 0 else: ((this.digits[6] * 1000000) + (if this.numDigits < 8: 0 else: (this.digits[7] * 10000000))))))))))))))))
   this.asIntLeInst = asIntLeInstExpr
-  if this.asIntLeInst != nil:
-    return this.asIntLeInst
+  this.asIntLeInstFlag = true
+  return this.asIntLeInst
 
 proc lastIdx(this: Bcd): int = 
 
   ##[
   Index of last digit (0-based).
   ]##
-  if this.lastIdxInst != nil:
+  if this.lastIdxInstFlag:
     return this.lastIdxInst
   let lastIdxInstExpr = int((this.numDigits - 1))
   this.lastIdxInst = lastIdxInstExpr
-  if this.lastIdxInst != nil:
-    return this.lastIdxInst
+  this.lastIdxInstFlag = true
+  return this.lastIdxInst
 
 proc asIntBe(this: Bcd): int = 
 
   ##[
   Value of this BCD number as integer (treating digit order as big-endian).
   ]##
-  if this.asIntBeInst != nil:
+  if this.asIntBeInstFlag:
     return this.asIntBeInst
   let asIntBeInstExpr = int((this.digits[this.lastIdx] + (if this.numDigits < 2: 0 else: ((this.digits[(this.lastIdx - 1)] * 10) + (if this.numDigits < 3: 0 else: ((this.digits[(this.lastIdx - 2)] * 100) + (if this.numDigits < 4: 0 else: ((this.digits[(this.lastIdx - 3)] * 1000) + (if this.numDigits < 5: 0 else: ((this.digits[(this.lastIdx - 4)] * 10000) + (if this.numDigits < 6: 0 else: ((this.digits[(this.lastIdx - 5)] * 100000) + (if this.numDigits < 7: 0 else: ((this.digits[(this.lastIdx - 6)] * 1000000) + (if this.numDigits < 8: 0 else: (this.digits[(this.lastIdx - 7)] * 10000000))))))))))))))))
   this.asIntBeInst = asIntBeInstExpr
-  if this.asIntBeInst != nil:
-    return this.asIntBeInst
+  this.asIntBeInstFlag = true
+  return this.asIntBeInst
 
 proc fromFile*(_: typedesc[Bcd], filename: string): Bcd =
   Bcd.read(newKaitaiFileStream(filename), nil, nil)

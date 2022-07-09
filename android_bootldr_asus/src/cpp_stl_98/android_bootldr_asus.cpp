@@ -27,9 +27,8 @@ void android_bootldr_asus_t::_read() {
     }
     m_reserved1 = m__io->read_u2le();
     m_reserved2 = m__io->read_u4le();
-    int l_images = 3;
     m_images = new std::vector<image_t*>();
-    m_images->reserve(l_images);
+    const int l_images = 3;
     for (int i = 0; i < l_images; i++) {
         m_images->push_back(new image_t(m__io, this, m__root));
     }

@@ -12,7 +12,8 @@ type
     `timestamp`*: uint32
     `flags`*: uint64
     `parent`*: KaitaiStruct
-    `streamsInst`*: seq[WindowsMinidump_Dir]
+    `streamsInst`: seq[WindowsMinidump_Dir]
+    `streamsInstFlag`: bool
   WindowsMinidump_StreamTypes* = enum
     unused = 0
     reserved_0 = 1
@@ -71,7 +72,8 @@ type
     `lenData`*: uint32
     `ofsData`*: uint32
     `parent`*: KaitaiStruct
-    `dataInst`*: seq[byte]
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
   WindowsMinidump_MinidumpString* = ref object of KaitaiStruct
     `lenStr`*: uint32
     `str`*: string
@@ -90,7 +92,8 @@ type
     `osSuiteMask`*: uint16
     `reserved2`*: uint16
     `parent`*: WindowsMinidump_Dir
-    `servicePackInst`*: WindowsMinidump_MinidumpString
+    `servicePackInst`: WindowsMinidump_MinidumpString
+    `servicePackInstFlag`: bool
   WindowsMinidump_SystemInfo_CpuArchs* = enum
     intel = 0
     arm = 5
@@ -125,7 +128,8 @@ type
     `ofsData`*: uint32
     `parent`*: WindowsMinidump
     `rawDataInst`*: seq[byte]
-    `dataInst`*: KaitaiStruct
+    `dataInst`: KaitaiStruct
+    `dataInstFlag`: bool
   WindowsMinidump_Thread* = ref object of KaitaiStruct
     `threadId`*: uint32
     `suspendCount`*: uint32
@@ -207,7 +211,7 @@ proc read*(_: typedesc[WindowsMinidump], io: KaitaiStream, root: KaitaiStruct, p
   this.flags = flagsExpr
 
 proc streams(this: WindowsMinidump): seq[WindowsMinidump_Dir] = 
-  if this.streamsInst.len != 0:
+  if this.streamsInstFlag:
     return this.streamsInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsStreams))
@@ -215,8 +219,8 @@ proc streams(this: WindowsMinidump): seq[WindowsMinidump_Dir] =
     let it = WindowsMinidump_Dir.read(this.io, this.root, this)
     this.streamsInst.add(it)
   this.io.seek(pos)
-  if this.streamsInst.len != 0:
-    return this.streamsInst
+  this.streamsInstFlag = true
+  return this.streamsInst
 
 proc fromFile*(_: typedesc[WindowsMinidump], filename: string): WindowsMinidump =
   WindowsMinidump.read(newKaitaiFileStream(filename), nil, nil)
@@ -260,7 +264,7 @@ proc read*(_: typedesc[WindowsMinidump_LocationDescriptor], io: KaitaiStream, ro
   this.ofsData = ofsDataExpr
 
 proc data(this: WindowsMinidump_LocationDescriptor): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let io = WindowsMinidump(this.root).io
   let pos = io.pos()
@@ -268,8 +272,8 @@ proc data(this: WindowsMinidump_LocationDescriptor): seq[byte] =
   let dataInstExpr = io.readBytes(int(this.lenData))
   this.dataInst = dataInstExpr
   io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[WindowsMinidump_LocationDescriptor], filename: string): WindowsMinidump_LocationDescriptor =
   WindowsMinidump_LocationDescriptor.read(newKaitaiFileStream(filename), nil, nil)
@@ -338,7 +342,7 @@ proc read*(_: typedesc[WindowsMinidump_SystemInfo], io: KaitaiStream, root: Kait
   this.reserved2 = reserved2Expr
 
 proc servicePack(this: WindowsMinidump_SystemInfo): WindowsMinidump_MinidumpString = 
-  if this.servicePackInst != nil:
+  if this.servicePackInstFlag:
     return this.servicePackInst
   if this.ofsServicePack > 0:
     let io = WindowsMinidump(this.root).io
@@ -347,8 +351,8 @@ proc servicePack(this: WindowsMinidump_SystemInfo): WindowsMinidump_MinidumpStri
     let servicePackInstExpr = WindowsMinidump_MinidumpString.read(io, this.root, this)
     this.servicePackInst = servicePackInstExpr
     io.seek(pos)
-  if this.servicePackInst != nil:
-    return this.servicePackInst
+  this.servicePackInstFlag = true
+  return this.servicePackInst
 
 proc fromFile*(_: typedesc[WindowsMinidump_SystemInfo], filename: string): WindowsMinidump_SystemInfo =
   WindowsMinidump_SystemInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -460,7 +464,7 @@ proc read*(_: typedesc[WindowsMinidump_Dir], io: KaitaiStream, root: KaitaiStruc
   this.ofsData = ofsDataExpr
 
 proc data(this: WindowsMinidump_Dir): KaitaiStruct = 
-  if this.dataInst != nil:
+  if this.dataInstFlag:
     return this.dataInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsData))
@@ -500,8 +504,8 @@ proc data(this: WindowsMinidump_Dir): KaitaiStruct =
       let dataInstExpr = this.io.readBytes(int(this.lenData))
       this.dataInst = dataInstExpr
   this.io.seek(pos)
-  if this.dataInst != nil:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[WindowsMinidump_Dir], filename: string): WindowsMinidump_Dir =
   WindowsMinidump_Dir.read(newKaitaiFileStream(filename), nil, nil)

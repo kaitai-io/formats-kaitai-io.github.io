@@ -105,10 +105,10 @@ public class SaintsRow2VppPc extends KaitaiStruct {
             public String filename() {
                 if (this.filename != null)
                     return this.filename;
-                KaitaiStream io = _root.filenames()._io();
+                KaitaiStream io = _root().filenames()._io();
                 long _pos = io.pos();
                 io.seek(nameOfs());
-                this.filename = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                this.filename = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                 io.seek(_pos);
                 return this.filename;
             }
@@ -116,10 +116,10 @@ public class SaintsRow2VppPc extends KaitaiStruct {
             public String ext() {
                 if (this.ext != null)
                     return this.ext;
-                KaitaiStream io = _root.extensions()._io();
+                KaitaiStream io = _root().extensions()._io();
                 long _pos = io.pos();
                 io.seek(extOfs());
-                this.ext = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                this.ext = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                 io.seek(_pos);
                 return this.ext;
             }
@@ -127,9 +127,9 @@ public class SaintsRow2VppPc extends KaitaiStruct {
             public byte[] body() {
                 if (this.body != null)
                     return this.body;
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((_root.dataStart() + ofsBody()));
+                io.seek((_root().dataStart() + ofsBody()));
                 this.body = io.readBytes(lenBody());
                 io.seek(_pos);
                 return this.body;
@@ -184,7 +184,7 @@ public class SaintsRow2VppPc extends KaitaiStruct {
             {
                 int i = 0;
                 while (!this._io.isEof()) {
-                    this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
+                    this.entries.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
                     i++;
                 }
             }

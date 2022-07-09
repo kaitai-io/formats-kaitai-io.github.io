@@ -8,7 +8,7 @@
   } else {
     root.Luks = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Linux Unified Key Setup (LUKS) is a format specification for storing disk
  * encryption parameters and up to 8 user keys (which can unlock the master key).
@@ -53,9 +53,9 @@ var Luks = (function() {
       this.masterKeySaltParameter = this._io.readBytes(32);
       this.masterKeyIterationsParameter = this._io.readU4be();
       this.uuid = KaitaiStream.bytesToStr(this._io.readBytes(40), "ASCII");
-      this.keySlots = new Array(8);
+      this.keySlots = [];
       for (var i = 0; i < 8; i++) {
-        this.keySlots[i] = new KeySlot(this._io, this, this._root);
+        this.keySlots.push(new KeySlot(this._io, this, this._root));
       }
     }
 

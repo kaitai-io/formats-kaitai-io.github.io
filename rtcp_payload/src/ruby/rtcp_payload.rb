@@ -87,9 +87,9 @@ class RtcpPayload < Kaitai::Struct::Struct
       @br_exp = @_io.read_bits_int_be(6)
       @br_mantissa = @_io.read_bits_int_be(18)
       @_io.align_to_byte
-      @ssrc_list = Array.new(num_ssrc)
+      @ssrc_list = []
       (num_ssrc).times { |i|
-        @ssrc_list[i] = @_io.read_u4be
+        @ssrc_list << @_io.read_u4be
       }
       self
     end
@@ -116,9 +116,9 @@ class RtcpPayload < Kaitai::Struct::Struct
       @rtp_timestamp = @_io.read_u4be
       @sender_packet_count = @_io.read_u4be
       @sender_octet_count = @_io.read_u4be
-      @report_block = Array.new(_parent.subtype)
+      @report_block = []
       (_parent.subtype).times { |i|
-        @report_block[i] = ReportBlock.new(@_io, self, @_root)
+        @report_block << ReportBlock.new(@_io, self, @_root)
       }
       self
     end
@@ -143,9 +143,9 @@ class RtcpPayload < Kaitai::Struct::Struct
 
     def _read
       @ssrc = @_io.read_u4be
-      @report_block = Array.new(_parent.subtype)
+      @report_block = []
       (_parent.subtype).times { |i|
-        @report_block[i] = ReportBlock.new(@_io, self, @_root)
+        @report_block << ReportBlock.new(@_io, self, @_root)
       }
       self
     end
@@ -344,9 +344,9 @@ class RtcpPayload < Kaitai::Struct::Struct
     end
 
     def _read
-      @source_chunk = Array.new(source_count)
+      @source_chunk = []
       (source_count).times { |i|
-        @source_chunk[i] = SourceChunk.new(@_io, self, @_root)
+        @source_chunk << SourceChunk.new(@_io, self, @_root)
       }
       self
     end

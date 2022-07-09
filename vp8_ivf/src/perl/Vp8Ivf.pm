@@ -47,7 +47,7 @@ sub _read {
     $self->{image_data} = ();
     my $n_image_data = $self->num_frames();
     for (my $i = 0; $i < $n_image_data; $i++) {
-        $self->{image_data}[$i] = Vp8Ivf::Blocks->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{image_data}}, Vp8Ivf::Blocks->new($self->{_io}, $self, $self->{_root});
     }
 }
 

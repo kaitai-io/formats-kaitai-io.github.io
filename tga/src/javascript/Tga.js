@@ -8,7 +8,7 @@
   } else {
     root.Tga = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
  * @see {@link https://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf|Source}
@@ -63,9 +63,9 @@ var Tga = (function() {
     this.imgDescriptor = this._io.readU1();
     this.imageId = this._io.readBytes(this.imageIdLen);
     if (this.colorMapType == Tga.ColorMapEnum.HAS_COLOR_MAP) {
-      this.colorMap = new Array(this.numColorMap);
+      this.colorMap = [];
       for (var i = 0; i < this.numColorMap; i++) {
-        this.colorMap[i] = this._io.readBytes(Math.floor((this.colorMapDepth + 7) / 8));
+        this.colorMap.push(this._io.readBytes(Math.floor((this.colorMapDepth + 7) / 8)));
       }
     }
   }
@@ -127,9 +127,9 @@ var Tga = (function() {
     TgaExtArea.prototype._read = function() {
       this.extAreaSize = this._io.readU2le();
       this.authorName = KaitaiStream.bytesToStr(this._io.readBytes(41), "ASCII");
-      this.comments = new Array(4);
+      this.comments = [];
       for (var i = 0; i < 4; i++) {
-        this.comments[i] = KaitaiStream.bytesToStr(this._io.readBytes(81), "ASCII");
+        this.comments.push(KaitaiStream.bytesToStr(this._io.readBytes(81), "ASCII"));
       }
       this.timestamp = this._io.readBytes(12);
       this.jobId = KaitaiStream.bytesToStr(this._io.readBytes(41), "ASCII");

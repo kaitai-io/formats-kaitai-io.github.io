@@ -57,9 +57,9 @@ sub _read {
     $self->{color_map} = ();
     my $n_color_map = $self->hdr()->color_map_entries();
     for (my $i = 0; $i < $n_color_map; $i++) {
-        $self->{_raw_color_map}[$i] = $self->{_io}->read_bytes(12);
+        push @{$self->{_raw_color_map}}, $self->{_io}->read_bytes(12);
         my $io__raw_color_map = IO::KaitaiStruct::Stream->new($self->{_raw_color_map}[$i]);
-        $self->{color_map}[$i] = Xwd::ColorMapEntry->new($io__raw_color_map, $self, $self->{_root});
+        push @{$self->{color_map}}, Xwd::ColorMapEntry->new($io__raw_color_map, $self, $self->{_root});
     }
 }
 

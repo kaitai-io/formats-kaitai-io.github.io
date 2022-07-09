@@ -140,7 +140,7 @@ public class BroadcomTrx extends KaitaiStruct {
         private void _read() {
             this.version = new Version(this._io, this, _root);
             this.productId = new String(KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false), Charset.forName("utf-8"));
-            compHw = new ArrayList<HwCompInfo>(((Number) (4)).intValue());
+            this.compHw = new ArrayList<HwCompInfo>();
             for (int i = 0; i < 4; i++) {
                 this.compHw.add(new HwCompInfo(this._io, this, _root));
             }
@@ -281,7 +281,7 @@ public class BroadcomTrx extends KaitaiStruct {
                 if (this.lenBody != null)
                     return this.lenBody;
                 if (isPresent()) {
-                    int _tmp = (int) ((isLast() ? (_root._io().size() - ofsBody()) : _parent().partitions().get((int) (idx() + 1)).ofsBody()));
+                    int _tmp = (int) ((isLast() ? (_root()._io().size() - ofsBody()) : _parent().partitions().get((int) (idx() + 1)).ofsBody()));
                     this.lenBody = _tmp;
                 }
                 return this.lenBody;
@@ -291,7 +291,7 @@ public class BroadcomTrx extends KaitaiStruct {
                 if (this.body != null)
                     return this.body;
                 if (isPresent()) {
-                    KaitaiStream io = _root._io();
+                    KaitaiStream io = _root()._io();
                     long _pos = io.pos();
                     io.seek(ofsBody());
                     this.body = io.readBytes(lenBody());
@@ -328,7 +328,7 @@ public class BroadcomTrx extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                flags = new ArrayList<Boolean>(((Number) (16)).intValue());
+                this.flags = new ArrayList<Boolean>();
                 for (int i = 0; i < 16; i++) {
                     this.flags.add(this._io.readBitsIntLe(1) != 0);
                 }

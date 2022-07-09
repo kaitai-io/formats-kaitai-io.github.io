@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class GenmidiOp2(KaitaiStruct):
@@ -40,13 +39,13 @@ class GenmidiOp2(KaitaiStruct):
         self.magic = self._io.read_bytes(8)
         if not self.magic == b"\x23\x4F\x50\x4C\x5F\x49\x49\x23":
             raise kaitaistruct.ValidationNotEqualError(b"\x23\x4F\x50\x4C\x5F\x49\x49\x23", self.magic, self._io, u"/seq/0")
-        self.instruments = [None] * (175)
+        self.instruments = []
         for i in range(175):
-            self.instruments[i] = GenmidiOp2.InstrumentEntry(self._io, self, self._root)
+            self.instruments.append(GenmidiOp2.InstrumentEntry(self._io, self, self._root))
 
-        self.instrument_names = [None] * (175)
+        self.instrument_names = []
         for i in range(175):
-            self.instrument_names[i] = (KaitaiStream.bytes_terminate(KaitaiStream.bytes_strip_right(self._io.read_bytes(32), 0), 0, False)).decode(u"ASCII")
+            self.instrument_names.append((KaitaiStream.bytes_terminate(KaitaiStream.bytes_strip_right(self._io.read_bytes(32), 0), 0, False)).decode(u"ASCII"))
 
 
     class InstrumentEntry(KaitaiStruct):
@@ -60,9 +59,9 @@ class GenmidiOp2(KaitaiStruct):
             self.flags = self._io.read_u2le()
             self.finetune = self._io.read_u1()
             self.note = self._io.read_u1()
-            self.instruments = [None] * (2)
+            self.instruments = []
             for i in range(2):
-                self.instruments[i] = GenmidiOp2.Instrument(self._io, self, self._root)
+                self.instruments.append(GenmidiOp2.Instrument(self._io, self, self._root))
 
 
 

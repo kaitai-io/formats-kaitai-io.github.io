@@ -8,7 +8,7 @@
   } else {
     root.Ico = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Microsoft Windows uses specific file format to store applications
  * icons - ICO. This is a container that contains one or more image
@@ -31,9 +31,9 @@ var Ico = (function() {
       throw new KaitaiStream.ValidationNotEqualError([0, 0, 1, 0], this.magic, this._io, "/seq/0");
     }
     this.numImages = this._io.readU2le();
-    this.images = new Array(this.numImages);
+    this.images = [];
     for (var i = 0; i < this.numImages; i++) {
-      this.images[i] = new IconDirEntry(this._io, this, this._root);
+      this.images.push(new IconDirEntry(this._io, this, this._root));
     }
   }
 

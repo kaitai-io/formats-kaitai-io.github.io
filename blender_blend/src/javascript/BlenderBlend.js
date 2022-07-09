@@ -8,7 +8,7 @@
   } else {
     root.BlenderBlend = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Blender is an open source suite for 3D modelling, sculpting,
  * animation, compositing, rendering, preparation of assets for its own
@@ -74,9 +74,9 @@ var BlenderBlend = (function() {
     DnaStruct.prototype._read = function() {
       this.idxType = this._io.readU2le();
       this.numFields = this._io.readU2le();
-      this.fields = new Array(this.numFields);
+      this.fields = [];
       for (var i = 0; i < this.numFields; i++) {
-        this.fields[i] = new DnaField(this._io, this, this._root);
+        this.fields.push(new DnaField(this._io, this, this._root));
       }
     }
     Object.defineProperty(DnaStruct.prototype, 'type', {
@@ -183,9 +183,9 @@ var BlenderBlend = (function() {
         throw new KaitaiStream.ValidationNotEqualError([78, 65, 77, 69], this.nameMagic, this._io, "/types/dna1_body/seq/1");
       }
       this.numNames = this._io.readU4le();
-      this.names = new Array(this.numNames);
+      this.names = [];
       for (var i = 0; i < this.numNames; i++) {
-        this.names[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+        this.names.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
       }
       this.padding1 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
       this.typeMagic = this._io.readBytes(4);
@@ -193,18 +193,18 @@ var BlenderBlend = (function() {
         throw new KaitaiStream.ValidationNotEqualError([84, 89, 80, 69], this.typeMagic, this._io, "/types/dna1_body/seq/5");
       }
       this.numTypes = this._io.readU4le();
-      this.types = new Array(this.numTypes);
+      this.types = [];
       for (var i = 0; i < this.numTypes; i++) {
-        this.types[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+        this.types.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
       }
       this.padding2 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
       this.tlenMagic = this._io.readBytes(4);
       if (!((KaitaiStream.byteArrayCompare(this.tlenMagic, [84, 76, 69, 78]) == 0))) {
         throw new KaitaiStream.ValidationNotEqualError([84, 76, 69, 78], this.tlenMagic, this._io, "/types/dna1_body/seq/9");
       }
-      this.lengths = new Array(this.numTypes);
+      this.lengths = [];
       for (var i = 0; i < this.numTypes; i++) {
-        this.lengths[i] = this._io.readU2le();
+        this.lengths.push(this._io.readU2le());
       }
       this.padding3 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
       this.strcMagic = this._io.readBytes(4);
@@ -212,9 +212,9 @@ var BlenderBlend = (function() {
         throw new KaitaiStream.ValidationNotEqualError([83, 84, 82, 67], this.strcMagic, this._io, "/types/dna1_body/seq/12");
       }
       this.numStructs = this._io.readU4le();
-      this.structs = new Array(this.numStructs);
+      this.structs = [];
       for (var i = 0; i < this.numStructs; i++) {
-        this.structs[i] = new DnaStruct(this._io, this, this._root);
+        this.structs.push(new DnaStruct(this._io, this, this._root));
       }
     }
 

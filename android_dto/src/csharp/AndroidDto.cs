@@ -36,7 +36,7 @@ namespace Kaitai
         private void _read()
         {
             _header = new DtTableHeader(m_io, this, m_root);
-            _entries = new List<DtTableEntry>((int) (Header.DtEntryCount));
+            _entries = new List<DtTableEntry>();
             for (var i = 0; i < Header.DtEntryCount; i++)
             {
                 _entries.Add(new DtTableEntry(m_io, this, m_root));
@@ -139,7 +139,7 @@ namespace Kaitai
                 _dtOffset = m_io.ReadU4be();
                 _id = m_io.ReadU4be();
                 _rev = m_io.ReadU4be();
-                _custom = new List<uint>((int) (4));
+                _custom = new List<uint>();
                 for (var i = 0; i < 4; i++)
                 {
                     _custom.Add(m_io.ReadU4be());

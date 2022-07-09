@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class MozillaMar(KaitaiStruct):
@@ -38,14 +37,14 @@ class MozillaMar(KaitaiStruct):
         self.ofs_index = self._io.read_u4be()
         self.file_size = self._io.read_u8be()
         self.len_signatures = self._io.read_u4be()
-        self.signatures = [None] * (self.len_signatures)
+        self.signatures = []
         for i in range(self.len_signatures):
-            self.signatures[i] = MozillaMar.Signature(self._io, self, self._root)
+            self.signatures.append(MozillaMar.Signature(self._io, self, self._root))
 
         self.len_additional_sections = self._io.read_u4be()
-        self.additional_sections = [None] * (self.len_additional_sections)
+        self.additional_sections = []
         for i in range(self.len_additional_sections):
-            self.additional_sections[i] = MozillaMar.AdditionalSection(self._io, self, self._root)
+            self.additional_sections.append(MozillaMar.AdditionalSection(self._io, self, self._root))
 
 
     class MarIndex(KaitaiStruct):
@@ -119,14 +118,14 @@ class MozillaMar(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.ofs_content)
             self._m_body = io.read_bytes(self.len_content)
             io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     class AdditionalSection(KaitaiStruct):
@@ -151,12 +150,12 @@ class MozillaMar(KaitaiStruct):
     @property
     def index(self):
         if hasattr(self, '_m_index'):
-            return self._m_index if hasattr(self, '_m_index') else None
+            return self._m_index
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_index)
         self._m_index = MozillaMar.MarIndex(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_index if hasattr(self, '_m_index') else None
+        return getattr(self, '_m_index', None)
 
 

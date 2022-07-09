@@ -4117,62 +4117,62 @@ function Dicom.TDataElementExplicit:_read()
     self.items = {}
     local i = 0
     while true do
-      _ = Dicom.SeqItem(self._io, self, self._root)
+      local _ = Dicom.SeqItem(self._io, self, self._root)
       self.items[i + 1] = _
       if _.tag_elem == 57565 then
         break
       end
       i = i + 1
     end
-end
-if self.is_transfer_syntax_change_implicit then
-  self.elements_implicit = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.elements_implicit[i + 1] = Dicom.TDataElementImplicit(self._io, self, self._root)
-    i = i + 1
   end
-end
+  if self.is_transfer_syntax_change_implicit then
+    self.elements_implicit = {}
+    local i = 0
+    while not self._io:is_eof() do
+      self.elements_implicit[i + 1] = Dicom.TDataElementImplicit(self._io, self, self._root)
+      i = i + 1
+    end
+  end
 end
 
 Dicom.TDataElementExplicit.property.is_forced_implicit = {}
 function Dicom.TDataElementExplicit.property.is_forced_implicit:get()
-if self._m_is_forced_implicit ~= nil then
-  return self._m_is_forced_implicit
-end
+  if self._m_is_forced_implicit ~= nil then
+    return self._m_is_forced_implicit
+  end
 
-self._m_is_forced_implicit = self.tag_group == 65534
-return self._m_is_forced_implicit
+  self._m_is_forced_implicit = self.tag_group == 65534
+  return self._m_is_forced_implicit
 end
 
 Dicom.TDataElementExplicit.property.is_long_len = {}
 function Dicom.TDataElementExplicit.property.is_long_len:get()
-if self._m_is_long_len ~= nil then
-  return self._m_is_long_len
-end
+  if self._m_is_long_len ~= nil then
+    return self._m_is_long_len
+  end
 
-self._m_is_long_len =  ((self.is_forced_implicit) or (self.vr == "OB") or (self.vr == "OD") or (self.vr == "OF") or (self.vr == "OL") or (self.vr == "OW") or (self.vr == "SQ") or (self.vr == "UC") or (self.vr == "UR") or (self.vr == "UT") or (self.vr == "UN")) 
-return self._m_is_long_len
+  self._m_is_long_len =  ((self.is_forced_implicit) or (self.vr == "OB") or (self.vr == "OD") or (self.vr == "OF") or (self.vr == "OL") or (self.vr == "OW") or (self.vr == "SQ") or (self.vr == "UC") or (self.vr == "UR") or (self.vr == "UT") or (self.vr == "UN")) 
+  return self._m_is_long_len
 end
 
 Dicom.TDataElementExplicit.property.is_transfer_syntax_change_implicit = {}
 function Dicom.TDataElementExplicit.property.is_transfer_syntax_change_implicit:get()
-if self._m_is_transfer_syntax_change_implicit ~= nil then
-  return self._m_is_transfer_syntax_change_implicit
-end
+  if self._m_is_transfer_syntax_change_implicit ~= nil then
+    return self._m_is_transfer_syntax_change_implicit
+  end
 
-self._m_is_transfer_syntax_change_implicit = false
-return self._m_is_transfer_syntax_change_implicit
+  self._m_is_transfer_syntax_change_implicit = false
+  return self._m_is_transfer_syntax_change_implicit
 end
 
 Dicom.TDataElementExplicit.property.tag = {}
 function Dicom.TDataElementExplicit.property.tag:get()
-if self._m_tag ~= nil then
-  return self._m_tag
-end
+  if self._m_tag ~= nil then
+    return self._m_tag
+  end
 
-self._m_tag = Dicom.Tags(((self.tag_group << 16) | self.tag_elem))
-return self._m_tag
+  self._m_tag = Dicom.Tags(((self.tag_group << 16) | self.tag_elem))
+  return self._m_tag
 end
 
 
@@ -4181,134 +4181,134 @@ end
 Dicom.TDataElementImplicit = class.class(KaitaiStruct)
 
 function Dicom.TDataElementImplicit:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dicom.TDataElementImplicit:_read()
-self.tag_group = self._io:read_u2le()
-self.tag_elem = self._io:read_u2le()
-if self.is_forced_explicit then
-  self.vr = str_decode.decode(self._io:read_bytes(2), "ASCII")
-end
-if  ((self.is_long_len) and (self.is_forced_explicit))  then
-  self.reserved = self._io:read_u2le()
-end
-local _on = utils.box_unwrap((self.is_forced_explicit) and utils.box_wrap(self.is_long_len) or (true))
-if _on == false then
-  self.value_len = self._io:read_u2le()
-elseif _on == true then
-  self.value_len = self._io:read_u4le()
-end
-if self.value_len ~= 4294967295 then
-  self.value = self._io:read_bytes(self.value_len)
-end
-if  ((self.vr == "SQ") and (self.value_len == 4294967295))  then
-  self.items = {}
-  local i = 0
-  while true do
-    _ = Dicom.SeqItem(self._io, self, self._root)
-    self.items[i + 1] = _
-    if _.tag_elem == 57565 then
-      break
-    end
-    i = i + 1
+  self.tag_group = self._io:read_u2le()
+  self.tag_elem = self._io:read_u2le()
+  if self.is_forced_explicit then
+    self.vr = str_decode.decode(self._io:read_bytes(2), "ASCII")
   end
-end
-if self.is_transfer_syntax_change_explicit then
-self.elements = {}
-local i = 0
-while not self._io:is_eof() do
-  self.elements[i + 1] = Dicom.TDataElementExplicit(self._io, self, self._root)
-  i = i + 1
-end
-end
+  if  ((self.is_long_len) and (self.is_forced_explicit))  then
+    self.reserved = self._io:read_u2le()
+  end
+  local _on = utils.box_unwrap((self.is_forced_explicit) and utils.box_wrap(self.is_long_len) or (true))
+  if _on == false then
+    self.value_len = self._io:read_u2le()
+  elseif _on == true then
+    self.value_len = self._io:read_u4le()
+  end
+  if self.value_len ~= 4294967295 then
+    self.value = self._io:read_bytes(self.value_len)
+  end
+  if  ((self.vr == "SQ") and (self.value_len == 4294967295))  then
+    self.items = {}
+    local i = 0
+    while true do
+      local _ = Dicom.SeqItem(self._io, self, self._root)
+      self.items[i + 1] = _
+      if _.tag_elem == 57565 then
+        break
+      end
+      i = i + 1
+    end
+  end
+  if self.is_transfer_syntax_change_explicit then
+    self.elements = {}
+    local i = 0
+    while not self._io:is_eof() do
+      self.elements[i + 1] = Dicom.TDataElementExplicit(self._io, self, self._root)
+      i = i + 1
+    end
+  end
 end
 
 Dicom.TDataElementImplicit.property.tag = {}
 function Dicom.TDataElementImplicit.property.tag:get()
-if self._m_tag ~= nil then
-return self._m_tag
-end
+  if self._m_tag ~= nil then
+    return self._m_tag
+  end
 
-self._m_tag = Dicom.Tags(((self.tag_group << 16) | self.tag_elem))
-return self._m_tag
+  self._m_tag = Dicom.Tags(((self.tag_group << 16) | self.tag_elem))
+  return self._m_tag
 end
 
 Dicom.TDataElementImplicit.property.is_transfer_syntax_change_explicit = {}
 function Dicom.TDataElementImplicit.property.is_transfer_syntax_change_explicit:get()
-if self._m_is_transfer_syntax_change_explicit ~= nil then
-return self._m_is_transfer_syntax_change_explicit
-end
+  if self._m_is_transfer_syntax_change_explicit ~= nil then
+    return self._m_is_transfer_syntax_change_explicit
+  end
 
-self._m_is_transfer_syntax_change_explicit = self.p_is_transfer_syntax_change_explicit
-return self._m_is_transfer_syntax_change_explicit
+  self._m_is_transfer_syntax_change_explicit = self.p_is_transfer_syntax_change_explicit
+  return self._m_is_transfer_syntax_change_explicit
 end
 
 Dicom.TDataElementImplicit.property.is_long_len = {}
 function Dicom.TDataElementImplicit.property.is_long_len:get()
-if self._m_is_long_len ~= nil then
-return self._m_is_long_len
-end
+  if self._m_is_long_len ~= nil then
+    return self._m_is_long_len
+  end
 
-self._m_is_long_len =  ((self.is_forced_explicit) and ( ((self.vr == "OB") or (self.vr == "OD") or (self.vr == "OF") or (self.vr == "OL") or (self.vr == "OW") or (self.vr == "SQ") or (self.vr == "UC") or (self.vr == "UR") or (self.vr == "UT") or (self.vr == "UN")) )) 
-return self._m_is_long_len
+  self._m_is_long_len =  ((self.is_forced_explicit) and ( ((self.vr == "OB") or (self.vr == "OD") or (self.vr == "OF") or (self.vr == "OL") or (self.vr == "OW") or (self.vr == "SQ") or (self.vr == "UC") or (self.vr == "UR") or (self.vr == "UT") or (self.vr == "UN")) )) 
+  return self._m_is_long_len
 end
 
 Dicom.TDataElementImplicit.property.p_is_transfer_syntax_change_explicit = {}
 function Dicom.TDataElementImplicit.property.p_is_transfer_syntax_change_explicit:get()
-if self._m_p_is_transfer_syntax_change_explicit ~= nil then
-return self._m_p_is_transfer_syntax_change_explicit
-end
+  if self._m_p_is_transfer_syntax_change_explicit ~= nil then
+    return self._m_p_is_transfer_syntax_change_explicit
+  end
 
-self._m_p_is_transfer_syntax_change_explicit = self.value == "\049\046\050\046\056\052\048\046\049\048\048\048\056\046\049\046\050\046\049\000"
-return self._m_p_is_transfer_syntax_change_explicit
+  self._m_p_is_transfer_syntax_change_explicit = self.value == "\049\046\050\046\056\052\048\046\049\048\048\048\056\046\049\046\050\046\049\000"
+  return self._m_p_is_transfer_syntax_change_explicit
 end
 
 Dicom.TDataElementImplicit.property.is_forced_explicit = {}
 function Dicom.TDataElementImplicit.property.is_forced_explicit:get()
-if self._m_is_forced_explicit ~= nil then
-return self._m_is_forced_explicit
-end
+  if self._m_is_forced_explicit ~= nil then
+    return self._m_is_forced_explicit
+  end
 
-self._m_is_forced_explicit = self.tag_group == 2
-return self._m_is_forced_explicit
+  self._m_is_forced_explicit = self.tag_group == 2
+  return self._m_is_forced_explicit
 end
 
 
 Dicom.SeqItem = class.class(KaitaiStruct)
 
 function Dicom.SeqItem:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dicom.SeqItem:_read()
-self.tag_group = self._io:read_bytes(2)
-if not(self.tag_group == "\254\255") then
-error("not equal, expected " ..  "\254\255" .. ", but got " .. self.tag_group)
-end
-self.tag_elem = self._io:read_u2le()
-self.value_len = self._io:read_u4le()
-if self.value_len ~= 4294967295 then
-self.value = self._io:read_bytes(self.value_len)
-end
-if self.value_len == 4294967295 then
-self.items = {}
-local i = 0
-while true do
-  _ = Dicom.TDataElementExplicit(self._io, self, self._root)
-  self.items[i + 1] = _
-  if  ((_.tag_group == 65534) and (_.tag_elem == 57357))  then
-    break
+  self.tag_group = self._io:read_bytes(2)
+  if not(self.tag_group == "\254\255") then
+    error("not equal, expected " ..  "\254\255" .. ", but got " .. self.tag_group)
   end
-  i = i + 1
-end
-end
+  self.tag_elem = self._io:read_u2le()
+  self.value_len = self._io:read_u4le()
+  if self.value_len ~= 4294967295 then
+    self.value = self._io:read_bytes(self.value_len)
+  end
+  if self.value_len == 4294967295 then
+    self.items = {}
+    local i = 0
+    while true do
+      local _ = Dicom.TDataElementExplicit(self._io, self, self._root)
+      self.items[i + 1] = _
+      if  ((_.tag_group == 65534) and (_.tag_elem == 57357))  then
+        break
+      end
+      i = i + 1
+    end
+  end
 end
 
 

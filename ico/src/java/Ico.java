@@ -40,7 +40,7 @@ public class Ico extends KaitaiStruct {
             throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, magic(), _io(), "/seq/0");
         }
         this.numImages = this._io.readU2le();
-        images = new ArrayList<IconDirEntry>(((Number) (numImages())).intValue());
+        this.images = new ArrayList<IconDirEntry>();
         for (int i = 0; i < numImages(); i++) {
             this.images.add(new IconDirEntry(this._io, this, _root));
         }

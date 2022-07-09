@@ -21,9 +21,8 @@ phar_without_stub_t::phar_without_stub_t(kaitai::kstream* p__io, kaitai::kstruct
 
 void phar_without_stub_t::_read() {
     m_manifest = new manifest_t(m__io, this, m__root);
-    int l_files = manifest()->num_files();
     m_files = new std::vector<std::string>();
-    m_files->reserve(l_files);
+    const int l_files = manifest()->num_files();
     for (int i = 0; i < l_files; i++) {
         m_files->push_back(m__io->read_bytes(manifest()->file_entries()->at(i)->len_data_compressed()));
     }
@@ -284,9 +283,8 @@ void phar_without_stub_t::manifest_t::_read() {
         m__io__raw_metadata = new kaitai::kstream(m__raw_metadata);
         m_metadata = new serialized_value_t(m__io__raw_metadata, this, m__root);
     }
-    int l_file_entries = num_files();
     m_file_entries = new std::vector<file_entry_t*>();
-    m_file_entries->reserve(l_file_entries);
+    const int l_file_entries = num_files();
     for (int i = 0; i < l_file_entries; i++) {
         m_file_entries->push_back(new file_entry_t(m__io, this, m__root));
     }

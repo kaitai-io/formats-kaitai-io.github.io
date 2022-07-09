@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class QuakePak(KaitaiStruct):
@@ -57,20 +56,20 @@ class QuakePak(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.ofs)
             self._m_body = io.read_bytes(self.size)
             io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     @property
     def index(self):
         if hasattr(self, '_m_index'):
-            return self._m_index if hasattr(self, '_m_index') else None
+            return self._m_index
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_index)
@@ -78,6 +77,6 @@ class QuakePak(KaitaiStruct):
         _io__raw__m_index = KaitaiStream(BytesIO(self._raw__m_index))
         self._m_index = QuakePak.IndexStruct(_io__raw__m_index, self, self._root)
         self._io.seek(_pos)
-        return self._m_index if hasattr(self, '_m_index') else None
+        return getattr(self, '_m_index', None)
 
 

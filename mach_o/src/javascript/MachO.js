@@ -8,7 +8,7 @@
   } else {
     root.MachO = factory(root.KaitaiStream, root.Asn1Der);
   }
-}(this, function (KaitaiStream, Asn1Der) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Asn1Der) {
 var MachO = (function() {
   MachO.MagicType = Object.freeze({
     FAT_LE: 3199925962,
@@ -212,9 +212,9 @@ var MachO = (function() {
   MachO.prototype._read = function() {
     this.magic = this._io.readU4be();
     this.header = new MachHeader(this._io, this, this._root);
-    this.loadCommands = new Array(this.header.ncmds);
+    this.loadCommands = [];
     for (var i = 0; i < this.header.ncmds; i++) {
-      this.loadCommands[i] = new LoadCommand(this._io, this, this._root);
+      this.loadCommands.push(new LoadCommand(this._io, this, this._root));
     }
   }
 
@@ -433,9 +433,9 @@ var MachO = (function() {
             return this._m_hashes;
           var _pos = this._io.pos;
           this._io.seek(((this.hashOffset - 8) - (this.hashSize * this.nSpecialSlots)));
-          this._m_hashes = new Array((this.nSpecialSlots + this.nCodeSlots));
+          this._m_hashes = [];
           for (var i = 0; i < (this.nSpecialSlots + this.nCodeSlots); i++) {
-            this._m_hashes[i] = this._io.readBytes(this.hashSize);
+            this._m_hashes.push(this._io.readBytes(this.hashSize));
           }
           this._io.seek(_pos);
           return this._m_hashes;
@@ -472,9 +472,9 @@ var MachO = (function() {
       }
       SuperBlob.prototype._read = function() {
         this.count = this._io.readU4be();
-        this.blobs = new Array(this.count);
+        this.blobs = [];
         for (var i = 0; i < this.count; i++) {
-          this.blobs[i] = new BlobIndex(this._io, this, this._root);
+          this.blobs.push(new BlobIndex(this._io, this, this._root));
         }
       }
 
@@ -867,9 +867,9 @@ var MachO = (function() {
       }
       Requirements.prototype._read = function() {
         this.count = this._io.readU4be();
-        this.items = new Array(this.count);
+        this.items = [];
         for (var i = 0; i < this.count; i++) {
-          this.items[i] = new RequirementsBlobIndex(this._io, this, this._root);
+          this.items.push(new RequirementsBlobIndex(this._io, this, this._root));
         }
       }
 
@@ -961,9 +961,9 @@ var MachO = (function() {
       this.minos = this._io.readU4le();
       this.sdk = this._io.readU4le();
       this.ntools = this._io.readU4le();
-      this.tools = new Array(this.ntools);
+      this.tools = [];
       for (var i = 0; i < this.ntools; i++) {
-        this.tools[i] = new BuildToolVersion(this._io, this, this._root);
+        this.tools.push(new BuildToolVersion(this._io, this, this._root));
       }
     }
 
@@ -1341,9 +1341,9 @@ var MachO = (function() {
     }
     LinkerOptionCommand.prototype._read = function() {
       this.numStrings = this._io.readU4le();
-      this.strings = new Array(this.numStrings);
+      this.strings = [];
       for (var i = 0; i < this.numStrings; i++) {
-        this.strings[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "utf-8");
+        this.strings.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "utf-8"));
       }
     }
 
@@ -1368,9 +1368,9 @@ var MachO = (function() {
       this.initprot = new VmProt(this._io, this, this._root);
       this.nsects = this._io.readU4le();
       this.flags = this._io.readU4le();
-      this.sections = new Array(this.nsects);
+      this.sections = [];
       for (var i = 0; i < this.nsects; i++) {
-        this.sections[i] = new Section64(this._io, this, this._root);
+        this.sections.push(new Section64(this._io, this, this._root));
       }
     }
 
@@ -1785,9 +1785,9 @@ var MachO = (function() {
         var io = this._root._io;
         var _pos = io.pos;
         io.seek(this.indirectSymOff);
-        this._m_indirectSymbols = new Array(this.nIndirectSyms);
+        this._m_indirectSymbols = [];
         for (var i = 0; i < this.nIndirectSyms; i++) {
-          this._m_indirectSymbols[i] = io.readU4le();
+          this._m_indirectSymbols.push(io.readU4le());
         }
         io.seek(_pos);
         return this._m_indirectSymbols;
@@ -2065,7 +2065,7 @@ var MachO = (function() {
         this._read();
       }
       RebaseData.prototype._read = function() {
-        this.items = []
+        this.items = [];
         var i = 0;
         do {
           var _ = new RebaseItem(this._io, this, this._root);
@@ -2125,9 +2125,9 @@ var MachO = (function() {
       ExportNode.prototype._read = function() {
         this.terminalSize = new Uleb128(this._io, this, this._root);
         this.childrenCount = this._io.readU1();
-        this.children = new Array(this.childrenCount);
+        this.children = [];
         for (var i = 0; i < this.childrenCount; i++) {
-          this.children[i] = new Child(this._io, this, this._root);
+          this.children.push(new Child(this._io, this, this._root));
         }
         this.terminal = this._io.readBytes(this.terminalSize.value);
       }
@@ -2171,7 +2171,7 @@ var MachO = (function() {
         this._read();
       }
       BindData.prototype._read = function() {
-        this.items = []
+        this.items = [];
         var i = 0;
         do {
           var _ = new BindItem(this._io, this, this._root);
@@ -2314,9 +2314,9 @@ var MachO = (function() {
       this.initprot = new VmProt(this._io, this, this._root);
       this.nsects = this._io.readU4le();
       this.flags = this._io.readU4le();
-      this.sections = new Array(this.nsects);
+      this.sections = [];
       for (var i = 0; i < this.nsects; i++) {
-        this.sections[i] = new Section(this._io, this, this._root);
+        this.sections.push(new Section(this._io, this, this._root));
       }
     }
 
@@ -2637,7 +2637,7 @@ var MachO = (function() {
       }
       StrTable.prototype._read = function() {
         this.unknown = this._io.readU4le();
-        this.items = []
+        this.items = [];
         var i = 0;
         do {
           var _ = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, false), "utf-8");
@@ -2719,20 +2719,20 @@ var MachO = (function() {
         var io = this._root._io;
         var _pos = io.pos;
         io.seek(this.symOff);
-        this._m_symbols = new Array(this.nSyms);
+        this._m_symbols = [];
         for (var i = 0; i < this.nSyms; i++) {
           switch (this._root.magic) {
           case MachO.MagicType.MACHO_LE_X64:
-            this._m_symbols[i] = new Nlist64(io, this, this._root);
+            this._m_symbols.push(new Nlist64(io, this, this._root));
             break;
           case MachO.MagicType.MACHO_BE_X64:
-            this._m_symbols[i] = new Nlist64(io, this, this._root);
+            this._m_symbols.push(new Nlist64(io, this, this._root));
             break;
           case MachO.MagicType.MACHO_LE_X86:
-            this._m_symbols[i] = new Nlist(io, this, this._root);
+            this._m_symbols.push(new Nlist(io, this, this._root));
             break;
           case MachO.MagicType.MACHO_BE_X86:
-            this._m_symbols[i] = new Nlist(io, this, this._root);
+            this._m_symbols.push(new Nlist(io, this, this._root));
             break;
           }
         }

@@ -8,7 +8,7 @@
   } else {
     root.Rpm = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * This parser is for the RPM version 3 file format which is the current version
  * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
@@ -768,9 +768,9 @@ var Rpm = (function() {
     if (this.ofsPayload < 0) {
       this._unnamed5 = this._io.readBytes(0);
     }
-    this.signatureTagsSteps = new Array(this.signature.headerRecord.numIndexRecords);
+    this.signatureTagsSteps = [];
     for (var i = 0; i < this.signature.headerRecord.numIndexRecords; i++) {
-      this.signatureTagsSteps[i] = new SignatureTagsStep(this._io, this, this._root, i, (i < 1 ? -1 : this.signatureTagsSteps[(i - 1)].sizeTagIdx));
+      this.signatureTagsSteps.push(new SignatureTagsStep(this._io, this, this._root, i, (i < 1 ? -1 : this.signatureTagsSteps[(i - 1)].sizeTagIdx)));
     }
   }
 
@@ -784,9 +784,9 @@ var Rpm = (function() {
       this._read();
     }
     RecordTypeStringArray.prototype._read = function() {
-      this.values = new Array(this.numValues);
+      this.values = [];
       for (var i = 0; i < this.numValues; i++) {
-        this.values[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+        this.values.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
       }
     }
 
@@ -846,9 +846,9 @@ var Rpm = (function() {
       this._read();
     }
     RecordTypeString.prototype._read = function() {
-      this.values = new Array(1);
+      this.values = [];
       for (var i = 0; i < 1; i++) {
-        this.values[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+        this.values.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
       }
     }
 
@@ -889,9 +889,9 @@ var Rpm = (function() {
       this._read();
     }
     RecordTypeUint32.prototype._read = function() {
-      this.values = new Array(this.numValues);
+      this.values = [];
       for (var i = 0; i < this.numValues; i++) {
-        this.values[i] = this._io.readU4be();
+        this.values.push(this._io.readU4be());
       }
     }
 
@@ -908,9 +908,9 @@ var Rpm = (function() {
       this._read();
     }
     RecordTypeUint16.prototype._read = function() {
-      this.values = new Array(this.numValues);
+      this.values = [];
       for (var i = 0; i < this.numValues; i++) {
-        this.values[i] = this._io.readU2be();
+        this.values.push(this._io.readU2be());
       }
     }
 
@@ -1073,9 +1073,9 @@ var Rpm = (function() {
       this._read();
     }
     RecordTypeUint8.prototype._read = function() {
-      this.values = new Array(this.numValues);
+      this.values = [];
       for (var i = 0; i < this.numValues; i++) {
-        this.values[i] = this._io.readU1();
+        this.values.push(this._io.readU1());
       }
     }
 
@@ -1092,9 +1092,9 @@ var Rpm = (function() {
       this._read();
     }
     RecordTypeUint64.prototype._read = function() {
-      this.values = new Array(this.numValues);
+      this.values = [];
       for (var i = 0; i < this.numValues; i++) {
-        this.values[i] = this._io.readU8be();
+        this.values.push(this._io.readU8be());
       }
     }
 
@@ -1111,9 +1111,9 @@ var Rpm = (function() {
       this._read();
     }
     RecordTypeBin.prototype._read = function() {
-      this.values = new Array(1);
+      this.values = [];
       for (var i = 0; i < 1; i++) {
-        this.values[i] = this._io.readBytes(this.lenValue);
+        this.values.push(this._io.readBytes(this.lenValue));
       }
     }
 
@@ -1169,9 +1169,9 @@ var Rpm = (function() {
     }
     Header.prototype._read = function() {
       this.headerRecord = new HeaderRecord(this._io, this, this._root);
-      this.indexRecords = new Array(this.headerRecord.numIndexRecords);
+      this.indexRecords = [];
       for (var i = 0; i < this.headerRecord.numIndexRecords; i++) {
-        this.indexRecords[i] = new HeaderIndexRecord(this._io, this, this._root);
+        this.indexRecords.push(new HeaderIndexRecord(this._io, this, this._root));
       }
       this._raw_storageSection = this._io.readBytes(this.headerRecord.lenStorageSection);
       var _io__raw_storageSection = new KaitaiStream(this._raw_storageSection);

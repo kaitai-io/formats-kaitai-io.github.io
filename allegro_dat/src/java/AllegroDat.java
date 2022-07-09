@@ -65,7 +65,7 @@ public class AllegroDat extends KaitaiStruct {
             throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 76, 76, 46 }, datMagic(), _io(), "/seq/1");
         }
         this.numObjects = this._io.readU4be();
-        objects = new ArrayList<DatObject>(((Number) (numObjects())).intValue());
+        this.objects = new ArrayList<DatObject>();
         for (int i = 0; i < numObjects(); i++) {
             this.objects.add(new DatObject(this._io, this, _root));
         }
@@ -95,7 +95,7 @@ public class AllegroDat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            chars = new ArrayList<byte[]>(((Number) (95)).intValue());
+            this.chars = new ArrayList<byte[]>();
             for (int i = 0; i < 95; i++) {
                 this.chars.add(this._io.readBytes(16));
             }
@@ -215,7 +215,7 @@ public class AllegroDat extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            chars = new ArrayList<byte[]>(((Number) (95)).intValue());
+            this.chars = new ArrayList<byte[]>();
             for (int i = 0; i < 95; i++) {
                 this.chars.add(this._io.readBytes(8));
             }
@@ -333,7 +333,7 @@ public class AllegroDat extends KaitaiStruct {
         }
         private void _read() {
             this.numRanges = this._io.readS2be();
-            ranges = new ArrayList<Range>(((Number) (numRanges())).intValue());
+            this.ranges = new ArrayList<Range>();
             for (int i = 0; i < numRanges(); i++) {
                 this.ranges.add(new Range(this._io, this, _root));
             }
@@ -361,7 +361,7 @@ public class AllegroDat extends KaitaiStruct {
                 this.mono = this._io.readU1();
                 this.startChar = this._io.readU4be();
                 this.endChar = this._io.readU4be();
-                chars = new ArrayList<FontChar>(((Number) (((endChar() - startChar()) + 1))).intValue());
+                this.chars = new ArrayList<FontChar>();
                 for (int i = 0; i < ((endChar() - startChar()) + 1); i++) {
                     this.chars.add(new FontChar(this._io, this, _root));
                 }

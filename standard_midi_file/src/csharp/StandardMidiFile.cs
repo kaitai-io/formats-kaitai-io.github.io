@@ -37,7 +37,7 @@ namespace Kaitai
         private void _read()
         {
             _hdr = new Header(m_io, this, m_root);
-            _tracks = new List<Track>((int) (Hdr.NumTracks));
+            _tracks = new List<Track>();
             for (var i = 0; i < Hdr.NumTracks; i++)
             {
                 _tracks.Add(new Track(m_io, this, m_root));

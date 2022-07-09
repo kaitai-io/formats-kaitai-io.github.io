@@ -8,7 +8,7 @@
   } else {
     root.Sqlite3 = factory(root.KaitaiStream, root.VlqBase128Be);
   }
-}(this, function (KaitaiStream, VlqBase128Be) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Be) {
 /**
  * SQLite3 is a popular serverless SQL engine, implemented as a library
  * to be used within other applications. It keeps its databases as
@@ -140,9 +140,9 @@ var Sqlite3 = (function() {
       if ( ((this.pageType == 2) || (this.pageType == 5)) ) {
         this.rightPtr = this._io.readU4be();
       }
-      this.cells = new Array(this.numCells);
+      this.cells = [];
       for (var i = 0; i < this.numCells; i++) {
-        this.cells[i] = new RefCell(this._io, this, this._root);
+        this.cells.push(new RefCell(this._io, this, this._root));
       }
     }
 
@@ -231,9 +231,9 @@ var Sqlite3 = (function() {
       this._raw_columnSerials = this._io.readBytes((this.lenHeaderAndLen.value - 1));
       var _io__raw_columnSerials = new KaitaiStream(this._raw_columnSerials);
       this.columnSerials = new Serials(_io__raw_columnSerials, this, this._root);
-      this.columnContents = new Array(this.columnSerials.entries.length);
+      this.columnContents = [];
       for (var i = 0; i < this.columnSerials.entries.length; i++) {
-        this.columnContents[i] = new ColumnContent(this._io, this, this._root, this.columnSerials.entries[i]);
+        this.columnContents.push(new ColumnContent(this._io, this, this._root, this.columnSerials.entries[i]));
       }
     }
 

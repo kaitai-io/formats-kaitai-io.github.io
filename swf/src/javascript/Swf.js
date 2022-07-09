@@ -8,7 +8,7 @@
   } else {
     root.Swf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
  * Flash) to encode rich interactive multimedia content and are,
@@ -254,9 +254,9 @@ var Swf = (function() {
     }
     SymbolClassBody.prototype._read = function() {
       this.numSymbols = this._io.readU2le();
-      this.symbols = new Array(this.numSymbols);
+      this.symbols = [];
       for (var i = 0; i < this.numSymbols; i++) {
-        this.symbols[i] = new Symbol(this._io, this, this._root);
+        this.symbols.push(new Symbol(this._io, this, this._root));
       }
     }
 

@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndroidDto(KaitaiStruct):
@@ -32,9 +31,9 @@ class AndroidDto(KaitaiStruct):
 
     def _read(self):
         self.header = AndroidDto.DtTableHeader(self._io, self, self._root)
-        self.entries = [None] * (self.header.dt_entry_count)
+        self.entries = []
         for i in range(self.header.dt_entry_count):
-            self.entries[i] = AndroidDto.DtTableEntry(self._io, self, self._root)
+            self.entries.append(AndroidDto.DtTableEntry(self._io, self, self._root))
 
 
     class DtTableHeader(KaitaiStruct):
@@ -69,23 +68,23 @@ class AndroidDto(KaitaiStruct):
             self.dt_offset = self._io.read_u4be()
             self.id = self._io.read_u4be()
             self.rev = self._io.read_u4be()
-            self.custom = [None] * (4)
+            self.custom = []
             for i in range(4):
-                self.custom[i] = self._io.read_u4be()
+                self.custom.append(self._io.read_u4be())
 
 
         @property
         def body(self):
             """DTB/DTBO file."""
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.dt_offset)
             self._m_body = io.read_bytes(self.dt_size)
             io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
 

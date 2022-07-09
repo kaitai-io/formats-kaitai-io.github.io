@@ -137,7 +137,7 @@ namespace Kaitai
             _numImages = m_io.ReadU4le();
             _ofsImgBodies = m_io.ReadU4le();
             _bootloaderSize = m_io.ReadU4le();
-            _imgHeaders = new List<ImgHeader>((int) (NumImages));
+            _imgHeaders = new List<ImgHeader>();
             for (var i = 0; i < NumImages; i++)
             {
                 _imgHeaders.Add(new ImgHeader(m_io, this, m_root));
@@ -216,7 +216,7 @@ namespace Kaitai
                     return _imgBodies;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsImgBodies);
-                _imgBodies = new List<ImgBody>((int) (NumImages));
+                _imgBodies = new List<ImgBody>();
                 for (var i = 0; i < NumImages; i++)
                 {
                     _imgBodies.Add(new ImgBody(i, m_io, this, m_root));

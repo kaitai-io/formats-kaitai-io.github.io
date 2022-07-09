@@ -393,7 +393,7 @@ namespace Kaitai
                     private void _read()
                     {
                         _numTypesM1 = m_io.ReadU2be();
-                        _entries = new List<TypeListEntry>((int) (NumTypes));
+                        _entries = new List<TypeListEntry>();
                         for (var i = 0; i < NumTypes; i++)
                         {
                             _entries.Add(new TypeListEntry(m_io, this, m_root));
@@ -555,7 +555,7 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _references = new List<Reference>((int) (NumReferences));
+                        _references = new List<Reference>();
                         for (var i = 0; i < NumReferences; i++)
                         {
                             _references.Add(new Reference(m_io, this, m_root));

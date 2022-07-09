@@ -54,23 +54,23 @@ class S3m < Kaitai::Struct::Struct
     @has_custom_pan = @_io.read_u1
     @reserved2 = @_io.read_bytes(8)
     @ofs_special = @_io.read_u2le
-    @channels = Array.new(32)
+    @channels = []
     (32).times { |i|
-      @channels[i] = Channel.new(@_io, self, @_root)
+      @channels << Channel.new(@_io, self, @_root)
     }
     @orders = @_io.read_bytes(num_orders)
-    @instruments = Array.new(num_instruments)
+    @instruments = []
     (num_instruments).times { |i|
-      @instruments[i] = InstrumentPtr.new(@_io, self, @_root)
+      @instruments << InstrumentPtr.new(@_io, self, @_root)
     }
-    @patterns = Array.new(num_patterns)
+    @patterns = []
     (num_patterns).times { |i|
-      @patterns[i] = PatternPtr.new(@_io, self, @_root)
+      @patterns << PatternPtr.new(@_io, self, @_root)
     }
     if has_custom_pan == 252
-      @channel_pans = Array.new(32)
+      @channel_pans = []
       (32).times { |i|
-        @channel_pans[i] = ChannelPan.new(@_io, self, @_root)
+        @channel_pans << ChannelPan.new(@_io, self, @_root)
       }
     end
     self

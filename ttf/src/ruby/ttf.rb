@@ -19,9 +19,9 @@ class Ttf < Kaitai::Struct::Struct
 
   def _read
     @offset_table = OffsetTable.new(@_io, self, @_root)
-    @directory_table = Array.new(offset_table.num_tables)
+    @directory_table = []
     (offset_table.num_tables).times { |i|
-      @directory_table[i] = DirTableEntry.new(@_io, self, @_root)
+      @directory_table << DirTableEntry.new(@_io, self, @_root)
     }
     self
   end
@@ -54,9 +54,9 @@ class Ttf < Kaitai::Struct::Struct
 
       def _read
         @number_of_glyphs = @_io.read_u2be
-        @glyph_name_index = Array.new(number_of_glyphs)
+        @glyph_name_index = []
         (number_of_glyphs).times { |i|
-          @glyph_name_index[i] = @_io.read_u2be
+          @glyph_name_index << @_io.read_u2be
         }
         @glyph_names = []
         i = 0
@@ -149,9 +149,9 @@ class Ttf < Kaitai::Struct::Struct
       @format_selector = @_io.read_u2be
       @num_name_records = @_io.read_u2be
       @ofs_strings = @_io.read_u2be
-      @name_records = Array.new(num_name_records)
+      @name_records = []
       (num_name_records).times { |i|
-        @name_records[i] = NameRecord.new(@_io, self, @_root)
+        @name_records << NameRecord.new(@_io, self, @_root)
       }
       self
     end
@@ -352,9 +352,9 @@ class Ttf < Kaitai::Struct::Struct
     def _read
       @version = @_io.read_u2be
       @subtable_count = @_io.read_u2be
-      @subtables = Array.new(subtable_count)
+      @subtables = []
       (subtable_count).times { |i|
-        @subtables[i] = Subtable.new(@_io, self, @_root)
+        @subtables << Subtable.new(@_io, self, @_root)
       }
       self
     end
@@ -390,9 +390,9 @@ class Ttf < Kaitai::Struct::Struct
           @search_range = @_io.read_u2be
           @entry_selector = @_io.read_u2be
           @range_shift = @_io.read_u2be
-          @kerning_pairs = Array.new(pair_count)
+          @kerning_pairs = []
           (pair_count).times { |i|
-            @kerning_pairs[i] = KerningPair.new(@_io, self, @_root)
+            @kerning_pairs << KerningPair.new(@_io, self, @_root)
           }
           self
         end
@@ -1158,15 +1158,15 @@ class Ttf < Kaitai::Struct::Struct
       end
 
       def _read
-        @end_pts_of_contours = Array.new(_parent.number_of_contours)
+        @end_pts_of_contours = []
         (_parent.number_of_contours).times { |i|
-          @end_pts_of_contours[i] = @_io.read_u2be
+          @end_pts_of_contours << @_io.read_u2be
         }
         @instruction_length = @_io.read_u2be
         @instructions = @_io.read_bytes(instruction_length)
-        @flags = Array.new(point_count)
+        @flags = []
         (point_count).times { |i|
-          @flags[i] = Flag.new(@_io, self, @_root)
+          @flags << Flag.new(@_io, self, @_root)
         }
         self
       end
@@ -1372,9 +1372,9 @@ class Ttf < Kaitai::Struct::Struct
     def _read
       @version_number = @_io.read_u2be
       @number_of_encoding_tables = @_io.read_u2be
-      @tables = Array.new(number_of_encoding_tables)
+      @tables = []
       (number_of_encoding_tables).times { |i|
-        @tables[i] = SubtableHeader.new(@_io, self, @_root)
+        @tables << SubtableHeader.new(@_io, self, @_root)
       }
       self
     end
@@ -1462,9 +1462,9 @@ class Ttf < Kaitai::Struct::Struct
         end
 
         def _read
-          @sub_header_keys = Array.new(256)
+          @sub_header_keys = []
           (256).times { |i|
-            @sub_header_keys[i] = @_io.read_u2be
+            @sub_header_keys << @_io.read_u2be
           }
           self
         end
@@ -1481,22 +1481,22 @@ class Ttf < Kaitai::Struct::Struct
           @search_range = @_io.read_u2be
           @entry_selector = @_io.read_u2be
           @range_shift = @_io.read_u2be
-          @end_count = Array.new(seg_count)
+          @end_count = []
           (seg_count).times { |i|
-            @end_count[i] = @_io.read_u2be
+            @end_count << @_io.read_u2be
           }
           @reserved_pad = @_io.read_u2be
-          @start_count = Array.new(seg_count)
+          @start_count = []
           (seg_count).times { |i|
-            @start_count[i] = @_io.read_u2be
+            @start_count << @_io.read_u2be
           }
-          @id_delta = Array.new(seg_count)
+          @id_delta = []
           (seg_count).times { |i|
-            @id_delta[i] = @_io.read_u2be
+            @id_delta << @_io.read_u2be
           }
-          @id_range_offset = Array.new(seg_count)
+          @id_range_offset = []
           (seg_count).times { |i|
-            @id_range_offset[i] = @_io.read_u2be
+            @id_range_offset << @_io.read_u2be
           }
           @glyph_id_array = []
           i = 0
@@ -1531,9 +1531,9 @@ class Ttf < Kaitai::Struct::Struct
         def _read
           @first_code = @_io.read_u2be
           @entry_count = @_io.read_u2be
-          @glyph_id_array = Array.new(entry_count)
+          @glyph_id_array = []
           (entry_count).times { |i|
-            @glyph_id_array[i] = @_io.read_u2be
+            @glyph_id_array << @_io.read_u2be
           }
           self
         end

@@ -264,7 +264,8 @@ device. This metadata holds that mapping.</p>
 <span class="k">type</span>
   <span class="n">AndroidSuper</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">rootInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidSuper_Root</span>
+    <span class="p">`</span><span class="n">rootInst</span><span class="p">`:</span> <span class="n">AndroidSuper_Root</span>
+    <span class="p">`</span><span class="n">rootInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">AndroidSuper_Root</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">primaryGeometry</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidSuper_Geometry</span>
     <span class="p">`</span><span class="n">backupGeometry</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidSuper_Geometry</span>
@@ -326,7 +327,8 @@ device. This metadata holds that mapping.</p>
     <span class="p">`</span><span class="n">kind</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidSuper_Metadata_TableKind</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidSuper_Metadata</span>
     <span class="p">`</span><span class="n">rawTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
-    <span class="p">`</span><span class="n">tableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">KaitaiStruct</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">tableInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">KaitaiStruct</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">tableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">AndroidSuper_Metadata_Partition</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">attrReadonly</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
@@ -379,15 +381,15 @@ device. This metadata holds that mapping.</p>
 
 
 <span class="k">proc </span><span class="nf">root</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidSuper</span><span class="p">):</span> <span class="n">AndroidSuper_Root</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4096</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">rootInstExpr</span> <span class="o">=</span> <span class="n">AndroidSuper_Root</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rootInst</span> <span class="o">=</span> <span class="n">rootInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rootInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidSuper], filename: string): AndroidSuper =</span>
   <span class="n">AndroidSuper</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -564,7 +566,7 @@ device. This metadata holds that mapping.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">entrySize</span> <span class="o">=</span> <span class="n">entrySizeExpr</span>
 
 <span class="k">proc </span><span class="nf">table</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidSuper_Metadata_TableDescriptor</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">KaitaiStruct</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tableInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">headerSize</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">offset</span><span class="p">)))</span>
@@ -599,8 +601,8 @@ device. This metadata holds that mapping.</p>
         <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">entrySize</span><span class="p">))</span>
         <span class="n">this</span><span class="p">.</span><span class="n">tableInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tableInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidSuper_Metadata_TableDescriptor], filename: string): AndroidSuper_Metadata_TableDescriptor =</span>
   <span class="n">AndroidSuper_Metadata_TableDescriptor</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

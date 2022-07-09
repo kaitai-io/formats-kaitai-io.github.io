@@ -127,7 +127,7 @@ public class Ext2 extends KaitaiStruct {
             this.journalInum = this._io.readU4le();
             this.journalDev = this._io.readU4le();
             this.lastOrphan = this._io.readU4le();
-            hashSeed = new ArrayList<Long>(((Number) (4)).intValue());
+            this.hashSeed = new ArrayList<Long>();
             for (int i = 0; i < 4; i++) {
                 this.hashSeed.add(this._io.readU4le());
             }
@@ -294,7 +294,7 @@ public class Ext2 extends KaitaiStruct {
         public Inode inode() {
             if (this.inode != null)
                 return this.inode;
-            this.inode = _root.bg1().blockGroups().get((int) ((inodePtr() - 1) / _root.bg1().superBlock().inodesPerGroup())).inodes().get((int) KaitaiStream.mod((inodePtr() - 1), _root.bg1().superBlock().inodesPerGroup()));
+            this.inode = _root().bg1().blockGroups().get((int) ((inodePtr() - 1) / _root().bg1().superBlock().inodesPerGroup())).inodes().get((int) KaitaiStream.mod((inodePtr() - 1), _root().bg1().superBlock().inodesPerGroup()));
             return this.inode;
         }
         private long inodePtr;
@@ -346,7 +346,7 @@ public class Ext2 extends KaitaiStruct {
             this.blocks = this._io.readU4le();
             this.flags = this._io.readU4le();
             this.osd1 = this._io.readU4le();
-            block = new ArrayList<BlockPtr>(((Number) (15)).intValue());
+            this.block = new ArrayList<BlockPtr>();
             for (int i = 0; i < 15; i++) {
                 this.block.add(new BlockPtr(this._io, this, _root));
             }
@@ -435,8 +435,8 @@ public class Ext2 extends KaitaiStruct {
             if (this.body != null)
                 return this.body;
             long _pos = this._io.pos();
-            this._io.seek((ptr() * _root.bg1().superBlock().blockSize()));
-            this._raw_body = this._io.readBytes(_root.bg1().superBlock().blockSize());
+            this._io.seek((ptr() * _root().bg1().superBlock().blockSize()));
+            this._raw_body = this._io.readBytes(_root().bg1().superBlock().blockSize());
             KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
             this.body = new RawBlock(_io__raw_body, this, _root);
             this._io.seek(_pos);
@@ -510,7 +510,7 @@ public class Ext2 extends KaitaiStruct {
             this._raw_superBlock = this._io.readBytes(1024);
             KaitaiStream _io__raw_superBlock = new ByteBufferKaitaiStream(_raw_superBlock);
             this.superBlock = new SuperBlockStruct(_io__raw_superBlock, this, _root);
-            blockGroups = new ArrayList<Bgd>(((Number) (superBlock().blockGroupCount())).intValue());
+            this.blockGroups = new ArrayList<Bgd>();
             for (int i = 0; i < superBlock().blockGroupCount(); i++) {
                 this.blockGroups.add(new Bgd(this._io, this, _root));
             }
@@ -559,7 +559,7 @@ public class Ext2 extends KaitaiStruct {
             if (this.blockBitmap != null)
                 return this.blockBitmap;
             long _pos = this._io.pos();
-            this._io.seek((blockBitmapBlock() * _root.bg1().superBlock().blockSize()));
+            this._io.seek((blockBitmapBlock() * _root().bg1().superBlock().blockSize()));
             this.blockBitmap = this._io.readBytes(1024);
             this._io.seek(_pos);
             return this.blockBitmap;
@@ -569,7 +569,7 @@ public class Ext2 extends KaitaiStruct {
             if (this.inodeBitmap != null)
                 return this.inodeBitmap;
             long _pos = this._io.pos();
-            this._io.seek((inodeBitmapBlock() * _root.bg1().superBlock().blockSize()));
+            this._io.seek((inodeBitmapBlock() * _root().bg1().superBlock().blockSize()));
             this.inodeBitmap = this._io.readBytes(1024);
             this._io.seek(_pos);
             return this.inodeBitmap;
@@ -579,9 +579,9 @@ public class Ext2 extends KaitaiStruct {
             if (this.inodes != null)
                 return this.inodes;
             long _pos = this._io.pos();
-            this._io.seek((inodeTableBlock() * _root.bg1().superBlock().blockSize()));
-            inodes = new ArrayList<Inode>(((Number) (_root.bg1().superBlock().inodesPerGroup())).intValue());
-            for (int i = 0; i < _root.bg1().superBlock().inodesPerGroup(); i++) {
+            this._io.seek((inodeTableBlock() * _root().bg1().superBlock().blockSize()));
+            this.inodes = new ArrayList<Inode>();
+            for (int i = 0; i < _root().bg1().superBlock().inodesPerGroup(); i++) {
                 this.inodes.add(new Inode(this._io, this, _root));
             }
             this._io.seek(_pos);
@@ -626,7 +626,7 @@ public class Ext2 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.body = this._io.readBytes(_root.bg1().superBlock().blockSize());
+            this.body = this._io.readBytes(_root().bg1().superBlock().blockSize());
         }
         private byte[] body;
         private Ext2 _root;

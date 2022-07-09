@@ -281,7 +281,8 @@ sudo losetup -d /dev/loop1
   <span class="n">Lvm2</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">pv</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Lvm2_PhysicalVolume</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">emptySector</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">label</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label</span>
@@ -310,13 +311,15 @@ sudo losetup -d /dev/loop1
     <span class="p">`</span><span class="n">offset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader</span>
-    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">dataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">offset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader</span>
     <span class="p">`</span><span class="n">rawDataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea</span>
+    <span class="p">`</span><span class="n">dataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor</span>
@@ -328,7 +331,8 @@ sudo losetup -d /dev/loop1
     <span class="p">`</span><span class="n">metadataAreaSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">rawLocationDescriptors</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">metadataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">metadataInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">metadataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">offset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
@@ -386,12 +390,12 @@ sudo losetup -d /dev/loop1
   <span class="n">this</span><span class="p">.</span><span class="n">pv</span> <span class="o">=</span> <span class="n">pvExpr</span>
 
 <span class="k">proc </span><span class="nf">sectorSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Lvm2</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
   <span class="k">let</span> <span class="n">sectorSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">=</span> <span class="n">sectorSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Lvm2], filename: string): Lvm2 =</span>
   <span class="n">Lvm2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -544,7 +548,7 @@ sudo losetup -d /dev/loop1
   <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizeExpr</span>
 
 <span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -552,8 +556,8 @@ sudo losetup -d /dev/loop1
     <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">)),</span> <span class="s">&quot;ascii&quot;</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor =</span>
   <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -580,7 +584,7 @@ sudo losetup -d /dev/loop1
   <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizeExpr</span>
 
 <span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor</span><span class="p">):</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -591,8 +595,8 @@ sudo losetup -d /dev/loop1
     <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawDataInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor =</span>
   <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -655,15 +659,15 @@ sudo losetup -d /dev/loop1
       <span class="n">inc</span> <span class="n">i</span>
 
 <span class="k">proc </span><span class="nf">metadata</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">metadataAreaOffset</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">metadataInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">metadataAreaSize</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span> <span class="o">=</span> <span class="n">metadataInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">metadataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">metadataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader =</span>
   <span class="n">Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

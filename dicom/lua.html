@@ -4394,62 +4394,62 @@ subtypes to force parsing in particular transfer syntax.</p>
     <span class="n">self</span><span class="p">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
-      <span class="n">_</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">SeqItem</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">SeqItem</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
       <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
       <span class="kr">if</span> <span class="n">_</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">==</span> <span class="mi">57565</span> <span class="kr">then</span>
         <span class="kr">break</span>
       <span class="kr">end</span>
       <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="kr">end</span>
-<span class="kr">end</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_transfer_syntax_change_implicit</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">elements_implicit</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">elements_implicit</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
   <span class="kr">end</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_transfer_syntax_change_implicit</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">elements_implicit</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">elements_implicit</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_forced_implicit</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementExplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_forced_implicit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="mi">65534</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="mi">65534</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_implicit</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_long_len</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementExplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_long_len</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_implicit</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OB&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OD&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OF&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OL&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;SQ&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UC&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UT&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UN&quot;</span><span class="p">))</span> 
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_implicit</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OB&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OD&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OF&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OL&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;SQ&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UC&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UT&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UN&quot;</span><span class="p">))</span> 
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_transfer_syntax_change_implicit</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementExplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_transfer_syntax_change_implicit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span> <span class="o">=</span> <span class="kc">false</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span> <span class="o">=</span> <span class="kc">false</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_implicit</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementExplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">Tags</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span><span class="p">))</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">Tags</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span><span class="p">))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
 <span class="kr">end</span>
 
 
@@ -4458,134 +4458,134 @@ subtypes to force parsing in particular transfer syntax.</p>
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementImplicit</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementImplicit</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-<span class="kr">end</span>
-<span class="kr">if</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_long_len</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span><span class="p">))</span>  <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
-<span class="kr">end</span>
-<span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">is_long_len</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="kc">true</span><span class="p">))</span>
-<span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">false</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">true</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-<span class="kr">end</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">~=</span> <span class="mi">4294967295</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_len</span><span class="p">)</span>
-<span class="kr">end</span>
-<span class="kr">if</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;SQ&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">==</span> <span class="mi">4294967295</span><span class="p">))</span>  <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">SeqItem</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
-    <span class="kr">if</span> <span class="n">_</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">==</span> <span class="mi">57565</span> <span class="kr">then</span>
-      <span class="kr">break</span>
-    <span class="kr">end</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
   <span class="kr">end</span>
-<span class="kr">end</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_transfer_syntax_change_explicit</span> <span class="kr">then</span>
-<span class="n">self</span><span class="p">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="kr">end</span>
-<span class="kr">end</span>
+  <span class="kr">if</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_long_len</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span><span class="p">))</span>  <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">is_long_len</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="kc">true</span><span class="p">))</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">false</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">true</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">~=</span> <span class="mi">4294967295</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_len</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;SQ&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">==</span> <span class="mi">4294967295</span><span class="p">))</span>  <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
+      <span class="kd">local</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">SeqItem</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
+      <span class="kr">if</span> <span class="n">_</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">==</span> <span class="mi">57565</span> <span class="kr">then</span>
+        <span class="kr">break</span>
+      <span class="kr">end</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_transfer_syntax_change_explicit</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementImplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">Tags</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span><span class="p">))</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">Tags</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span><span class="p">))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_transfer_syntax_change_explicit</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementImplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_transfer_syntax_change_explicit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">p_is_transfer_syntax_change_explicit</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">p_is_transfer_syntax_change_explicit</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_transfer_syntax_change_explicit</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_long_len</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementImplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_long_len</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OB&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OD&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OF&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OL&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;SQ&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UC&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UT&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UN&quot;</span><span class="p">))</span> <span class="p">))</span> 
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_forced_explicit</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OB&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OD&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OF&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OL&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;OW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;SQ&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UC&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UT&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vr</span> <span class="o">==</span> <span class="s2">&quot;UN&quot;</span><span class="p">))</span> <span class="p">))</span> 
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_long_len</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">p_is_transfer_syntax_change_explicit</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementImplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">p_is_transfer_syntax_change_explicit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\049\046\050\046\056\052\048\046\049\048\048\048\056\046\049\046\050\046\049\000</span><span class="s2">&quot;</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\049\046\050\046\056\052\048\046\049\048\048\048\056\046\049\046\050\046\049\000</span><span class="s2">&quot;</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_p_is_transfer_syntax_change_explicit</span>
 <span class="kr">end</span>
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementImplicit</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_forced_explicit</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">TDataElementImplicit</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_forced_explicit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="mi">2</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="mi">2</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_forced_explicit</span>
 <span class="kr">end</span>
 
 
 <span class="n">Dicom</span><span class="p">.</span><span class="n">SeqItem</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">SeqItem</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">Dicom</span><span class="p">.</span><span class="nc">SeqItem</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\254\255</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
-<span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\254\255</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span><span class="p">)</span>
-<span class="kr">end</span>
-<span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">~=</span> <span class="mi">4294967295</span> <span class="kr">then</span>
-<span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_len</span><span class="p">)</span>
-<span class="kr">end</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">==</span> <span class="mi">4294967295</span> <span class="kr">then</span>
-<span class="n">self</span><span class="p">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
-  <span class="n">_</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
-  <span class="kr">if</span>  <span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="mi">65534</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">==</span> <span class="mi">57357</span><span class="p">))</span>  <span class="kr">then</span>
-    <span class="kr">break</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\254\255</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\254\255</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_group</span><span class="p">)</span>
   <span class="kr">end</span>
-  <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="kr">end</span>
-<span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">~=</span> <span class="mi">4294967295</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_len</span><span class="p">)</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">value_len</span> <span class="o">==</span> <span class="mi">4294967295</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
+      <span class="kd">local</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Dicom</span><span class="p">.</span><span class="n">TDataElementExplicit</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
+      <span class="kr">if</span>  <span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">tag_group</span> <span class="o">==</span> <span class="mi">65534</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">tag_elem</span> <span class="o">==</span> <span class="mi">57357</span><span class="p">))</span>  <span class="kr">then</span>
+        <span class="kr">break</span>
+      <span class="kr">end</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
 

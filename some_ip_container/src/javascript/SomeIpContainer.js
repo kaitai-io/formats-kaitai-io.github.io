@@ -8,7 +8,7 @@
   } else {
     root.SomeIpContainer = factory(root.KaitaiStream, root.SomeIp);
   }
-}(this, function (KaitaiStream, SomeIp) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, SomeIp) {
 var SomeIpContainer = (function() {
   function SomeIpContainer(_io, _parent, _root) {
     this._io = _io;

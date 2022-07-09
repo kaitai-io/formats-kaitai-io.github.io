@@ -42,12 +42,12 @@ sub _read {
     $self->{patterns} = ();
     my $n_patterns = $self->header()->num_patterns();
     for (my $i = 0; $i < $n_patterns; $i++) {
-        $self->{patterns}[$i] = FasttrackerXmModule::Pattern->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{patterns}}, FasttrackerXmModule::Pattern->new($self->{_io}, $self, $self->{_root});
     }
     $self->{instruments} = ();
     my $n_instruments = $self->header()->num_instruments();
     for (my $i = 0; $i < $n_instruments; $i++) {
-        $self->{instruments}[$i] = FasttrackerXmModule::Instrument->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{instruments}}, FasttrackerXmModule::Instrument->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -438,7 +438,7 @@ sub _read {
     $self->{pattern_order_table} = ();
     my $n_pattern_order_table = 256;
     for (my $i = 0; $i < $n_pattern_order_table; $i++) {
-        $self->{pattern_order_table}[$i] = $self->{_io}->read_u1();
+        push @{$self->{pattern_order_table}}, $self->{_io}->read_u1();
     }
 }
 
@@ -524,12 +524,12 @@ sub _read {
     $self->{samples_headers} = ();
     my $n_samples_headers = $self->header()->num_samples();
     for (my $i = 0; $i < $n_samples_headers; $i++) {
-        $self->{samples_headers}[$i] = FasttrackerXmModule::Instrument::SampleHeader->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{samples_headers}}, FasttrackerXmModule::Instrument::SampleHeader->new($self->{_io}, $self, $self->{_root});
     }
     $self->{samples} = ();
     my $n_samples = $self->header()->num_samples();
     for (my $i = 0; $i < $n_samples; $i++) {
-        $self->{samples}[$i] = FasttrackerXmModule::Instrument::SamplesData->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{samples}}, FasttrackerXmModule::Instrument::SamplesData->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -654,17 +654,17 @@ sub _read {
     $self->{idx_sample_per_note} = ();
     my $n_idx_sample_per_note = 96;
     for (my $i = 0; $i < $n_idx_sample_per_note; $i++) {
-        $self->{idx_sample_per_note}[$i] = $self->{_io}->read_u1();
+        push @{$self->{idx_sample_per_note}}, $self->{_io}->read_u1();
     }
     $self->{volume_points} = ();
     my $n_volume_points = 12;
     for (my $i = 0; $i < $n_volume_points; $i++) {
-        $self->{volume_points}[$i] = FasttrackerXmModule::Instrument::ExtraHeader::EnvelopePoint->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{volume_points}}, FasttrackerXmModule::Instrument::ExtraHeader::EnvelopePoint->new($self->{_io}, $self, $self->{_root});
     }
     $self->{panning_points} = ();
     my $n_panning_points = 12;
     for (my $i = 0; $i < $n_panning_points; $i++) {
-        $self->{panning_points}[$i] = FasttrackerXmModule::Instrument::ExtraHeader::EnvelopePoint->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{panning_points}}, FasttrackerXmModule::Instrument::ExtraHeader::EnvelopePoint->new($self->{_io}, $self, $self->{_root});
     }
     $self->{num_volume_points} = $self->{_io}->read_u1();
     $self->{num_panning_points} = $self->{_io}->read_u1();

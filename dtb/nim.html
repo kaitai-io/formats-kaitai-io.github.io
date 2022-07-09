@@ -314,9 +314,12 @@ actually a subset of ASCII:</p>
     <span class="p">`</span><span class="n">rawMemoryReservationBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawStructureBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawStringsBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">memoryReservationBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_MemoryBlock</span>
-    <span class="p">`</span><span class="n">structureBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_FdtBlock</span>
-    <span class="p">`</span><span class="n">stringsBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_Strings</span>
+    <span class="p">`</span><span class="n">memoryReservationBlockInst</span><span class="p">`:</span> <span class="n">Dtb_MemoryBlock</span>
+    <span class="p">`</span><span class="n">memoryReservationBlockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">structureBlockInst</span><span class="p">`:</span> <span class="n">Dtb_FdtBlock</span>
+    <span class="p">`</span><span class="n">structureBlockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">stringsBlockInst</span><span class="p">`:</span> <span class="n">Dtb_Strings</span>
+    <span class="p">`</span><span class="n">stringsBlockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Dtb_Fdt</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">begin_node</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">end_node</span> <span class="o">=</span> <span class="mi">2</span>
@@ -342,7 +345,8 @@ actually a subset of ASCII:</p>
     <span class="p">`</span><span class="n">property</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_FdtNode</span>
-    <span class="p">`</span><span class="n">nameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Dtb_FdtNode</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_Fdt</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
@@ -423,7 +427,7 @@ actually a subset of ASCII:</p>
   <span class="n">this</span><span class="p">.</span><span class="n">lenStructureBlock</span> <span class="o">=</span> <span class="n">lenStructureBlockExpr</span>
 
 <span class="k">proc </span><span class="nf">memoryReservationBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_MemoryBlock</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsMemoryReservationBlock</span><span class="p">))</span>
@@ -433,11 +437,11 @@ actually a subset of ASCII:</p>
   <span class="k">let</span> <span class="n">memoryReservationBlockInstExpr</span> <span class="o">=</span> <span class="n">Dtb_MemoryBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMemoryReservationBlockInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span> <span class="o">=</span> <span class="n">memoryReservationBlockInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span>
 
 <span class="k">proc </span><span class="nf">structureBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_FdtBlock</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsStructureBlock</span><span class="p">))</span>
@@ -447,11 +451,11 @@ actually a subset of ASCII:</p>
   <span class="k">let</span> <span class="n">structureBlockInstExpr</span> <span class="o">=</span> <span class="n">Dtb_FdtBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawStructureBlockInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span> <span class="o">=</span> <span class="n">structureBlockInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span>
 
 <span class="k">proc </span><span class="nf">stringsBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_Strings</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsStringsBlock</span><span class="p">))</span>
@@ -461,8 +465,8 @@ actually a subset of ASCII:</p>
   <span class="k">let</span> <span class="n">stringsBlockInstExpr</span> <span class="o">=</span> <span class="n">Dtb_Strings</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawStringsBlockInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span> <span class="o">=</span> <span class="n">stringsBlockInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb], filename: string): Dtb =</span>
   <span class="n">Dtb</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -565,7 +569,7 @@ actually a subset of ASCII:</p>
   <span class="n">this</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">paddingExpr</span>
 
 <span class="k">proc </span><span class="nf">name</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb_FdtProp</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Dtb</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">stringsBlock</span><span class="p">.</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -573,8 +577,8 @@ actually a subset of ASCII:</p>
   <span class="k">let</span> <span class="n">nameInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span> <span class="o">=</span> <span class="n">nameInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtProp], filename: string): Dtb_FdtProp =</span>
   <span class="n">Dtb_FdtProp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

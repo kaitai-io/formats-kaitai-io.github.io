@@ -170,7 +170,7 @@ end
 
 function RtcpPayload.RtcpPacket:_read()
   self.version = self._io:read_bits_int_be(2)
-  self.padding = self._io:read_bits_int_be(1)
+  self.padding = self._io:read_bits_int_be(1) ~= 0
   self.subtype = self._io:read_bits_int_be(5)
   self._io:align_to_byte()
   self.payload_type = RtcpPayload.PayloadType(self._io:read_u1())
@@ -441,12 +441,12 @@ function RtcpPayload.PacketStatusChunk:_init(io, parent, root)
 end
 
 function RtcpPayload.PacketStatusChunk:_read()
-  self.t = self._io:read_bits_int_be(1)
+  self.t = self._io:read_bits_int_be(1) ~= 0
   if (self.t and 1 or 0) == 0 then
     self.s2 = self._io:read_bits_int_be(2)
   end
   if (self.t and 1 or 0) == 1 then
-    self.s1 = self._io:read_bits_int_be(1)
+    self.s1 = self._io:read_bits_int_be(1) ~= 0
   end
   if (self.t and 1 or 0) == 0 then
     self.rle = self._io:read_bits_int_be(13)

@@ -8,7 +8,7 @@
   } else {
     root.Jpeg = factory(root.KaitaiStream, root.Exif);
   }
-}(this, function (KaitaiStream, Exif) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Exif) {
 /**
  * JPEG File Interchange Format, or JFIF, or, more colloquially known
  * as just "JPEG" or "JPG", is a popular 2D bitmap image file format,
@@ -191,9 +191,9 @@ var Jpeg = (function() {
     }
     SegmentSos.prototype._read = function() {
       this.numComponents = this._io.readU1();
-      this.components = new Array(this.numComponents);
+      this.components = [];
       for (var i = 0; i < this.numComponents; i++) {
-        this.components[i] = new Component(this._io, this, this._root);
+        this.components.push(new Component(this._io, this, this._root));
       }
       this.startSpectralSelection = this._io.readU1();
       this.endSpectral = this._io.readU1();
@@ -276,9 +276,9 @@ var Jpeg = (function() {
       this.imageHeight = this._io.readU2be();
       this.imageWidth = this._io.readU2be();
       this.numComponents = this._io.readU1();
-      this.components = new Array(this.numComponents);
+      this.components = [];
       for (var i = 0; i < this.numComponents; i++) {
-        this.components[i] = new Component(this._io, this, this._root);
+        this.components.push(new Component(this._io, this, this._root));
       }
     }
 

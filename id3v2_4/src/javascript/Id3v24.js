@@ -8,7 +8,7 @@
   } else {
     root.Id3v24 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link http://id3.org/id3v2.4.0-structure|Source}
  * @see {@link http://id3.org/id3v2.4.0-frames|Source}
@@ -79,7 +79,7 @@ var Id3v24 = (function() {
       if (this.header.flags.flagHeaderex) {
         this.headerEx = new HeaderEx(this._io, this, this._root);
       }
-      this.frames = []
+      this.frames = [];
       var i = 0;
       do {
         var _ = new Frame(this._io, this, this._root);

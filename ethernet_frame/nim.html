@@ -283,7 +283,8 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">etherTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EthernetFrame_EtherTypeEnum</span>
+    <span class="p">`</span><span class="n">etherTypeInst</span><span class="p">`:</span> <span class="n">EthernetFrame_EtherTypeEnum</span>
+    <span class="p">`</span><span class="n">etherTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">EthernetFrame_EtherTypeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">ipv4</span> <span class="o">=</span> <span class="mi">2048</span>
     <span class="n">x_75_internet</span> <span class="o">=</span> <span class="mi">2049</span>
@@ -372,12 +373,12 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
 <span class="ow">and</span> <span class="n">real</span> <span class="n">ether</span> <span class="k">type</span> <span class="ow">is</span> <span class="n">upcoming</span> <span class="n">next</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span>
   <span class="k">let</span> <span class="n">etherTypeInstExpr</span> <span class="o">=</span> <span class="n">EthernetFrame_EtherTypeEnum</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType1</span> <span class="o">==</span> <span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ieee_802_1q_tpid</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType2</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span> <span class="o">=</span> <span class="n">etherTypeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame], filename: string): EthernetFrame =</span>
   <span class="n">EthernetFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

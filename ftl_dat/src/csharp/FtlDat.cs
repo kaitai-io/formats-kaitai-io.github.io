@@ -20,7 +20,7 @@ namespace Kaitai
         private void _read()
         {
             _numFiles = m_io.ReadU4le();
-            _files = new List<File>((int) (NumFiles));
+            _files = new List<File>();
             for (var i = 0; i < NumFiles; i++)
             {
                 _files.Add(new File(m_io, this, m_root));

@@ -8,7 +8,7 @@
   } else {
     root.Regf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * This spec allows to parse files used by Microsoft Windows family of
  * operating systems to store parts of its "registry". "Registry" is a
@@ -254,9 +254,9 @@ var Regf = (function() {
       }
       SubKeyListLhLf.prototype._read = function() {
         this.count = this._io.readU2le();
-        this.items = new Array(this.count);
+        this.items = [];
         for (var i = 0; i < this.count; i++) {
-          this.items[i] = new Item(this._io, this, this._root);
+          this.items.push(new Item(this._io, this, this._root));
         }
       }
 
@@ -307,9 +307,9 @@ var Regf = (function() {
       }
       SubKeyListLi.prototype._read = function() {
         this.count = this._io.readU2le();
-        this.items = new Array(this.count);
+        this.items = [];
         for (var i = 0; i < this.count; i++) {
-          this.items[i] = new Item(this._io, this, this._root);
+          this.items.push(new Item(this._io, this, this._root));
         }
       }
 
@@ -403,9 +403,9 @@ var Regf = (function() {
       }
       SubKeyListRi.prototype._read = function() {
         this.count = this._io.readU2le();
-        this.items = new Array(this.count);
+        this.items = [];
         for (var i = 0; i < this.count; i++) {
-          this.items[i] = new Item(this._io, this, this._root);
+          this.items.push(new Item(this._io, this, this._root));
         }
       }
 

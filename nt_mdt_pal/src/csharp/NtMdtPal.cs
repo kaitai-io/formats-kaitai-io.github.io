@@ -29,13 +29,13 @@ namespace Kaitai
                 throw new ValidationNotEqualError(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }, Signature, M_Io, "/seq/0");
             }
             _count = m_io.ReadU4be();
-            _meta = new List<Meta>((int) (Count));
+            _meta = new List<Meta>();
             for (var i = 0; i < Count; i++)
             {
                 _meta.Add(new Meta(m_io, this, m_root));
             }
             _something2 = m_io.ReadBytes(1);
-            _tables = new List<ColTable>((int) (Count));
+            _tables = new List<ColTable>();
             for (var i = 0; i < Count; i++)
             {
                 _tables.Add(new ColTable(i, m_io, this, m_root));
@@ -157,7 +157,7 @@ namespace Kaitai
                 _unkn = m_io.ReadU1();
                 _title = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes(M_Root.Meta[Index].NameSize));
                 _unkn1 = m_io.ReadU2be();
-                _colors = new List<Color>((int) ((M_Root.Meta[Index].ColorsCount - 1)));
+                _colors = new List<Color>();
                 for (var i = 0; i < (M_Root.Meta[Index].ColorsCount - 1); i++)
                 {
                     _colors.Add(new Color(m_io, this, m_root));

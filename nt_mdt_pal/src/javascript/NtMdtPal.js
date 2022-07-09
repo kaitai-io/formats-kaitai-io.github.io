@@ -8,7 +8,7 @@
   } else {
     root.NtMdtPal = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * It is a color scheme for visualising SPM scans.
  */
@@ -27,14 +27,14 @@ var NtMdtPal = (function() {
       throw new KaitaiStream.ValidationNotEqualError([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33], this.signature, this._io, "/seq/0");
     }
     this.count = this._io.readU4be();
-    this.meta = new Array(this.count);
+    this.meta = [];
     for (var i = 0; i < this.count; i++) {
-      this.meta[i] = new Meta(this._io, this, this._root);
+      this.meta.push(new Meta(this._io, this, this._root));
     }
     this.something2 = this._io.readBytes(1);
-    this.tables = new Array(this.count);
+    this.tables = [];
     for (var i = 0; i < this.count; i++) {
-      this.tables[i] = new ColTable(this._io, this, this._root, i);
+      this.tables.push(new ColTable(this._io, this, this._root, i));
     }
   }
 
@@ -113,9 +113,9 @@ var NtMdtPal = (function() {
       this.unkn = this._io.readU1();
       this.title = KaitaiStream.bytesToStr(this._io.readBytes(this._root.meta[this.index].nameSize), "UTF-16LE");
       this.unkn1 = this._io.readU2be();
-      this.colors = new Array((this._root.meta[this.index].colorsCount - 1));
+      this.colors = [];
       for (var i = 0; i < (this._root.meta[this.index].colorsCount - 1); i++) {
-        this.colors[i] = new Color(this._io, this, this._root);
+        this.colors.push(new Color(this._io, this, this._root));
       }
     }
 

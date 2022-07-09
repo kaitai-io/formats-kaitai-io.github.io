@@ -136,7 +136,7 @@ sub _read {
     $self->{entries} = ();
     my $n_entries = $self->num_entries();
     for (my $i = 0; $i < $n_entries; $i++) {
-        $self->{entries}[$i] = PhpSerializedValue::MappingEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{entries}}, PhpSerializedValue::MappingEntry->new($self->{_io}, $self, $self->{_root});
     }
     $self->{closing_brace} = $self->{_io}->read_bytes(1);
 }
@@ -144,7 +144,7 @@ sub _read {
 sub num_entries {
     my ($self) = @_;
     return $self->{num_entries} if ($self->{num_entries});
-    $self->{num_entries} = $self->num_entries_dec();
+    $self->{num_entries} = $self->num_entries_dec() + 0;
     return $self->{num_entries};
 }
 
@@ -251,7 +251,7 @@ sub _read {
 sub len_data {
     my ($self) = @_;
     return $self->{len_data} if ($self->{len_data});
-    $self->{len_data} = $self->len_data_dec();
+    $self->{len_data} = $self->len_data_dec() + 0;
     return $self->{len_data};
 }
 
@@ -417,7 +417,7 @@ sub _read {
 sub len_data {
     my ($self) = @_;
     return $self->{len_data} if ($self->{len_data});
-    $self->{len_data} = $self->len_data_dec();
+    $self->{len_data} = $self->len_data_dec() + 0;
     return $self->{len_data};
 }
 
@@ -689,7 +689,7 @@ sub _read {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = $self->value_dec();
+    $self->{value} = $self->value_dec() + 0;
     return $self->{value};
 }
 

@@ -623,7 +623,7 @@ namespace Kaitai
                     {
                         _segmentNumberRaw = new DcmpVariableLengthInteger(m_io);
                         _numAddressesRaw = new DcmpVariableLengthInteger(m_io);
-                        _addressesRaw = new List<DcmpVariableLengthInteger>((int) (NumAddresses));
+                        _addressesRaw = new List<DcmpVariableLengthInteger>();
                         for (var i = 0; i < NumAddresses; i++)
                         {
                             _addressesRaw.Add(new DcmpVariableLengthInteger(m_io));
@@ -860,7 +860,7 @@ namespace Kaitai
                     {
                         _firstValueRaw = new DcmpVariableLengthInteger(m_io);
                         _numDeltasRaw = new DcmpVariableLengthInteger(m_io);
-                        _deltas = new List<sbyte>((int) (NumDeltas));
+                        _deltas = new List<sbyte>();
                         for (var i = 0; i < NumDeltas; i++)
                         {
                             _deltas.Add(m_io.ReadS1());
@@ -961,7 +961,7 @@ namespace Kaitai
                     {
                         _firstValueRaw = new DcmpVariableLengthInteger(m_io);
                         _numDeltasRaw = new DcmpVariableLengthInteger(m_io);
-                        _deltasRaw = new List<DcmpVariableLengthInteger>((int) (NumDeltas));
+                        _deltasRaw = new List<DcmpVariableLengthInteger>();
                         for (var i = 0; i < NumDeltas; i++)
                         {
                             _deltasRaw.Add(new DcmpVariableLengthInteger(m_io));

@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 import exif
@@ -134,9 +133,9 @@ class Jpeg(KaitaiStruct):
 
         def _read(self):
             self.num_components = self._io.read_u1()
-            self.components = [None] * (self.num_components)
+            self.components = []
             for i in range(self.num_components):
-                self.components[i] = Jpeg.SegmentSos.Component(self._io, self, self._root)
+                self.components.append(Jpeg.SegmentSos.Component(self._io, self, self._root))
 
             self.start_spectral_selection = self._io.read_u1()
             self.end_spectral = self._io.read_u1()
@@ -181,9 +180,9 @@ class Jpeg(KaitaiStruct):
             self.image_height = self._io.read_u2be()
             self.image_width = self._io.read_u2be()
             self.num_components = self._io.read_u1()
-            self.components = [None] * (self.num_components)
+            self.components = []
             for i in range(self.num_components):
-                self.components[i] = Jpeg.SegmentSof0.Component(self._io, self, self._root)
+                self.components.append(Jpeg.SegmentSof0.Component(self._io, self, self._root))
 
 
         class Component(KaitaiStruct):
@@ -201,18 +200,18 @@ class Jpeg(KaitaiStruct):
             @property
             def sampling_x(self):
                 if hasattr(self, '_m_sampling_x'):
-                    return self._m_sampling_x if hasattr(self, '_m_sampling_x') else None
+                    return self._m_sampling_x
 
                 self._m_sampling_x = ((self.sampling_factors & 240) >> 4)
-                return self._m_sampling_x if hasattr(self, '_m_sampling_x') else None
+                return getattr(self, '_m_sampling_x', None)
 
             @property
             def sampling_y(self):
                 if hasattr(self, '_m_sampling_y'):
-                    return self._m_sampling_y if hasattr(self, '_m_sampling_y') else None
+                    return self._m_sampling_y
 
                 self._m_sampling_y = (self.sampling_factors & 15)
-                return self._m_sampling_y if hasattr(self, '_m_sampling_y') else None
+                return getattr(self, '_m_sampling_y', None)
 
 
 

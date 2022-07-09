@@ -131,7 +131,7 @@ public class DoomWad extends KaitaiStruct {
         }
         private void _read() {
             this.numTextures = this._io.readS4le();
-            textures = new ArrayList<TextureIndex>(((Number) (numTextures())).intValue());
+            this.textures = new ArrayList<TextureIndex>();
             for (int i = 0; i < numTextures(); i++) {
                 this.textures.add(new TextureIndex(this._io, this, _root));
             }
@@ -201,7 +201,7 @@ public class DoomWad extends KaitaiStruct {
                 this.height = this._io.readU2le();
                 this.columnDirectory = this._io.readU4le();
                 this.numPatches = this._io.readU2le();
-                patches = new ArrayList<Patch>(((Number) (numPatches())).intValue());
+                this.patches = new ArrayList<Patch>();
                 for (int i = 0; i < numPatches(); i++) {
                     this.patches.add(new Patch(this._io, this, _root));
                 }
@@ -375,7 +375,7 @@ public class DoomWad extends KaitaiStruct {
         }
         private void _read() {
             this.numPatches = this._io.readU4le();
-            names = new ArrayList<String>(((Number) (numPatches())).intValue());
+            this.names = new ArrayList<String>();
             for (int i = 0; i < numPatches(); i++) {
                 this.names.add(new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("ASCII")));
             }
@@ -709,7 +709,7 @@ public class DoomWad extends KaitaiStruct {
         public Object contents() {
             if (this.contents != null)
                 return this.contents;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(offset());
             switch (name()) {
@@ -848,7 +848,7 @@ public class DoomWad extends KaitaiStruct {
             this.originY = this._io.readS2le();
             this.numCols = this._io.readS2le();
             this.numRows = this._io.readS2le();
-            linedefsInBlock = new ArrayList<Blocklist>(((Number) ((numCols() * numRows()))).intValue());
+            this.linedefsInBlock = new ArrayList<Blocklist>();
             for (int i = 0; i < (numCols() * numRows()); i++) {
                 this.linedefsInBlock.add(new Blocklist(this._io, this, _root));
             }
@@ -950,7 +950,7 @@ public class DoomWad extends KaitaiStruct {
             return this.index;
         long _pos = this._io.pos();
         this._io.seek(indexOffset());
-        index = new ArrayList<IndexEntry>(((Number) (numIndexEntries())).intValue());
+        this.index = new ArrayList<IndexEntry>();
         for (int i = 0; i < numIndexEntries(); i++) {
             this.index.add(new IndexEntry(this._io, this, _root));
         }

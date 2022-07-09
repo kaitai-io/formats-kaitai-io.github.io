@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class RubyMarshal(KaitaiStruct):
@@ -70,9 +69,9 @@ class RubyMarshal(KaitaiStruct):
 
         def _read(self):
             self.num_elements = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.elements = [None] * (self.num_elements.value)
+            self.elements = []
             for i in range(self.num_elements.value):
-                self.elements[i] = RubyMarshal.Record(self._io, self, self._root)
+                self.elements.append(RubyMarshal.Record(self._io, self, self._root))
 
 
 
@@ -107,9 +106,9 @@ class RubyMarshal(KaitaiStruct):
         def _read(self):
             self.name = RubyMarshal.Record(self._io, self, self._root)
             self.num_members = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.members = [None] * (self.num_members.value)
+            self.members = []
             for i in range(self.num_members.value):
-                self.members[i] = RubyMarshal.Pair(self._io, self, self._root)
+                self.members.append(RubyMarshal.Pair(self._io, self, self._root))
 
 
 
@@ -193,18 +192,18 @@ class RubyMarshal(KaitaiStruct):
         @property
         def is_immediate(self):
             if hasattr(self, '_m_is_immediate'):
-                return self._m_is_immediate if hasattr(self, '_m_is_immediate') else None
+                return self._m_is_immediate
 
             self._m_is_immediate =  ((self.code > 4) and (self.code < 252)) 
-            return self._m_is_immediate if hasattr(self, '_m_is_immediate') else None
+            return getattr(self, '_m_is_immediate', None)
 
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = (((self.code - 5) if self.code < 128 else (4 - (~(self.code) & 127))) if self.is_immediate else (0 if self.code == 0 else ((self.encoded - 256) if self.code == 255 else ((self.encoded - 65536) if self.code == 254 else ((((self.encoded2 << 16) | self.encoded) - 16777216) if self.code == 253 else (((self.encoded2 << 16) | self.encoded) if self.code == 3 else self.encoded))))))
-            return self._m_value if hasattr(self, '_m_value') else None
+            return getattr(self, '_m_value', None)
 
 
     class Pair(KaitaiStruct):
@@ -233,9 +232,9 @@ class RubyMarshal(KaitaiStruct):
         def _read(self):
             self.obj = RubyMarshal.Record(self._io, self, self._root)
             self.num_vars = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.vars = [None] * (self.num_vars.value)
+            self.vars = []
             for i in range(self.num_vars.value):
-                self.vars[i] = RubyMarshal.Pair(self._io, self, self._root)
+                self.vars.append(RubyMarshal.Pair(self._io, self, self._root))
 
 
 
@@ -288,9 +287,9 @@ class RubyMarshal(KaitaiStruct):
 
         def _read(self):
             self.num_pairs = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.pairs = [None] * (self.num_pairs.value)
+            self.pairs = []
             for i in range(self.num_pairs.value):
-                self.pairs[i] = RubyMarshal.Pair(self._io, self, self._root)
+                self.pairs.append(RubyMarshal.Pair(self._io, self, self._root))
 
 
 

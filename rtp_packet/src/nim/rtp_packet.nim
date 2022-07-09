@@ -16,8 +16,10 @@ type
     `data`*: seq[byte]
     `padding`*: seq[byte]
     `parent`*: KaitaiStruct
-    `lenPaddingIfExistsInst`*: uint8
-    `lenPaddingInst`*: uint8
+    `lenPaddingIfExistsInst`: uint8
+    `lenPaddingIfExistsInstFlag`: bool
+    `lenPaddingInst`: uint8
+    `lenPaddingInstFlag`: bool
   RtpPacket_PayloadTypeEnum* = enum
     pcmu = 0
     reserved1 = 1
@@ -120,7 +122,7 @@ proc lenPaddingIfExists(this: RtpPacket): uint8 =
 bytes appended to the payload as padding.
 
   ]##
-  if this.lenPaddingIfExistsInst != nil:
+  if this.lenPaddingIfExistsInstFlag:
     return this.lenPaddingIfExistsInst
   if this.hasPadding:
     let pos = this.io.pos()
@@ -128,20 +130,20 @@ bytes appended to the payload as padding.
     let lenPaddingIfExistsInstExpr = this.io.readU1()
     this.lenPaddingIfExistsInst = lenPaddingIfExistsInstExpr
     this.io.seek(pos)
-  if this.lenPaddingIfExistsInst != nil:
-    return this.lenPaddingIfExistsInst
+  this.lenPaddingIfExistsInstFlag = true
+  return this.lenPaddingIfExistsInst
 
 proc lenPadding(this: RtpPacket): uint8 = 
 
   ##[
   Always returns number of padding bytes to in the payload.
   ]##
-  if this.lenPaddingInst != nil:
+  if this.lenPaddingInstFlag:
     return this.lenPaddingInst
   let lenPaddingInstExpr = uint8((if this.hasPadding: this.lenPaddingIfExists else: 0))
   this.lenPaddingInst = lenPaddingInstExpr
-  if this.lenPaddingInst != nil:
-    return this.lenPaddingInst
+  this.lenPaddingInstFlag = true
+  return this.lenPaddingInst
 
 proc fromFile*(_: typedesc[RtpPacket], filename: string): RtpPacket =
   RtpPacket.read(newKaitaiFileStream(filename), nil, nil)

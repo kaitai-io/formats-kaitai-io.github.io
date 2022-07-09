@@ -8,7 +8,7 @@
   } else {
     root.Rtpdump = factory(root.KaitaiStream, root.RtpPacket);
   }
-}(this, function (KaitaiStream, RtpPacket) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, RtpPacket) {
 /**
  * rtpdump is a format used by rtptools to record and replay
  * rtp data from network capture.

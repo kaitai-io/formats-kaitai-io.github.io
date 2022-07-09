@@ -65,18 +65,18 @@ class DsStore < Kaitai::Struct::Struct
     def _read
       @num_blocks = @_io.read_u4be
       @_unnamed1 = @_io.read_bytes(4)
-      @block_addresses = Array.new(num_block_addresses)
+      @block_addresses = []
       (num_block_addresses).times { |i|
-        @block_addresses[i] = BlockDescriptor.new(@_io, self, @_root)
+        @block_addresses << BlockDescriptor.new(@_io, self, @_root)
       }
       @num_directories = @_io.read_u4be
-      @directory_entries = Array.new(num_directories)
+      @directory_entries = []
       (num_directories).times { |i|
-        @directory_entries[i] = DirectoryEntry.new(@_io, self, @_root)
+        @directory_entries << DirectoryEntry.new(@_io, self, @_root)
       }
-      @free_lists = Array.new(num_free_lists)
+      @free_lists = []
       (num_free_lists).times { |i|
-        @free_lists[i] = FreeList.new(@_io, self, @_root)
+        @free_lists << FreeList.new(@_io, self, @_root)
       }
       self
     end
@@ -126,9 +126,9 @@ class DsStore < Kaitai::Struct::Struct
 
       def _read
         @counter = @_io.read_u4be
-        @offsets = Array.new(counter)
+        @offsets = []
         (counter).times { |i|
-          @offsets[i] = @_io.read_u4be
+          @offsets << @_io.read_u4be
         }
         self
       end
@@ -151,9 +151,9 @@ class DsStore < Kaitai::Struct::Struct
     def directories
       return @directories unless @directories.nil?
       io = _root._io
-      @directories = Array.new(num_directories)
+      @directories = []
       (num_directories).times { |i|
-        @directories[i] = MasterBlockRef.new(io, self, @_root, i)
+        @directories << MasterBlockRef.new(io, self, @_root, i)
       }
       @directories
     end
@@ -255,9 +255,9 @@ class DsStore < Kaitai::Struct::Struct
     def _read
       @mode = @_io.read_u4be
       @counter = @_io.read_u4be
-      @data = Array.new(counter)
+      @data = []
       (counter).times { |i|
-        @data[i] = BlockData.new(@_io, self, @_root, mode)
+        @data << BlockData.new(@_io, self, @_root, mode)
       }
       self
     end

@@ -9,18 +9,24 @@ type
     `reserved`*: seq[byte]
     `offsets`*: seq[uint32]
     `parent`*: KaitaiStruct
-    `ofsDirInst`*: uint32
-    `filesInst`*: seq[GranTurismoVol_FileInfo]
+    `ofsDirInst`: uint32
+    `ofsDirInstFlag`: bool
+    `filesInst`: seq[GranTurismoVol_FileInfo]
+    `filesInstFlag`: bool
   GranTurismoVol_FileInfo* = ref object of KaitaiStruct
     `timestamp`*: uint32
     `offsetIdx`*: uint16
     `flags`*: uint8
     `name`*: string
     `parent`*: GranTurismoVol
-    `sizeInst`*: int
-    `bodyInst`*: seq[byte]
-    `isDirInst`*: bool
-    `isLastEntryInst`*: bool
+    `sizeInst`: int
+    `sizeInstFlag`: bool
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
+    `isDirInst`: bool
+    `isDirInstFlag`: bool
+    `isLastEntryInst`: bool
+    `isLastEntryInstFlag`: bool
 
 proc read*(_: typedesc[GranTurismoVol], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GranTurismoVol
 proc read*(_: typedesc[GranTurismoVol_FileInfo], io: KaitaiStream, root: KaitaiStruct, parent: GranTurismoVol): GranTurismoVol_FileInfo
@@ -53,15 +59,15 @@ proc read*(_: typedesc[GranTurismoVol], io: KaitaiStream, root: KaitaiStruct, pa
     this.offsets.add(it)
 
 proc ofsDir(this: GranTurismoVol): uint32 = 
-  if this.ofsDirInst != nil:
+  if this.ofsDirInstFlag:
     return this.ofsDirInst
   let ofsDirInstExpr = uint32(this.offsets[1])
   this.ofsDirInst = ofsDirInstExpr
-  if this.ofsDirInst != nil:
-    return this.ofsDirInst
+  this.ofsDirInstFlag = true
+  return this.ofsDirInst
 
 proc files(this: GranTurismoVol): seq[GranTurismoVol_FileInfo] = 
-  if this.filesInst.len != 0:
+  if this.filesInstFlag:
     return this.filesInst
   let pos = this.io.pos()
   this.io.seek(int((this.ofsDir and 4294965248'i64)))
@@ -69,8 +75,8 @@ proc files(this: GranTurismoVol): seq[GranTurismoVol_FileInfo] =
     let it = GranTurismoVol_FileInfo.read(this.io, this.root, this)
     this.filesInst.add(it)
   this.io.seek(pos)
-  if this.filesInst.len != 0:
-    return this.filesInst
+  this.filesInstFlag = true
+  return this.filesInst
 
 proc fromFile*(_: typedesc[GranTurismoVol], filename: string): GranTurismoVol =
   GranTurismoVol.read(newKaitaiFileStream(filename), nil, nil)
@@ -93,15 +99,15 @@ proc read*(_: typedesc[GranTurismoVol_FileInfo], io: KaitaiStream, root: KaitaiS
   this.name = nameExpr
 
 proc size(this: GranTurismoVol_FileInfo): int = 
-  if this.sizeInst != nil:
+  if this.sizeInstFlag:
     return this.sizeInst
   let sizeInstExpr = int(((GranTurismoVol(this.root).offsets[(this.offsetIdx + 1)] and 4294965248'i64) - GranTurismoVol(this.root).offsets[this.offsetIdx]))
   this.sizeInst = sizeInstExpr
-  if this.sizeInst != nil:
-    return this.sizeInst
+  this.sizeInstFlag = true
+  return this.sizeInst
 
 proc body(this: GranTurismoVol_FileInfo): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   if not(this.isDir):
     let pos = this.io.pos()
@@ -109,24 +115,24 @@ proc body(this: GranTurismoVol_FileInfo): seq[byte] =
     let bodyInstExpr = this.io.readBytes(int(this.size))
     this.bodyInst = bodyInstExpr
     this.io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc isDir(this: GranTurismoVol_FileInfo): bool = 
-  if this.isDirInst != nil:
+  if this.isDirInstFlag:
     return this.isDirInst
   let isDirInstExpr = bool((this.flags and 1) != 0)
   this.isDirInst = isDirInstExpr
-  if this.isDirInst != nil:
-    return this.isDirInst
+  this.isDirInstFlag = true
+  return this.isDirInst
 
 proc isLastEntry(this: GranTurismoVol_FileInfo): bool = 
-  if this.isLastEntryInst != nil:
+  if this.isLastEntryInstFlag:
     return this.isLastEntryInst
   let isLastEntryInstExpr = bool((this.flags and 128) != 0)
   this.isLastEntryInst = isLastEntryInstExpr
-  if this.isLastEntryInst != nil:
-    return this.isLastEntryInst
+  this.isLastEntryInstFlag = true
+  return this.isLastEntryInst
 
 proc fromFile*(_: typedesc[GranTurismoVol_FileInfo], filename: string): GranTurismoVol_FileInfo =
   GranTurismoVol_FileInfo.read(newKaitaiFileStream(filename), nil, nil)

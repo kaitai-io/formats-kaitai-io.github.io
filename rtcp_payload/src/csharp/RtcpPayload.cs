@@ -106,7 +106,7 @@ namespace Kaitai
                 _brExp = m_io.ReadBitsIntBe(6);
                 _brMantissa = m_io.ReadBitsIntBe(18);
                 m_io.AlignToByte();
-                _ssrcList = new List<uint>((int) (NumSsrc));
+                _ssrcList = new List<uint>();
                 for (var i = 0; i < NumSsrc; i++)
                 {
                     _ssrcList.Add(m_io.ReadU4be());
@@ -160,7 +160,7 @@ namespace Kaitai
                 _rtpTimestamp = m_io.ReadU4be();
                 _senderPacketCount = m_io.ReadU4be();
                 _senderOctetCount = m_io.ReadU4be();
-                _reportBlock = new List<ReportBlock>((int) (M_Parent.Subtype));
+                _reportBlock = new List<ReportBlock>();
                 for (var i = 0; i < M_Parent.Subtype; i++)
                 {
                     _reportBlock.Add(new ReportBlock(m_io, this, m_root));
@@ -214,7 +214,7 @@ namespace Kaitai
             private void _read()
             {
                 _ssrc = m_io.ReadU4be();
-                _reportBlock = new List<ReportBlock>((int) (M_Parent.Subtype));
+                _reportBlock = new List<ReportBlock>();
                 for (var i = 0; i < M_Parent.Subtype; i++)
                 {
                     _reportBlock.Add(new ReportBlock(m_io, this, m_root));
@@ -603,7 +603,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _sourceChunk = new List<SourceChunk>((int) (SourceCount));
+                _sourceChunk = new List<SourceChunk>();
                 for (var i = 0; i < SourceCount; i++)
                 {
                     _sourceChunk.Add(new SourceChunk(m_io, this, m_root));

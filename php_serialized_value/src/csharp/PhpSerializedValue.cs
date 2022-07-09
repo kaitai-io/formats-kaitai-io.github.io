@@ -153,7 +153,7 @@ namespace Kaitai
                 {
                     throw new ValidationNotEqualError(new byte[] { 123 }, OpeningBrace, M_Io, "/types/count_prefixed_mapping/seq/1");
                 }
-                _entries = new List<MappingEntry>((int) (NumEntries));
+                _entries = new List<MappingEntry>();
                 for (var i = 0; i < NumEntries; i++)
                 {
                     _entries.Add(new MappingEntry(m_io, this, m_root));

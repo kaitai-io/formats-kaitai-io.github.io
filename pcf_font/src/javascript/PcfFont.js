@@ -8,7 +8,7 @@
   } else {
     root.PcfFont = factory(root.KaitaiStream, root.BytesWithIo);
   }
-}(this, function (KaitaiStream, BytesWithIo) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, BytesWithIo) {
 /**
  * Portable Compiled Format (PCF) font is a bitmap font format
  * originating from X11 Window System. It matches BDF format (which is
@@ -61,9 +61,9 @@ var PcfFont = (function() {
       throw new KaitaiStream.ValidationNotEqualError([1, 102, 99, 112], this.magic, this._io, "/seq/0");
     }
     this.numTables = this._io.readU4le();
-    this.tables = new Array(this.numTables);
+    this.tables = [];
     for (var i = 0; i < this.numTables; i++) {
-      this.tables[i] = new Table(this._io, this, this._root);
+      this.tables.push(new Table(this._io, this, this._root));
     }
   }
 
@@ -104,9 +104,9 @@ var PcfFont = (function() {
       Swidths.prototype._read = function() {
         this.format = new Format(this._io, this, this._root);
         this.numGlyphs = this._io.readU4le();
-        this.swidths = new Array(this.numGlyphs);
+        this.swidths = [];
         for (var i = 0; i < this.numGlyphs; i++) {
-          this.swidths[i] = this._io.readU4le();
+          this.swidths.push(this._io.readU4le());
         }
       }
 
@@ -135,9 +135,9 @@ var PcfFont = (function() {
       Properties.prototype._read = function() {
         this.format = new Format(this._io, this, this._root);
         this.numProps = this._io.readU4le();
-        this.props = new Array(this.numProps);
+        this.props = [];
         for (var i = 0; i < this.numProps; i++) {
-          this.props[i] = new Prop(this._io, this, this._root);
+          this.props.push(new Prop(this._io, this, this._root));
         }
         this.padding = this._io.readBytes(((this.numProps & 3) == 0 ? 0 : (4 - (this.numProps & 3))));
         this.lenStrings = this._io.readU4le();
@@ -272,9 +272,9 @@ var PcfFont = (function() {
         this.minByte1 = this._io.readU2le();
         this.maxByte1 = this._io.readU2le();
         this.defaultChar = this._io.readU2le();
-        this.glyphIndexes = new Array((((this.maxCharOrByte2 - this.minCharOrByte2) + 1) * ((this.maxByte1 - this.minByte1) + 1)));
+        this.glyphIndexes = [];
         for (var i = 0; i < (((this.maxCharOrByte2 - this.minCharOrByte2) + 1) * ((this.maxByte1 - this.minByte1) + 1)); i++) {
-          this.glyphIndexes[i] = this._io.readU2le();
+          this.glyphIndexes.push(this._io.readU2le());
         }
       }
 
@@ -297,9 +297,9 @@ var PcfFont = (function() {
       GlyphNames.prototype._read = function() {
         this.format = new Format(this._io, this, this._root);
         this.numGlyphs = this._io.readU4le();
-        this.names = new Array(this.numGlyphs);
+        this.names = [];
         for (var i = 0; i < this.numGlyphs; i++) {
-          this.names[i] = new StringRef(this._io, this, this._root);
+          this.names.push(new StringRef(this._io, this, this._root));
         }
         this.lenStrings = this._io.readU4le();
         this._raw_strings = this._io.readBytes(this.lenStrings);
@@ -361,13 +361,13 @@ var PcfFont = (function() {
       Bitmaps.prototype._read = function() {
         this.format = new Format(this._io, this, this._root);
         this.numGlyphs = this._io.readU4le();
-        this.offsets = new Array(this.numGlyphs);
+        this.offsets = [];
         for (var i = 0; i < this.numGlyphs; i++) {
-          this.offsets[i] = this._io.readU4le();
+          this.offsets.push(this._io.readU4le());
         }
-        this.bitmapSizes = new Array(4);
+        this.bitmapSizes = [];
         for (var i = 0; i < 4; i++) {
-          this.bitmapSizes[i] = this._io.readU4le();
+          this.bitmapSizes.push(this._io.readU4le());
         }
       }
 

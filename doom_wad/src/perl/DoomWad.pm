@@ -48,7 +48,7 @@ sub index {
     $self->{index} = ();
     my $n_index = $self->num_index_entries();
     for (my $i = 0; $i < $n_index; $i++) {
-        $self->{index}[$i] = DoomWad::IndexEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{index}}, DoomWad::IndexEntry->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{index};
@@ -188,7 +188,7 @@ sub _read {
     $self->{textures} = ();
     my $n_textures = $self->num_textures();
     for (my $i = 0; $i < $n_textures; $i++) {
-        $self->{textures}[$i] = DoomWad::Texture12::TextureIndex->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{textures}}, DoomWad::Texture12::TextureIndex->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -289,7 +289,7 @@ sub _read {
     $self->{patches} = ();
     my $n_patches = $self->num_patches();
     for (my $i = 0; $i < $n_patches; $i++) {
-        $self->{patches}[$i] = DoomWad::Texture12::Patch->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{patches}}, DoomWad::Texture12::Patch->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -498,7 +498,7 @@ sub _read {
     $self->{names} = ();
     my $n_names = $self->num_patches();
     for (my $i = 0; $i < $n_names; $i++) {
-        $self->{names}[$i] = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(8), 0));
+        push @{$self->{names}}, Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(8), 0));
     }
 }
 
@@ -1056,7 +1056,7 @@ sub _read {
     $self->{linedefs_in_block} = ();
     my $n_linedefs_in_block = ($self->num_cols() * $self->num_rows());
     for (my $i = 0; $i < $n_linedefs_in_block; $i++) {
-        $self->{linedefs_in_block}[$i] = DoomWad::Blockmap::Blocklist->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{linedefs_in_block}}, DoomWad::Blockmap::Blocklist->new($self->{_io}, $self, $self->{_root});
     }
 }
 

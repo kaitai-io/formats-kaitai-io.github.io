@@ -461,7 +461,7 @@ sub _read {
     $self->{symbols} = ();
     my $n_symbols = $self->num_symbols();
     for (my $i = 0; $i < $n_symbols; $i++) {
-        $self->{symbols}[$i] = Swf::SymbolClassBody::Symbol->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{symbols}}, Swf::SymbolClassBody::Symbol->new($self->{_io}, $self, $self->{_root});
     }
 }
 

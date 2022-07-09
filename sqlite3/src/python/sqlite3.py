@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 import vlq_base128_be
@@ -84,28 +83,28 @@ class Sqlite3(KaitaiStruct):
         @property
         def is_blob(self):
             if hasattr(self, '_m_is_blob'):
-                return self._m_is_blob if hasattr(self, '_m_is_blob') else None
+                return self._m_is_blob
 
             self._m_is_blob =  ((self.code.value >= 12) and ((self.code.value % 2) == 0)) 
-            return self._m_is_blob if hasattr(self, '_m_is_blob') else None
+            return getattr(self, '_m_is_blob', None)
 
         @property
         def is_string(self):
             if hasattr(self, '_m_is_string'):
-                return self._m_is_string if hasattr(self, '_m_is_string') else None
+                return self._m_is_string
 
             self._m_is_string =  ((self.code.value >= 13) and ((self.code.value % 2) == 1)) 
-            return self._m_is_string if hasattr(self, '_m_is_string') else None
+            return getattr(self, '_m_is_string', None)
 
         @property
         def len_content(self):
             if hasattr(self, '_m_len_content'):
-                return self._m_len_content if hasattr(self, '_m_len_content') else None
+                return self._m_len_content
 
             if self.code.value >= 12:
                 self._m_len_content = (self.code.value - 12) // 2
 
-            return self._m_len_content if hasattr(self, '_m_len_content') else None
+            return getattr(self, '_m_len_content', None)
 
 
     class BtreePage(KaitaiStruct):
@@ -124,9 +123,9 @@ class Sqlite3(KaitaiStruct):
             if  ((self.page_type == 2) or (self.page_type == 5)) :
                 self.right_ptr = self._io.read_u4be()
 
-            self.cells = [None] * (self.num_cells)
+            self.cells = []
             for i in range(self.num_cells):
-                self.cells[i] = Sqlite3.RefCell(self._io, self, self._root)
+                self.cells.append(Sqlite3.RefCell(self._io, self, self._root))
 
 
 
@@ -199,9 +198,9 @@ class Sqlite3(KaitaiStruct):
             self._raw_column_serials = self._io.read_bytes((self.len_header_and_len.value - 1))
             _io__raw_column_serials = KaitaiStream(BytesIO(self._raw_column_serials))
             self.column_serials = Sqlite3.Serials(_io__raw_column_serials, self, self._root)
-            self.column_contents = [None] * (len(self.column_serials.entries))
+            self.column_contents = []
             for i in range(len(self.column_serials.entries)):
-                self.column_contents[i] = Sqlite3.ColumnContent(self.column_serials.entries[i], self._io, self, self._root)
+                self.column_contents.append(Sqlite3.ColumnContent(self.column_serials.entries[i], self._io, self, self._root))
 
 
 
@@ -275,10 +274,10 @@ class Sqlite3(KaitaiStruct):
         @property
         def serial_type(self):
             if hasattr(self, '_m_serial_type'):
-                return self._m_serial_type if hasattr(self, '_m_serial_type') else None
+                return self._m_serial_type
 
             self._m_serial_type = self.ser
-            return self._m_serial_type if hasattr(self, '_m_serial_type') else None
+            return getattr(self, '_m_serial_type', None)
 
 
     class RefCell(KaitaiStruct):
@@ -294,7 +293,7 @@ class Sqlite3(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_body)
@@ -308,15 +307,15 @@ class Sqlite3(KaitaiStruct):
             elif _on == 2:
                 self._m_body = Sqlite3.CellIndexInterior(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     @property
     def len_page(self):
         if hasattr(self, '_m_len_page'):
-            return self._m_len_page if hasattr(self, '_m_len_page') else None
+            return self._m_len_page
 
         self._m_len_page = (65536 if self.len_page_mod == 1 else self.len_page_mod)
-        return self._m_len_page if hasattr(self, '_m_len_page') else None
+        return getattr(self, '_m_len_page', None)
 
 

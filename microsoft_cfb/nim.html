@@ -185,6 +185,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="go.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -263,9 +268,12 @@ section#format-index .row {
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftCfb_CfbHeader</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawFatInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">fatInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftCfb_FatEntries</span>
-    <span class="p">`</span><span class="n">dirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span>
+    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">fatInst</span><span class="p">`:</span> <span class="n">MicrosoftCfb_FatEntries</span>
+    <span class="p">`</span><span class="n">fatInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">dirInst</span><span class="p">`:</span> <span class="n">MicrosoftCfb_DirEntry</span>
+    <span class="p">`</span><span class="n">dirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftCfb_CfbHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">signature</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">clsid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -304,10 +312,14 @@ section#format-index .row {
     <span class="p">`</span><span class="n">ofs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">miniStreamInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">childInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span>
-    <span class="p">`</span><span class="n">leftSiblingInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span>
-    <span class="p">`</span><span class="n">rightSiblingInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span>
+    <span class="p">`</span><span class="n">miniStreamInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">miniStreamInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">childInst</span><span class="p">`:</span> <span class="n">MicrosoftCfb_DirEntry</span>
+    <span class="p">`</span><span class="n">childInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">leftSiblingInst</span><span class="p">`:</span> <span class="n">MicrosoftCfb_DirEntry</span>
+    <span class="p">`</span><span class="n">leftSiblingInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">rightSiblingInst</span><span class="p">`:</span> <span class="n">MicrosoftCfb_DirEntry</span>
+    <span class="p">`</span><span class="n">rightSiblingInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftCfb_DirEntry_ObjType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">storage</span> <span class="o">=</span> <span class="mi">1</span>
@@ -342,15 +354,15 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
 
 <span class="k">proc </span><span class="nf">sectorSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftCfb</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
   <span class="k">let</span> <span class="n">sectorSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="mi">1</span> <span class="ow">shl</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">sectorShift</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">=</span> <span class="n">sectorSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
 
 <span class="k">proc </span><span class="nf">fat</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftCfb</span><span class="p">):</span> <span class="n">MicrosoftCfb_FatEntries</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fatInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fatInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fatInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">sectorSize</span><span class="p">))</span>
@@ -360,19 +372,19 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">fatInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftCfb_FatEntries</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawFatInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">fatInst</span> <span class="o">=</span> <span class="n">fatInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fatInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fatInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fatInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fatInst</span>
 
 <span class="k">proc </span><span class="nf">dir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftCfb</span><span class="p">):</span> <span class="n">MicrosoftCfb_DirEntry</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dirInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">ofsDir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSize</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">dirInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">dirInst</span> <span class="o">=</span> <span class="n">dirInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dirInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftCfb], filename: string): MicrosoftCfb =</span>
   <span class="n">MicrosoftCfb</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -548,7 +560,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizeExpr</span>
 
 <span class="k">proc </span><span class="nf">miniStream</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">objectType</span> <span class="o">==</span> <span class="n">microsoft_cfb</span><span class="p">.</span><span class="n">root_storage</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -557,11 +569,11 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">miniStreamInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInst</span> <span class="o">=</span> <span class="n">miniStreamInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">miniStreamInst</span>
 
 <span class="k">proc </span><span class="nf">child</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">):</span> <span class="n">MicrosoftCfb_DirEntry</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">childInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">childInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">childInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">childId</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -570,11 +582,11 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">childInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">childInst</span> <span class="o">=</span> <span class="n">childInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">childInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">childInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">childInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">childInst</span>
 
 <span class="k">proc </span><span class="nf">leftSibling</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">):</span> <span class="n">MicrosoftCfb_DirEntry</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingId</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -583,11 +595,11 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">leftSiblingInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInst</span> <span class="o">=</span> <span class="n">leftSiblingInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">leftSiblingInst</span>
 
 <span class="k">proc </span><span class="nf">rightSibling</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">):</span> <span class="n">MicrosoftCfb_DirEntry</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingId</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -596,8 +608,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">rightSiblingInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftCfb_DirEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInst</span> <span class="o">=</span> <span class="n">rightSiblingInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rightSiblingInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftCfb_DirEntry], filename: string): MicrosoftCfb_DirEntry =</span>
   <span class="n">MicrosoftCfb_DirEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

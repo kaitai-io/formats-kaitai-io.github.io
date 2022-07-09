@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class BlenderBlend(KaitaiStruct):
@@ -59,18 +58,18 @@ class BlenderBlend(KaitaiStruct):
         def _read(self):
             self.idx_type = self._io.read_u2le()
             self.num_fields = self._io.read_u2le()
-            self.fields = [None] * (self.num_fields)
+            self.fields = []
             for i in range(self.num_fields):
-                self.fields[i] = BlenderBlend.DnaField(self._io, self, self._root)
+                self.fields.append(BlenderBlend.DnaField(self._io, self, self._root))
 
 
         @property
         def type(self):
             if hasattr(self, '_m_type'):
-                return self._m_type if hasattr(self, '_m_type') else None
+                return self._m_type
 
             self._m_type = self._parent.types[self.idx_type]
-            return self._m_type if hasattr(self, '_m_type') else None
+            return getattr(self, '_m_type', None)
 
 
     class FileBlock(KaitaiStruct):
@@ -97,12 +96,12 @@ class BlenderBlend(KaitaiStruct):
         @property
         def sdna_struct(self):
             if hasattr(self, '_m_sdna_struct'):
-                return self._m_sdna_struct if hasattr(self, '_m_sdna_struct') else None
+                return self._m_sdna_struct
 
             if self.sdna_index != 0:
                 self._m_sdna_struct = self._root.sdna_structs[self.sdna_index]
 
-            return self._m_sdna_struct if hasattr(self, '_m_sdna_struct') else None
+            return getattr(self, '_m_sdna_struct', None)
 
 
     class Dna1Body(KaitaiStruct):
@@ -135,35 +134,35 @@ class BlenderBlend(KaitaiStruct):
             if not self.name_magic == b"\x4E\x41\x4D\x45":
                 raise kaitaistruct.ValidationNotEqualError(b"\x4E\x41\x4D\x45", self.name_magic, self._io, u"/types/dna1_body/seq/1")
             self.num_names = self._io.read_u4le()
-            self.names = [None] * (self.num_names)
+            self.names = []
             for i in range(self.num_names):
-                self.names[i] = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                self.names.append((self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8"))
 
             self.padding_1 = self._io.read_bytes(((4 - self._io.pos()) % 4))
             self.type_magic = self._io.read_bytes(4)
             if not self.type_magic == b"\x54\x59\x50\x45":
                 raise kaitaistruct.ValidationNotEqualError(b"\x54\x59\x50\x45", self.type_magic, self._io, u"/types/dna1_body/seq/5")
             self.num_types = self._io.read_u4le()
-            self.types = [None] * (self.num_types)
+            self.types = []
             for i in range(self.num_types):
-                self.types[i] = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                self.types.append((self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8"))
 
             self.padding_2 = self._io.read_bytes(((4 - self._io.pos()) % 4))
             self.tlen_magic = self._io.read_bytes(4)
             if not self.tlen_magic == b"\x54\x4C\x45\x4E":
                 raise kaitaistruct.ValidationNotEqualError(b"\x54\x4C\x45\x4E", self.tlen_magic, self._io, u"/types/dna1_body/seq/9")
-            self.lengths = [None] * (self.num_types)
+            self.lengths = []
             for i in range(self.num_types):
-                self.lengths[i] = self._io.read_u2le()
+                self.lengths.append(self._io.read_u2le())
 
             self.padding_3 = self._io.read_bytes(((4 - self._io.pos()) % 4))
             self.strc_magic = self._io.read_bytes(4)
             if not self.strc_magic == b"\x53\x54\x52\x43":
                 raise kaitaistruct.ValidationNotEqualError(b"\x53\x54\x52\x43", self.strc_magic, self._io, u"/types/dna1_body/seq/12")
             self.num_structs = self._io.read_u4le()
-            self.structs = [None] * (self.num_structs)
+            self.structs = []
             for i in range(self.num_structs):
-                self.structs[i] = BlenderBlend.DnaStruct(self._io, self, self._root)
+                self.structs.append(BlenderBlend.DnaStruct(self._io, self, self._root))
 
 
 
@@ -186,10 +185,10 @@ class BlenderBlend(KaitaiStruct):
         def psize(self):
             """Number of bytes that a pointer occupies."""
             if hasattr(self, '_m_psize'):
-                return self._m_psize if hasattr(self, '_m_psize') else None
+                return self._m_psize
 
             self._m_psize = (8 if self.ptr_size_id == BlenderBlend.PtrSize.bits_64 else 4)
-            return self._m_psize if hasattr(self, '_m_psize') else None
+            return getattr(self, '_m_psize', None)
 
 
     class DnaField(KaitaiStruct):
@@ -206,26 +205,26 @@ class BlenderBlend(KaitaiStruct):
         @property
         def type(self):
             if hasattr(self, '_m_type'):
-                return self._m_type if hasattr(self, '_m_type') else None
+                return self._m_type
 
             self._m_type = self._parent._parent.types[self.idx_type]
-            return self._m_type if hasattr(self, '_m_type') else None
+            return getattr(self, '_m_type', None)
 
         @property
         def name(self):
             if hasattr(self, '_m_name'):
-                return self._m_name if hasattr(self, '_m_name') else None
+                return self._m_name
 
             self._m_name = self._parent._parent.names[self.idx_name]
-            return self._m_name if hasattr(self, '_m_name') else None
+            return getattr(self, '_m_name', None)
 
 
     @property
     def sdna_structs(self):
         if hasattr(self, '_m_sdna_structs'):
-            return self._m_sdna_structs if hasattr(self, '_m_sdna_structs') else None
+            return self._m_sdna_structs
 
         self._m_sdna_structs = self.blocks[(len(self.blocks) - 2)].body.structs
-        return self._m_sdna_structs if hasattr(self, '_m_sdna_structs') else None
+        return getattr(self, '_m_sdna_structs', None)
 
 

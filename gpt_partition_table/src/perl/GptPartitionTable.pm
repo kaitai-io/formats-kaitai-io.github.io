@@ -190,9 +190,9 @@ sub entries {
     $self->{entries} = ();
     my $n_entries = $self->entries_count();
     for (my $i = 0; $i < $n_entries; $i++) {
-        $self->{_raw_entries}[$i] = $io->read_bytes($self->entries_size());
+        push @{$self->{_raw_entries}}, $io->read_bytes($self->entries_size());
         my $io__raw_entries = IO::KaitaiStruct::Stream->new($self->{_raw_entries}[$i]);
-        $self->{entries}[$i] = GptPartitionTable::PartitionEntry->new($io__raw_entries, $self, $self->{_root});
+        push @{$self->{entries}}, GptPartitionTable::PartitionEntry->new($io__raw_entries, $self, $self->{_root});
     }
     $io->seek($_pos);
     return $self->{entries};

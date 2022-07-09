@@ -10,8 +10,10 @@ type
     `resources`*: seq[ChromePak_Resource]
     `aliases`*: seq[ChromePak_Alias]
     `parent`*: KaitaiStruct
-    `numResourcesInst`*: uint32
-    `numAliasesInst`*: uint16
+    `numResourcesInst`: uint32
+    `numResourcesInstFlag`: bool
+    `numAliasesInst`: uint16
+    `numAliasesInstFlag`: bool
   ChromePak_Encodings* = enum
     binary = 0
     utf8 = 1
@@ -27,13 +29,16 @@ type
     `idx`*: int32
     `hasBody`*: bool
     `parent`*: ChromePak
-    `lenBodyInst`*: int
-    `bodyInst`*: seq[byte]
+    `lenBodyInst`: int
+    `lenBodyInstFlag`: bool
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   ChromePak_Alias* = ref object of KaitaiStruct
     `id`*: uint16
     `resourceIdx`*: uint16
     `parent`*: ChromePak
-    `resourceInst`*: ChromePak_Resource
+    `resourceInst`: ChromePak_Resource
+    `resourceInstFlag`: bool
 
 proc read*(_: typedesc[ChromePak], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ChromePak
 proc read*(_: typedesc[ChromePak_HeaderV5Part], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_HeaderV5Part
@@ -105,20 +110,20 @@ and offset pointing to the end of the resources.
     this.aliases.add(it)
 
 proc numResources(this: ChromePak): uint32 = 
-  if this.numResourcesInst != nil:
+  if this.numResourcesInstFlag:
     return this.numResourcesInst
   let numResourcesInstExpr = uint32((if this.version == 5: this.v5Part.numResources else: this.numResourcesV4))
   this.numResourcesInst = numResourcesInstExpr
-  if this.numResourcesInst != nil:
-    return this.numResourcesInst
+  this.numResourcesInstFlag = true
+  return this.numResourcesInst
 
 proc numAliases(this: ChromePak): uint16 = 
-  if this.numAliasesInst != nil:
+  if this.numAliasesInstFlag:
     return this.numAliasesInst
   let numAliasesInstExpr = uint16((if this.version == 5: this.v5Part.numAliases else: 0))
   this.numAliasesInst = numAliasesInstExpr
-  if this.numAliasesInst != nil:
-    return this.numAliasesInst
+  this.numAliasesInstFlag = true
+  return this.numAliasesInst
 
 proc fromFile*(_: typedesc[ChromePak], filename: string): ChromePak =
   ChromePak.read(newKaitaiFileStream(filename), nil, nil)
@@ -163,20 +168,20 @@ proc lenBody(this: ChromePak_Resource): int =
   ##[
   MUST NOT be accessed until the next `resource` is parsed
   ]##
-  if this.lenBodyInst != nil:
+  if this.lenBodyInstFlag:
     return this.lenBodyInst
   if this.hasBody:
     let lenBodyInstExpr = int((this.parent.resources[(this.idx + 1)].ofsBody - this.ofsBody))
     this.lenBodyInst = lenBodyInstExpr
-  if this.lenBodyInst != nil:
-    return this.lenBodyInst
+  this.lenBodyInstFlag = true
+  return this.lenBodyInst
 
 proc body(this: ChromePak_Resource): seq[byte] = 
 
   ##[
   MUST NOT be accessed until the next `resource` is parsed
   ]##
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   if this.hasBody:
     let pos = this.io.pos()
@@ -184,8 +189,8 @@ proc body(this: ChromePak_Resource): seq[byte] =
     let bodyInstExpr = this.io.readBytes(int(this.lenBody))
     this.bodyInst = bodyInstExpr
     this.io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[ChromePak_Resource], filename: string): ChromePak_Resource =
   ChromePak_Resource.read(newKaitaiFileStream(filename), nil, nil)
@@ -204,12 +209,12 @@ proc read*(_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, p
   this.resourceIdx = resourceIdxExpr
 
 proc resource(this: ChromePak_Alias): ChromePak_Resource = 
-  if this.resourceInst != nil:
+  if this.resourceInstFlag:
     return this.resourceInst
   let resourceInstExpr = ChromePak_Resource(this.parent.resources[this.resourceIdx])
   this.resourceInst = resourceInstExpr
-  if this.resourceInst != nil:
-    return this.resourceInst
+  this.resourceInstFlag = true
+  return this.resourceInst
 
 proc fromFile*(_: typedesc[ChromePak_Alias], filename: string): ChromePak_Alias =
   ChromePak_Alias.read(newKaitaiFileStream(filename), nil, nil)

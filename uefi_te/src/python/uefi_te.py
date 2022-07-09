@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class UefiTe(KaitaiStruct):
@@ -42,9 +41,9 @@ class UefiTe(KaitaiStruct):
         self._raw_te_hdr = self._io.read_bytes(40)
         _io__raw_te_hdr = KaitaiStream(BytesIO(self._raw_te_hdr))
         self.te_hdr = UefiTe.TeHeader(_io__raw_te_hdr, self, self._root)
-        self.sections = [None] * (self.te_hdr.num_sections)
+        self.sections = []
         for i in range(self.te_hdr.num_sections):
-            self.sections[i] = UefiTe.Section(self._io, self, self._root)
+            self.sections.append(UefiTe.Section(self._io, self, self._root))
 
 
     class TeHeader(KaitaiStruct):
@@ -156,13 +155,13 @@ class UefiTe(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek(((self.pointer_to_raw_data - self._root.te_hdr.stripped_size) + self._root.te_hdr._io.size()))
             self._m_body = self._io.read_bytes(self.size_of_raw_data)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
 

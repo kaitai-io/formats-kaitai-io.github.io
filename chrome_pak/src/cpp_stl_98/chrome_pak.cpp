@@ -36,15 +36,13 @@ void chrome_pak_t::_read() {
         n_v5_part = false;
         m_v5_part = new header_v5_part_t(m__io, this, m__root);
     }
-    int l_resources = (num_resources() + 1);
     m_resources = new std::vector<resource_t*>();
-    m_resources->reserve(l_resources);
+    const int l_resources = (num_resources() + 1);
     for (int i = 0; i < l_resources; i++) {
         m_resources->push_back(new resource_t(i, i < num_resources(), m__io, this, m__root));
     }
-    int l_aliases = num_aliases();
     m_aliases = new std::vector<alias_t*>();
-    m_aliases->reserve(l_aliases);
+    const int l_aliases = num_aliases();
     for (int i = 0; i < l_aliases; i++) {
         m_aliases->push_back(new alias_t(m__io, this, m__root));
     }

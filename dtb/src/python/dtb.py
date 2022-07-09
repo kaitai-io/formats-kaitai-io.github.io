@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dtb(KaitaiStruct):
@@ -146,14 +145,14 @@ class Dtb(KaitaiStruct):
         @property
         def name(self):
             if hasattr(self, '_m_name'):
-                return self._m_name if hasattr(self, '_m_name') else None
+                return self._m_name
 
             io = self._root.strings_block._io
             _pos = io.pos()
             io.seek(self.ofs_name)
             self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
             io.seek(_pos)
-            return self._m_name if hasattr(self, '_m_name') else None
+            return getattr(self, '_m_name', None)
 
 
     class FdtNode(KaitaiStruct):
@@ -187,7 +186,7 @@ class Dtb(KaitaiStruct):
     @property
     def memory_reservation_block(self):
         if hasattr(self, '_m_memory_reservation_block'):
-            return self._m_memory_reservation_block if hasattr(self, '_m_memory_reservation_block') else None
+            return self._m_memory_reservation_block
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_memory_reservation_block)
@@ -195,12 +194,12 @@ class Dtb(KaitaiStruct):
         _io__raw__m_memory_reservation_block = KaitaiStream(BytesIO(self._raw__m_memory_reservation_block))
         self._m_memory_reservation_block = Dtb.MemoryBlock(_io__raw__m_memory_reservation_block, self, self._root)
         self._io.seek(_pos)
-        return self._m_memory_reservation_block if hasattr(self, '_m_memory_reservation_block') else None
+        return getattr(self, '_m_memory_reservation_block', None)
 
     @property
     def structure_block(self):
         if hasattr(self, '_m_structure_block'):
-            return self._m_structure_block if hasattr(self, '_m_structure_block') else None
+            return self._m_structure_block
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_structure_block)
@@ -208,12 +207,12 @@ class Dtb(KaitaiStruct):
         _io__raw__m_structure_block = KaitaiStream(BytesIO(self._raw__m_structure_block))
         self._m_structure_block = Dtb.FdtBlock(_io__raw__m_structure_block, self, self._root)
         self._io.seek(_pos)
-        return self._m_structure_block if hasattr(self, '_m_structure_block') else None
+        return getattr(self, '_m_structure_block', None)
 
     @property
     def strings_block(self):
         if hasattr(self, '_m_strings_block'):
-            return self._m_strings_block if hasattr(self, '_m_strings_block') else None
+            return self._m_strings_block
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_strings_block)
@@ -221,6 +220,6 @@ class Dtb(KaitaiStruct):
         _io__raw__m_strings_block = KaitaiStream(BytesIO(self._raw__m_strings_block))
         self._m_strings_block = Dtb.Strings(_io__raw__m_strings_block, self, self._root)
         self._io.seek(_pos)
-        return self._m_strings_block if hasattr(self, '_m_strings_block') else None
+        return getattr(self, '_m_strings_block', None)
 
 

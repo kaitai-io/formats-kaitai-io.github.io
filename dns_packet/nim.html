@@ -307,13 +307,15 @@ section#format-index .row {
   <span class="n">DnsPacket_PointerStruct</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_Label</span>
-    <span class="p">`</span><span class="n">contentsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_DomainName</span>
+    <span class="p">`</span><span class="n">contentsInst</span><span class="p">`:</span> <span class="n">DnsPacket_DomainName</span>
+    <span class="p">`</span><span class="n">contentsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DnsPacket_Label</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">length</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">pointer</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_PointerStruct</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_DomainName</span>
-    <span class="p">`</span><span class="n">isPointerInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isPointerInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isPointerInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DnsPacket_Query</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_DomainName</span>
     <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_TypeType</span>
@@ -353,17 +355,28 @@ section#format-index .row {
   <span class="n">DnsPacket_PacketFlags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">flag</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket</span>
-    <span class="p">`</span><span class="n">qrInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">raInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">tcInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">isOpcodeValidInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">rcodeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">opcodeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">aaInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">zInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">rdInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">cdInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">adInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">qrInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">qrInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">raInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">raInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">tcInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">tcInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isOpcodeValidInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isOpcodeValidInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">rcodeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">rcodeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">opcodeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">opcodeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">aaInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">aaInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">zInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">zInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">rdInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">rdInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">cdInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">cdInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">adInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">adInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DnsPacket_AuthorityInfo</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">primaryNs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_DomainName</span>
     <span class="p">`</span><span class="n">resoponsibleMailbox</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DnsPacket_DomainName</span>
@@ -504,7 +517,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">valueExpr</span>
 
 <span class="k">proc </span><span class="nf">contents</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PointerStruct</span><span class="p">):</span> <span class="n">DnsPacket_DomainName</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -512,8 +525,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">contentsInstExpr</span> <span class="o">=</span> <span class="n">DnsPacket_DomainName</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span> <span class="o">=</span> <span class="n">contentsInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">contentsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DnsPacket_PointerStruct], filename: string): DnsPacket_PointerStruct =</span>
   <span class="n">DnsPacket_PointerStruct</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -544,12 +557,12 @@ section#format-index .row {
     <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
 
 <span class="k">proc </span><span class="nf">isPointer</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_Label</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPointerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPointerInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPointerInst</span>
   <span class="k">let</span> <span class="n">isPointerInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;=</span> <span class="mi">192</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isPointerInst</span> <span class="o">=</span> <span class="n">isPointerInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPointerInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPointerInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isPointerInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPointerInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DnsPacket_Label], filename: string): DnsPacket_Label =</span>
   <span class="n">DnsPacket_Label</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -779,92 +792,92 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flagExpr</span>
 
 <span class="k">proc </span><span class="nf">qr</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">qrInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">qrInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">qrInst</span>
   <span class="k">let</span> <span class="n">qrInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">32768</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">15</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">qrInst</span> <span class="o">=</span> <span class="n">qrInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">qrInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">qrInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">qrInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">qrInst</span>
 
 <span class="k">proc </span><span class="nf">ra</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">raInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">raInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">raInst</span>
   <span class="k">let</span> <span class="n">raInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">128</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">raInst</span> <span class="o">=</span> <span class="n">raInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">raInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">raInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">raInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">raInst</span>
 
 <span class="k">proc </span><span class="nf">tc</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tcInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tcInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tcInst</span>
   <span class="k">let</span> <span class="n">tcInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">512</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">9</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">tcInst</span> <span class="o">=</span> <span class="n">tcInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">tcInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tcInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">tcInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">tcInst</span>
 
 <span class="k">proc </span><span class="nf">isOpcodeValid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInst</span>
   <span class="k">let</span> <span class="n">isOpcodeValidInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">))</span> <span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInst</span> <span class="o">=</span> <span class="n">isOpcodeValidInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isOpcodeValidInst</span>
 
 <span class="k">proc </span><span class="nf">rcode</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rcodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rcodeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rcodeInst</span>
   <span class="k">let</span> <span class="n">rcodeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">15</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">0</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rcodeInst</span> <span class="o">=</span> <span class="n">rcodeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rcodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rcodeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rcodeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rcodeInst</span>
 
 <span class="k">proc </span><span class="nf">opcode</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">opcodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">opcodeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">opcodeInst</span>
   <span class="k">let</span> <span class="n">opcodeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">30720</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">11</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">opcodeInst</span> <span class="o">=</span> <span class="n">opcodeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">opcodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">opcodeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">opcodeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">opcodeInst</span>
 
 <span class="k">proc </span><span class="nf">aa</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">aaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">aaInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">aaInst</span>
   <span class="k">let</span> <span class="n">aaInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">1024</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">10</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">aaInst</span> <span class="o">=</span> <span class="n">aaInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">aaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">aaInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">aaInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">aaInst</span>
 
 <span class="k">proc </span><span class="nf">z</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zInst</span>
   <span class="k">let</span> <span class="n">zInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">64</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">6</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">zInst</span> <span class="o">=</span> <span class="n">zInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">zInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zInst</span>
 
 <span class="k">proc </span><span class="nf">rd</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rdInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rdInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rdInst</span>
   <span class="k">let</span> <span class="n">rdInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">256</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">8</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rdInst</span> <span class="o">=</span> <span class="n">rdInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rdInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rdInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rdInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rdInst</span>
 
 <span class="k">proc </span><span class="nf">cd</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cdInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cdInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cdInst</span>
   <span class="k">let</span> <span class="n">cdInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">16</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">cdInst</span> <span class="o">=</span> <span class="n">cdInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cdInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cdInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">cdInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cdInst</span>
 
 <span class="k">proc </span><span class="nf">ad</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DnsPacket_PacketFlags</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adInst</span>
   <span class="k">let</span> <span class="n">adInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">flag</span> <span class="ow">and</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">5</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">adInst</span> <span class="o">=</span> <span class="n">adInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">adInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DnsPacket_PacketFlags], filename: string): DnsPacket_PacketFlags =</span>
   <span class="n">DnsPacket_PacketFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

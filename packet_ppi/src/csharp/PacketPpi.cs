@@ -490,24 +490,24 @@ namespace Kaitai
                 _mcs = m_io.ReadU1();
                 _numStreams = m_io.ReadU1();
                 _rssiCombined = m_io.ReadU1();
-                _rssiAntCtl = new List<byte>((int) (4));
+                _rssiAntCtl = new List<byte>();
                 for (var i = 0; i < 4; i++)
                 {
                     _rssiAntCtl.Add(m_io.ReadU1());
                 }
-                _rssiAntExt = new List<byte>((int) (4));
+                _rssiAntExt = new List<byte>();
                 for (var i = 0; i < 4; i++)
                 {
                     _rssiAntExt.Add(m_io.ReadU1());
                 }
                 _extChannelFreq = m_io.ReadU2le();
                 _extChannelFlags = new ChannelFlags(m_io, this, m_root);
-                _rfSignalNoise = new List<SignalNoise>((int) (4));
+                _rfSignalNoise = new List<SignalNoise>();
                 for (var i = 0; i < 4; i++)
                 {
                     _rfSignalNoise.Add(new SignalNoise(m_io, this, m_root));
                 }
-                _evm = new List<uint>((int) (4));
+                _evm = new List<uint>();
                 for (var i = 0; i < 4; i++)
                 {
                     _evm.Add(m_io.ReadU4le());

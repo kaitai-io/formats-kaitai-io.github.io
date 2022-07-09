@@ -8,7 +8,7 @@
   } else {
     root.Fallout2Dat = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var Fallout2Dat = (function() {
   Fallout2Dat.Compression = Object.freeze({
     NONE: 0,
@@ -70,9 +70,9 @@ var Fallout2Dat = (function() {
     }
     Index.prototype._read = function() {
       this.fileCount = this._io.readU4le();
-      this.files = new Array(this.fileCount);
+      this.files = [];
       for (var i = 0; i < this.fileCount; i++) {
-        this.files[i] = new File(this._io, this, this._root);
+        this.files.push(new File(this._io, this, this._root));
       }
     }
 

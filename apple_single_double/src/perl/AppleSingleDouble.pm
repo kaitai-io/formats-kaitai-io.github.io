@@ -44,7 +44,7 @@ sub _read {
     $self->{entries} = ();
     my $n_entries = $self->num_entries();
     for (my $i = 0; $i < $n_entries; $i++) {
-        $self->{entries}[$i] = AppleSingleDouble::Entry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{entries}}, AppleSingleDouble::Entry->new($self->{_io}, $self, $self->{_root});
     }
 }
 

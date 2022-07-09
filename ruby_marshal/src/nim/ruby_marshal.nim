@@ -43,8 +43,10 @@ type
     `encoded`*: uint32
     `encoded2`*: uint8
     `parent`*: KaitaiStruct
-    `isImmediateInst`*: bool
-    `valueInst`*: int
+    `isImmediateInst`: bool
+    `isImmediateInstFlag`: bool
+    `valueInst`: int
+    `valueInstFlag`: bool
   RubyMarshal_Pair* = ref object of KaitaiStruct
     `key`*: RubyMarshal_Record
     `value`*: RubyMarshal_Record
@@ -307,20 +309,20 @@ there is no standard `u3` type in KS.
       this.encoded2 = encoded2Expr
 
 proc isImmediate(this: RubyMarshal_PackedInt): bool = 
-  if this.isImmediateInst != nil:
+  if this.isImmediateInstFlag:
     return this.isImmediateInst
   let isImmediateInstExpr = bool( ((this.code > 4) and (this.code < 252)) )
   this.isImmediateInst = isImmediateInstExpr
-  if this.isImmediateInst != nil:
-    return this.isImmediateInst
+  this.isImmediateInstFlag = true
+  return this.isImmediateInst
 
 proc value(this: RubyMarshal_PackedInt): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((if this.isImmediate: (if this.code < 128: (this.code - 5) else: (4 - (not(this.code) and 127))) else: (if this.code == 0: 0 else: (if this.code == 255: (this.encoded - 256) else: (if this.code == 254: (this.encoded - 65536) else: (if this.code == 253: (((this.encoded2 shl 16) or this.encoded) - 16777216) else: (if this.code == 3: ((this.encoded2 shl 16) or this.encoded) else: this.encoded)))))))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[RubyMarshal_PackedInt], filename: string): RubyMarshal_PackedInt =
   RubyMarshal_PackedInt.read(newKaitaiFileStream(filename), nil, nil)

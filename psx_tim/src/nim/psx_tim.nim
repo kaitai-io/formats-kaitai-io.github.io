@@ -8,8 +8,10 @@ type
     `clut`*: PsxTim_Bitmap
     `img`*: PsxTim_Bitmap
     `parent`*: KaitaiStruct
-    `hasClutInst`*: bool
-    `bppInst`*: int
+    `hasClutInst`: bool
+    `hasClutInstFlag`: bool
+    `bppInst`: int
+    `bppInstFlag`: bool
   PsxTim_BppType* = enum
     bpp_4 = 0
     bpp_8 = 1
@@ -63,20 +65,20 @@ proc read*(_: typedesc[PsxTim], io: KaitaiStream, root: KaitaiStruct, parent: Ka
   this.img = imgExpr
 
 proc hasClut(this: PsxTim): bool = 
-  if this.hasClutInst != nil:
+  if this.hasClutInstFlag:
     return this.hasClutInst
   let hasClutInstExpr = bool((this.flags and 8) != 0)
   this.hasClutInst = hasClutInstExpr
-  if this.hasClutInst != nil:
-    return this.hasClutInst
+  this.hasClutInstFlag = true
+  return this.hasClutInst
 
 proc bpp(this: PsxTim): int = 
-  if this.bppInst != nil:
+  if this.bppInstFlag:
     return this.bppInst
   let bppInstExpr = int((this.flags and 3))
   this.bppInst = bppInstExpr
-  if this.bppInst != nil:
-    return this.bppInst
+  this.bppInstFlag = true
+  return this.bppInst
 
 proc fromFile*(_: typedesc[PsxTim], filename: string): PsxTim =
   PsxTim.read(newKaitaiFileStream(filename), nil, nil)

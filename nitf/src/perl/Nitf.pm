@@ -37,29 +37,29 @@ sub _read {
 
     $self->{header} = Nitf::Header->new($self->{_io}, $self, $self->{_root});
     $self->{image_segments} = ();
-    my $n_image_segments = $self->header()->num_image_segments();
+    my $n_image_segments = $self->header()->num_image_segments() + 0;
     for (my $i = 0; $i < $n_image_segments; $i++) {
-        $self->{image_segments}[$i] = Nitf::ImageSegment->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{image_segments}}, Nitf::ImageSegment->new($self->{_io}, $self, $self->{_root});
     }
     $self->{graphics_segments} = ();
-    my $n_graphics_segments = $self->header()->num_graphics_segments();
+    my $n_graphics_segments = $self->header()->num_graphics_segments() + 0;
     for (my $i = 0; $i < $n_graphics_segments; $i++) {
-        $self->{graphics_segments}[$i] = Nitf::GraphicsSegment->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{graphics_segments}}, Nitf::GraphicsSegment->new($self->{_io}, $self, $self->{_root});
     }
     $self->{text_segments} = ();
-    my $n_text_segments = $self->header()->num_text_files();
+    my $n_text_segments = $self->header()->num_text_files() + 0;
     for (my $i = 0; $i < $n_text_segments; $i++) {
-        $self->{text_segments}[$i] = Nitf::TextSegment->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{text_segments}}, Nitf::TextSegment->new($self->{_io}, $self, $self->{_root});
     }
     $self->{data_extension_segments} = ();
-    my $n_data_extension_segments = $self->header()->num_data_extension();
+    my $n_data_extension_segments = $self->header()->num_data_extension() + 0;
     for (my $i = 0; $i < $n_data_extension_segments; $i++) {
-        $self->{data_extension_segments}[$i] = Nitf::DataExtensionSegment->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{data_extension_segments}}, Nitf::DataExtensionSegment->new($self->{_io}, $self, $self->{_root});
     }
     $self->{reserved_extension_segments} = ();
-    my $n_reserved_extension_segments = $self->header()->num_reserved_extension();
+    my $n_reserved_extension_segments = $self->header()->num_reserved_extension() + 0;
     for (my $i = 0; $i < $n_reserved_extension_segments; $i++) {
-        $self->{reserved_extension_segments}[$i] = Nitf::ReservedExtensionSegment->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{reserved_extension_segments}}, Nitf::ReservedExtensionSegment->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -123,10 +123,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{_raw_reserved_sub_header} = $self->{_io}->read_bytes(@{$self->_parent()->header()->lrnfo()}[$self->idx()]->length_reserved_extension_subheader());
+    $self->{_raw_reserved_sub_header} = $self->{_io}->read_bytes(@{$self->_parent()->header()->lrnfo()}[$self->idx()]->length_reserved_extension_subheader() + 0);
     my $io__raw_reserved_sub_header = IO::KaitaiStruct::Stream->new($self->{_raw_reserved_sub_header});
     $self->{reserved_sub_header} = Nitf::ReservedSubHeader->new($io__raw_reserved_sub_header, $self, $self->{_root});
-    $self->{reserved_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->lrnfo()}[$self->idx()]->length_reserved_extension_segment());
+    $self->{reserved_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->lrnfo()}[$self->idx()]->length_reserved_extension_segment() + 0);
 }
 
 sub reserved_sub_header {
@@ -263,7 +263,7 @@ sub _read {
 
     $self->{extension_type_id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(6));
     $self->{edata_length} = Encode::decode("UTF-8", $self->{_io}->read_bytes(5));
-    $self->{edata} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->edata_length()));
+    $self->{edata} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->edata_length() + 0));
 }
 
 sub extension_type_id {
@@ -316,13 +316,13 @@ sub _read {
     $self->{img_filter_condition} = $self->{_io}->read_bytes(1);
     $self->{img_filter_code} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{num_luts} = Encode::decode("UTF-8", $self->{_io}->read_bytes(1));
-    if ($self->num_luts() != 0) {
+    if ($self->num_luts() + 0 != 0) {
         $self->{num_lut_entries} = Encode::decode("UTF-8", $self->{_io}->read_bytes(5));
     }
     $self->{luts} = ();
-    my $n_luts = $self->num_luts();
+    my $n_luts = $self->num_luts() + 0;
     for (my $i = 0; $i < $n_luts; $i++) {
-        $self->{luts}[$i] = $self->{_io}->read_bytes($self->num_lut_entries());
+        push @{$self->{luts}}, $self->{_io}->read_bytes($self->num_lut_entries() + 0);
     }
 }
 
@@ -396,14 +396,14 @@ sub _read {
         $self->{image_data_mask} = Nitf::ImageDataMask->new($self->{_io}, $self, $self->{_root});
     }
     if ($self->has_mask()) {
-        $self->{image_data_field} = $self->{_io}->read_bytes((@{$self->_parent()->header()->linfo()}[$self->idx()]->length_image_segment() - $self->image_data_mask()->total_size()));
+        $self->{image_data_field} = $self->{_io}->read_bytes((@{$self->_parent()->header()->linfo()}[$self->idx()]->length_image_segment() + 0 - $self->image_data_mask()->total_size()));
     }
 }
 
 sub has_mask {
     my ($self) = @_;
     return $self->{has_mask} if ($self->{has_mask});
-    $self->{has_mask} = $self->image_sub_header()->img_compression()[0:2] eq "MM";
+    $self->{has_mask} = substr($self->image_sub_header()->img_compression(), 0, (2) - (0)) eq "MM";
     return $self->{has_mask};
 }
 
@@ -458,7 +458,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{text_sub_header} = $self->{_io}->read_bytes(1);
-    $self->{text_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->ltnfo()}[$self->idx()]->length_text_segment());
+    $self->{text_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->ltnfo()}[$self->idx()]->length_text_segment() + 0);
 }
 
 sub text_sub_header {
@@ -847,14 +847,14 @@ sub _read {
         $self->{bmrbnd} = ();
         my $n_bmrbnd = $self->bmrtmr_count();
         for (my $i = 0; $i < $n_bmrbnd; $i++) {
-            $self->{bmrbnd}[$i] = $self->{_io}->read_u4be();
+            push @{$self->{bmrbnd}}, $self->{_io}->read_u4be();
         }
     }
     if ($self->has_tmr()) {
         $self->{tmrbnd} = ();
         my $n_tmrbnd = $self->bmrtmr_count();
         for (my $i = 0; $i < $n_tmrbnd; $i++) {
-            $self->{tmrbnd}[$i] = $self->{_io}->read_u4be();
+            push @{$self->{tmrbnd}}, $self->{_io}->read_u4be();
         }
     }
 }
@@ -904,7 +904,7 @@ sub bmrbnd_size {
 sub bmrtmr_count {
     my ($self) = @_;
     return $self->{bmrtmr_count} if ($self->{bmrtmr_count});
-    $self->{bmrtmr_count} = (($self->_parent()->image_sub_header()->num_blocks_per_row() * $self->_parent()->image_sub_header()->num_blocks_per_col()) * ($self->_parent()->image_sub_header()->img_mode() ne "S" ? 1 : ($self->_parent()->image_sub_header()->num_bands() != 0 ? $self->_parent()->image_sub_header()->num_bands() : $self->_parent()->image_sub_header()->num_multispectral_bands())));
+    $self->{bmrtmr_count} = (($self->_parent()->image_sub_header()->num_blocks_per_row() + 0 * $self->_parent()->image_sub_header()->num_blocks_per_col() + 0) * ($self->_parent()->image_sub_header()->img_mode() ne "S" ? 1 : ($self->_parent()->image_sub_header()->num_bands() + 0 != 0 ? $self->_parent()->image_sub_header()->num_bands() + 0 : $self->_parent()->image_sub_header()->num_multispectral_bands() + 0)));
     return $self->{bmrtmr_count};
 }
 
@@ -974,7 +974,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{graphic_sub_header} = Nitf::GraphicSubHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{graphic_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->lnnfo()}[$self->idx()]->length_graphic_segment());
+    $self->{graphic_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->lnnfo()}[$self->idx()]->length_graphic_segment() + 0);
 }
 
 sub graphic_sub_header {
@@ -1030,7 +1030,7 @@ sub _read {
         $self->{data_item_overflowed} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     }
     $self->{des_defined_subheader_fields_len} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
-    $self->{desshf} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->des_defined_subheader_fields_len()));
+    $self->{desshf} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->des_defined_subheader_fields_len() + 0));
     $self->{des_defined_data_field} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
 }
 
@@ -1101,10 +1101,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{_raw_data_sub_header} = $self->{_io}->read_bytes(@{$self->_parent()->header()->ldnfo()}[$self->idx()]->length_data_extension_subheader());
+    $self->{_raw_data_sub_header} = $self->{_io}->read_bytes(@{$self->_parent()->header()->ldnfo()}[$self->idx()]->length_data_extension_subheader() + 0);
     my $io__raw_data_sub_header = IO::KaitaiStruct::Stream->new($self->{_raw_data_sub_header});
     $self->{data_sub_header} = Nitf::DataSubHeader->new($io__raw_data_sub_header, $self, $self->{_root});
-    $self->{data_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->ldnfo()}[$self->idx()]->length_data_extension_segment());
+    $self->{data_data_field} = $self->{_io}->read_bytes(@{$self->_parent()->header()->ldnfo()}[$self->idx()]->length_data_extension_segment() + 0);
 }
 
 sub data_sub_header {
@@ -1165,7 +1165,7 @@ sub _read {
         $self->{data_item_overflowed} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     }
     $self->{des_defined_subheader_fields_len} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
-    $self->{des_defined_data_field} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->des_defined_subheader_fields_len()));
+    $self->{des_defined_data_field} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->des_defined_subheader_fields_len() + 0));
 }
 
 sub des_base {
@@ -1242,20 +1242,20 @@ sub _read {
     $self->{image_geo_loc} = Encode::decode("UTF-8", $self->{_io}->read_bytes(60));
     $self->{num_img_comments} = Encode::decode("UTF-8", $self->{_io}->read_bytes(1));
     $self->{img_comments} = ();
-    my $n_img_comments = $self->num_img_comments();
+    my $n_img_comments = $self->num_img_comments() + 0;
     for (my $i = 0; $i < $n_img_comments; $i++) {
-        $self->{img_comments}[$i] = Nitf::ImageComment->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{img_comments}}, Nitf::ImageComment->new($self->{_io}, $self, $self->{_root});
     }
     $self->{img_compression} = Encode::decode("UTF-8", $self->{_io}->read_bytes(2));
     $self->{compression_rate_code} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
     $self->{num_bands} = Encode::decode("UTF-8", $self->{_io}->read_bytes(1));
-    if ($self->num_bands() == 0) {
+    if ($self->num_bands() + 0 == 0) {
         $self->{num_multispectral_bands} = Encode::decode("UTF-8", $self->{_io}->read_bytes(5));
     }
     $self->{bands} = ();
-    my $n_bands = ($self->num_bands() != 0 ? $self->num_bands() : $self->num_multispectral_bands());
+    my $n_bands = ($self->num_bands() + 0 != 0 ? $self->num_bands() + 0 : $self->num_multispectral_bands() + 0);
     for (my $i = 0; $i < $n_bands; $i++) {
-        $self->{bands}[$i] = Nitf::BandInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{bands}}, Nitf::BandInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{img_sync_code} = Encode::decode("UTF-8", $self->{_io}->read_bytes(1));
     $self->{img_mode} = Encode::decode("UTF-8", $self->{_io}->read_bytes(1));
@@ -1269,14 +1269,14 @@ sub _read {
     $self->{img_location} = Encode::decode("UTF-8", $self->{_io}->read_bytes(10));
     $self->{img_magnification} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
     $self->{user_def_img_data_len} = Encode::decode("UTF-8", $self->{_io}->read_bytes(5));
-    if ($self->user_def_img_data_len() != 0) {
+    if ($self->user_def_img_data_len() + 0 != 0) {
         $self->{user_def_overflow} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     }
-    if ($self->user_def_img_data_len() > 2) {
+    if ($self->user_def_img_data_len() + 0 > 2) {
         $self->{user_def_img_data} = ();
-        my $n_user_def_img_data = ($self->user_def_img_data_len() - 3);
+        my $n_user_def_img_data = ($self->user_def_img_data_len() + 0 - 3);
         for (my $i = 0; $i < $n_user_def_img_data; $i++) {
-            $self->{user_def_img_data}[$i] = $self->{_io}->read_u1();
+            push @{$self->{user_def_img_data}}, $self->{_io}->read_u1();
         }
     }
     $self->{image_extended_sub_header} = Nitf::TreHeader->new($self->{_io}, $self, $self->{_root});
@@ -1512,7 +1512,7 @@ sub _read {
     $self->{res_version} = Encode::decode("UTF-8", $self->{_io}->read_bytes(2));
     $self->{reclasnfo} = Nitf::Clasnfo->new($self->{_io}, $self, $self->{_root});
     $self->{res_user_defined_subheader_length} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
-    $self->{res_user_defined_subheader_fields} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->res_user_defined_subheader_length()));
+    $self->{res_user_defined_subheader_fields} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->res_user_defined_subheader_length() + 0));
     $self->{res_user_defined_data} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
 }
 
@@ -1761,34 +1761,34 @@ sub _read {
     $self->{file_header_length} = Encode::decode("UTF-8", $self->{_io}->read_bytes(6));
     $self->{num_image_segments} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{linfo} = ();
-    my $n_linfo = $self->num_image_segments();
+    my $n_linfo = $self->num_image_segments() + 0;
     for (my $i = 0; $i < $n_linfo; $i++) {
-        $self->{linfo}[$i] = Nitf::LengthImageInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{linfo}}, Nitf::LengthImageInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{num_graphics_segments} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{lnnfo} = ();
-    my $n_lnnfo = $self->num_graphics_segments();
+    my $n_lnnfo = $self->num_graphics_segments() + 0;
     for (my $i = 0; $i < $n_lnnfo; $i++) {
-        $self->{lnnfo}[$i] = Nitf::LengthGraphicInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{lnnfo}}, Nitf::LengthGraphicInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{reserved_numx} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{num_text_files} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{ltnfo} = ();
-    my $n_ltnfo = $self->num_text_files();
+    my $n_ltnfo = $self->num_text_files() + 0;
     for (my $i = 0; $i < $n_ltnfo; $i++) {
-        $self->{ltnfo}[$i] = Nitf::LengthTextInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{ltnfo}}, Nitf::LengthTextInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{num_data_extension} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{ldnfo} = ();
-    my $n_ldnfo = $self->num_data_extension();
+    my $n_ldnfo = $self->num_data_extension() + 0;
     for (my $i = 0; $i < $n_ldnfo; $i++) {
-        $self->{ldnfo}[$i] = Nitf::LengthDataInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{ldnfo}}, Nitf::LengthDataInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{num_reserved_extension} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     $self->{lrnfo} = ();
-    my $n_lrnfo = $self->num_reserved_extension();
+    my $n_lrnfo = $self->num_reserved_extension() + 0;
     for (my $i = 0; $i < $n_lrnfo; $i++) {
-        $self->{lrnfo}[$i] = Nitf::LengthReservedInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{lrnfo}}, Nitf::LengthReservedInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{user_defined_header} = Nitf::TreHeader->new($self->{_io}, $self, $self->{_root});
     $self->{extended_header} = Nitf::TreHeader->new($self->{_io}, $self, $self->{_root});
@@ -1974,9 +1974,9 @@ sub _read {
     $self->{sfh_l1} = Encode::decode("UTF-8", $self->{_io}->read_bytes(7));
     $self->{sfh_delim1} = $self->{_io}->read_u4be();
     $self->{sfh_dr} = ();
-    my $n_sfh_dr = $self->sfh_l1();
+    my $n_sfh_dr = $self->sfh_l1() + 0;
     for (my $i = 0; $i < $n_sfh_dr; $i++) {
-        $self->{sfh_dr}[$i] = $self->{_io}->read_u1();
+        push @{$self->{sfh_dr}}, $self->{_io}->read_u1();
     }
     $self->{sfh_delim2} = $self->{_io}->read_u4be();
     $self->{sfh_l2} = Encode::decode("UTF-8", $self->{_io}->read_bytes(7));
@@ -2048,14 +2048,14 @@ sub _read {
     my ($self) = @_;
 
     $self->{header_data_length} = Encode::decode("UTF-8", $self->{_io}->read_bytes(5));
-    if ($self->header_data_length() != 0) {
+    if ($self->header_data_length() + 0 != 0) {
         $self->{header_overflow} = Encode::decode("UTF-8", $self->{_io}->read_bytes(3));
     }
-    if ($self->header_data_length() > 2) {
+    if ($self->header_data_length() + 0 > 2) {
         $self->{header_data} = ();
-        my $n_header_data = ($self->header_data_length() - 3);
+        my $n_header_data = ($self->header_data_length() + 0 - 3);
         for (my $i = 0; $i < $n_header_data; $i++) {
-            $self->{header_data}[$i] = $self->{_io}->read_u1();
+            push @{$self->{header_data}}, $self->{_io}->read_u1();
         }
     }
 }

@@ -59,14 +59,14 @@ class ShapefileMain < Kaitai::Struct::Struct
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_points = @_io.read_s4le
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = Array.new(number_of_points)
+      @m_values = []
       (number_of_points).times { |i|
-        @m_values[i] = @_io.read_f8le
+        @m_values << @_io.read_f8le
       }
       self
     end
@@ -118,13 +118,13 @@ class ShapefileMain < Kaitai::Struct::Struct
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
       @number_of_points = @_io.read_s4le
-      @parts = Array.new(number_of_parts)
+      @parts = []
       (number_of_parts).times { |i|
-        @parts[i] = @_io.read_s4le
+        @parts << @_io.read_s4le
       }
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       self
     end
@@ -158,13 +158,13 @@ class ShapefileMain < Kaitai::Struct::Struct
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
       @number_of_points = @_io.read_s4le
-      @parts = Array.new(number_of_parts)
+      @parts = []
       (number_of_parts).times { |i|
-        @parts[i] = @_io.read_s4le
+        @parts << @_io.read_s4le
       }
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       self
     end
@@ -183,19 +183,19 @@ class ShapefileMain < Kaitai::Struct::Struct
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_points = @_io.read_s4le
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       @z_range = BoundsMinMax.new(@_io, self, @_root)
-      @z_values = Array.new(number_of_points)
+      @z_values = []
       (number_of_points).times { |i|
-        @z_values[i] = @_io.read_f8le
+        @z_values << @_io.read_f8le
       }
       @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = Array.new(number_of_points)
+      @m_values = []
       (number_of_points).times { |i|
-        @m_values[i] = @_io.read_f8le
+        @m_values << @_io.read_f8le
       }
       self
     end
@@ -217,23 +217,23 @@ class ShapefileMain < Kaitai::Struct::Struct
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
       @number_of_points = @_io.read_s4le
-      @parts = Array.new(number_of_parts)
+      @parts = []
       (number_of_parts).times { |i|
-        @parts[i] = @_io.read_s4le
+        @parts << @_io.read_s4le
       }
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       @z_range = BoundsMinMax.new(@_io, self, @_root)
-      @z_values = Array.new(number_of_points)
+      @z_values = []
       (number_of_points).times { |i|
-        @z_values[i] = @_io.read_f8le
+        @z_values << @_io.read_f8le
       }
       @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = Array.new(number_of_points)
+      @m_values = []
       (number_of_points).times { |i|
-        @m_values[i] = @_io.read_f8le
+        @m_values << @_io.read_f8le
       }
       self
     end
@@ -257,23 +257,23 @@ class ShapefileMain < Kaitai::Struct::Struct
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
       @number_of_points = @_io.read_s4le
-      @parts = Array.new(number_of_parts)
+      @parts = []
       (number_of_parts).times { |i|
-        @parts[i] = @_io.read_s4le
+        @parts << @_io.read_s4le
       }
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       @z_range = BoundsMinMax.new(@_io, self, @_root)
-      @z_values = Array.new(number_of_points)
+      @z_values = []
       (number_of_points).times { |i|
-        @z_values[i] = @_io.read_f8le
+        @z_values << @_io.read_f8le
       }
       @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = Array.new(number_of_points)
+      @m_values = []
       (number_of_points).times { |i|
-        @m_values[i] = @_io.read_f8le
+        @m_values << @_io.read_f8le
       }
       self
     end
@@ -327,18 +327,18 @@ class ShapefileMain < Kaitai::Struct::Struct
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
       @number_of_points = @_io.read_s4le
-      @parts = Array.new(number_of_parts)
+      @parts = []
       (number_of_parts).times { |i|
-        @parts[i] = @_io.read_s4le
+        @parts << @_io.read_s4le
       }
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = Array.new(number_of_points)
+      @m_values = []
       (number_of_points).times { |i|
-        @m_values[i] = @_io.read_f8le
+        @m_values << @_io.read_f8le
       }
       self
     end
@@ -373,9 +373,9 @@ class ShapefileMain < Kaitai::Struct::Struct
     def _read
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_points = @_io.read_s4le
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       self
     end
@@ -514,27 +514,27 @@ class ShapefileMain < Kaitai::Struct::Struct
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
       @number_of_points = @_io.read_s4le
-      @parts = Array.new(number_of_parts)
+      @parts = []
       (number_of_parts).times { |i|
-        @parts[i] = @_io.read_s4le
+        @parts << @_io.read_s4le
       }
-      @part_types = Array.new(number_of_parts)
+      @part_types = []
       (number_of_parts).times { |i|
-        @part_types[i] = Kaitai::Struct::Stream::resolve_enum(ShapefileMain::PART_TYPE, @_io.read_s4le)
+        @part_types << Kaitai::Struct::Stream::resolve_enum(ShapefileMain::PART_TYPE, @_io.read_s4le)
       }
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       @z_range = BoundsMinMax.new(@_io, self, @_root)
-      @z_values = Array.new(number_of_points)
+      @z_values = []
       (number_of_points).times { |i|
-        @z_values[i] = @_io.read_f8le
+        @z_values << @_io.read_f8le
       }
       @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = Array.new(number_of_points)
+      @m_values = []
       (number_of_points).times { |i|
-        @m_values[i] = @_io.read_f8le
+        @m_values << @_io.read_f8le
       }
       self
     end
@@ -559,18 +559,18 @@ class ShapefileMain < Kaitai::Struct::Struct
       @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
       @number_of_parts = @_io.read_s4le
       @number_of_points = @_io.read_s4le
-      @parts = Array.new(number_of_parts)
+      @parts = []
       (number_of_parts).times { |i|
-        @parts[i] = @_io.read_s4le
+        @parts << @_io.read_s4le
       }
-      @points = Array.new(number_of_points)
+      @points = []
       (number_of_points).times { |i|
-        @points[i] = Point.new(@_io, self, @_root)
+        @points << Point.new(@_io, self, @_root)
       }
       @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = Array.new(number_of_points)
+      @m_values = []
       (number_of_points).times { |i|
-        @m_values[i] = @_io.read_f8le
+        @m_values << @_io.read_f8le
       }
       self
     end

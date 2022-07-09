@@ -505,9 +505,9 @@ any of:</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@data</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -520,9 +520,9 @@ any of:</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@frames</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">last_frame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="vi">@frames</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">last_frame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@frames</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Frame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@frames</span> <span class="o">&lt;&lt;</span> <span class="no">Frame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -564,13 +564,13 @@ any of:</p>
         <span class="k">if</span> <span class="n">fm_ndots</span> <span class="o">&gt;</span> <span class="mi">0</span>
           <span class="vi">@coord_header</span> <span class="o">=</span> <span class="no">DotsHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">end</span>
-        <span class="vi">@coordinates</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">fm_ndots</span><span class="p">)</span>
+        <span class="vi">@coordinates</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">fm_ndots</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@coordinates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">DotsData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@coordinates</span> <span class="o">&lt;&lt;</span> <span class="no">DotsData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
-        <span class="vi">@data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">fm_ndots</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">fm_ndots</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">DataLinez</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+          <span class="vi">@data</span> <span class="o">&lt;&lt;</span> <span class="no">DataLinez</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -633,13 +633,13 @@ any of:</p>
         <span class="k">end</span>
 
         <span class="k">def</span> <span class="n">_read</span>
-          <span class="vi">@forward</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">coordinates</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="n">forward_size</span><span class="p">)</span>
+          <span class="vi">@forward</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">coordinates</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="n">forward_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@forward</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+            <span class="vi">@forward</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
           <span class="p">}</span>
-          <span class="vi">@backward</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">coordinates</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="n">backward_size</span><span class="p">)</span>
+          <span class="vi">@backward</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">coordinates</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="n">backward_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@backward</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+            <span class="vi">@backward</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
           <span class="p">}</span>
           <span class="nb">self</span>
         <span class="k">end</span>
@@ -713,17 +713,17 @@ any of:</p>
 
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@block_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-        <span class="vi">@blocks_headers</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">block_count</span><span class="p">)</span>
+        <span class="vi">@blocks_headers</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">block_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@blocks_headers</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">BlockDescr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@blocks_headers</span> <span class="o">&lt;&lt;</span> <span class="no">BlockDescr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
-        <span class="vi">@blocks_names</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">block_count</span><span class="p">)</span>
+        <span class="vi">@blocks_names</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">block_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@blocks_names</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">blocks_headers</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">name_len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+          <span class="vi">@blocks_names</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">blocks_headers</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">name_len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
         <span class="p">}</span>
-        <span class="vi">@blocks_data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">block_count</span><span class="p">)</span>
+        <span class="vi">@blocks_data</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">block_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@blocks_data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">blocks_headers</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">len</span><span class="p">)</span>
+          <span class="vi">@blocks_data</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">blocks_headers</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">len</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -755,9 +755,9 @@ any of:</p>
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@head_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@tot_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-        <span class="vi">@guids</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="vi">@guids</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@guids</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Uuid</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@guids</span> <span class="o">&lt;&lt;</span> <span class="no">Uuid</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="vi">@frame_status</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="vi">@name_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -775,13 +775,13 @@ any of:</p>
         <span class="vi">@cell_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@n_dimensions</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@n_mesurands</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-        <span class="vi">@dimensions</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n_dimensions</span><span class="p">)</span>
+        <span class="vi">@dimensions</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">n_dimensions</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@dimensions</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Calibration</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@dimensions</span> <span class="o">&lt;&lt;</span> <span class="no">Calibration</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
-        <span class="vi">@mesurands</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n_mesurands</span><span class="p">)</span>
+        <span class="vi">@mesurands</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">n_mesurands</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@mesurands</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Calibration</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@mesurands</span> <span class="o">&lt;&lt;</span> <span class="no">Calibration</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -807,29 +807,29 @@ any of:</p>
           <span class="k">end</span>
 
           <span class="k">def</span> <span class="n">_read</span>
-            <span class="vi">@items</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">n_mesurands</span><span class="p">)</span>
+            <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
             <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">n_mesurands</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
               <span class="k">case</span> <span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">mesurands</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">data_type</span>
               <span class="k">when</span> <span class="ss">:data_type_uint64</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
               <span class="k">when</span> <span class="ss">:data_type_uint8</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
               <span class="k">when</span> <span class="ss">:data_type_float32</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
               <span class="k">when</span> <span class="ss">:data_type_int8</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
               <span class="k">when</span> <span class="ss">:data_type_uint16</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
               <span class="k">when</span> <span class="ss">:data_type_int64</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s8le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s8le</span>
               <span class="k">when</span> <span class="ss">:data_type_uint32</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
               <span class="k">when</span> <span class="ss">:data_type_float64</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8le</span>
               <span class="k">when</span> <span class="ss">:data_type_int16</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
               <span class="k">when</span> <span class="ss">:data_type_int32</span>
-                <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+                <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
               <span class="k">end</span>
             <span class="p">}</span>
             <span class="nb">self</span>
@@ -936,9 +936,9 @@ any of:</p>
         <span class="vi">@fm_xres</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@fm_yres</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@dots</span> <span class="o">=</span> <span class="no">Dots</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="vi">@data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">fm_xres</span> <span class="o">*</span> <span class="n">fm_yres</span><span class="p">))</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">((</span><span class="n">fm_xres</span> <span class="o">*</span> <span class="n">fm_yres</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+          <span class="vi">@data</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
         <span class="p">}</span>
         <span class="vi">@title</span> <span class="o">=</span> <span class="no">Title</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@xml</span> <span class="o">=</span> <span class="no">Xml</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -1148,9 +1148,9 @@ any of:</p>
         <span class="vi">@fm_xres</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@fm_yres</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@dots</span> <span class="o">=</span> <span class="no">Dots</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="vi">@image</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">fm_xres</span> <span class="o">*</span> <span class="n">fm_yres</span><span class="p">))</span>
+        <span class="vi">@image</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">((</span><span class="n">fm_xres</span> <span class="o">*</span> <span class="n">fm_yres</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@image</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+          <span class="vi">@image</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
         <span class="p">}</span>
         <span class="vi">@title</span> <span class="o">=</span> <span class="no">Title</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@xml</span> <span class="o">=</span> <span class="no">Xml</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>

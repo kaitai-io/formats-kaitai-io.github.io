@@ -42,7 +42,7 @@ sub _read {
     $self->{records} = ();
     my $n_records = $self->header1()->num_records();
     for (my $i = 0; $i < $n_records; $i++) {
-        $self->{records}[$i] = $self->{_io}->read_bytes($self->header1()->len_record());
+        push @{$self->{records}}, $self->{_io}->read_bytes($self->header1()->len_record());
     }
 }
 
@@ -105,7 +105,7 @@ sub _read {
     $self->{fields} = ();
     my $n_fields = 11;
     for (my $i = 0; $i < $n_fields; $i++) {
-        $self->{fields}[$i] = Dbf::Field->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{fields}}, Dbf::Field->new($self->{_io}, $self, $self->{_root});
     }
 }
 

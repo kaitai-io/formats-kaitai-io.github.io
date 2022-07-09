@@ -296,9 +296,8 @@ regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::sub_key_list_lh_lf_t(kaitai::kstr
 
 void regf_t::hive_bin_cell_t::sub_key_list_lh_lf_t::_read() {
     m_count = m__io->read_u2le();
-    int l_items = count();
     m_items = new std::vector<item_t*>();
-    m_items->reserve(l_items);
+    const int l_items = count();
     for (int i = 0; i < l_items; i++) {
         m_items->push_back(new item_t(m__io, this, m__root));
     }
@@ -382,9 +381,8 @@ regf_t::hive_bin_cell_t::sub_key_list_li_t::sub_key_list_li_t(kaitai::kstream* p
 
 void regf_t::hive_bin_cell_t::sub_key_list_li_t::_read() {
     m_count = m__io->read_u2le();
-    int l_items = count();
     m_items = new std::vector<item_t*>();
-    m_items->reserve(l_items);
+    const int l_items = count();
     for (int i = 0; i < l_items; i++) {
         m_items->push_back(new item_t(m__io, this, m__root));
     }
@@ -487,9 +485,8 @@ regf_t::hive_bin_cell_t::sub_key_list_ri_t::sub_key_list_ri_t(kaitai::kstream* p
 
 void regf_t::hive_bin_cell_t::sub_key_list_ri_t::_read() {
     m_count = m__io->read_u2le();
-    int l_items = count();
     m_items = new std::vector<item_t*>();
-    m_items->reserve(l_items);
+    const int l_items = count();
     for (int i = 0; i < l_items; i++) {
         m_items->push_back(new item_t(m__io, this, m__root));
     }

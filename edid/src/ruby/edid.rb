@@ -29,12 +29,12 @@ class Edid < Kaitai::Struct::Struct
     @features_flags = @_io.read_u1
     @chromacity = ChromacityInfo.new(@_io, self, @_root)
     @est_timings = EstTimingsInfo.new(@_io, self, @_root)
-    @_raw_std_timings = Array.new(8)
-    @std_timings = Array.new(8)
+    @_raw_std_timings = []
+    @std_timings = []
     (8).times { |i|
-      @_raw_std_timings[i] = @_io.read_bytes(2)
+      @_raw_std_timings << @_io.read_bytes(2)
       _io__raw_std_timings = Kaitai::Struct::Stream.new(@_raw_std_timings[i])
-      @std_timings[i] = StdTiming.new(_io__raw_std_timings, self, @_root)
+      @std_timings << StdTiming.new(_io__raw_std_timings, self, @_root)
     }
     self
   end

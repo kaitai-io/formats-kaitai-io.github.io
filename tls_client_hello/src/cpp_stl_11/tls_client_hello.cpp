@@ -126,9 +126,8 @@ tls_client_hello_t::cipher_suites_t::cipher_suites_t(kaitai::kstream* p__io, tls
 
 void tls_client_hello_t::cipher_suites_t::_read() {
     m_len = m__io->read_u2be();
-    int l_cipher_suites = (len() / 2);
     m_cipher_suites = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_cipher_suites->reserve(l_cipher_suites);
+    const int l_cipher_suites = (len() / 2);
     for (int i = 0; i < l_cipher_suites; i++) {
         m_cipher_suites->push_back(std::move(m__io->read_u2be()));
     }

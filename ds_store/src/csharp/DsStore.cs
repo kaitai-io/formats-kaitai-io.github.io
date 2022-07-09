@@ -111,18 +111,18 @@ namespace Kaitai
             {
                 _numBlocks = m_io.ReadU4be();
                 __unnamed1 = m_io.ReadBytes(4);
-                _blockAddresses = new List<BlockDescriptor>((int) (NumBlockAddresses));
+                _blockAddresses = new List<BlockDescriptor>();
                 for (var i = 0; i < NumBlockAddresses; i++)
                 {
                     _blockAddresses.Add(new BlockDescriptor(m_io, this, m_root));
                 }
                 _numDirectories = m_io.ReadU4be();
-                _directoryEntries = new List<DirectoryEntry>((int) (NumDirectories));
+                _directoryEntries = new List<DirectoryEntry>();
                 for (var i = 0; i < NumDirectories; i++)
                 {
                     _directoryEntries.Add(new DirectoryEntry(m_io, this, m_root));
                 }
-                _freeLists = new List<FreeList>((int) (NumFreeLists));
+                _freeLists = new List<FreeList>();
                 for (var i = 0; i < NumFreeLists; i++)
                 {
                     _freeLists.Add(new FreeList(m_io, this, m_root));
@@ -226,7 +226,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _counter = m_io.ReadU4be();
-                    _offsets = new List<uint>((int) (Counter));
+                    _offsets = new List<uint>();
                     for (var i = 0; i < Counter; i++)
                     {
                         _offsets.Add(m_io.ReadU4be());
@@ -280,7 +280,7 @@ namespace Kaitai
                     if (f_directories)
                         return _directories;
                     KaitaiStream io = M_Root.M_Io;
-                    _directories = new List<MasterBlockRef>((int) (NumDirectories));
+                    _directories = new List<MasterBlockRef>();
                     for (var i = 0; i < NumDirectories; i++)
                     {
                         _directories.Add(new MasterBlockRef(i, io, this, m_root));
@@ -458,7 +458,7 @@ namespace Kaitai
             {
                 _mode = m_io.ReadU4be();
                 _counter = m_io.ReadU4be();
-                _data = new List<BlockData>((int) (Counter));
+                _data = new List<BlockData>();
                 for (var i = 0; i < Counter; i++)
                 {
                     _data.Add(new BlockData(Mode, m_io, this, m_root));

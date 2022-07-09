@@ -8,7 +8,7 @@
   } else {
     root.WindowsShellItems = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Windows Shell Items (AKA "shellbags") is an undocumented set of
  * structures used internally within Windows to identify paths in
@@ -33,7 +33,7 @@ var WindowsShellItems = (function() {
     this._read();
   }
   WindowsShellItems.prototype._read = function() {
-    this.items = []
+    this.items = [];
     var i = 0;
     do {
       var _ = new ShellItem(this._io, this, this._root);

@@ -67,8 +67,10 @@ type
     `lenStr`*: uint16
     `ofsStr`*: uint16
     `parent`*: Ttf_Name
-    `asciiValueInst`*: string
-    `unicodeValueInst`*: string
+    `asciiValueInst`: string
+    `asciiValueInstFlag`: bool
+    `unicodeValueInst`: string
+    `unicodeValueInstFlag`: bool
   Ttf_Head* = ref object of KaitaiStruct
     `version`*: Ttf_Fixed
     `fontRevision`*: Ttf_Fixed
@@ -154,7 +156,8 @@ type
     `length`*: uint32
     `parent`*: Ttf
     `rawValueInst`*: seq[byte]
-    `valueInst`*: KaitaiStruct
+    `valueInst`: KaitaiStruct
+    `valueInstFlag`: bool
   Ttf_Os2* = ref object of KaitaiStruct
     `version`*: uint16
     `xAvgCharWidth`*: int16
@@ -481,7 +484,8 @@ type
     `instructions`*: seq[byte]
     `flags`*: seq[Ttf_Glyf_SimpleGlyph_Flag]
     `parent`*: Ttf_Glyf
-    `pointCountInst`*: int
+    `pointCountInst`: int
+    `pointCountInstFlag`: bool
   Ttf_Glyf_SimpleGlyph_Flag* = ref object of KaitaiStruct
     `reserved`*: uint64
     `yIsSame`*: bool
@@ -500,7 +504,8 @@ type
     `numGlyphs`*: uint16
     `version10Body`*: Ttf_MaxpVersion10Body
     `parent`*: Ttf_DirTableEntry
-    `isVersion10Inst`*: bool
+    `isVersion10Inst`: bool
+    `isVersion10InstFlag`: bool
   Ttf_MaxpVersion10Body* = ref object of KaitaiStruct
     `maxPoints`*: uint16
     `maxContours`*: uint16
@@ -533,7 +538,8 @@ type
     `encodingId`*: uint16
     `subtableOffset`*: uint32
     `parent`*: Ttf_Cmap
-    `tableInst`*: Ttf_Cmap_Subtable
+    `tableInst`: Ttf_Cmap_Subtable
+    `tableInstFlag`: bool
   Ttf_Cmap_Subtable* = ref object of KaitaiStruct
     `format`*: Ttf_Cmap_Subtable_SubtableFormat
     `length`*: uint16
@@ -564,7 +570,8 @@ type
     `idRangeOffset`*: seq[uint16]
     `glyphIdArray`*: seq[uint16]
     `parent`*: Ttf_Cmap_Subtable
-    `segCountInst`*: int
+    `segCountInst`: int
+    `segCountInstFlag`: bool
   Ttf_Cmap_Subtable_TrimmedTableMapping* = ref object of KaitaiStruct
     `firstCode`*: uint16
     `entryCount`*: uint16
@@ -767,7 +774,7 @@ proc read*(_: typedesc[Ttf_Name_NameRecord], io: KaitaiStream, root: KaitaiStruc
   this.ofsStr = ofsStrExpr
 
 proc asciiValue(this: Ttf_Name_NameRecord): string = 
-  if this.asciiValueInst.len != 0:
+  if this.asciiValueInstFlag:
     return this.asciiValueInst
   let io = this.parent.io
   let pos = io.pos()
@@ -775,11 +782,11 @@ proc asciiValue(this: Ttf_Name_NameRecord): string =
   let asciiValueInstExpr = encode(io.readBytes(int(this.lenStr)), "ascii")
   this.asciiValueInst = asciiValueInstExpr
   io.seek(pos)
-  if this.asciiValueInst.len != 0:
-    return this.asciiValueInst
+  this.asciiValueInstFlag = true
+  return this.asciiValueInst
 
 proc unicodeValue(this: Ttf_Name_NameRecord): string = 
-  if this.unicodeValueInst.len != 0:
+  if this.unicodeValueInstFlag:
     return this.unicodeValueInst
   let io = this.parent.io
   let pos = io.pos()
@@ -787,8 +794,8 @@ proc unicodeValue(this: Ttf_Name_NameRecord): string =
   let unicodeValueInstExpr = encode(io.readBytes(int(this.lenStr)), "utf-16be")
   this.unicodeValueInst = unicodeValueInstExpr
   io.seek(pos)
-  if this.unicodeValueInst.len != 0:
-    return this.unicodeValueInst
+  this.unicodeValueInstFlag = true
+  return this.unicodeValueInst
 
 proc fromFile*(_: typedesc[Ttf_Name_NameRecord], filename: string): Ttf_Name_NameRecord =
   Ttf_Name_NameRecord.read(newKaitaiFileStream(filename), nil, nil)
@@ -1043,7 +1050,7 @@ proc read*(_: typedesc[Ttf_DirTableEntry], io: KaitaiStream, root: KaitaiStruct,
   this.length = lengthExpr
 
 proc value(this: Ttf_DirTableEntry): KaitaiStruct = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let io = Ttf(this.root).io
   let pos = io.pos()
@@ -1126,8 +1133,8 @@ proc value(this: Ttf_DirTableEntry): KaitaiStruct =
       let valueInstExpr = io.readBytes(int(this.length))
       this.valueInst = valueInstExpr
   io.seek(pos)
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Ttf_DirTableEntry], filename: string): Ttf_DirTableEntry =
   Ttf_DirTableEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -1644,12 +1651,12 @@ proc read*(_: typedesc[Ttf_Glyf_SimpleGlyph], io: KaitaiStream, root: KaitaiStru
     this.flags.add(it)
 
 proc pointCount(this: Ttf_Glyf_SimpleGlyph): int = 
-  if this.pointCountInst != nil:
+  if this.pointCountInstFlag:
     return this.pointCountInst
   let pointCountInstExpr = int((max(this.endPtsOfContours) + 1))
   this.pointCountInst = pointCountInstExpr
-  if this.pointCountInst != nil:
-    return this.pointCountInst
+  this.pointCountInstFlag = true
+  return this.pointCountInst
 
 proc fromFile*(_: typedesc[Ttf_Glyf_SimpleGlyph], filename: string): Ttf_Glyf_SimpleGlyph =
   Ttf_Glyf_SimpleGlyph.read(newKaitaiFileStream(filename), nil, nil)
@@ -1732,12 +1739,12 @@ proc read*(_: typedesc[Ttf_Maxp], io: KaitaiStream, root: KaitaiStruct, parent: 
     this.version10Body = version10BodyExpr
 
 proc isVersion10(this: Ttf_Maxp): bool = 
-  if this.isVersion10Inst != nil:
+  if this.isVersion10InstFlag:
     return this.isVersion10Inst
   let isVersion10InstExpr = bool( ((this.tableVersionNumber.major == 1) and (this.tableVersionNumber.minor == 0)) )
   this.isVersion10Inst = isVersion10InstExpr
-  if this.isVersion10Inst != nil:
-    return this.isVersion10Inst
+  this.isVersion10InstFlag = true
+  return this.isVersion10Inst
 
 proc fromFile*(_: typedesc[Ttf_Maxp], filename: string): Ttf_Maxp =
   Ttf_Maxp.read(newKaitaiFileStream(filename), nil, nil)
@@ -1894,7 +1901,7 @@ proc read*(_: typedesc[Ttf_Cmap_SubtableHeader], io: KaitaiStream, root: KaitaiS
   this.subtableOffset = subtableOffsetExpr
 
 proc table(this: Ttf_Cmap_SubtableHeader): Ttf_Cmap_Subtable = 
-  if this.tableInst != nil:
+  if this.tableInstFlag:
     return this.tableInst
   let io = this.parent.io
   let pos = io.pos()
@@ -1902,8 +1909,8 @@ proc table(this: Ttf_Cmap_SubtableHeader): Ttf_Cmap_Subtable =
   let tableInstExpr = Ttf_Cmap_Subtable.read(io, this.root, this)
   this.tableInst = tableInstExpr
   io.seek(pos)
-  if this.tableInst != nil:
-    return this.tableInst
+  this.tableInstFlag = true
+  return this.tableInst
 
 proc fromFile*(_: typedesc[Ttf_Cmap_SubtableHeader], filename: string): Ttf_Cmap_SubtableHeader =
   Ttf_Cmap_SubtableHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -2022,12 +2029,12 @@ proc read*(_: typedesc[Ttf_Cmap_Subtable_SegmentMappingToDeltaValues], io: Kaita
       inc i
 
 proc segCount(this: Ttf_Cmap_Subtable_SegmentMappingToDeltaValues): int = 
-  if this.segCountInst != nil:
+  if this.segCountInstFlag:
     return this.segCountInst
   let segCountInstExpr = int((this.segCountX2 div 2))
   this.segCountInst = segCountInstExpr
-  if this.segCountInst != nil:
-    return this.segCountInst
+  this.segCountInstFlag = true
+  return this.segCountInst
 
 proc fromFile*(_: typedesc[Ttf_Cmap_Subtable_SegmentMappingToDeltaValues], filename: string): Ttf_Cmap_Subtable_SegmentMappingToDeltaValues =
   Ttf_Cmap_Subtable_SegmentMappingToDeltaValues.read(newKaitaiFileStream(filename), nil, nil)

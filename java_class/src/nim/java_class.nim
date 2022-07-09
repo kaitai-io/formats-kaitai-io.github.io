@@ -29,7 +29,8 @@ type
     `info`*: KaitaiStruct
     `parent`*: KaitaiStruct
     `rawInfo`*: seq[byte]
-    `nameAsStrInst`*: string
+    `nameAsStrInst`: string
+    `nameAsStrInstFlag`: bool
   JavaClass_AttributeInfo_AttrBodyCode* = ref object of KaitaiStruct
     `maxStack`*: uint16
     `maxLocals`*: uint16
@@ -46,7 +47,8 @@ type
     `handlerPc`*: uint16
     `catchType`*: uint16
     `parent`*: JavaClass_AttributeInfo_AttrBodyCode
-    `catchExceptionInst`*: JavaClass_ConstantPoolEntry
+    `catchExceptionInst`: JavaClass_ConstantPoolEntry
+    `catchExceptionInstFlag`: bool
   JavaClass_AttributeInfo_AttrBodyExceptions* = ref object of KaitaiStruct
     `numberOfExceptions`*: uint16
     `exceptions`*: seq[JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTableEntry]
@@ -54,12 +56,15 @@ type
   JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTableEntry* = ref object of KaitaiStruct
     `index`*: uint16
     `parent`*: JavaClass_AttributeInfo_AttrBodyExceptions
-    `asInfoInst`*: JavaClass_ClassCpInfo
-    `nameAsStrInst`*: string
+    `asInfoInst`: JavaClass_ClassCpInfo
+    `asInfoInstFlag`: bool
+    `nameAsStrInst`: string
+    `nameAsStrInstFlag`: bool
   JavaClass_AttributeInfo_AttrBodySourceFile* = ref object of KaitaiStruct
     `sourcefileIndex`*: uint16
     `parent`*: JavaClass_AttributeInfo
-    `sourcefileAsStrInst`*: string
+    `sourcefileAsStrInst`: string
+    `sourcefileAsStrInstFlag`: bool
   JavaClass_AttributeInfo_AttrBodyLineNumberTable* = ref object of KaitaiStruct
     `lineNumberTableLength`*: uint16
     `lineNumberTable`*: seq[JavaClass_AttributeInfo_AttrBodyLineNumberTable_LineNumberTableEntry]
@@ -72,8 +77,10 @@ type
     `classIndex`*: uint16
     `nameAndTypeIndex`*: uint16
     `parent`*: JavaClass_ConstantPoolEntry
-    `classAsInfoInst`*: JavaClass_ClassCpInfo
-    `nameAndTypeAsInfoInst`*: JavaClass_NameAndTypeCpInfo
+    `classAsInfoInst`: JavaClass_ClassCpInfo
+    `classAsInfoInstFlag`: bool
+    `nameAndTypeAsInfoInst`: JavaClass_NameAndTypeCpInfo
+    `nameAndTypeAsInfoInstFlag`: bool
   JavaClass_FieldInfo* = ref object of KaitaiStruct
     `accessFlags`*: uint16
     `nameIndex`*: uint16
@@ -81,7 +88,8 @@ type
     `attributesCount`*: uint16
     `attributes`*: seq[JavaClass_AttributeInfo]
     `parent`*: JavaClass
-    `nameAsStrInst`*: string
+    `nameAsStrInst`: string
+    `nameAsStrInstFlag`: bool
   JavaClass_DoubleCpInfo* = ref object of KaitaiStruct
     `value`*: float64
     `parent`*: JavaClass_ConstantPoolEntry
@@ -110,10 +118,14 @@ type
     `nameIndex`*: uint16
     `descriptorIndex`*: uint16
     `parent`*: JavaClass_ConstantPoolEntry
-    `nameAsInfoInst`*: JavaClass_Utf8CpInfo
-    `nameAsStrInst`*: string
-    `descriptorAsInfoInst`*: JavaClass_Utf8CpInfo
-    `descriptorAsStrInst`*: string
+    `nameAsInfoInst`: JavaClass_Utf8CpInfo
+    `nameAsInfoInstFlag`: bool
+    `nameAsStrInst`: string
+    `nameAsStrInstFlag`: bool
+    `descriptorAsInfoInst`: JavaClass_Utf8CpInfo
+    `descriptorAsInfoInstFlag`: bool
+    `descriptorAsStrInst`: string
+    `descriptorAsStrInstFlag`: bool
   JavaClass_Utf8CpInfo* = ref object of KaitaiStruct
     `strLen`*: uint16
     `value`*: string
@@ -128,19 +140,24 @@ type
     `classIndex`*: uint16
     `nameAndTypeIndex`*: uint16
     `parent`*: JavaClass_ConstantPoolEntry
-    `classAsInfoInst`*: JavaClass_ClassCpInfo
-    `nameAndTypeAsInfoInst`*: JavaClass_NameAndTypeCpInfo
+    `classAsInfoInst`: JavaClass_ClassCpInfo
+    `classAsInfoInstFlag`: bool
+    `nameAndTypeAsInfoInst`: JavaClass_NameAndTypeCpInfo
+    `nameAndTypeAsInfoInstFlag`: bool
   JavaClass_ClassCpInfo* = ref object of KaitaiStruct
     `nameIndex`*: uint16
     `parent`*: JavaClass_ConstantPoolEntry
-    `nameAsInfoInst`*: JavaClass_Utf8CpInfo
-    `nameAsStrInst`*: string
+    `nameAsInfoInst`: JavaClass_Utf8CpInfo
+    `nameAsInfoInstFlag`: bool
+    `nameAsStrInst`: string
+    `nameAsStrInstFlag`: bool
   JavaClass_ConstantPoolEntry* = ref object of KaitaiStruct
     `tag`*: JavaClass_ConstantPoolEntry_TagEnum
     `cpInfo`*: KaitaiStruct
     `isPrevTwoEntries`*: bool
     `parent`*: JavaClass
-    `isTwoEntriesInst`*: bool
+    `isTwoEntriesInst`: bool
+    `isTwoEntriesInstFlag`: bool
   JavaClass_ConstantPoolEntry_TagEnum* = enum
     utf8 = 1
     integer = 3
@@ -163,7 +180,8 @@ type
     `attributesCount`*: uint16
     `attributes`*: seq[JavaClass_AttributeInfo]
     `parent`*: JavaClass
-    `nameAsStrInst`*: string
+    `nameAsStrInst`: string
+    `nameAsStrInstFlag`: bool
   JavaClass_IntegerCpInfo* = ref object of KaitaiStruct
     `value`*: uint32
     `parent`*: JavaClass_ConstantPoolEntry
@@ -171,8 +189,10 @@ type
     `classIndex`*: uint16
     `nameAndTypeIndex`*: uint16
     `parent`*: JavaClass_ConstantPoolEntry
-    `classAsInfoInst`*: JavaClass_ClassCpInfo
-    `nameAndTypeAsInfoInst`*: JavaClass_NameAndTypeCpInfo
+    `classAsInfoInst`: JavaClass_ClassCpInfo
+    `classAsInfoInstFlag`: bool
+    `nameAndTypeAsInfoInst`: JavaClass_NameAndTypeCpInfo
+    `nameAndTypeAsInfoInstFlag`: bool
 
 proc read*(_: typedesc[JavaClass], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): JavaClass
 proc read*(_: typedesc[JavaClass_FloatCpInfo], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass_ConstantPoolEntry): JavaClass_FloatCpInfo
@@ -340,12 +360,12 @@ proc read*(_: typedesc[JavaClass_AttributeInfo], io: KaitaiStream, root: KaitaiS
       this.info = infoExpr
 
 proc nameAsStr(this: JavaClass_AttributeInfo): string = 
-  if this.nameAsStrInst.len != 0:
+  if this.nameAsStrInstFlag:
     return this.nameAsStrInst
   let nameAsStrInstExpr = string((JavaClass_Utf8CpInfo(JavaClass(this.root).constantPool[(this.nameIndex - 1)].cpInfo)).value)
   this.nameAsStrInst = nameAsStrInstExpr
-  if this.nameAsStrInst.len != 0:
-    return this.nameAsStrInst
+  this.nameAsStrInstFlag = true
+  return this.nameAsStrInst
 
 proc fromFile*(_: typedesc[JavaClass_AttributeInfo], filename: string): JavaClass_AttributeInfo =
   JavaClass_AttributeInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -429,13 +449,13 @@ pool, or 0 (catch all exceptions handler, used to implement
   this.catchType = catchTypeExpr
 
 proc catchException(this: JavaClass_AttributeInfo_AttrBodyCode_ExceptionEntry): JavaClass_ConstantPoolEntry = 
-  if this.catchExceptionInst != nil:
+  if this.catchExceptionInstFlag:
     return this.catchExceptionInst
   if this.catchType != 0:
     let catchExceptionInstExpr = JavaClass_ConstantPoolEntry(JavaClass(this.root).constantPool[(this.catchType - 1)])
     this.catchExceptionInst = catchExceptionInstExpr
-  if this.catchExceptionInst != nil:
-    return this.catchExceptionInst
+  this.catchExceptionInstFlag = true
+  return this.catchExceptionInst
 
 proc fromFile*(_: typedesc[JavaClass_AttributeInfo_AttrBodyCode_ExceptionEntry], filename: string): JavaClass_AttributeInfo_AttrBodyCode_ExceptionEntry =
   JavaClass_AttributeInfo_AttrBodyCode_ExceptionEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -473,20 +493,20 @@ proc read*(_: typedesc[JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTable
   this.index = indexExpr
 
 proc asInfo(this: JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTableEntry): JavaClass_ClassCpInfo = 
-  if this.asInfoInst != nil:
+  if this.asInfoInstFlag:
     return this.asInfoInst
   let asInfoInstExpr = JavaClass_ClassCpInfo((JavaClass_ClassCpInfo(JavaClass(this.root).constantPool[(this.index - 1)].cpInfo)))
   this.asInfoInst = asInfoInstExpr
-  if this.asInfoInst != nil:
-    return this.asInfoInst
+  this.asInfoInstFlag = true
+  return this.asInfoInst
 
 proc nameAsStr(this: JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTableEntry): string = 
-  if this.nameAsStrInst.len != 0:
+  if this.nameAsStrInstFlag:
     return this.nameAsStrInst
   let nameAsStrInstExpr = string(this.asInfo.nameAsStr)
   this.nameAsStrInst = nameAsStrInstExpr
-  if this.nameAsStrInst.len != 0:
-    return this.nameAsStrInst
+  this.nameAsStrInstFlag = true
+  return this.nameAsStrInst
 
 proc fromFile*(_: typedesc[JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTableEntry], filename: string): JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTableEntry =
   JavaClass_AttributeInfo_AttrBodyExceptions_ExceptionTableEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -507,12 +527,12 @@ proc read*(_: typedesc[JavaClass_AttributeInfo_AttrBodySourceFile], io: KaitaiSt
   this.sourcefileIndex = sourcefileIndexExpr
 
 proc sourcefileAsStr(this: JavaClass_AttributeInfo_AttrBodySourceFile): string = 
-  if this.sourcefileAsStrInst.len != 0:
+  if this.sourcefileAsStrInstFlag:
     return this.sourcefileAsStrInst
   let sourcefileAsStrInstExpr = string((JavaClass_Utf8CpInfo(JavaClass(this.root).constantPool[(this.sourcefileIndex - 1)].cpInfo)).value)
   this.sourcefileAsStrInst = sourcefileAsStrInstExpr
-  if this.sourcefileAsStrInst.len != 0:
-    return this.sourcefileAsStrInst
+  this.sourcefileAsStrInstFlag = true
+  return this.sourcefileAsStrInst
 
 proc fromFile*(_: typedesc[JavaClass_AttributeInfo_AttrBodySourceFile], filename: string): JavaClass_AttributeInfo_AttrBodySourceFile =
   JavaClass_AttributeInfo_AttrBodySourceFile.read(newKaitaiFileStream(filename), nil, nil)
@@ -572,20 +592,20 @@ proc read*(_: typedesc[JavaClass_MethodRefCpInfo], io: KaitaiStream, root: Kaita
   this.nameAndTypeIndex = nameAndTypeIndexExpr
 
 proc classAsInfo(this: JavaClass_MethodRefCpInfo): JavaClass_ClassCpInfo = 
-  if this.classAsInfoInst != nil:
+  if this.classAsInfoInstFlag:
     return this.classAsInfoInst
   let classAsInfoInstExpr = JavaClass_ClassCpInfo((JavaClass_ClassCpInfo(JavaClass(this.root).constantPool[(this.classIndex - 1)].cpInfo)))
   this.classAsInfoInst = classAsInfoInstExpr
-  if this.classAsInfoInst != nil:
-    return this.classAsInfoInst
+  this.classAsInfoInstFlag = true
+  return this.classAsInfoInst
 
 proc nameAndTypeAsInfo(this: JavaClass_MethodRefCpInfo): JavaClass_NameAndTypeCpInfo = 
-  if this.nameAndTypeAsInfoInst != nil:
+  if this.nameAndTypeAsInfoInstFlag:
     return this.nameAndTypeAsInfoInst
   let nameAndTypeAsInfoInstExpr = JavaClass_NameAndTypeCpInfo((JavaClass_NameAndTypeCpInfo(JavaClass(this.root).constantPool[(this.nameAndTypeIndex - 1)].cpInfo)))
   this.nameAndTypeAsInfoInst = nameAndTypeAsInfoInstExpr
-  if this.nameAndTypeAsInfoInst != nil:
-    return this.nameAndTypeAsInfoInst
+  this.nameAndTypeAsInfoInstFlag = true
+  return this.nameAndTypeAsInfoInst
 
 proc fromFile*(_: typedesc[JavaClass_MethodRefCpInfo], filename: string): JavaClass_MethodRefCpInfo =
   JavaClass_MethodRefCpInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -615,12 +635,12 @@ proc read*(_: typedesc[JavaClass_FieldInfo], io: KaitaiStream, root: KaitaiStruc
     this.attributes.add(it)
 
 proc nameAsStr(this: JavaClass_FieldInfo): string = 
-  if this.nameAsStrInst.len != 0:
+  if this.nameAsStrInstFlag:
     return this.nameAsStrInst
   let nameAsStrInstExpr = string((JavaClass_Utf8CpInfo(JavaClass(this.root).constantPool[(this.nameIndex - 1)].cpInfo)).value)
   this.nameAsStrInst = nameAsStrInstExpr
-  if this.nameAsStrInst.len != 0:
-    return this.nameAsStrInst
+  this.nameAsStrInstFlag = true
+  return this.nameAsStrInst
 
 proc fromFile*(_: typedesc[JavaClass_FieldInfo], filename: string): JavaClass_FieldInfo =
   JavaClass_FieldInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -719,36 +739,36 @@ proc read*(_: typedesc[JavaClass_NameAndTypeCpInfo], io: KaitaiStream, root: Kai
   this.descriptorIndex = descriptorIndexExpr
 
 proc nameAsInfo(this: JavaClass_NameAndTypeCpInfo): JavaClass_Utf8CpInfo = 
-  if this.nameAsInfoInst != nil:
+  if this.nameAsInfoInstFlag:
     return this.nameAsInfoInst
   let nameAsInfoInstExpr = JavaClass_Utf8CpInfo((JavaClass_Utf8CpInfo(JavaClass(this.root).constantPool[(this.nameIndex - 1)].cpInfo)))
   this.nameAsInfoInst = nameAsInfoInstExpr
-  if this.nameAsInfoInst != nil:
-    return this.nameAsInfoInst
+  this.nameAsInfoInstFlag = true
+  return this.nameAsInfoInst
 
 proc nameAsStr(this: JavaClass_NameAndTypeCpInfo): string = 
-  if this.nameAsStrInst.len != 0:
+  if this.nameAsStrInstFlag:
     return this.nameAsStrInst
   let nameAsStrInstExpr = string(this.nameAsInfo.value)
   this.nameAsStrInst = nameAsStrInstExpr
-  if this.nameAsStrInst.len != 0:
-    return this.nameAsStrInst
+  this.nameAsStrInstFlag = true
+  return this.nameAsStrInst
 
 proc descriptorAsInfo(this: JavaClass_NameAndTypeCpInfo): JavaClass_Utf8CpInfo = 
-  if this.descriptorAsInfoInst != nil:
+  if this.descriptorAsInfoInstFlag:
     return this.descriptorAsInfoInst
   let descriptorAsInfoInstExpr = JavaClass_Utf8CpInfo((JavaClass_Utf8CpInfo(JavaClass(this.root).constantPool[(this.descriptorIndex - 1)].cpInfo)))
   this.descriptorAsInfoInst = descriptorAsInfoInstExpr
-  if this.descriptorAsInfoInst != nil:
-    return this.descriptorAsInfoInst
+  this.descriptorAsInfoInstFlag = true
+  return this.descriptorAsInfoInst
 
 proc descriptorAsStr(this: JavaClass_NameAndTypeCpInfo): string = 
-  if this.descriptorAsStrInst.len != 0:
+  if this.descriptorAsStrInstFlag:
     return this.descriptorAsStrInst
   let descriptorAsStrInstExpr = string(this.descriptorAsInfo.value)
   this.descriptorAsStrInst = descriptorAsStrInstExpr
-  if this.descriptorAsStrInst.len != 0:
-    return this.descriptorAsStrInst
+  this.descriptorAsStrInstFlag = true
+  return this.descriptorAsStrInst
 
 proc fromFile*(_: typedesc[JavaClass_NameAndTypeCpInfo], filename: string): JavaClass_NameAndTypeCpInfo =
   JavaClass_NameAndTypeCpInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -827,20 +847,20 @@ proc read*(_: typedesc[JavaClass_InterfaceMethodRefCpInfo], io: KaitaiStream, ro
   this.nameAndTypeIndex = nameAndTypeIndexExpr
 
 proc classAsInfo(this: JavaClass_InterfaceMethodRefCpInfo): JavaClass_ClassCpInfo = 
-  if this.classAsInfoInst != nil:
+  if this.classAsInfoInstFlag:
     return this.classAsInfoInst
   let classAsInfoInstExpr = JavaClass_ClassCpInfo((JavaClass_ClassCpInfo(JavaClass(this.root).constantPool[(this.classIndex - 1)].cpInfo)))
   this.classAsInfoInst = classAsInfoInstExpr
-  if this.classAsInfoInst != nil:
-    return this.classAsInfoInst
+  this.classAsInfoInstFlag = true
+  return this.classAsInfoInst
 
 proc nameAndTypeAsInfo(this: JavaClass_InterfaceMethodRefCpInfo): JavaClass_NameAndTypeCpInfo = 
-  if this.nameAndTypeAsInfoInst != nil:
+  if this.nameAndTypeAsInfoInstFlag:
     return this.nameAndTypeAsInfoInst
   let nameAndTypeAsInfoInstExpr = JavaClass_NameAndTypeCpInfo((JavaClass_NameAndTypeCpInfo(JavaClass(this.root).constantPool[(this.nameAndTypeIndex - 1)].cpInfo)))
   this.nameAndTypeAsInfoInst = nameAndTypeAsInfoInstExpr
-  if this.nameAndTypeAsInfoInst != nil:
-    return this.nameAndTypeAsInfoInst
+  this.nameAndTypeAsInfoInstFlag = true
+  return this.nameAndTypeAsInfoInst
 
 proc fromFile*(_: typedesc[JavaClass_InterfaceMethodRefCpInfo], filename: string): JavaClass_InterfaceMethodRefCpInfo =
   JavaClass_InterfaceMethodRefCpInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -861,20 +881,20 @@ proc read*(_: typedesc[JavaClass_ClassCpInfo], io: KaitaiStream, root: KaitaiStr
   this.nameIndex = nameIndexExpr
 
 proc nameAsInfo(this: JavaClass_ClassCpInfo): JavaClass_Utf8CpInfo = 
-  if this.nameAsInfoInst != nil:
+  if this.nameAsInfoInstFlag:
     return this.nameAsInfoInst
   let nameAsInfoInstExpr = JavaClass_Utf8CpInfo((JavaClass_Utf8CpInfo(JavaClass(this.root).constantPool[(this.nameIndex - 1)].cpInfo)))
   this.nameAsInfoInst = nameAsInfoInstExpr
-  if this.nameAsInfoInst != nil:
-    return this.nameAsInfoInst
+  this.nameAsInfoInstFlag = true
+  return this.nameAsInfoInst
 
 proc nameAsStr(this: JavaClass_ClassCpInfo): string = 
-  if this.nameAsStrInst.len != 0:
+  if this.nameAsStrInstFlag:
     return this.nameAsStrInst
   let nameAsStrInstExpr = string(this.nameAsInfo.value)
   this.nameAsStrInst = nameAsStrInstExpr
-  if this.nameAsStrInst.len != 0:
-    return this.nameAsStrInst
+  this.nameAsStrInstFlag = true
+  return this.nameAsStrInst
 
 proc fromFile*(_: typedesc[JavaClass_ClassCpInfo], filename: string): JavaClass_ClassCpInfo =
   JavaClass_ClassCpInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -943,12 +963,12 @@ proc read*(_: typedesc[JavaClass_ConstantPoolEntry], io: KaitaiStream, root: Kai
         this.cpInfo = cpInfoExpr
 
 proc isTwoEntries(this: JavaClass_ConstantPoolEntry): bool = 
-  if this.isTwoEntriesInst != nil:
+  if this.isTwoEntriesInstFlag:
     return this.isTwoEntriesInst
   let isTwoEntriesInstExpr = bool((if this.isPrevTwoEntries: false else:  ((this.tag == java_class.long) or (this.tag == java_class.double)) ))
   this.isTwoEntriesInst = isTwoEntriesInstExpr
-  if this.isTwoEntriesInst != nil:
-    return this.isTwoEntriesInst
+  this.isTwoEntriesInstFlag = true
+  return this.isTwoEntriesInst
 
 proc fromFile*(_: typedesc[JavaClass_ConstantPoolEntry], filename: string): JavaClass_ConstantPoolEntry =
   JavaClass_ConstantPoolEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -978,12 +998,12 @@ proc read*(_: typedesc[JavaClass_MethodInfo], io: KaitaiStream, root: KaitaiStru
     this.attributes.add(it)
 
 proc nameAsStr(this: JavaClass_MethodInfo): string = 
-  if this.nameAsStrInst.len != 0:
+  if this.nameAsStrInstFlag:
     return this.nameAsStrInst
   let nameAsStrInstExpr = string((JavaClass_Utf8CpInfo(JavaClass(this.root).constantPool[(this.nameIndex - 1)].cpInfo)).value)
   this.nameAsStrInst = nameAsStrInstExpr
-  if this.nameAsStrInst.len != 0:
-    return this.nameAsStrInst
+  this.nameAsStrInstFlag = true
+  return this.nameAsStrInst
 
 proc fromFile*(_: typedesc[JavaClass_MethodInfo], filename: string): JavaClass_MethodInfo =
   JavaClass_MethodInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -1024,20 +1044,20 @@ proc read*(_: typedesc[JavaClass_FieldRefCpInfo], io: KaitaiStream, root: Kaitai
   this.nameAndTypeIndex = nameAndTypeIndexExpr
 
 proc classAsInfo(this: JavaClass_FieldRefCpInfo): JavaClass_ClassCpInfo = 
-  if this.classAsInfoInst != nil:
+  if this.classAsInfoInstFlag:
     return this.classAsInfoInst
   let classAsInfoInstExpr = JavaClass_ClassCpInfo((JavaClass_ClassCpInfo(JavaClass(this.root).constantPool[(this.classIndex - 1)].cpInfo)))
   this.classAsInfoInst = classAsInfoInstExpr
-  if this.classAsInfoInst != nil:
-    return this.classAsInfoInst
+  this.classAsInfoInstFlag = true
+  return this.classAsInfoInst
 
 proc nameAndTypeAsInfo(this: JavaClass_FieldRefCpInfo): JavaClass_NameAndTypeCpInfo = 
-  if this.nameAndTypeAsInfoInst != nil:
+  if this.nameAndTypeAsInfoInstFlag:
     return this.nameAndTypeAsInfoInst
   let nameAndTypeAsInfoInstExpr = JavaClass_NameAndTypeCpInfo((JavaClass_NameAndTypeCpInfo(JavaClass(this.root).constantPool[(this.nameAndTypeIndex - 1)].cpInfo)))
   this.nameAndTypeAsInfoInst = nameAndTypeAsInfoInstExpr
-  if this.nameAndTypeAsInfoInst != nil:
-    return this.nameAndTypeAsInfoInst
+  this.nameAndTypeAsInfoInstFlag = true
+  return this.nameAndTypeAsInfoInst
 
 proc fromFile*(_: typedesc[JavaClass_FieldRefCpInfo], filename: string): JavaClass_FieldRefCpInfo =
   JavaClass_FieldRefCpInfo.read(newKaitaiFileStream(filename), nil, nil)

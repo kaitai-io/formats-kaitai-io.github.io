@@ -308,7 +308,7 @@ public class Dex extends KaitaiStruct {
         }
         private void _read() {
             this.size = this._io.readU4le();
-            list = new ArrayList<MapItem>(((Number) (size())).intValue());
+            this.list = new ArrayList<MapItem>();
             for (int i = 0; i < size(); i++) {
                 this.list.add(new MapItem(this._io, this, _root));
             }
@@ -527,7 +527,7 @@ public class Dex extends KaitaiStruct {
         public String className() {
             if (this.className != null)
                 return this.className;
-            this.className = _root.typeIds().get((int) classIdx()).typeName();
+            this.className = _root().typeIds().get((int) classIdx()).typeName();
             return this.className;
         }
         private String protoDesc;
@@ -538,7 +538,7 @@ public class Dex extends KaitaiStruct {
         public String protoDesc() {
             if (this.protoDesc != null)
                 return this.protoDesc;
-            this.protoDesc = _root.protoIds().get((int) protoIdx()).shortyDesc();
+            this.protoDesc = _root().protoIds().get((int) protoIdx()).shortyDesc();
             return this.protoDesc;
         }
         private String methodName;
@@ -549,7 +549,7 @@ public class Dex extends KaitaiStruct {
         public String methodName() {
             if (this.methodName != null)
                 return this.methodName;
-            this.methodName = _root.stringIds().get((int) nameIdx()).value().data();
+            this.methodName = _root().stringIds().get((int) nameIdx()).value().data();
             return this.methodName;
         }
         private int classIdx;
@@ -603,7 +603,7 @@ public class Dex extends KaitaiStruct {
         public String value() {
             if (this.value != null)
                 return this.value;
-            this.value = _root.typeIds().get((int) typeIdx()).typeName();
+            this.value = _root().typeIds().get((int) typeIdx()).typeName();
             return this.value;
         }
         private int typeIdx;
@@ -639,7 +639,7 @@ public class Dex extends KaitaiStruct {
         public String typeName() {
             if (this.typeName != null)
                 return this.typeName;
-            this.typeName = _root.stringIds().get((int) descriptorIdx()).value().data();
+            this.typeName = _root().stringIds().get((int) descriptorIdx()).value().data();
             return this.typeName;
         }
         private long descriptorIdx;
@@ -795,19 +795,19 @@ public class Dex extends KaitaiStruct {
             this.instanceFieldsSize = new VlqBase128Le(this._io);
             this.directMethodsSize = new VlqBase128Le(this._io);
             this.virtualMethodsSize = new VlqBase128Le(this._io);
-            staticFields = new ArrayList<EncodedField>(((Number) (staticFieldsSize().value())).intValue());
+            this.staticFields = new ArrayList<EncodedField>();
             for (int i = 0; i < staticFieldsSize().value(); i++) {
                 this.staticFields.add(new EncodedField(this._io, this, _root));
             }
-            instanceFields = new ArrayList<EncodedField>(((Number) (instanceFieldsSize().value())).intValue());
+            this.instanceFields = new ArrayList<EncodedField>();
             for (int i = 0; i < instanceFieldsSize().value(); i++) {
                 this.instanceFields.add(new EncodedField(this._io, this, _root));
             }
-            directMethods = new ArrayList<EncodedMethod>(((Number) (directMethodsSize().value())).intValue());
+            this.directMethods = new ArrayList<EncodedMethod>();
             for (int i = 0; i < directMethodsSize().value(); i++) {
                 this.directMethods.add(new EncodedMethod(this._io, this, _root));
             }
-            virtualMethods = new ArrayList<EncodedMethod>(((Number) (virtualMethodsSize().value())).intValue());
+            this.virtualMethods = new ArrayList<EncodedMethod>();
             for (int i = 0; i < virtualMethodsSize().value(); i++) {
                 this.virtualMethods.add(new EncodedMethod(this._io, this, _root));
             }
@@ -912,7 +912,7 @@ public class Dex extends KaitaiStruct {
         public String className() {
             if (this.className != null)
                 return this.className;
-            this.className = _root.typeIds().get((int) classIdx()).typeName();
+            this.className = _root().typeIds().get((int) classIdx()).typeName();
             return this.className;
         }
         private String typeName;
@@ -923,7 +923,7 @@ public class Dex extends KaitaiStruct {
         public String typeName() {
             if (this.typeName != null)
                 return this.typeName;
-            this.typeName = _root.typeIds().get((int) typeIdx()).typeName();
+            this.typeName = _root().typeIds().get((int) typeIdx()).typeName();
             return this.typeName;
         }
         private String fieldName;
@@ -934,7 +934,7 @@ public class Dex extends KaitaiStruct {
         public String fieldName() {
             if (this.fieldName != null)
                 return this.fieldName;
-            this.fieldName = _root.stringIds().get((int) nameIdx()).value().data();
+            this.fieldName = _root().stringIds().get((int) nameIdx()).value().data();
             return this.fieldName;
         }
         private int classIdx;
@@ -984,7 +984,7 @@ public class Dex extends KaitaiStruct {
         private void _read() {
             this.typeIdx = new VlqBase128Le(this._io);
             this.size = new VlqBase128Le(this._io);
-            elements = new ArrayList<AnnotationElement>(((Number) (size().value())).intValue());
+            this.elements = new ArrayList<AnnotationElement>();
             for (int i = 0; i < size().value(); i++) {
                 this.elements.add(new AnnotationElement(this._io, this, _root));
             }
@@ -1049,7 +1049,7 @@ public class Dex extends KaitaiStruct {
         public String typeName() {
             if (this.typeName != null)
                 return this.typeName;
-            this.typeName = _root.typeIds().get((int) classIdx()).typeName();
+            this.typeName = _root().typeIds().get((int) classIdx()).typeName();
             return this.typeName;
         }
         private ClassDataItem classData;
@@ -1195,7 +1195,7 @@ public class Dex extends KaitaiStruct {
         }
         private void _read() {
             this.size = this._io.readU4le();
-            list = new ArrayList<TypeItem>(((Number) (size())).intValue());
+            this.list = new ArrayList<TypeItem>();
             for (int i = 0; i < size(); i++) {
                 this.list.add(new TypeItem(this._io, this, _root));
             }
@@ -1319,7 +1319,7 @@ public class Dex extends KaitaiStruct {
         public String shortyDesc() {
             if (this.shortyDesc != null)
                 return this.shortyDesc;
-            this.shortyDesc = _root.stringIds().get((int) shortyIdx()).value().data();
+            this.shortyDesc = _root().stringIds().get((int) shortyIdx()).value().data();
             return this.shortyDesc;
         }
         private TypeList paramsTypes;
@@ -1331,7 +1331,7 @@ public class Dex extends KaitaiStruct {
             if (this.paramsTypes != null)
                 return this.paramsTypes;
             if (parametersOff() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(parametersOff());
                 this.paramsTypes = new TypeList(io, this, _root);
@@ -1347,7 +1347,7 @@ public class Dex extends KaitaiStruct {
         public String returnType() {
             if (this.returnType != null)
                 return this.returnType;
-            this.returnType = _root.typeIds().get((int) returnTypeIdx()).typeName();
+            this.returnType = _root().typeIds().get((int) returnTypeIdx()).typeName();
             return this.returnType;
         }
         private long shortyIdx;
@@ -1545,7 +1545,7 @@ public class Dex extends KaitaiStruct {
         }
         private void _read() {
             this.size = new VlqBase128Le(this._io);
-            values = new ArrayList<EncodedValue>(((Number) (size().value())).intValue());
+            this.values = new ArrayList<EncodedValue>();
             for (int i = 0; i < size().value(); i++) {
                 this.values.add(new EncodedValue(this._io, this, _root));
             }
@@ -1575,7 +1575,7 @@ public class Dex extends KaitaiStruct {
             return this.stringIds;
         long _pos = this._io.pos();
         this._io.seek(header().stringIdsOff());
-        stringIds = new ArrayList<StringIdItem>(((Number) (header().stringIdsSize())).intValue());
+        this.stringIds = new ArrayList<StringIdItem>();
         for (int i = 0; i < header().stringIdsSize(); i++) {
             this.stringIds.add(new StringIdItem(this._io, this, _root));
         }
@@ -1601,7 +1601,7 @@ public class Dex extends KaitaiStruct {
             return this.methodIds;
         long _pos = this._io.pos();
         this._io.seek(header().methodIdsOff());
-        methodIds = new ArrayList<MethodIdItem>(((Number) (header().methodIdsSize())).intValue());
+        this.methodIds = new ArrayList<MethodIdItem>();
         for (int i = 0; i < header().methodIdsSize(); i++) {
             this.methodIds.add(new MethodIdItem(this._io, this, _root));
         }
@@ -1653,7 +1653,7 @@ public class Dex extends KaitaiStruct {
             return this.classDefs;
         long _pos = this._io.pos();
         this._io.seek(header().classDefsOff());
-        classDefs = new ArrayList<ClassDefItem>(((Number) (header().classDefsSize())).intValue());
+        this.classDefs = new ArrayList<ClassDefItem>();
         for (int i = 0; i < header().classDefsSize(); i++) {
             this.classDefs.add(new ClassDefItem(this._io, this, _root));
         }
@@ -1692,7 +1692,7 @@ public class Dex extends KaitaiStruct {
             return this.typeIds;
         long _pos = this._io.pos();
         this._io.seek(header().typeIdsOff());
-        typeIds = new ArrayList<TypeIdItem>(((Number) (header().typeIdsSize())).intValue());
+        this.typeIds = new ArrayList<TypeIdItem>();
         for (int i = 0; i < header().typeIdsSize(); i++) {
             this.typeIds.add(new TypeIdItem(this._io, this, _root));
         }
@@ -1715,7 +1715,7 @@ public class Dex extends KaitaiStruct {
             return this.protoIds;
         long _pos = this._io.pos();
         this._io.seek(header().protoIdsOff());
-        protoIds = new ArrayList<ProtoIdItem>(((Number) (header().protoIdsSize())).intValue());
+        this.protoIds = new ArrayList<ProtoIdItem>();
         for (int i = 0; i < header().protoIdsSize(); i++) {
             this.protoIds.add(new ProtoIdItem(this._io, this, _root));
         }
@@ -1740,7 +1740,7 @@ public class Dex extends KaitaiStruct {
             return this.fieldIds;
         long _pos = this._io.pos();
         this._io.seek(header().fieldIdsOff());
-        fieldIds = new ArrayList<FieldIdItem>(((Number) (header().fieldIdsSize())).intValue());
+        this.fieldIds = new ArrayList<FieldIdItem>();
         for (int i = 0; i < header().fieldIdsSize(); i++) {
             this.fieldIds.add(new FieldIdItem(this._io, this, _root));
         }

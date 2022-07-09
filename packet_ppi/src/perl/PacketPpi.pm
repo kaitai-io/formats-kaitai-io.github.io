@@ -630,24 +630,24 @@ sub _read {
     $self->{rssi_ant_ctl} = ();
     my $n_rssi_ant_ctl = 4;
     for (my $i = 0; $i < $n_rssi_ant_ctl; $i++) {
-        $self->{rssi_ant_ctl}[$i] = $self->{_io}->read_u1();
+        push @{$self->{rssi_ant_ctl}}, $self->{_io}->read_u1();
     }
     $self->{rssi_ant_ext} = ();
     my $n_rssi_ant_ext = 4;
     for (my $i = 0; $i < $n_rssi_ant_ext; $i++) {
-        $self->{rssi_ant_ext}[$i] = $self->{_io}->read_u1();
+        push @{$self->{rssi_ant_ext}}, $self->{_io}->read_u1();
     }
     $self->{ext_channel_freq} = $self->{_io}->read_u2le();
     $self->{ext_channel_flags} = PacketPpi::Radio80211nMacPhyExtBody::ChannelFlags->new($self->{_io}, $self, $self->{_root});
     $self->{rf_signal_noise} = ();
     my $n_rf_signal_noise = 4;
     for (my $i = 0; $i < $n_rf_signal_noise; $i++) {
-        $self->{rf_signal_noise}[$i] = PacketPpi::Radio80211nMacPhyExtBody::SignalNoise->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{rf_signal_noise}}, PacketPpi::Radio80211nMacPhyExtBody::SignalNoise->new($self->{_io}, $self, $self->{_root});
     }
     $self->{evm} = ();
     my $n_evm = 4;
     for (my $i = 0; $i < $n_evm; $i++) {
-        $self->{evm}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{evm}}, $self->{_io}->read_u4le();
     }
 }
 

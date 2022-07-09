@@ -332,7 +332,7 @@ encoding parameters, and gets result using either <code>as_int</code> or
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">root</span><span class="p">.</span><span class="nx">Bcd</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="ow">typeof</span> <span class="nx">self</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">self</span> <span class="o">:</span> <span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * BCD (Binary Coded Decimals) is a common way to encode integer</span>
 <span class="cm"> * numbers in a way that makes human-readable output somewhat</span>
@@ -375,14 +375,14 @@ encoding parameters, and gets result using either <code>as_int</code> or
     <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
   <span class="p">}</span>
   <span class="nx">Bcd</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">digits</span> <span class="o">=</span> <span class="ow">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numDigits</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">digits</span> <span class="o">=</span> <span class="p">[];</span>
     <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numDigits</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bitsPerDigit</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">case</span> <span class="mf">4</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">digits</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">digits</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">));</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="mf">8</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">digits</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">digits</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">());</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>

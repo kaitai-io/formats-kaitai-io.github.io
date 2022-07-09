@@ -85,7 +85,7 @@ end
 
 function HeapsPak.Header.Entry.Flags:_read()
   self.unused = self._io:read_bits_int_be(7)
-  self.is_dir = self._io:read_bits_int_be(1)
+  self.is_dir = self._io:read_bits_int_be(1) ~= 0
 end
 
 

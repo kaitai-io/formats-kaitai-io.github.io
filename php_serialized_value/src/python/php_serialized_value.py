@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class PhpSerializedValue(KaitaiStruct):
@@ -110,9 +109,9 @@ class PhpSerializedValue(KaitaiStruct):
             self.opening_brace = self._io.read_bytes(1)
             if not self.opening_brace == b"\x7B":
                 raise kaitaistruct.ValidationNotEqualError(b"\x7B", self.opening_brace, self._io, u"/types/count_prefixed_mapping/seq/1")
-            self.entries = [None] * (self.num_entries)
+            self.entries = []
             for i in range(self.num_entries):
-                self.entries[i] = PhpSerializedValue.MappingEntry(self._io, self, self._root)
+                self.entries.append(PhpSerializedValue.MappingEntry(self._io, self, self._root))
 
             self.closing_brace = self._io.read_bytes(1)
             if not self.closing_brace == b"\x7D":
@@ -123,10 +122,10 @@ class PhpSerializedValue(KaitaiStruct):
             """The number of key-value pairs in the mapping, parsed as an integer.
             """
             if hasattr(self, '_m_num_entries'):
-                return self._m_num_entries if hasattr(self, '_m_num_entries') else None
+                return self._m_num_entries
 
             self._m_num_entries = int(self.num_entries_dec)
-            return self._m_num_entries if hasattr(self, '_m_num_entries') else None
+            return getattr(self, '_m_num_entries', None)
 
 
     class FloatContents(KaitaiStruct):
@@ -174,10 +173,10 @@ class PhpSerializedValue(KaitaiStruct):
             The quotes are not counted in this size number.
             """
             if hasattr(self, '_m_len_data'):
-                return self._m_len_data if hasattr(self, '_m_len_data') else None
+                return self._m_len_data
 
             self._m_len_data = int(self.len_data_dec)
-            return self._m_len_data if hasattr(self, '_m_len_data') else None
+            return getattr(self, '_m_len_data', None)
 
 
     class ObjectContents(KaitaiStruct):
@@ -249,10 +248,10 @@ class PhpSerializedValue(KaitaiStruct):
             The braces are not counted in this length number.
             """
             if hasattr(self, '_m_len_data'):
-                return self._m_len_data if hasattr(self, '_m_len_data') else None
+                return self._m_len_data
 
             self._m_len_data = int(self.len_data_dec)
-            return self._m_len_data if hasattr(self, '_m_len_data') else None
+            return getattr(self, '_m_len_data', None)
 
 
     class NullContents(KaitaiStruct):
@@ -309,10 +308,10 @@ class PhpSerializedValue(KaitaiStruct):
         def value(self):
             """The value of the `bool`, parsed as a boolean."""
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = self.value_dec == PhpSerializedValue.BoolValue.true
-            return self._m_value if hasattr(self, '_m_value') else None
+            return getattr(self, '_m_value', None)
 
 
     class StringContents(KaitaiStruct):
@@ -340,10 +339,10 @@ class PhpSerializedValue(KaitaiStruct):
         def value(self):
             """The value of the string, as a byte array."""
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = self.string.data
-            return self._m_value if hasattr(self, '_m_value') else None
+            return getattr(self, '_m_value', None)
 
 
     class IntContents(KaitaiStruct):
@@ -367,10 +366,10 @@ class PhpSerializedValue(KaitaiStruct):
         def value(self):
             """The value of the `int`, parsed as an integer."""
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = int(self.value_dec)
-            return self._m_value if hasattr(self, '_m_value') else None
+            return getattr(self, '_m_value', None)
 
 
     class MappingEntry(KaitaiStruct):

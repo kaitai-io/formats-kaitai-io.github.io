@@ -54,7 +54,7 @@ namespace Kaitai
             _version = m_io.ReadU4be();
             _reserved = m_io.ReadBytes(16);
             _numEntries = m_io.ReadU2be();
-            _entries = new List<Entry>((int) (NumEntries));
+            _entries = new List<Entry>();
             for (var i = 0; i < NumEntries; i++)
             {
                 _entries.Add(new Entry(m_io, this, m_root));

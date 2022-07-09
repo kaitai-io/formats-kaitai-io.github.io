@@ -263,7 +263,8 @@ empty (contain no file data) they can be omitted.</p>
   <span class="n">TrDosImage</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">files</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">TrDosImage_File</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">volumeInfoInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">TrDosImage_VolumeInfo</span>
+    <span class="p">`</span><span class="n">volumeInfoInst</span><span class="p">`:</span> <span class="n">TrDosImage_VolumeInfo</span>
+    <span class="p">`</span><span class="n">volumeInfoInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">TrDosImage_DiskType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">type_80_tracks_double_side</span> <span class="o">=</span> <span class="mi">22</span>
     <span class="n">type_40_tracks_double_side</span> <span class="o">=</span> <span class="mi">23</span>
@@ -285,8 +286,10 @@ empty (contain no file data) they can be omitted.</p>
     <span class="p">`</span><span class="n">label</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">unused4</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">TrDosImage</span>
-    <span class="p">`</span><span class="n">numTracksInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">numSidesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">numTracksInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">numTracksInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">numSidesInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">numSidesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">TrDosImage_PositionAndLengthCode</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">startAddress</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">length</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -294,7 +297,8 @@ empty (contain no file data) they can be omitted.</p>
   <span class="n">TrDosImage_Filename</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">TrDosImage_File</span>
-    <span class="p">`</span><span class="n">firstByteInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">firstByteInst</span><span class="p">`:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">firstByteInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">TrDosImage_PositionAndLengthPrint</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">extentNo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -317,9 +321,12 @@ empty (contain no file data) they can be omitted.</p>
     <span class="p">`</span><span class="n">startingTrack</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">TrDosImage</span>
     <span class="p">`</span><span class="n">rawName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">isDeletedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isTerminatorInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">contentsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">isDeletedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isDeletedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isTerminatorInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isTerminatorInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">contentsInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">contentsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[TrDosImage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): TrDosImage</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[TrDosImage_VolumeInfo], io: KaitaiStream, root: KaitaiStruct, parent: TrDosImage): TrDosImage_VolumeInfo</span>
@@ -378,15 +385,15 @@ empty (contain no file data) they can be omitted.</p>
       <span class="n">inc</span> <span class="n">i</span>
 
 <span class="k">proc </span><span class="nf">volumeInfo</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">TrDosImage</span><span class="p">):</span> <span class="n">TrDosImage_VolumeInfo</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">2048</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">volumeInfoInstExpr</span> <span class="o">=</span> <span class="n">TrDosImage_VolumeInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInst</span> <span class="o">=</span> <span class="n">volumeInfoInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeInfoInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[TrDosImage], filename: string): TrDosImage =</span>
   <span class="n">TrDosImage</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -442,20 +449,20 @@ empty (contain no file data) they can be omitted.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">unused4</span> <span class="o">=</span> <span class="n">unused4Expr</span>
 
 <span class="k">proc </span><span class="nf">numTracks</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">TrDosImage_VolumeInfo</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numTracksInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numTracksInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numTracksInst</span>
   <span class="k">let</span> <span class="n">numTracksInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">((</span><span class="k">if</span> <span class="p">(</span><span class="n">ord</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">diskType</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">40</span> <span class="k">else</span><span class="p">:</span> <span class="mi">80</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numTracksInst</span> <span class="o">=</span> <span class="n">numTracksInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numTracksInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numTracksInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numTracksInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numTracksInst</span>
 
 <span class="k">proc </span><span class="nf">numSides</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">TrDosImage_VolumeInfo</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numSidesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numSidesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numSidesInst</span>
   <span class="k">let</span> <span class="n">numSidesInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">((</span><span class="k">if</span> <span class="p">(</span><span class="n">ord</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">diskType</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">1</span> <span class="k">else</span><span class="p">:</span> <span class="mi">2</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numSidesInst</span> <span class="o">=</span> <span class="n">numSidesInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numSidesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numSidesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numSidesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numSidesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[TrDosImage_VolumeInfo], filename: string): TrDosImage_VolumeInfo =</span>
   <span class="n">TrDosImage_VolumeInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -492,15 +499,15 @@ empty (contain no file data) they can be omitted.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
 
 <span class="k">proc </span><span class="nf">firstByte</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">TrDosImage_Filename</span><span class="p">):</span> <span class="n">uint8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstByteInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstByteInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstByteInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">firstByteInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">firstByteInst</span> <span class="o">=</span> <span class="n">firstByteInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">firstByteInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstByteInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">firstByteInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">firstByteInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[TrDosImage_Filename], filename: string): TrDosImage_Filename =</span>
   <span class="n">TrDosImage_Filename</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -592,31 +599,31 @@ empty (contain no file data) they can be omitted.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">startingTrack</span> <span class="o">=</span> <span class="n">startingTrackExpr</span>
 
 <span class="k">proc </span><span class="nf">isDeleted</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">TrDosImage_File</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInst</span>
   <span class="k">let</span> <span class="n">isDeletedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">firstByte</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInst</span> <span class="o">=</span> <span class="n">isDeletedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isDeletedInst</span>
 
 <span class="k">proc </span><span class="nf">isTerminator</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">TrDosImage_File</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInst</span>
   <span class="k">let</span> <span class="n">isTerminatorInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">firstByte</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInst</span> <span class="o">=</span> <span class="n">isTerminatorInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isTerminatorInst</span>
 
 <span class="k">proc </span><span class="nf">contents</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">TrDosImage_File</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((((</span><span class="n">this</span><span class="p">.</span><span class="n">startingTrack</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">startingSector</span> <span class="o">*</span> <span class="mi">256</span><span class="p">))))</span>
   <span class="k">let</span> <span class="n">contentsInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lengthSectors</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span> <span class="o">=</span> <span class="n">contentsInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">contentsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">contentsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[TrDosImage_File], filename: string): TrDosImage_File =</span>
   <span class="n">TrDosImage_File</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

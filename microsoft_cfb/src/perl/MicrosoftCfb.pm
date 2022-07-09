@@ -127,7 +127,7 @@ sub _read {
     $self->{difat} = ();
     my $n_difat = 109;
     for (my $i = 0; $i < $n_difat; $i++) {
-        $self->{difat}[$i] = $self->{_io}->read_s4le();
+        push @{$self->{difat}}, $self->{_io}->read_s4le();
     }
 }
 

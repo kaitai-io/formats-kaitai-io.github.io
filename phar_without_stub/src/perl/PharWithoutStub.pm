@@ -45,7 +45,7 @@ sub _read {
     $self->{files} = ();
     my $n_files = $self->manifest()->num_files();
     for (my $i = 0; $i < $n_files; $i++) {
-        $self->{files}[$i] = $self->{_io}->read_bytes(@{$self->manifest()->file_entries()}[$i]->len_data_compressed());
+        push @{$self->{files}}, $self->{_io}->read_bytes(@{$self->manifest()->file_entries()}[$i]->len_data_compressed());
     }
     if ($self->manifest()->flags()->has_signature()) {
         $self->{_raw_signature} = $self->{_io}->read_bytes_full();
@@ -391,7 +391,7 @@ sub _read {
     $self->{file_entries} = ();
     my $n_file_entries = $self->num_files();
     for (my $i = 0; $i < $n_file_entries; $i++) {
-        $self->{file_entries}[$i] = PharWithoutStub::FileEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{file_entries}}, PharWithoutStub::FileEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 

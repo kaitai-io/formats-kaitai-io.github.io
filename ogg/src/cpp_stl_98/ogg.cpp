@@ -73,15 +73,13 @@ void ogg_t::page_t::_read() {
     m_page_seq_num = m__io->read_u4le();
     m_crc32 = m__io->read_u4le();
     m_num_segments = m__io->read_u1();
-    int l_len_segments = num_segments();
     m_len_segments = new std::vector<uint8_t>();
-    m_len_segments->reserve(l_len_segments);
+    const int l_len_segments = num_segments();
     for (int i = 0; i < l_len_segments; i++) {
         m_len_segments->push_back(m__io->read_u1());
     }
-    int l_segments = num_segments();
     m_segments = new std::vector<std::string>();
-    m_segments->reserve(l_segments);
+    const int l_segments = num_segments();
     for (int i = 0; i < l_segments; i++) {
         m_segments->push_back(m__io->read_bytes(len_segments()->at(i)));
     }

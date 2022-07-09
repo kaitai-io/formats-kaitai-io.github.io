@@ -6,12 +6,18 @@ type
   Wav* = ref object of KaitaiStruct
     `chunk`*: Riff_Chunk
     `parent`*: KaitaiStruct
-    `subchunksInst`*: seq[Wav_ChunkType]
-    `parentChunkDataInst`*: Riff_ParentChunkData
-    `isFormTypeWaveInst`*: bool
-    `isRiffChunkInst`*: bool
-    `chunkIdInst`*: Wav_Fourcc
-    `formTypeInst`*: Wav_Fourcc
+    `subchunksInst`: seq[Wav_ChunkType]
+    `subchunksInstFlag`: bool
+    `parentChunkDataInst`: Riff_ParentChunkData
+    `parentChunkDataInstFlag`: bool
+    `isFormTypeWaveInst`: bool
+    `isFormTypeWaveInstFlag`: bool
+    `isRiffChunkInst`: bool
+    `isRiffChunkInstFlag`: bool
+    `chunkIdInst`: Wav_Fourcc
+    `chunkIdInstFlag`: bool
+    `formTypeInst`: Wav_Fourcc
+    `formTypeInstFlag`: bool
   Wav_WFormatTagType* = enum
     unknown = 0
     pcm = 1
@@ -312,10 +318,14 @@ type
     `wValidBitsPerSample`*: uint16
     `channelMaskAndSubformat`*: Wav_ChannelMaskAndSubformatType
     `parent`*: Wav_ChunkType
-    `isExtensibleInst`*: bool
-    `isBasicPcmInst`*: bool
-    `isBasicFloatInst`*: bool
-    `isCbSizeMeaningfulInst`*: bool
+    `isExtensibleInst`: bool
+    `isExtensibleInstFlag`: bool
+    `isBasicPcmInst`: bool
+    `isBasicPcmInstFlag`: bool
+    `isBasicFloatInst`: bool
+    `isBasicFloatInstFlag`: bool
+    `isCbSizeMeaningfulInst`: bool
+    `isCbSizeMeaningfulInstFlag`: bool
   Wav_PmxChunkType* = ref object of KaitaiStruct
     `data`*: string
     `parent`*: Wav_ChunkType
@@ -335,7 +345,8 @@ type
   Wav_InfoChunkType* = ref object of KaitaiStruct
     `chunk`*: Riff_Chunk
     `parent`*: Wav_ListChunkType
-    `chunkDataInst`*: string
+    `chunkDataInst`: string
+    `chunkDataInstFlag`: bool
   Wav_CuePointType* = ref object of KaitaiStruct
     `dwName`*: uint32
     `dwPosition`*: uint32
@@ -361,8 +372,10 @@ type
   Wav_ListChunkType* = ref object of KaitaiStruct
     `parentChunkData`*: Riff_ParentChunkData
     `parent`*: Wav_ChunkType
-    `formTypeInst`*: Wav_Fourcc
-    `subchunksInst`*: seq[Wav_InfoChunkType]
+    `formTypeInst`: Wav_Fourcc
+    `formTypeInstFlag`: bool
+    `subchunksInst`: seq[Wav_InfoChunkType]
+    `subchunksInstFlag`: bool
   Wav_ChannelMaskType* = ref object of KaitaiStruct
     `frontRightOfCenter`*: bool
     `frontLeftOfCenter`*: bool
@@ -395,8 +408,10 @@ type
   Wav_ChunkType* = ref object of KaitaiStruct
     `chunk`*: Riff_Chunk
     `parent`*: Wav
-    `chunkIdInst`*: Wav_Fourcc
-    `chunkDataInst`*: KaitaiStruct
+    `chunkIdInst`: Wav_Fourcc
+    `chunkIdInstFlag`: bool
+    `chunkDataInst`: KaitaiStruct
+    `chunkDataInstFlag`: bool
   Wav_BextChunkType* = ref object of KaitaiStruct
     `description`*: string
     `originator`*: string
@@ -483,7 +498,7 @@ proc read*(_: typedesc[Wav], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
   this.chunk = chunkExpr
 
 proc subchunks(this: Wav): seq[Wav_ChunkType] = 
-  if this.subchunksInst.len != 0:
+  if this.subchunksInstFlag:
     return this.subchunksInst
   if this.isFormTypeWave:
     let io = this.parentChunkData.subchunksSlot.io
@@ -496,11 +511,11 @@ proc subchunks(this: Wav): seq[Wav_ChunkType] =
         this.subchunksInst.add(it)
         inc i
     io.seek(pos)
-  if this.subchunksInst.len != 0:
-    return this.subchunksInst
+  this.subchunksInstFlag = true
+  return this.subchunksInst
 
 proc parentChunkData(this: Wav): Riff_ParentChunkData = 
-  if this.parentChunkDataInst != nil:
+  if this.parentChunkDataInstFlag:
     return this.parentChunkDataInst
   if this.isRiffChunk:
     let io = this.chunk.dataSlot.io
@@ -509,40 +524,40 @@ proc parentChunkData(this: Wav): Riff_ParentChunkData =
     let parentChunkDataInstExpr = Riff_ParentChunkData.read(io, this.root, this)
     this.parentChunkDataInst = parentChunkDataInstExpr
     io.seek(pos)
-  if this.parentChunkDataInst != nil:
-    return this.parentChunkDataInst
+  this.parentChunkDataInstFlag = true
+  return this.parentChunkDataInst
 
 proc isFormTypeWave(this: Wav): bool = 
-  if this.isFormTypeWaveInst != nil:
+  if this.isFormTypeWaveInstFlag:
     return this.isFormTypeWaveInst
   let isFormTypeWaveInstExpr = bool( ((this.isRiffChunk) and (this.formType == wav.wave)) )
   this.isFormTypeWaveInst = isFormTypeWaveInstExpr
-  if this.isFormTypeWaveInst != nil:
-    return this.isFormTypeWaveInst
+  this.isFormTypeWaveInstFlag = true
+  return this.isFormTypeWaveInst
 
 proc isRiffChunk(this: Wav): bool = 
-  if this.isRiffChunkInst != nil:
+  if this.isRiffChunkInstFlag:
     return this.isRiffChunkInst
   let isRiffChunkInstExpr = bool(this.chunkId == wav.riff)
   this.isRiffChunkInst = isRiffChunkInstExpr
-  if this.isRiffChunkInst != nil:
-    return this.isRiffChunkInst
+  this.isRiffChunkInstFlag = true
+  return this.isRiffChunkInst
 
 proc chunkId(this: Wav): Wav_Fourcc = 
-  if this.chunkIdInst != nil:
+  if this.chunkIdInstFlag:
     return this.chunkIdInst
   let chunkIdInstExpr = Wav_Fourcc(Wav_Fourcc(this.chunk.id))
   this.chunkIdInst = chunkIdInstExpr
-  if this.chunkIdInst != nil:
-    return this.chunkIdInst
+  this.chunkIdInstFlag = true
+  return this.chunkIdInst
 
 proc formType(this: Wav): Wav_Fourcc = 
-  if this.formTypeInst != nil:
+  if this.formTypeInstFlag:
     return this.formTypeInst
   let formTypeInstExpr = Wav_Fourcc(Wav_Fourcc(this.parentChunkData.formType))
   this.formTypeInst = formTypeInstExpr
-  if this.formTypeInst != nil:
-    return this.formTypeInst
+  this.formTypeInstFlag = true
+  return this.formTypeInst
 
 proc fromFile*(_: typedesc[Wav], filename: string): Wav =
   Wav.read(newKaitaiFileStream(filename), nil, nil)
@@ -592,36 +607,36 @@ proc read*(_: typedesc[Wav_FormatChunkType], io: KaitaiStream, root: KaitaiStruc
     this.channelMaskAndSubformat = channelMaskAndSubformatExpr
 
 proc isExtensible(this: Wav_FormatChunkType): bool = 
-  if this.isExtensibleInst != nil:
+  if this.isExtensibleInstFlag:
     return this.isExtensibleInst
   let isExtensibleInstExpr = bool(this.wFormatTag == wav.extensible)
   this.isExtensibleInst = isExtensibleInstExpr
-  if this.isExtensibleInst != nil:
-    return this.isExtensibleInst
+  this.isExtensibleInstFlag = true
+  return this.isExtensibleInst
 
 proc isBasicPcm(this: Wav_FormatChunkType): bool = 
-  if this.isBasicPcmInst != nil:
+  if this.isBasicPcmInstFlag:
     return this.isBasicPcmInst
   let isBasicPcmInstExpr = bool(this.wFormatTag == wav.pcm)
   this.isBasicPcmInst = isBasicPcmInstExpr
-  if this.isBasicPcmInst != nil:
-    return this.isBasicPcmInst
+  this.isBasicPcmInstFlag = true
+  return this.isBasicPcmInst
 
 proc isBasicFloat(this: Wav_FormatChunkType): bool = 
-  if this.isBasicFloatInst != nil:
+  if this.isBasicFloatInstFlag:
     return this.isBasicFloatInst
   let isBasicFloatInstExpr = bool(this.wFormatTag == wav.ieee_float)
   this.isBasicFloatInst = isBasicFloatInstExpr
-  if this.isBasicFloatInst != nil:
-    return this.isBasicFloatInst
+  this.isBasicFloatInstFlag = true
+  return this.isBasicFloatInst
 
 proc isCbSizeMeaningful(this: Wav_FormatChunkType): bool = 
-  if this.isCbSizeMeaningfulInst != nil:
+  if this.isCbSizeMeaningfulInstFlag:
     return this.isCbSizeMeaningfulInst
   let isCbSizeMeaningfulInstExpr = bool( ((not(this.isBasicPcm)) and (this.cbSize != 0)) )
   this.isCbSizeMeaningfulInst = isCbSizeMeaningfulInstExpr
-  if this.isCbSizeMeaningfulInst != nil:
-    return this.isCbSizeMeaningfulInst
+  this.isCbSizeMeaningfulInstFlag = true
+  return this.isCbSizeMeaningfulInst
 
 proc fromFile*(_: typedesc[Wav_FormatChunkType], filename: string): Wav_FormatChunkType =
   Wav_FormatChunkType.read(newKaitaiFileStream(filename), nil, nil)
@@ -718,7 +733,7 @@ proc read*(_: typedesc[Wav_InfoChunkType], io: KaitaiStream, root: KaitaiStruct,
   this.chunk = chunkExpr
 
 proc chunkData(this: Wav_InfoChunkType): string = 
-  if this.chunkDataInst.len != 0:
+  if this.chunkDataInstFlag:
     return this.chunkDataInst
   let io = this.chunk.dataSlot.io
   let pos = io.pos()
@@ -726,8 +741,8 @@ proc chunkData(this: Wav_InfoChunkType): string =
   let chunkDataInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
   this.chunkDataInst = chunkDataInstExpr
   io.seek(pos)
-  if this.chunkDataInst.len != 0:
-    return this.chunkDataInst
+  this.chunkDataInstFlag = true
+  return this.chunkDataInst
 
 proc fromFile*(_: typedesc[Wav_InfoChunkType], filename: string): Wav_InfoChunkType =
   Wav_InfoChunkType.read(newKaitaiFileStream(filename), nil, nil)
@@ -829,15 +844,15 @@ proc read*(_: typedesc[Wav_ListChunkType], io: KaitaiStream, root: KaitaiStruct,
   this.parentChunkData = parentChunkDataExpr
 
 proc formType(this: Wav_ListChunkType): Wav_Fourcc = 
-  if this.formTypeInst != nil:
+  if this.formTypeInstFlag:
     return this.formTypeInst
   let formTypeInstExpr = Wav_Fourcc(Wav_Fourcc(this.parentChunkData.formType))
   this.formTypeInst = formTypeInstExpr
-  if this.formTypeInst != nil:
-    return this.formTypeInst
+  this.formTypeInstFlag = true
+  return this.formTypeInst
 
 proc subchunks(this: Wav_ListChunkType): seq[Wav_InfoChunkType] = 
-  if this.subchunksInst.len != 0:
+  if this.subchunksInstFlag:
     return this.subchunksInst
   let io = this.parentChunkData.subchunksSlot.io
   let pos = io.pos()
@@ -852,8 +867,8 @@ proc subchunks(this: Wav_ListChunkType): seq[Wav_InfoChunkType] =
           this.subchunksInst.add(it)
       inc i
   io.seek(pos)
-  if this.subchunksInst.len != 0:
-    return this.subchunksInst
+  this.subchunksInstFlag = true
+  return this.subchunksInst
 
 proc fromFile*(_: typedesc[Wav_ListChunkType], filename: string): Wav_ListChunkType =
   Wav_ListChunkType.read(newKaitaiFileStream(filename), nil, nil)
@@ -973,15 +988,15 @@ proc read*(_: typedesc[Wav_ChunkType], io: KaitaiStream, root: KaitaiStruct, par
   this.chunk = chunkExpr
 
 proc chunkId(this: Wav_ChunkType): Wav_Fourcc = 
-  if this.chunkIdInst != nil:
+  if this.chunkIdInstFlag:
     return this.chunkIdInst
   let chunkIdInstExpr = Wav_Fourcc(Wav_Fourcc(this.chunk.id))
   this.chunkIdInst = chunkIdInstExpr
-  if this.chunkIdInst != nil:
-    return this.chunkIdInst
+  this.chunkIdInstFlag = true
+  return this.chunkIdInst
 
 proc chunkData(this: Wav_ChunkType): KaitaiStruct = 
-  if this.chunkDataInst != nil:
+  if this.chunkDataInstFlag:
     return this.chunkDataInst
   let io = this.chunk.dataSlot.io
   let pos = io.pos()
@@ -1019,8 +1034,8 @@ proc chunkData(this: Wav_ChunkType): KaitaiStruct =
       let chunkDataInstExpr = Wav_DataChunkType.read(io, this.root, this)
       this.chunkDataInst = chunkDataInstExpr
   io.seek(pos)
-  if this.chunkDataInst != nil:
-    return this.chunkDataInst
+  this.chunkDataInstFlag = true
+  return this.chunkDataInst
 
 proc fromFile*(_: typedesc[Wav_ChunkType], filename: string): Wav_ChunkType =
   Wav_ChunkType.read(newKaitaiFileStream(filename), nil, nil)

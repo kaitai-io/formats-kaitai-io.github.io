@@ -616,7 +616,7 @@ public class Dcmp0 extends KaitaiStruct {
                 private void _read() {
                     this.segmentNumberRaw = new DcmpVariableLengthInteger(this._io);
                     this.numAddressesRaw = new DcmpVariableLengthInteger(this._io);
-                    addressesRaw = new ArrayList<DcmpVariableLengthInteger>(((Number) (numAddresses())).intValue());
+                    this.addressesRaw = new ArrayList<DcmpVariableLengthInteger>();
                     for (int i = 0; i < numAddresses(); i++) {
                         this.addressesRaw.add(new DcmpVariableLengthInteger(this._io));
                     }
@@ -828,7 +828,7 @@ public class Dcmp0 extends KaitaiStruct {
                 private void _read() {
                     this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
                     this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
-                    deltas = new ArrayList<Byte>(((Number) (numDeltas())).intValue());
+                    this.deltas = new ArrayList<Byte>();
                     for (int i = 0; i < numDeltas(); i++) {
                         this.deltas.add(this._io.readS1());
                     }
@@ -921,7 +921,7 @@ public class Dcmp0 extends KaitaiStruct {
                 private void _read() {
                     this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
                     this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
-                    deltasRaw = new ArrayList<DcmpVariableLengthInteger>(((Number) (numDeltas())).intValue());
+                    this.deltasRaw = new ArrayList<DcmpVariableLengthInteger>();
                     for (int i = 0; i < numDeltas(); i++) {
                         this.deltasRaw.add(new DcmpVariableLengthInteger(this._io));
                     }

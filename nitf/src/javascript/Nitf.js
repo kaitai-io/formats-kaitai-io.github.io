@@ -8,7 +8,7 @@
   } else {
     root.Nitf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The NITF (National Image Transition Format) format is a file format developed by the U.S. Government for
  * storing imagery, e.g. from satellites.
@@ -33,25 +33,25 @@ var Nitf = (function() {
   }
   Nitf.prototype._read = function() {
     this.header = new Header(this._io, this, this._root);
-    this.imageSegments = new Array(Number.parseInt(this.header.numImageSegments, 10));
+    this.imageSegments = [];
     for (var i = 0; i < Number.parseInt(this.header.numImageSegments, 10); i++) {
-      this.imageSegments[i] = new ImageSegment(this._io, this, this._root, i);
+      this.imageSegments.push(new ImageSegment(this._io, this, this._root, i));
     }
-    this.graphicsSegments = new Array(Number.parseInt(this.header.numGraphicsSegments, 10));
+    this.graphicsSegments = [];
     for (var i = 0; i < Number.parseInt(this.header.numGraphicsSegments, 10); i++) {
-      this.graphicsSegments[i] = new GraphicsSegment(this._io, this, this._root, i);
+      this.graphicsSegments.push(new GraphicsSegment(this._io, this, this._root, i));
     }
-    this.textSegments = new Array(Number.parseInt(this.header.numTextFiles, 10));
+    this.textSegments = [];
     for (var i = 0; i < Number.parseInt(this.header.numTextFiles, 10); i++) {
-      this.textSegments[i] = new TextSegment(this._io, this, this._root, i);
+      this.textSegments.push(new TextSegment(this._io, this, this._root, i));
     }
-    this.dataExtensionSegments = new Array(Number.parseInt(this.header.numDataExtension, 10));
+    this.dataExtensionSegments = [];
     for (var i = 0; i < Number.parseInt(this.header.numDataExtension, 10); i++) {
-      this.dataExtensionSegments[i] = new DataExtensionSegment(this._io, this, this._root, i);
+      this.dataExtensionSegments.push(new DataExtensionSegment(this._io, this, this._root, i));
     }
-    this.reservedExtensionSegments = new Array(Number.parseInt(this.header.numReservedExtension, 10));
+    this.reservedExtensionSegments = [];
     for (var i = 0; i < Number.parseInt(this.header.numReservedExtension, 10); i++) {
-      this.reservedExtensionSegments[i] = new ReservedExtensionSegment(this._io, this, this._root, i);
+      this.reservedExtensionSegments.push(new ReservedExtensionSegment(this._io, this, this._root, i));
     }
   }
 
@@ -154,9 +154,9 @@ var Nitf = (function() {
       if (Number.parseInt(this.numLuts, 10) != 0) {
         this.numLutEntries = KaitaiStream.bytesToStr(this._io.readBytes(5), "UTF-8");
       }
-      this.luts = new Array(Number.parseInt(this.numLuts, 10));
+      this.luts = [];
       for (var i = 0; i < Number.parseInt(this.numLuts, 10); i++) {
-        this.luts[i] = this._io.readBytes(Number.parseInt(this.numLutEntries, 10));
+        this.luts.push(this._io.readBytes(Number.parseInt(this.numLutEntries, 10)));
       }
     }
 
@@ -341,15 +341,15 @@ var Nitf = (function() {
       this.tpxcdlnth = this._io.readU2be();
       this.tpxcd = this._io.readBytes(this.tpxcdSize);
       if (this.hasBmr) {
-        this.bmrbnd = new Array(this.bmrtmrCount);
+        this.bmrbnd = [];
         for (var i = 0; i < this.bmrtmrCount; i++) {
-          this.bmrbnd[i] = this._io.readU4be();
+          this.bmrbnd.push(this._io.readU4be());
         }
       }
       if (this.hasTmr) {
-        this.tmrbnd = new Array(this.bmrtmrCount);
+        this.tmrbnd = [];
         for (var i = 0; i < this.bmrtmrCount; i++) {
-          this.tmrbnd[i] = this._io.readU4be();
+          this.tmrbnd.push(this._io.readU4be());
         }
       }
     }
@@ -558,9 +558,9 @@ var Nitf = (function() {
       this.imageCoordinateRep = KaitaiStream.bytesToStr(this._io.readBytes(1), "UTF-8");
       this.imageGeoLoc = KaitaiStream.bytesToStr(this._io.readBytes(60), "UTF-8");
       this.numImgComments = KaitaiStream.bytesToStr(this._io.readBytes(1), "UTF-8");
-      this.imgComments = new Array(Number.parseInt(this.numImgComments, 10));
+      this.imgComments = [];
       for (var i = 0; i < Number.parseInt(this.numImgComments, 10); i++) {
-        this.imgComments[i] = new ImageComment(this._io, this, this._root);
+        this.imgComments.push(new ImageComment(this._io, this, this._root));
       }
       this.imgCompression = KaitaiStream.bytesToStr(this._io.readBytes(2), "UTF-8");
       this.compressionRateCode = KaitaiStream.bytesToStr(this._io.readBytes(4), "UTF-8");
@@ -568,9 +568,9 @@ var Nitf = (function() {
       if (Number.parseInt(this.numBands, 10) == 0) {
         this.numMultispectralBands = KaitaiStream.bytesToStr(this._io.readBytes(5), "UTF-8");
       }
-      this.bands = new Array((Number.parseInt(this.numBands, 10) != 0 ? Number.parseInt(this.numBands, 10) : Number.parseInt(this.numMultispectralBands, 10)));
+      this.bands = [];
       for (var i = 0; i < (Number.parseInt(this.numBands, 10) != 0 ? Number.parseInt(this.numBands, 10) : Number.parseInt(this.numMultispectralBands, 10)); i++) {
-        this.bands[i] = new BandInfo(this._io, this, this._root);
+        this.bands.push(new BandInfo(this._io, this, this._root));
       }
       this.imgSyncCode = KaitaiStream.bytesToStr(this._io.readBytes(1), "UTF-8");
       this.imgMode = KaitaiStream.bytesToStr(this._io.readBytes(1), "UTF-8");
@@ -588,9 +588,9 @@ var Nitf = (function() {
         this.userDefOverflow = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
       }
       if (Number.parseInt(this.userDefImgDataLen, 10) > 2) {
-        this.userDefImgData = new Array((Number.parseInt(this.userDefImgDataLen, 10) - 3));
+        this.userDefImgData = [];
         for (var i = 0; i < (Number.parseInt(this.userDefImgDataLen, 10) - 3); i++) {
-          this.userDefImgData[i] = this._io.readU1();
+          this.userDefImgData.push(this._io.readU1());
         }
       }
       this.imageExtendedSubHeader = new TreHeader(this._io, this, this._root);
@@ -746,30 +746,30 @@ var Nitf = (function() {
       this.fileLength = KaitaiStream.bytesToStr(this._io.readBytes(12), "UTF-8");
       this.fileHeaderLength = KaitaiStream.bytesToStr(this._io.readBytes(6), "UTF-8");
       this.numImageSegments = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
-      this.linfo = new Array(Number.parseInt(this.numImageSegments, 10));
+      this.linfo = [];
       for (var i = 0; i < Number.parseInt(this.numImageSegments, 10); i++) {
-        this.linfo[i] = new LengthImageInfo(this._io, this, this._root);
+        this.linfo.push(new LengthImageInfo(this._io, this, this._root));
       }
       this.numGraphicsSegments = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
-      this.lnnfo = new Array(Number.parseInt(this.numGraphicsSegments, 10));
+      this.lnnfo = [];
       for (var i = 0; i < Number.parseInt(this.numGraphicsSegments, 10); i++) {
-        this.lnnfo[i] = new LengthGraphicInfo(this._io, this, this._root);
+        this.lnnfo.push(new LengthGraphicInfo(this._io, this, this._root));
       }
       this.reservedNumx = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
       this.numTextFiles = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
-      this.ltnfo = new Array(Number.parseInt(this.numTextFiles, 10));
+      this.ltnfo = [];
       for (var i = 0; i < Number.parseInt(this.numTextFiles, 10); i++) {
-        this.ltnfo[i] = new LengthTextInfo(this._io, this, this._root);
+        this.ltnfo.push(new LengthTextInfo(this._io, this, this._root));
       }
       this.numDataExtension = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
-      this.ldnfo = new Array(Number.parseInt(this.numDataExtension, 10));
+      this.ldnfo = [];
       for (var i = 0; i < Number.parseInt(this.numDataExtension, 10); i++) {
-        this.ldnfo[i] = new LengthDataInfo(this._io, this, this._root);
+        this.ldnfo.push(new LengthDataInfo(this._io, this, this._root));
       }
       this.numReservedExtension = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
-      this.lrnfo = new Array(Number.parseInt(this.numReservedExtension, 10));
+      this.lrnfo = [];
       for (var i = 0; i < Number.parseInt(this.numReservedExtension, 10); i++) {
-        this.lrnfo[i] = new LengthReservedInfo(this._io, this, this._root);
+        this.lrnfo.push(new LengthReservedInfo(this._io, this, this._root));
       }
       this.userDefinedHeader = new TreHeader(this._io, this, this._root);
       this.extendedHeader = new TreHeader(this._io, this, this._root);
@@ -799,9 +799,9 @@ var Nitf = (function() {
       this.desDefinedSubheaderFieldsLen = KaitaiStream.bytesToStr(this._io.readBytes(4), "UTF-8");
       this.sfhL1 = KaitaiStream.bytesToStr(this._io.readBytes(7), "UTF-8");
       this.sfhDelim1 = this._io.readU4be();
-      this.sfhDr = new Array(Number.parseInt(this.sfhL1, 10));
+      this.sfhDr = [];
       for (var i = 0; i < Number.parseInt(this.sfhL1, 10); i++) {
-        this.sfhDr[i] = this._io.readU1();
+        this.sfhDr.push(this._io.readU1());
       }
       this.sfhDelim2 = this._io.readU4be();
       this.sfhL2 = KaitaiStream.bytesToStr(this._io.readBytes(7), "UTF-8");
@@ -840,9 +840,9 @@ var Nitf = (function() {
         this.headerOverflow = KaitaiStream.bytesToStr(this._io.readBytes(3), "UTF-8");
       }
       if (Number.parseInt(this.headerDataLength, 10) > 2) {
-        this.headerData = new Array((Number.parseInt(this.headerDataLength, 10) - 3));
+        this.headerData = [];
         for (var i = 0; i < (Number.parseInt(this.headerDataLength, 10) - 3); i++) {
-          this.headerData[i] = this._io.readU1();
+          this.headerData.push(this._io.readU1());
         }
       }
     }

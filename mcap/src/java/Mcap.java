@@ -522,7 +522,7 @@ public class Mcap extends KaitaiStruct {
         public Record attachment() {
             if (this.attachment != null)
                 return this.attachment;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsAttachment());
             this._raw_attachment = io.readBytes(lenAttachment());
@@ -693,7 +693,7 @@ public class Mcap extends KaitaiStruct {
         public Records group() {
             if (this.group != null)
                 return this.group;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsGroup());
             this._raw_group = io.readBytes(lenGroup());
@@ -955,7 +955,7 @@ public class Mcap extends KaitaiStruct {
         public Record metadata() {
             if (this.metadata != null)
                 return this.metadata;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsMetadata());
             this._raw_metadata = io.readBytes(lenMetadata());
@@ -1074,10 +1074,10 @@ public class Mcap extends KaitaiStruct {
             if (this.summarySection != null)
                 return this.summarySection;
             if (ofsSummarySection() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsSummarySection());
-                this._raw_summarySection = io.readBytes(((ofsSummaryOffsetSection() != 0 ? ofsSummaryOffsetSection() : _root.ofsFooter()) - ofsSummarySection()));
+                this._raw_summarySection = io.readBytes(((ofsSummaryOffsetSection() != 0 ? ofsSummaryOffsetSection() : _root().ofsFooter()) - ofsSummarySection()));
                 KaitaiStream _io__raw_summarySection = new ByteBufferKaitaiStream(_raw_summarySection);
                 this.summarySection = new Records(_io__raw_summarySection, this, _root);
                 io.seek(_pos);
@@ -1089,10 +1089,10 @@ public class Mcap extends KaitaiStruct {
             if (this.summaryOffsetSection != null)
                 return this.summaryOffsetSection;
             if (ofsSummaryOffsetSection() != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsSummaryOffsetSection());
-                this._raw_summaryOffsetSection = io.readBytes((_root.ofsFooter() - ofsSummaryOffsetSection()));
+                this._raw_summaryOffsetSection = io.readBytes((_root().ofsFooter() - ofsSummaryOffsetSection()));
                 KaitaiStream _io__raw_summaryOffsetSection = new ByteBufferKaitaiStream(_raw_summaryOffsetSection);
                 this.summaryOffsetSection = new Records(_io__raw_summaryOffsetSection, this, _root);
                 io.seek(_pos);
@@ -1103,7 +1103,7 @@ public class Mcap extends KaitaiStruct {
         public Integer ofsSummaryCrc32Input() {
             if (this.ofsSummaryCrc32Input != null)
                 return this.ofsSummaryCrc32Input;
-            int _tmp = (int) ((ofsSummarySection() != 0 ? ofsSummarySection() : _root.ofsFooter()));
+            int _tmp = (int) ((ofsSummarySection() != 0 ? ofsSummarySection() : _root().ofsFooter()));
             this.ofsSummaryCrc32Input = _tmp;
             return this.ofsSummaryCrc32Input;
         }
@@ -1111,10 +1111,10 @@ public class Mcap extends KaitaiStruct {
         public byte[] summaryCrc32Input() {
             if (this.summaryCrc32Input != null)
                 return this.summaryCrc32Input;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsSummaryCrc32Input());
-            this.summaryCrc32Input = io.readBytes((((_root._io().size() - ofsSummaryCrc32Input()) - 8) - 4));
+            this.summaryCrc32Input = io.readBytes((((_root()._io().size() - ofsSummaryCrc32Input()) - 8) - 4));
             io.seek(_pos);
             return this.summaryCrc32Input;
         }
@@ -1383,7 +1383,7 @@ public class Mcap extends KaitaiStruct {
         public Record chunk() {
             if (this.chunk != null)
                 return this.chunk;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsChunk());
             this._raw_chunk = io.readBytes(lenChunk());

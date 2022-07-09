@@ -8,7 +8,7 @@
   } else {
     root.ChromePak = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Format mostly used by Google Chrome and various Android apps to store
  * resources such as translated strings, help messages and images.
@@ -47,13 +47,13 @@ var ChromePak = (function() {
     if (this.version == 5) {
       this.v5Part = new HeaderV5Part(this._io, this, this._root);
     }
-    this.resources = new Array((this.numResources + 1));
+    this.resources = [];
     for (var i = 0; i < (this.numResources + 1); i++) {
-      this.resources[i] = new Resource(this._io, this, this._root, i, i < this.numResources);
+      this.resources.push(new Resource(this._io, this, this._root, i, i < this.numResources));
     }
-    this.aliases = new Array(this.numAliases);
+    this.aliases = [];
     for (var i = 0; i < this.numAliases; i++) {
-      this.aliases[i] = new Alias(this._io, this, this._root);
+      this.aliases.push(new Alias(this._io, this, this._root));
     }
   }
 

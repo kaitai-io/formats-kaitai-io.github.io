@@ -51,12 +51,12 @@ class Xwd < Kaitai::Struct::Struct
     @_raw_hdr = @_io.read_bytes((len_header - 4))
     _io__raw_hdr = Kaitai::Struct::Stream.new(@_raw_hdr)
     @hdr = Header.new(_io__raw_hdr, self, @_root)
-    @_raw_color_map = Array.new(hdr.color_map_entries)
-    @color_map = Array.new(hdr.color_map_entries)
+    @_raw_color_map = []
+    @color_map = []
     (hdr.color_map_entries).times { |i|
-      @_raw_color_map[i] = @_io.read_bytes(12)
+      @_raw_color_map << @_io.read_bytes(12)
       _io__raw_color_map = Kaitai::Struct::Stream.new(@_raw_color_map[i])
-      @color_map[i] = ColorMapEntry.new(_io__raw_color_map, self, @_root)
+      @color_map << ColorMapEntry.new(_io__raw_color_map, self, @_root)
     }
     self
   end

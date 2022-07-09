@@ -78,7 +78,8 @@ type
     `numLinenumbers`*: uint16
     `characteristics`*: uint32
     `parent`*: UefiTe
-    `bodyInst`*: seq[byte]
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[UefiTe], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): UefiTe
 proc read*(_: typedesc[UefiTe_TeHeader], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe): UefiTe_TeHeader
@@ -223,15 +224,15 @@ proc read*(_: typedesc[UefiTe_Section], io: KaitaiStream, root: KaitaiStruct, pa
   this.characteristics = characteristicsExpr
 
 proc body(this: UefiTe_Section): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(((this.pointerToRawData - UefiTe(this.root).teHdr.strippedSize) + UefiTe(this.root).teHdr.io.size)))
   let bodyInstExpr = this.io.readBytes(int(this.sizeOfRawData))
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[UefiTe_Section], filename: string): UefiTe_Section =
   UefiTe_Section.read(newKaitaiFileStream(filename), nil, nil)

@@ -314,7 +314,7 @@ public class NtMdt extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            data = new ArrayList<Integer>(((Number) (16)).intValue());
+            this.data = new ArrayList<Integer>();
             for (int i = 0; i < 16; i++) {
                 this.data.add(this._io.readU1());
             }
@@ -346,8 +346,8 @@ public class NtMdt extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            frames = new ArrayList<Frame>(((Number) ((_root.lastFrame() + 1))).intValue());
-            for (int i = 0; i < (_root.lastFrame() + 1); i++) {
+            this.frames = new ArrayList<Frame>();
+            for (int i = 0; i < (_root().lastFrame() + 1); i++) {
                 this.frames.add(new Frame(this._io, this, _root));
             }
         }
@@ -428,11 +428,11 @@ public class NtMdt extends KaitaiStruct {
                 if (fmNdots() > 0) {
                     this.coordHeader = new DotsHeader(this._io, this, _root);
                 }
-                coordinates = new ArrayList<DotsData>(((Number) (fmNdots())).intValue());
+                this.coordinates = new ArrayList<DotsData>();
                 for (int i = 0; i < fmNdots(); i++) {
                     this.coordinates.add(new DotsData(this._io, this, _root));
                 }
-                data = new ArrayList<DataLinez>(((Number) (fmNdots())).intValue());
+                this.data = new ArrayList<DataLinez>();
                 for (int i = 0; i < fmNdots(); i++) {
                     this.data.add(new DataLinez(this._io, this, _root, i));
                 }
@@ -564,11 +564,11 @@ public class NtMdt extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    forward = new ArrayList<Short>(((Number) (_parent().coordinates().get((int) index()).forwardSize())).intValue());
+                    this.forward = new ArrayList<Short>();
                     for (int i = 0; i < _parent().coordinates().get((int) index()).forwardSize(); i++) {
                         this.forward.add(this._io.readS2le());
                     }
-                    backward = new ArrayList<Short>(((Number) (_parent().coordinates().get((int) index()).backwardSize())).intValue());
+                    this.backward = new ArrayList<Short>();
                     for (int i = 0; i < _parent().coordinates().get((int) index()).backwardSize(); i++) {
                         this.backward.add(this._io.readS2le());
                     }
@@ -715,15 +715,15 @@ public class NtMdt extends KaitaiStruct {
             }
             private void _read() {
                 this.blockCount = this._io.readU4le();
-                blocksHeaders = new ArrayList<BlockDescr>(((Number) (blockCount())).intValue());
+                this.blocksHeaders = new ArrayList<BlockDescr>();
                 for (int i = 0; i < blockCount(); i++) {
                     this.blocksHeaders.add(new BlockDescr(this._io, this, _root));
                 }
-                blocksNames = new ArrayList<String>(((Number) (blockCount())).intValue());
+                this.blocksNames = new ArrayList<String>();
                 for (int i = 0; i < blockCount(); i++) {
                     this.blocksNames.add(new String(this._io.readBytes(blocksHeaders().get((int) i).nameLen()), Charset.forName("UTF-8")));
                 }
-                blocksData = new ArrayList<byte[]>(((Number) (blockCount())).intValue());
+                this.blocksData = new ArrayList<byte[]>();
                 for (int i = 0; i < blockCount(); i++) {
                     this.blocksData.add(this._io.readBytes(blocksHeaders().get((int) i).len()));
                 }
@@ -795,7 +795,7 @@ public class NtMdt extends KaitaiStruct {
             private void _read() {
                 this.headSize = this._io.readU4le();
                 this.totLen = this._io.readU4le();
-                guids = new ArrayList<Uuid>(((Number) (2)).intValue());
+                this.guids = new ArrayList<Uuid>();
                 for (int i = 0; i < 2; i++) {
                     this.guids.add(new Uuid(this._io, this, _root));
                 }
@@ -815,11 +815,11 @@ public class NtMdt extends KaitaiStruct {
                 this.cellSize = this._io.readU4le();
                 this.nDimensions = this._io.readU4le();
                 this.nMesurands = this._io.readU4le();
-                dimensions = new ArrayList<Calibration>(((Number) (nDimensions())).intValue());
+                this.dimensions = new ArrayList<Calibration>();
                 for (int i = 0; i < nDimensions(); i++) {
                     this.dimensions.add(new Calibration(this._io, this, _root));
                 }
-                mesurands = new ArrayList<Calibration>(((Number) (nMesurands())).intValue());
+                this.mesurands = new ArrayList<Calibration>();
                 for (int i = 0; i < nMesurands(); i++) {
                     this.mesurands.add(new Calibration(this._io, this, _root));
                 }
@@ -873,7 +873,7 @@ public class NtMdt extends KaitaiStruct {
                         _read();
                     }
                     private void _read() {
-                        items = new ArrayList<Double>(((Number) (_parent()._parent().nMesurands())).intValue());
+                        this.items = new ArrayList<Double>();
                         for (int i = 0; i < _parent()._parent().nMesurands(); i++) {
                             {
                                 DataType on = _parent()._parent().mesurands().get((int) i).dataType();
@@ -1114,7 +1114,7 @@ public class NtMdt extends KaitaiStruct {
                 this.fmXres = this._io.readU2le();
                 this.fmYres = this._io.readU2le();
                 this.dots = new Dots(this._io, this, _root);
-                data = new ArrayList<Short>(((Number) ((fmXres() * fmYres()))).intValue());
+                this.data = new ArrayList<Short>();
                 for (int i = 0; i < (fmXres() * fmYres()); i++) {
                     this.data.add(this._io.readS2le());
                 }
@@ -1498,7 +1498,7 @@ public class NtMdt extends KaitaiStruct {
                 this.fmXres = this._io.readU2le();
                 this.fmYres = this._io.readU2le();
                 this.dots = new Dots(this._io, this, _root);
-                image = new ArrayList<Short>(((Number) ((fmXres() * fmYres()))).intValue());
+                this.image = new ArrayList<Short>();
                 for (int i = 0; i < (fmXres() * fmYres()); i++) {
                     this.image.add(this._io.readS2le());
                 }

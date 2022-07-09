@@ -101,7 +101,7 @@ namespace Kaitai
                     _key = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(KeyLen));
                     _type = m_io.ReadU1();
                     _entryCount = m_io.ReadU2be();
-                    _indexEntries = new List<IndexEntry>((int) (EntryCount));
+                    _indexEntries = new List<IndexEntry>();
                     for (var i = 0; i < EntryCount; i++)
                     {
                         _indexEntries.Add(new IndexEntry(m_io, this, m_root));

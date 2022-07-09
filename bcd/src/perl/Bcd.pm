@@ -39,10 +39,10 @@ sub _read {
     for (my $i = 0; $i < $n_digits; $i++) {
         my $_on = $self->bits_per_digit();
         if ($_on == 4) {
-            $self->{digits}[$i] = $self->{_io}->read_bits_int_be(4);
+            push @{$self->{digits}}, $self->{_io}->read_bits_int_be(4);
         }
         elsif ($_on == 8) {
-            $self->{digits}[$i] = $self->{_io}->read_u1();
+            push @{$self->{digits}}, $self->{_io}->read_u1();
         }
     }
 }

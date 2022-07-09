@@ -103,7 +103,7 @@ public class QuakePak extends KaitaiStruct {
         public byte[] body() {
             if (this.body != null)
                 return this.body;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofs());
             this.body = io.readBytes(size());

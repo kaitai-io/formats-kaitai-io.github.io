@@ -8,7 +8,7 @@
   } else {
     root.PcxDcx = factory(root.KaitaiStream, root.Pcx);
   }
-}(this, function (KaitaiStream, Pcx) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Pcx) {
 /**
  * DCX is a simple extension of PCX image format allowing to bundle
  * many PCX images (typically, pages of a document) in one file. It saw
@@ -29,7 +29,7 @@ var PcxDcx = (function() {
     if (!((KaitaiStream.byteArrayCompare(this.magic, [177, 104, 222, 58]) == 0))) {
       throw new KaitaiStream.ValidationNotEqualError([177, 104, 222, 58], this.magic, this._io, "/seq/0");
     }
-    this.files = []
+    this.files = [];
     var i = 0;
     do {
       var _ = new PcxOffset(this._io, this, this._root);

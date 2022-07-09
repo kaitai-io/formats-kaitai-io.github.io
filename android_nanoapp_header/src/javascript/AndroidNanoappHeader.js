@@ -8,7 +8,7 @@
   } else {
     root.AndroidNanoappHeader = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://android.googlesource.com/platform/system/chre/+/a7ff61b9/build/build_template.mk#130|Source}
  */

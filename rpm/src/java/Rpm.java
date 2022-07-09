@@ -482,7 +482,7 @@ public class Rpm extends KaitaiStruct {
         if (ofsPayload() < 0) {
             this._unnamed5 = this._io.readBytes(0);
         }
-        signatureTagsSteps = new ArrayList<SignatureTagsStep>(((Number) (signature().headerRecord().numIndexRecords())).intValue());
+        this.signatureTagsSteps = new ArrayList<SignatureTagsStep>();
         for (int i = 0; i < signature().headerRecord().numIndexRecords(); i++) {
             this.signatureTagsSteps.add(new SignatureTagsStep(this._io, this, _root, i, (i < 1 ? -1 : signatureTagsSteps().get((int) (i - 1)).sizeTagIdx())));
         }
@@ -505,9 +505,9 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<String>(((Number) (numValues())).intValue());
+            this.values = new ArrayList<String>();
             for (int i = 0; i < numValues(); i++) {
-                this.values.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
+                this.values.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
             }
         }
         private ArrayList<String> values;
@@ -611,9 +611,9 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<String>(((Number) (1)).intValue());
+            this.values = new ArrayList<String>();
             for (int i = 0; i < 1; i++) {
-                this.values.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
+                this.values.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
             }
         }
         private ArrayList<String> values;
@@ -678,7 +678,7 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<Long>(((Number) (numValues())).intValue());
+            this.values = new ArrayList<Long>();
             for (int i = 0; i < numValues(); i++) {
                 this.values.add(this._io.readU4be());
             }
@@ -710,7 +710,7 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<Integer>(((Number) (numValues())).intValue());
+            this.values = new ArrayList<Integer>();
             for (int i = 0; i < numValues(); i++) {
                 this.values.add(this._io.readU2be());
             }
@@ -947,7 +947,7 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<Integer>(((Number) (numValues())).intValue());
+            this.values = new ArrayList<Integer>();
             for (int i = 0; i < numValues(); i++) {
                 this.values.add(this._io.readU1());
             }
@@ -979,7 +979,7 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<Long>(((Number) (numValues())).intValue());
+            this.values = new ArrayList<Long>();
             for (int i = 0; i < numValues(); i++) {
                 this.values.add(this._io.readU8be());
             }
@@ -1011,7 +1011,7 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            values = new ArrayList<byte[]>(((Number) (1)).intValue());
+            this.values = new ArrayList<byte[]>();
             for (int i = 0; i < 1; i++) {
                 this.values.add(this._io.readBytes(lenValue()));
             }
@@ -1102,7 +1102,7 @@ public class Rpm extends KaitaiStruct {
         }
         private void _read() {
             this.headerRecord = new HeaderRecord(this._io, this, _root);
-            indexRecords = new ArrayList<HeaderIndexRecord>(((Number) (headerRecord().numIndexRecords())).intValue());
+            this.indexRecords = new ArrayList<HeaderIndexRecord>();
             for (int i = 0; i < headerRecord().numIndexRecords(); i++) {
                 this.indexRecords.add(new HeaderIndexRecord(this._io, this, _root));
             }

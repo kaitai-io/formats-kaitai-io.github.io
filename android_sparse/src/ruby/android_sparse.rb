@@ -38,9 +38,9 @@ class AndroidSparse < Kaitai::Struct::Struct
     @_raw_header = @_io.read_bytes((header_prefix.len_header - 10))
     _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
     @header = FileHeader.new(_io__raw_header, self, @_root)
-    @chunks = Array.new(header.num_chunks)
+    @chunks = []
     (header.num_chunks).times { |i|
-      @chunks[i] = Chunk.new(@_io, self, @_root)
+      @chunks << Chunk.new(@_io, self, @_root)
     }
     self
   end

@@ -28,8 +28,10 @@ type
     `lastModTime`*: uint32
     `fileAttrs`*: uint16
     `parent`*: WindowsShellItems_ShellItemData
-    `isDirInst`*: bool
-    `isFileInst`*: bool
+    `isDirInst`: bool
+    `isDirInstFlag`: bool
+    `isFileInst`: bool
+    `isFileInstFlag`: bool
 
 proc read*(_: typedesc[WindowsShellItems], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsShellItems
 proc read*(_: typedesc[WindowsShellItems_ShellItemData], io: KaitaiStream, root: KaitaiStruct, parent: WindowsShellItems_ShellItem): WindowsShellItems_ShellItemData
@@ -192,20 +194,20 @@ proc read*(_: typedesc[WindowsShellItems_FileEntryBody], io: KaitaiStream, root:
   this.fileAttrs = fileAttrsExpr
 
 proc isDir(this: WindowsShellItems_FileEntryBody): bool = 
-  if this.isDirInst != nil:
+  if this.isDirInstFlag:
     return this.isDirInst
   let isDirInstExpr = bool((this.parent.code and 1) != 0)
   this.isDirInst = isDirInstExpr
-  if this.isDirInst != nil:
-    return this.isDirInst
+  this.isDirInstFlag = true
+  return this.isDirInst
 
 proc isFile(this: WindowsShellItems_FileEntryBody): bool = 
-  if this.isFileInst != nil:
+  if this.isFileInstFlag:
     return this.isFileInst
   let isFileInstExpr = bool((this.parent.code and 2) != 0)
   this.isFileInst = isFileInstExpr
-  if this.isFileInst != nil:
-    return this.isFileInst
+  this.isFileInstFlag = true
+  return this.isFileInst
 
 proc fromFile*(_: typedesc[WindowsShellItems_FileEntryBody], filename: string): WindowsShellItems_FileEntryBody =
   WindowsShellItems_FileEntryBody.read(newKaitaiFileStream(filename), nil, nil)

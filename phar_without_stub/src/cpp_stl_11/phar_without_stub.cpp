@@ -15,9 +15,8 @@ phar_without_stub_t::phar_without_stub_t(kaitai::kstream* p__io, kaitai::kstruct
 
 void phar_without_stub_t::_read() {
     m_manifest = std::unique_ptr<manifest_t>(new manifest_t(m__io, this, m__root));
-    int l_files = manifest()->num_files();
     m_files = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m_files->reserve(l_files);
+    const int l_files = manifest()->num_files();
     for (int i = 0; i < l_files; i++) {
         m_files->push_back(std::move(m__io->read_bytes(manifest()->file_entries()->at(i)->len_data_compressed())));
     }
@@ -227,9 +226,8 @@ void phar_without_stub_t::manifest_t::_read() {
         m__io__raw_metadata = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_metadata));
         m_metadata = std::unique_ptr<serialized_value_t>(new serialized_value_t(m__io__raw_metadata.get(), this, m__root));
     }
-    int l_file_entries = num_files();
     m_file_entries = std::unique_ptr<std::vector<std::unique_ptr<file_entry_t>>>(new std::vector<std::unique_ptr<file_entry_t>>());
-    m_file_entries->reserve(l_file_entries);
+    const int l_file_entries = num_files();
     for (int i = 0; i < l_file_entries; i++) {
         m_file_entries->push_back(std::move(std::unique_ptr<file_entry_t>(new file_entry_t(m__io, this, m__root))));
     }

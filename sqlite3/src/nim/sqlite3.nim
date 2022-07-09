@@ -30,7 +30,8 @@ type
     `sqliteVersionNumber`*: uint32
     `rootPage`*: Sqlite3_BtreePage
     `parent`*: KaitaiStruct
-    `lenPageInst`*: int
+    `lenPageInst`: int
+    `lenPageInstFlag`: bool
   Sqlite3_Versions* = enum
     legacy = 1
     wal = 2
@@ -41,9 +42,12 @@ type
   Sqlite3_Serial* = ref object of KaitaiStruct
     `code`*: VlqBase128Be
     `parent`*: KaitaiStruct
-    `isBlobInst`*: bool
-    `isStringInst`*: bool
-    `lenContentInst`*: int
+    `isBlobInst`: bool
+    `isBlobInstFlag`: bool
+    `isStringInst`: bool
+    `isStringInstFlag`: bool
+    `lenContentInst`: int
+    `lenContentInstFlag`: bool
   Sqlite3_BtreePage* = ref object of KaitaiStruct
     `pageType`*: uint8
     `firstFreeblock`*: uint16
@@ -90,11 +94,13 @@ type
     `asStr`*: string
     `ser`*: KaitaiStruct
     `parent`*: Sqlite3_CellPayload
-    `serialTypeInst`*: Sqlite3_Serial
+    `serialTypeInst`: Sqlite3_Serial
+    `serialTypeInstFlag`: bool
   Sqlite3_RefCell* = ref object of KaitaiStruct
     `ofsBody`*: uint16
     `parent`*: Sqlite3_BtreePage
-    `bodyInst`*: KaitaiStruct
+    `bodyInst`: KaitaiStruct
+    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[Sqlite3], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3
 proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3_Serial
@@ -254,12 +260,12 @@ of 65536.
   this.rootPage = rootPageExpr
 
 proc lenPage(this: Sqlite3): int = 
-  if this.lenPageInst != nil:
+  if this.lenPageInstFlag:
     return this.lenPageInst
   let lenPageInstExpr = int((if this.lenPageMod == 1: 65536 else: this.lenPageMod))
   this.lenPageInst = lenPageInstExpr
-  if this.lenPageInst != nil:
-    return this.lenPageInst
+  this.lenPageInstFlag = true
+  return this.lenPageInst
 
 proc fromFile*(_: typedesc[Sqlite3], filename: string): Sqlite3 =
   Sqlite3.read(newKaitaiFileStream(filename), nil, nil)
@@ -276,29 +282,29 @@ proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, pa
   this.code = codeExpr
 
 proc isBlob(this: Sqlite3_Serial): bool = 
-  if this.isBlobInst != nil:
+  if this.isBlobInstFlag:
     return this.isBlobInst
   let isBlobInstExpr = bool( ((this.code.value >= 12) and ((this.code.value %%% 2) == 0)) )
   this.isBlobInst = isBlobInstExpr
-  if this.isBlobInst != nil:
-    return this.isBlobInst
+  this.isBlobInstFlag = true
+  return this.isBlobInst
 
 proc isString(this: Sqlite3_Serial): bool = 
-  if this.isStringInst != nil:
+  if this.isStringInstFlag:
     return this.isStringInst
   let isStringInstExpr = bool( ((this.code.value >= 13) and ((this.code.value %%% 2) == 1)) )
   this.isStringInst = isStringInstExpr
-  if this.isStringInst != nil:
-    return this.isStringInst
+  this.isStringInstFlag = true
+  return this.isStringInst
 
 proc lenContent(this: Sqlite3_Serial): int = 
-  if this.lenContentInst != nil:
+  if this.lenContentInstFlag:
     return this.lenContentInst
   if this.code.value >= 12:
     let lenContentInstExpr = int(((this.code.value - 12) div 2))
     this.lenContentInst = lenContentInstExpr
-  if this.lenContentInst != nil:
-    return this.lenContentInst
+  this.lenContentInstFlag = true
+  return this.lenContentInst
 
 proc fromFile*(_: typedesc[Sqlite3_Serial], filename: string): Sqlite3_Serial =
   Sqlite3_Serial.read(newKaitaiFileStream(filename), nil, nil)
@@ -509,12 +515,12 @@ proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStr
   this.asStr = asStrExpr
 
 proc serialType(this: Sqlite3_ColumnContent): Sqlite3_Serial = 
-  if this.serialTypeInst != nil:
+  if this.serialTypeInstFlag:
     return this.serialTypeInst
   let serialTypeInstExpr = Sqlite3_Serial((Sqlite3_Serial(this.ser)))
   this.serialTypeInst = serialTypeInstExpr
-  if this.serialTypeInst != nil:
-    return this.serialTypeInst
+  this.serialTypeInstFlag = true
+  return this.serialTypeInst
 
 proc fromFile*(_: typedesc[Sqlite3_ColumnContent], filename: string): Sqlite3_ColumnContent =
   Sqlite3_ColumnContent.read(newKaitaiFileStream(filename), nil, nil)
@@ -531,7 +537,7 @@ proc read*(_: typedesc[Sqlite3_RefCell], io: KaitaiStream, root: KaitaiStruct, p
   this.ofsBody = ofsBodyExpr
 
 proc body(this: Sqlite3_RefCell): KaitaiStruct = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsBody))
@@ -550,8 +556,8 @@ proc body(this: Sqlite3_RefCell): KaitaiStruct =
       let bodyInstExpr = Sqlite3_CellIndexInterior.read(this.io, this.root, this)
       this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[Sqlite3_RefCell], filename: string): Sqlite3_RefCell =
   Sqlite3_RefCell.read(newKaitaiFileStream(filename), nil, nil)

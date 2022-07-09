@@ -58,18 +58,18 @@ class Specpr < Kaitai::Struct::Struct
       @itchan = @_io.read_s4be
       @irmas = @_io.read_s4be
       @revs = @_io.read_s4be
-      @iband = Array.new(2)
+      @iband = []
       (2).times { |i|
-        @iband[i] = @_io.read_s4be
+        @iband << @_io.read_s4be
       }
       @irwav = @_io.read_s4be
       @irespt = @_io.read_s4be
       @irecno = @_io.read_s4be
       @itpntr = @_io.read_s4be
       @ihist = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(60), 32)).force_encoding("ascii")
-      @mhist = Array.new(4)
+      @mhist = []
       (4).times { |i|
-        @mhist[i] = (@_io.read_bytes(74)).force_encoding("ascii")
+        @mhist << (@_io.read_bytes(74)).force_encoding("ascii")
       }
       @nruns = @_io.read_s4be
       @siangl = IllumAngle.new(@_io, self, @_root)
@@ -81,9 +81,9 @@ class Specpr < Kaitai::Struct::Struct
       @scatim = @_io.read_f4be
       @timint = @_io.read_f4be
       @tempd = @_io.read_f4be
-      @data = Array.new(256)
+      @data = []
       (256).times { |i|
-        @data[i] = @_io.read_f4be
+        @data << @_io.read_f4be
       }
       self
     end
@@ -301,9 +301,9 @@ class Specpr < Kaitai::Struct::Struct
     end
 
     def _read
-      @cdata = Array.new(383)
+      @cdata = []
       (383).times { |i|
-        @cdata[i] = @_io.read_f4be
+        @cdata << @_io.read_f4be
       }
       self
     end

@@ -8,7 +8,7 @@
   } else {
     root.QuakePak = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://quakewiki.org/wiki/.pak#Format_specification|Source}
  */

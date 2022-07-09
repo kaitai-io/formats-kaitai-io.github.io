@@ -121,7 +121,7 @@ sub _read {
     $self->{ssrc_list} = ();
     my $n_ssrc_list = $self->num_ssrc();
     for (my $i = 0; $i < $n_ssrc_list; $i++) {
-        $self->{ssrc_list}[$i] = $self->{_io}->read_u4be();
+        push @{$self->{ssrc_list}}, $self->{_io}->read_u4be();
     }
 }
 
@@ -191,7 +191,7 @@ sub _read {
     $self->{report_block} = ();
     my $n_report_block = $self->_parent()->subtype();
     for (my $i = 0; $i < $n_report_block; $i++) {
-        $self->{report_block}[$i] = RtcpPayload::ReportBlock->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{report_block}}, RtcpPayload::ReportBlock->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -271,7 +271,7 @@ sub _read {
     $self->{report_block} = ();
     my $n_report_block = $self->_parent()->subtype();
     for (my $i = 0; $i < $n_report_block; $i++) {
-        $self->{report_block}[$i] = RtcpPayload::ReportBlock->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{report_block}}, RtcpPayload::ReportBlock->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -757,7 +757,7 @@ sub _read {
     $self->{source_chunk} = ();
     my $n_source_chunk = $self->source_count();
     for (my $i = 0; $i < $n_source_chunk; $i++) {
-        $self->{source_chunk}[$i] = RtcpPayload::SourceChunk->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{source_chunk}}, RtcpPayload::SourceChunk->new($self->{_io}, $self, $self->{_root});
     }
 }
 

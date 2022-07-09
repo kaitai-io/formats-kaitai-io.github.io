@@ -5,20 +5,20 @@
 
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
-#include "icmp_packet.h"
+#include "tcp_segment.h"
 #include "udp_datagram.h"
 #include "ipv4_packet.h"
+#include "icmp_packet.h"
 #include "ipv6_packet.h"
-#include "tcp_segment.h"
 
 #if KAITAI_STRUCT_VERSION < 9000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
-class icmp_packet_t;
+class tcp_segment_t;
 class udp_datagram_t;
 class ipv4_packet_t;
+class icmp_packet_t;
 class ipv6_packet_t;
-class tcp_segment_t;
 
 /**
  * Protocol body represents particular payload on transport level (OSI

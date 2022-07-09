@@ -14,21 +14,21 @@ class QuakeMdl < Kaitai::Struct::Struct
 
   def _read
     @header = MdlHeader.new(@_io, self, @_root)
-    @skins = Array.new(header.num_skins)
+    @skins = []
     (header.num_skins).times { |i|
-      @skins[i] = MdlSkin.new(@_io, self, @_root)
+      @skins << MdlSkin.new(@_io, self, @_root)
     }
-    @texture_coordinates = Array.new(header.num_verts)
+    @texture_coordinates = []
     (header.num_verts).times { |i|
-      @texture_coordinates[i] = MdlTexcoord.new(@_io, self, @_root)
+      @texture_coordinates << MdlTexcoord.new(@_io, self, @_root)
     }
-    @triangles = Array.new(header.num_tris)
+    @triangles = []
     (header.num_tris).times { |i|
-      @triangles[i] = MdlTriangle.new(@_io, self, @_root)
+      @triangles << MdlTriangle.new(@_io, self, @_root)
     }
-    @frames = Array.new(header.num_frames)
+    @frames = []
     (header.num_frames).times { |i|
-      @frames[i] = MdlFrame.new(@_io, self, @_root)
+      @frames << MdlFrame.new(@_io, self, @_root)
     }
     self
   end
@@ -39,9 +39,9 @@ class QuakeMdl < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(3)
+      @values = []
       (3).times { |i|
-        @values[i] = @_io.read_u1
+        @values << @_io.read_u1
       }
       @normal_index = @_io.read_u1
       self
@@ -132,15 +132,15 @@ class QuakeMdl < Kaitai::Struct::Struct
         @num_frames = @_io.read_u4le
       end
       if group != 0
-        @frame_times = Array.new(num_frames)
+        @frame_times = []
         (num_frames).times { |i|
-          @frame_times[i] = @_io.read_f4le
+          @frame_times << @_io.read_f4le
         }
       end
       if group != 0
-        @group_texture_data = Array.new(num_frames)
+        @group_texture_data = []
         (num_frames).times { |i|
-          @group_texture_data[i] = @_io.read_bytes(_root.header.skin_size)
+          @group_texture_data << @_io.read_bytes(_root.header.skin_size)
         }
       end
       self
@@ -166,14 +166,14 @@ class QuakeMdl < Kaitai::Struct::Struct
         @max = MdlVertex.new(@_io, self, @_root)
       end
       if type != 0
-        @time = Array.new(type)
+        @time = []
         (type).times { |i|
-          @time[i] = @_io.read_f4le
+          @time << @_io.read_f4le
         }
       end
-      @frames = Array.new(num_simple_frames)
+      @frames = []
       (num_simple_frames).times { |i|
-        @frames[i] = MdlSimpleFrame.new(@_io, self, @_root)
+        @frames << MdlSimpleFrame.new(@_io, self, @_root)
       }
       self
     end
@@ -198,9 +198,9 @@ class QuakeMdl < Kaitai::Struct::Struct
       @bbox_min = MdlVertex.new(@_io, self, @_root)
       @bbox_max = MdlVertex.new(@_io, self, @_root)
       @name = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0), 0, false)).force_encoding("ASCII")
-      @vertices = Array.new(_root.header.num_verts)
+      @vertices = []
       (_root.header.num_verts).times { |i|
-        @vertices[i] = MdlVertex.new(@_io, self, @_root)
+        @vertices << MdlVertex.new(@_io, self, @_root)
       }
       self
     end
@@ -217,9 +217,9 @@ class QuakeMdl < Kaitai::Struct::Struct
 
     def _read
       @faces_front = @_io.read_s4le
-      @vertices = Array.new(3)
+      @vertices = []
       (3).times { |i|
-        @vertices[i] = @_io.read_s4le
+        @vertices << @_io.read_s4le
       }
       self
     end

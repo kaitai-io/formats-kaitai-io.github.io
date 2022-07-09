@@ -8,7 +8,7 @@
   } else {
     root.Lzh = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream, DosDatetime) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
 /**
  * LHA (LHarc, LZH) is a file format used by a popular freeware
  * eponymous archiver, created in 1988 by Haruyasu Yoshizaki. Over the

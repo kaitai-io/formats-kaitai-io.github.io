@@ -8,7 +8,7 @@
   } else {
     root.VlqBase128Le = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
  * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
@@ -40,7 +40,7 @@ var VlqBase128Le = (function() {
     this._read();
   }
   VlqBase128Le.prototype._read = function() {
-    this.groups = []
+    this.groups = [];
     var i = 0;
     do {
       var _ = new Group(this._io, this, this._root);

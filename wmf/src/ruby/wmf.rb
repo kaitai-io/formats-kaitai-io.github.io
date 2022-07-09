@@ -238,9 +238,9 @@ class Wmf < Kaitai::Struct::Struct
 
     def _read
       @num_points = @_io.read_s2le
-      @points = Array.new(num_points)
+      @points = []
       (num_points).times { |i|
-        @points[i] = PointS.new(@_io, self, @_root)
+        @points << PointS.new(@_io, self, @_root)
       }
       self
     end
@@ -345,9 +345,9 @@ class Wmf < Kaitai::Struct::Struct
 
     def _read
       @num_points = @_io.read_s2le
-      @points = Array.new(num_points)
+      @points = []
       (num_points).times { |i|
-        @points[i] = PointS.new(@_io, self, @_root)
+        @points << PointS.new(@_io, self, @_root)
       }
       self
     end

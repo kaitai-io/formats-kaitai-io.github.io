@@ -8,7 +8,7 @@
   } else {
     root.Exif = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var Exif = (function() {
   function Exif(_io, _parent, _root) {
     this._io = _io;
@@ -78,17 +78,17 @@ var Exif = (function() {
       }
       Ifd.prototype._readLE = function() {
         this.numFields = this._io.readU2le();
-        this.fields = new Array(this.numFields);
+        this.fields = [];
         for (var i = 0; i < this.numFields; i++) {
-          this.fields[i] = new IfdField(this._io, this, this._root, this._is_le);
+          this.fields.push(new IfdField(this._io, this, this._root, this._is_le));
         }
         this.nextIfdOfs = this._io.readU4le();
       }
       Ifd.prototype._readBE = function() {
         this.numFields = this._io.readU2be();
-        this.fields = new Array(this.numFields);
+        this.fields = [];
         for (var i = 0; i < this.numFields; i++) {
-          this.fields[i] = new IfdField(this._io, this, this._root, this._is_le);
+          this.fields.push(new IfdField(this._io, this, this._root, this._is_le));
         }
         this.nextIfdOfs = this._io.readU4be();
       }

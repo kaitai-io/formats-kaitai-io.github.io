@@ -186,7 +186,7 @@ sub _read {
     $self->{index_entries} = ();
     my $n_index_entries = $self->entry_count();
     for (my $i = 0; $i < $n_index_entries; $i++) {
-        $self->{index_entries}[$i] = Tsm::Index::IndexHeader::IndexEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{index_entries}}, Tsm::Index::IndexHeader::IndexEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -54,12 +54,12 @@ namespace Kaitai
             if (Version == 5) {
                 _v5Part = new HeaderV5Part(m_io, this, m_root);
             }
-            _resources = new List<Resource>((int) ((NumResources + 1)));
+            _resources = new List<Resource>();
             for (var i = 0; i < (NumResources + 1); i++)
             {
                 _resources.Add(new Resource(i, i < NumResources, m_io, this, m_root));
             }
-            _aliases = new List<Alias>((int) (NumAliases));
+            _aliases = new List<Alias>();
             for (var i = 0; i < NumAliases; i++)
             {
                 _aliases.Add(new Alias(m_io, this, m_root));

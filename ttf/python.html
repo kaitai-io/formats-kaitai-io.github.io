@@ -193,6 +193,11 @@ an outline font.</p>
                 
                 <li>
                 
+                <a href="go.html" title="TrueType Font File parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="TrueType Font File parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -309,13 +314,12 @@ an outline font.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
 <span class="kn">import</span> <span class="nn">kaitaistruct</span>
 <span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">):</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span> <span class="nc">Ttf</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -333,9 +337,9 @@ an outline font.</p>
 
     <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offset_table</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">OffsetTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">directory_table</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_table</span><span class="o">.</span><span class="n">num_tables</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory_table</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_table</span><span class="o">.</span><span class="n">num_tables</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">directory_table</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">DirTableEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">directory_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ttf</span><span class="o">.</span><span class="n">DirTableEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
     <span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -368,9 +372,9 @@ an outline font.</p>
 
             <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">number_of_glyphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">glyph_name_index</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_glyphs</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">glyph_name_index</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_glyphs</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">glyph_name_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">glyph_name_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">glyph_names</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -446,9 +450,9 @@ an outline font.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">format_selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">num_name_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name_records</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_name_records</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name_records</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_name_records</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_records</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">NameRecord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name_records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ttf</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">NameRecord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
         <span class="k">class</span> <span class="nc">NameRecord</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -469,26 +473,26 @@ an outline font.</p>
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">ascii_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ascii_value&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ascii_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ascii_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ascii_value</span>
 
                 <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ofs_strings</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ofs_str</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_ascii_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_str</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ascii_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ascii_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ascii_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">unicode_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_unicode_value&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_unicode_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_unicode_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_unicode_value</span>
 
                 <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ofs_strings</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ofs_str</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_unicode_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_str</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;utf-16be&quot;</span><span class="p">)</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_unicode_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_unicode_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_unicode_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
 
@@ -590,9 +594,9 @@ an outline font.</p>
         <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subtable_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">subtables</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subtable_count</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subtables</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subtable_count</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">subtables</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">Kern</span><span class="o">.</span><span class="n">Subtable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">subtables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ttf</span><span class="o">.</span><span class="n">Kern</span><span class="o">.</span><span class="n">Subtable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
         <span class="k">class</span> <span class="nc">Subtable</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -628,9 +632,9 @@ an outline font.</p>
                     <span class="bp">self</span><span class="o">.</span><span class="n">search_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">entry_selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">range_shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">kerning_pairs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pair_count</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">kerning_pairs</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pair_count</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">kerning_pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">Kern</span><span class="o">.</span><span class="n">Subtable</span><span class="o">.</span><span class="n">Format0</span><span class="o">.</span><span class="n">KerningPair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">kerning_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ttf</span><span class="o">.</span><span class="n">Kern</span><span class="o">.</span><span class="n">Subtable</span><span class="o">.</span><span class="n">Format0</span><span class="o">.</span><span class="n">KerningPair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
                 <span class="k">class</span> <span class="nc">KerningPair</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -665,7 +669,7 @@ an outline font.</p>
         <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
 
             <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
             <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
@@ -722,7 +726,7 @@ an outline font.</p>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
             <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
     <span class="k">class</span> <span class="nc">Os2</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1118,15 +1122,15 @@ an outline font.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
             <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">end_pts_of_contours</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">number_of_contours</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">end_pts_of_contours</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">number_of_contours</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">end_pts_of_contours</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">end_pts_of_contours</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">instruction_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">instructions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instruction_length</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point_count</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point_count</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">Glyf</span><span class="o">.</span><span class="n">SimpleGlyph</span><span class="o">.</span><span class="n">Flag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ttf</span><span class="o">.</span><span class="n">Glyf</span><span class="o">.</span><span class="n">SimpleGlyph</span><span class="o">.</span><span class="n">Flag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
             <span class="k">class</span> <span class="nc">Flag</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1153,10 +1157,10 @@ an outline font.</p>
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">point_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_point_count&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_point_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_point_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_point_count</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_point_count</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_pts_of_contours</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_point_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_point_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_point_count&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
 
@@ -1195,10 +1199,10 @@ an outline font.</p>
         <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">is_version10</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_version10&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_version10</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_version10&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_version10</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_version10</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">table_version_number</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table_version_number</span><span class="o">.</span><span class="n">minor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> 
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_version10</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_version10&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_version10&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
     <span class="k">class</span> <span class="nc">MaxpVersion10Body</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1251,9 +1255,9 @@ an outline font.</p>
         <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">version_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">number_of_encoding_tables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_encoding_tables</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tables</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_encoding_tables</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">Cmap</span><span class="o">.</span><span class="n">SubtableHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ttf</span><span class="o">.</span><span class="n">Cmap</span><span class="o">.</span><span class="n">SubtableHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
         <span class="k">class</span> <span class="nc">SubtableHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1271,14 +1275,14 @@ an outline font.</p>
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_table&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_table</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_table&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_table</span>
 
                 <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subtable_offset</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_table</span> <span class="o">=</span> <span class="n">Ttf</span><span class="o">.</span><span class="n">Cmap</span><span class="o">.</span><span class="n">Subtable</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_table</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_table&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_table&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
         <span class="k">class</span> <span class="nc">Subtable</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1337,9 +1341,9 @@ an outline font.</p>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
                 <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">sub_header_keys</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sub_header_keys</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">256</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">sub_header_keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">sub_header_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 
 
 
@@ -1355,22 +1359,22 @@ an outline font.</p>
                     <span class="bp">self</span><span class="o">.</span><span class="n">search_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">entry_selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">range_shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">end_count</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">end_count</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">end_count</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">end_count</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">reserved_pad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">start_count</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">start_count</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">start_count</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">start_count</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 
-                    <span class="bp">self</span><span class="o">.</span><span class="n">id_delta</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">id_delta</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">id_delta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">id_delta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 
-                    <span class="bp">self</span><span class="o">.</span><span class="n">id_range_offset</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">id_range_offset</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seg_count</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">id_range_offset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">id_range_offset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">glyph_id_array</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1382,10 +1386,10 @@ an outline font.</p>
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">seg_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_seg_count&#39;</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_seg_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_seg_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_seg_count</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_seg_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seg_count_x2</span> <span class="o">//</span> <span class="mi">2</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_seg_count</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_seg_count&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_seg_count&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
             <span class="k">class</span> <span class="nc">TrimmedTableMapping</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1398,9 +1402,9 @@ an outline font.</p>
                 <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">first_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">entry_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">glyph_id_array</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_count</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">glyph_id_array</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_count</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">glyph_id_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">glyph_id_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">())</span>
 </pre></div>
 
         </div>

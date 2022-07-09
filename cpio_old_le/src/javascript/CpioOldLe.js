@@ -8,7 +8,7 @@
   } else {
     root.CpioOldLe = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var CpioOldLe = (function() {
   function CpioOldLe(_io, _parent, _root) {
     this._io = _io;

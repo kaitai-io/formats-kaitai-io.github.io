@@ -871,7 +871,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _colors = new List<RgbRecord>((int) (( ((NumColors > 0) && (NumColors < NumColorsPresent))  ? NumColors : NumColorsPresent)));
+                _colors = new List<RgbRecord>();
                 for (var i = 0; i < ( ((NumColors > 0) && (NumColors < NumColorsPresent))  ? NumColors : NumColorsPresent); i++)
                 {
                     _colors.Add(new RgbRecord(HasReservedField, m_io, this, m_root));

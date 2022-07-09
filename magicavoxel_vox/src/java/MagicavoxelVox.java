@@ -249,7 +249,7 @@ public class MagicavoxelVox extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            colors = new ArrayList<Color>(((Number) (256)).intValue());
+            this.colors = new ArrayList<Color>();
             for (int i = 0; i < 256; i++) {
                 this.colors.add(new Color(this._io, this, _root));
             }
@@ -453,7 +453,7 @@ public class MagicavoxelVox extends KaitaiStruct {
         }
         private void _read() {
             this.numVoxels = this._io.readU4le();
-            voxels = new ArrayList<Voxel>(((Number) (numVoxels())).intValue());
+            this.voxels = new ArrayList<Voxel>();
             for (int i = 0; i < numVoxels(); i++) {
                 this.voxels.add(new Voxel(this._io, this, _root));
             }

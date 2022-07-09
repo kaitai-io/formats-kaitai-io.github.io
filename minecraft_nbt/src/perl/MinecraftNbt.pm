@@ -109,7 +109,7 @@ sub _read {
     $self->{tags} = ();
     my $n_tags = $self->num_tags();
     for (my $i = 0; $i < $n_tags; $i++) {
-        $self->{tags}[$i] = $self->{_io}->read_s8be();
+        push @{$self->{tags}}, $self->{_io}->read_s8be();
     }
 }
 
@@ -208,7 +208,7 @@ sub _read {
     $self->{tags} = ();
     my $n_tags = $self->num_tags();
     for (my $i = 0; $i < $n_tags; $i++) {
-        $self->{tags}[$i] = $self->{_io}->read_s4be();
+        push @{$self->{tags}}, $self->{_io}->read_s4be();
     }
 }
 
@@ -266,40 +266,40 @@ sub _read {
     for (my $i = 0; $i < $n_tags; $i++) {
         my $_on = $self->tags_type();
         if ($_on == $MinecraftNbt::TAG_LONG_ARRAY) {
-            $self->{tags}[$i] = MinecraftNbt::TagLongArray->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{tags}}, MinecraftNbt::TagLongArray->new($self->{_io}, $self, $self->{_root});
         }
         elsif ($_on == $MinecraftNbt::TAG_COMPOUND) {
-            $self->{tags}[$i] = MinecraftNbt::TagCompound->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{tags}}, MinecraftNbt::TagCompound->new($self->{_io}, $self, $self->{_root});
         }
         elsif ($_on == $MinecraftNbt::TAG_DOUBLE) {
-            $self->{tags}[$i] = $self->{_io}->read_f8be();
+            push @{$self->{tags}}, $self->{_io}->read_f8be();
         }
         elsif ($_on == $MinecraftNbt::TAG_LIST) {
-            $self->{tags}[$i] = MinecraftNbt::TagList->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{tags}}, MinecraftNbt::TagList->new($self->{_io}, $self, $self->{_root});
         }
         elsif ($_on == $MinecraftNbt::TAG_FLOAT) {
-            $self->{tags}[$i] = $self->{_io}->read_f4be();
+            push @{$self->{tags}}, $self->{_io}->read_f4be();
         }
         elsif ($_on == $MinecraftNbt::TAG_SHORT) {
-            $self->{tags}[$i] = $self->{_io}->read_s2be();
+            push @{$self->{tags}}, $self->{_io}->read_s2be();
         }
         elsif ($_on == $MinecraftNbt::TAG_INT) {
-            $self->{tags}[$i] = $self->{_io}->read_s4be();
+            push @{$self->{tags}}, $self->{_io}->read_s4be();
         }
         elsif ($_on == $MinecraftNbt::TAG_BYTE_ARRAY) {
-            $self->{tags}[$i] = MinecraftNbt::TagByteArray->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{tags}}, MinecraftNbt::TagByteArray->new($self->{_io}, $self, $self->{_root});
         }
         elsif ($_on == $MinecraftNbt::TAG_BYTE) {
-            $self->{tags}[$i] = $self->{_io}->read_s1();
+            push @{$self->{tags}}, $self->{_io}->read_s1();
         }
         elsif ($_on == $MinecraftNbt::TAG_INT_ARRAY) {
-            $self->{tags}[$i] = MinecraftNbt::TagIntArray->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{tags}}, MinecraftNbt::TagIntArray->new($self->{_io}, $self, $self->{_root});
         }
         elsif ($_on == $MinecraftNbt::TAG_STRING) {
-            $self->{tags}[$i] = MinecraftNbt::TagString->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{tags}}, MinecraftNbt::TagString->new($self->{_io}, $self, $self->{_root});
         }
         elsif ($_on == $MinecraftNbt::TAG_LONG) {
-            $self->{tags}[$i] = $self->{_io}->read_s8be();
+            push @{$self->{tags}}, $self->{_io}->read_s8be();
         }
     }
 }

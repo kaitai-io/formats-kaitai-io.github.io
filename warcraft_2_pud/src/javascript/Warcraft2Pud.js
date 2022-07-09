@@ -8,7 +8,7 @@
   } else {
     root.Warcraft2Pud = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Warcraft II game engine uses this format for map files. External
  * maps can be edited by official Warcraft II map editor and saved in

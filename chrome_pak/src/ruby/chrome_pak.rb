@@ -36,13 +36,13 @@ class ChromePak < Kaitai::Struct::Struct
     if version == 5
       @v5_part = HeaderV5Part.new(@_io, self, @_root)
     end
-    @resources = Array.new((num_resources + 1))
+    @resources = []
     ((num_resources + 1)).times { |i|
-      @resources[i] = Resource.new(@_io, self, @_root, i, i < num_resources)
+      @resources << Resource.new(@_io, self, @_root, i, i < num_resources)
     }
-    @aliases = Array.new(num_aliases)
+    @aliases = []
     (num_aliases).times { |i|
-      @aliases[i] = Alias.new(@_io, self, @_root)
+      @aliases << Alias.new(@_io, self, @_root)
     }
     self
   end

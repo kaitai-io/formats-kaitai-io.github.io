@@ -406,7 +406,7 @@ sub _read {
     $self->{signature_tags_steps} = ();
     my $n_signature_tags_steps = $self->signature()->header_record()->num_index_records();
     for (my $i = 0; $i < $n_signature_tags_steps; $i++) {
-        $self->{signature_tags_steps}[$i] = Rpm::SignatureTagsStep->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{signature_tags_steps}}, Rpm::SignatureTagsStep->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -536,7 +536,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+        push @{$self->{values}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
 }
 
@@ -663,7 +663,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = 1;
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+        push @{$self->{values}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
 }
 
@@ -754,7 +754,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = $self->{_io}->read_u4be();
+        push @{$self->{values}}, $self->{_io}->read_u4be();
     }
 }
 
@@ -801,7 +801,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{values}}, $self->{_io}->read_u2be();
     }
 }
 
@@ -1054,7 +1054,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = $self->{_io}->read_u1();
+        push @{$self->{values}}, $self->{_io}->read_u1();
     }
 }
 
@@ -1101,7 +1101,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = $self->{_io}->read_u8be();
+        push @{$self->{values}}, $self->{_io}->read_u8be();
     }
 }
 
@@ -1148,7 +1148,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = 1;
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = $self->{_io}->read_bytes($self->len_value());
+        push @{$self->{values}}, $self->{_io}->read_bytes($self->len_value());
     }
 }
 
@@ -1252,7 +1252,7 @@ sub _read {
     $self->{index_records} = ();
     my $n_index_records = $self->header_record()->num_index_records();
     for (my $i = 0; $i < $n_index_records; $i++) {
-        $self->{index_records}[$i] = Rpm::HeaderIndexRecord->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{index_records}}, Rpm::HeaderIndexRecord->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_raw_storage_section} = $self->{_io}->read_bytes($self->header_record()->len_storage_section());
     my $io__raw_storage_section = IO::KaitaiStruct::Stream->new($self->{_raw_storage_section});

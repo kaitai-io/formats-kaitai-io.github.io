@@ -68,9 +68,9 @@ class PharWithoutStub < Kaitai::Struct::Struct
 
   def _read
     @manifest = Manifest.new(@_io, self, @_root)
-    @files = Array.new(manifest.num_files)
+    @files = []
     (manifest.num_files).times { |i|
-      @files[i] = @_io.read_bytes(manifest.file_entries[i].len_data_compressed)
+      @files << @_io.read_bytes(manifest.file_entries[i].len_data_compressed)
     }
     if manifest.flags.has_signature
       @_raw_signature = @_io.read_bytes_full
@@ -280,9 +280,9 @@ class PharWithoutStub < Kaitai::Struct::Struct
         _io__raw_metadata = Kaitai::Struct::Stream.new(@_raw_metadata)
         @metadata = SerializedValue.new(_io__raw_metadata, self, @_root)
       end
-      @file_entries = Array.new(num_files)
+      @file_entries = []
       (num_files).times { |i|
-        @file_entries[i] = FileEntry.new(@_io, self, @_root)
+        @file_entries << FileEntry.new(@_io, self, @_root)
       }
       self
     end

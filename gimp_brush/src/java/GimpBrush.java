@@ -163,8 +163,8 @@ public class GimpBrush extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            rows = new ArrayList<Row>(((Number) (_root.header().height())).intValue());
-            for (int i = 0; i < _root.header().height(); i++) {
+            this.rows = new ArrayList<Row>();
+            for (int i = 0; i < _root().header().height(); i++) {
                 this.rows.add(new Row(this._io, this, _root));
             }
         }
@@ -195,12 +195,12 @@ public class GimpBrush extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            pixels = new ArrayList<KaitaiStruct>(((Number) (_root.header().width())).intValue());
-            for (int i = 0; i < _root.header().width(); i++) {
+            this.pixels = new ArrayList<KaitaiStruct>();
+            for (int i = 0; i < _root().header().width(); i++) {
                 {
-                    ColorDepth on = _root.header().bytesPerPixel();
+                    ColorDepth on = _root().header().bytesPerPixel();
                     if (on != null) {
-                        switch (_root.header().bytesPerPixel()) {
+                        switch (_root().header().bytesPerPixel()) {
                         case GRAYSCALE: {
                             this.pixels.add(new PixelGray(this._io, this, _root));
                             break;

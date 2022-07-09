@@ -107,11 +107,11 @@ end
 
 function Gzip.Flags:_read()
   self.reserved1 = self._io:read_bits_int_be(3)
-  self.has_comment = self._io:read_bits_int_be(1)
-  self.has_name = self._io:read_bits_int_be(1)
-  self.has_extra = self._io:read_bits_int_be(1)
-  self.has_header_crc = self._io:read_bits_int_be(1)
-  self.is_text = self._io:read_bits_int_be(1)
+  self.has_comment = self._io:read_bits_int_be(1) ~= 0
+  self.has_name = self._io:read_bits_int_be(1) ~= 0
+  self.has_extra = self._io:read_bits_int_be(1) ~= 0
+  self.has_header_crc = self._io:read_bits_int_be(1) ~= 0
+  self.is_text = self._io:read_bits_int_be(1) ~= 0
 end
 
 -- 

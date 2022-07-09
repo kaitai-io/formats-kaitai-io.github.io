@@ -41,7 +41,7 @@ public class Dbf extends KaitaiStruct {
         this._raw_header2 = this._io.readBytes((header1().lenHeader() - 12));
         KaitaiStream _io__raw_header2 = new ByteBufferKaitaiStream(_raw_header2);
         this.header2 = new Header2(_io__raw_header2, this, _root);
-        records = new ArrayList<byte[]>(((Number) (header1().numRecords())).intValue());
+        this.records = new ArrayList<byte[]>();
         for (int i = 0; i < header1().numRecords(); i++) {
             this.records.add(this._io.readBytes(header1().lenRecord()));
         }
@@ -66,13 +66,13 @@ public class Dbf extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            if (_root.header1().dbaseLevel() == 3) {
+            if (_root().header1().dbaseLevel() == 3) {
                 this.headerDbase3 = new HeaderDbase3(this._io, this, _root);
             }
-            if (_root.header1().dbaseLevel() == 7) {
+            if (_root().header1().dbaseLevel() == 7) {
                 this.headerDbase7 = new HeaderDbase7(this._io, this, _root);
             }
-            fields = new ArrayList<Field>(((Number) (11)).intValue());
+            this.fields = new ArrayList<Field>();
             for (int i = 0; i < 11; i++) {
                 this.fields.add(new Field(this._io, this, _root));
             }

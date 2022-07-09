@@ -67,9 +67,9 @@ sub partition_entries {
     $self->{partition_entries} = ();
     my $n_partition_entries = $self->_root()->partition_lookup()->number_of_partitions();
     for (my $i = 0; $i < $n_partition_entries; $i++) {
-        $self->{_raw_partition_entries}[$i] = $io->read_bytes($self->sector_size());
+        push @{$self->{_raw_partition_entries}}, $io->read_bytes($self->sector_size());
         my $io__raw_partition_entries = IO::KaitaiStruct::Stream->new($self->{_raw_partition_entries}[$i]);
-        $self->{partition_entries}[$i] = ApmPartitionTable::PartitionEntry->new($io__raw_partition_entries, $self, $self->{_root});
+        push @{$self->{partition_entries}}, ApmPartitionTable::PartitionEntry->new($io__raw_partition_entries, $self, $self->{_root});
     }
     $io->seek($_pos);
     return $self->{partition_entries};

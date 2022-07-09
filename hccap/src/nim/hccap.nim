@@ -17,7 +17,8 @@ type
     `keymic`*: seq[byte]
     `parent`*: Hccap
     `rawEapolBuffer`*: seq[byte]
-    `eapolInst`*: seq[byte]
+    `eapolInst`: seq[byte]
+    `eapolInstFlag`: bool
   Hccap_EapolDummy* = ref object of KaitaiStruct
     `parent`*: Hccap_HccapRecord
 
@@ -120,7 +121,7 @@ proc read*(_: typedesc[Hccap_HccapRecord], io: KaitaiStream, root: KaitaiStruct,
   this.keymic = keymicExpr
 
 proc eapol(this: Hccap_HccapRecord): seq[byte] = 
-  if this.eapolInst.len != 0:
+  if this.eapolInstFlag:
     return this.eapolInst
   let io = this.eapolBuffer.io
   let pos = io.pos()
@@ -128,8 +129,8 @@ proc eapol(this: Hccap_HccapRecord): seq[byte] =
   let eapolInstExpr = io.readBytes(int(this.lenEapol))
   this.eapolInst = eapolInstExpr
   io.seek(pos)
-  if this.eapolInst.len != 0:
-    return this.eapolInst
+  this.eapolInstFlag = true
+  return this.eapolInst
 
 proc fromFile*(_: typedesc[Hccap_HccapRecord], filename: string): Hccap_HccapRecord =
   Hccap_HccapRecord.read(newKaitaiFileStream(filename), nil, nil)

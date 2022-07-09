@@ -16,10 +16,14 @@ type
     `hasManufacturer`*: bool
     `parent`*: MifareClassic
     `rawDataFiller`*: seq[byte]
-    `blockSizeInst`*: int8
-    `dataInst`*: seq[byte]
-    `blocksInst`*: seq[seq[byte]]
-    `valuesInst`*: MifareClassic_Sector_Values
+    `blockSizeInst`: int8
+    `blockSizeInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
+    `blocksInst`: seq[seq[byte]]
+    `blocksInstFlag`: bool
+    `valuesInst`: MifareClassic_Sector_Values
+    `valuesInstFlag`: bool
   MifareClassic_Sector_Values* = ref object of KaitaiStruct
     `values`*: seq[MifareClassic_Sector_Values_ValueBlock]
     `parent`*: MifareClassic_Sector
@@ -27,11 +31,16 @@ type
     `valuez`*: seq[uint32]
     `addrz`*: seq[uint8]
     `parent`*: MifareClassic_Sector_Values
-    `addrInst`*: uint8
-    `addrValidInst`*: bool
-    `validInst`*: bool
-    `valueValidInst`*: bool
-    `valueInst`*: uint32
+    `addrInst`: uint8
+    `addrInstFlag`: bool
+    `addrValidInst`: bool
+    `addrValidInstFlag`: bool
+    `validInst`: bool
+    `validInstFlag`: bool
+    `valueValidInst`: bool
+    `valueValidInstFlag`: bool
+    `valueInst`: uint32
+    `valueInstFlag`: bool
   MifareClassic_Sector_Filler* = ref object of KaitaiStruct
     `data`*: seq[byte]
     `parent`*: MifareClassic_Sector
@@ -49,56 +58,83 @@ type
     `keyB`*: MifareClassic_Key
     `parent`*: MifareClassic_Sector
     `rawAccessBits`*: seq[byte]
-    `acBitsInst`*: int8
-    `acsInSectorInst`*: int8
-    `acCountOfChunksInst`*: int
+    `acBitsInst`: int8
+    `acBitsInstFlag`: bool
+    `acsInSectorInst`: int8
+    `acsInSectorInstFlag`: bool
+    `acCountOfChunksInst`: int
+    `acCountOfChunksInstFlag`: bool
   MifareClassic_Trailer_AccessConditions* = ref object of KaitaiStruct
     `rawChunks`*: seq[uint64]
     `parent`*: MifareClassic_Trailer
-    `dataAcsInst`*: seq[MifareClassic_Trailer_AccessConditions_DataAc]
-    `remapsInst`*: seq[MifareClassic_Trailer_AccessConditions_ChunkBitRemap]
-    `acsRawInst`*: seq[MifareClassic_Trailer_AccessConditions_Ac]
-    `trailerAcInst`*: MifareClassic_Trailer_AccessConditions_TrailerAc
-    `chunksInst`*: seq[MifareClassic_Trailer_AccessConditions_ValidChunk]
+    `dataAcsInst`: seq[MifareClassic_Trailer_AccessConditions_DataAc]
+    `dataAcsInstFlag`: bool
+    `remapsInst`: seq[MifareClassic_Trailer_AccessConditions_ChunkBitRemap]
+    `remapsInstFlag`: bool
+    `acsRawInst`: seq[MifareClassic_Trailer_AccessConditions_Ac]
+    `acsRawInstFlag`: bool
+    `trailerAcInst`: MifareClassic_Trailer_AccessConditions_TrailerAc
+    `trailerAcInstFlag`: bool
+    `chunksInst`: seq[MifareClassic_Trailer_AccessConditions_ValidChunk]
+    `chunksInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_TrailerAc* = ref object of KaitaiStruct
     `ac`*: MifareClassic_Trailer_AccessConditions_Ac
     `parent`*: MifareClassic_Trailer_AccessConditions
-    `canReadKeyBInst`*: bool
-    `canWriteKeysInst`*: bool
-    `canWriteAccessBitsInst`*: bool
-    `keyBControlsWriteInst`*: bool
+    `canReadKeyBInst`: bool
+    `canReadKeyBInstFlag`: bool
+    `canWriteKeysInst`: bool
+    `canWriteKeysInstFlag`: bool
+    `canWriteAccessBitsInst`: bool
+    `canWriteAccessBitsInstFlag`: bool
+    `keyBControlsWriteInst`: bool
+    `keyBControlsWriteInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_ChunkBitRemap* = ref object of KaitaiStruct
     `bitNo`*: uint8
     `parent`*: MifareClassic_Trailer_AccessConditions
-    `shiftValueInst`*: int
-    `chunkNoInst`*: int
-    `invChunkNoInst`*: int
+    `shiftValueInst`: int
+    `shiftValueInstFlag`: bool
+    `chunkNoInst`: int
+    `chunkNoInstFlag`: bool
+    `invChunkNoInst`: int
+    `invChunkNoInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_DataAc* = ref object of KaitaiStruct
     `ac`*: MifareClassic_Trailer_AccessConditions_Ac
     `parent`*: MifareClassic_Trailer_AccessConditions
-    `readKeyARequiredInst`*: bool
-    `writeKeyBRequiredInst`*: bool
-    `writeKeyARequiredInst`*: bool
-    `readKeyBRequiredInst`*: bool
-    `decrementAvailableInst`*: bool
-    `incrementAvailableInst`*: bool
+    `readKeyARequiredInst`: bool
+    `readKeyARequiredInstFlag`: bool
+    `writeKeyBRequiredInst`: bool
+    `writeKeyBRequiredInstFlag`: bool
+    `writeKeyARequiredInst`: bool
+    `writeKeyARequiredInstFlag`: bool
+    `readKeyBRequiredInst`: bool
+    `readKeyBRequiredInstFlag`: bool
+    `decrementAvailableInst`: bool
+    `decrementAvailableInstFlag`: bool
+    `incrementAvailableInst`: bool
+    `incrementAvailableInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_Ac* = ref object of KaitaiStruct
     `index`*: uint8
     `parent`*: MifareClassic_Trailer_AccessConditions
-    `bitsInst`*: seq[MifareClassic_Trailer_AccessConditions_Ac_AcBit]
-    `valInst`*: int
-    `invShiftValInst`*: int
+    `bitsInst`: seq[MifareClassic_Trailer_AccessConditions_Ac_AcBit]
+    `bitsInstFlag`: bool
+    `valInst`: int
+    `valInstFlag`: bool
+    `invShiftValInst`: int
+    `invShiftValInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_Ac_AcBit* = ref object of KaitaiStruct
     `i`*: uint8
     `chunk`*: uint8
     `parent`*: MifareClassic_Trailer_AccessConditions_Ac
-    `nInst`*: int
-    `bInst`*: bool
+    `nInst`: int
+    `nInstFlag`: bool
+    `bInst`: bool
+    `bInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_ValidChunk* = ref object of KaitaiStruct
     `invChunk`*: uint8
     `chunk`*: uint8
     `parent`*: MifareClassic_Trailer_AccessConditions
-    `validInst`*: bool
+    `validInst`: bool
+    `validInstFlag`: bool
 
 proc read*(_: typedesc[MifareClassic], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MifareClassic
 proc read*(_: typedesc[MifareClassic_Key], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer): MifareClassic_Key
@@ -218,23 +254,23 @@ proc read*(_: typedesc[MifareClassic_Sector], io: KaitaiStream, root: KaitaiStru
   this.trailer = trailerExpr
 
 proc blockSize(this: MifareClassic_Sector): int8 = 
-  if this.blockSizeInst != nil:
+  if this.blockSizeInstFlag:
     return this.blockSizeInst
   let blockSizeInstExpr = int8(16)
   this.blockSizeInst = blockSizeInstExpr
-  if this.blockSizeInst != nil:
-    return this.blockSizeInst
+  this.blockSizeInstFlag = true
+  return this.blockSizeInst
 
 proc data(this: MifareClassic_Sector): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   let dataInstExpr = seq[byte](this.dataFiller.data)
   this.dataInst = dataInstExpr
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc blocks(this: MifareClassic_Sector): seq[seq[byte]] = 
-  if this.blocksInst.len != 0:
+  if this.blocksInstFlag:
     return this.blocksInst
   let io = this.dataFiller.io
   let pos = io.pos()
@@ -246,11 +282,11 @@ proc blocks(this: MifareClassic_Sector): seq[seq[byte]] =
       this.blocksInst.add(it)
       inc i
   io.seek(pos)
-  if this.blocksInst.len != 0:
-    return this.blocksInst
+  this.blocksInstFlag = true
+  return this.blocksInst
 
 proc values(this: MifareClassic_Sector): MifareClassic_Sector_Values = 
-  if this.valuesInst != nil:
+  if this.valuesInstFlag:
     return this.valuesInst
   let io = this.dataFiller.io
   let pos = io.pos()
@@ -258,8 +294,8 @@ proc values(this: MifareClassic_Sector): MifareClassic_Sector_Values =
   let valuesInstExpr = MifareClassic_Sector_Values.read(io, this.root, this)
   this.valuesInst = valuesInstExpr
   io.seek(pos)
-  if this.valuesInst != nil:
-    return this.valuesInst
+  this.valuesInstFlag = true
+  return this.valuesInst
 
 proc fromFile*(_: typedesc[MifareClassic_Sector], filename: string): MifareClassic_Sector =
   MifareClassic_Sector.read(newKaitaiFileStream(filename), nil, nil)
@@ -298,46 +334,46 @@ proc read*(_: typedesc[MifareClassic_Sector_Values_ValueBlock], io: KaitaiStream
     this.addrz.add(it)
 
 proc addr(this: MifareClassic_Sector_Values_ValueBlock): uint8 = 
-  if this.addrInst != nil:
+  if this.addrInstFlag:
     return this.addrInst
   if this.valid:
     let addrInstExpr = uint8(this.addrz[0])
     this.addrInst = addrInstExpr
-  if this.addrInst != nil:
-    return this.addrInst
+  this.addrInstFlag = true
+  return this.addrInst
 
 proc addrValid(this: MifareClassic_Sector_Values_ValueBlock): bool = 
-  if this.addrValidInst != nil:
+  if this.addrValidInstFlag:
     return this.addrValidInst
   let addrValidInstExpr = bool( ((this.addrz[0] == not(this.addrz[1])) and (this.addrz[0] == this.addrz[2]) and (this.addrz[1] == this.addrz[3])) )
   this.addrValidInst = addrValidInstExpr
-  if this.addrValidInst != nil:
-    return this.addrValidInst
+  this.addrValidInstFlag = true
+  return this.addrValidInst
 
 proc valid(this: MifareClassic_Sector_Values_ValueBlock): bool = 
-  if this.validInst != nil:
+  if this.validInstFlag:
     return this.validInst
   let validInstExpr = bool( ((this.valueValid) and (this.addrValid)) )
   this.validInst = validInstExpr
-  if this.validInst != nil:
-    return this.validInst
+  this.validInstFlag = true
+  return this.validInst
 
 proc valueValid(this: MifareClassic_Sector_Values_ValueBlock): bool = 
-  if this.valueValidInst != nil:
+  if this.valueValidInstFlag:
     return this.valueValidInst
   let valueValidInstExpr = bool( ((this.valuez[0] == not(this.valuez[1])) and (this.valuez[0] == this.valuez[2])) )
   this.valueValidInst = valueValidInstExpr
-  if this.valueValidInst != nil:
-    return this.valueValidInst
+  this.valueValidInstFlag = true
+  return this.valueValidInst
 
 proc value(this: MifareClassic_Sector_Values_ValueBlock): uint32 = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   if this.valid:
     let valueInstExpr = uint32(this.valuez[0])
     this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[MifareClassic_Sector_Values_ValueBlock], filename: string): MifareClassic_Sector_Values_ValueBlock =
   MifareClassic_Sector_Values_ValueBlock.read(newKaitaiFileStream(filename), nil, nil)
@@ -411,28 +447,28 @@ proc read*(_: typedesc[MifareClassic_Trailer], io: KaitaiStream, root: KaitaiStr
   this.keyB = keyBExpr
 
 proc acBits(this: MifareClassic_Trailer): int8 = 
-  if this.acBitsInst != nil:
+  if this.acBitsInstFlag:
     return this.acBitsInst
   let acBitsInstExpr = int8(3)
   this.acBitsInst = acBitsInstExpr
-  if this.acBitsInst != nil:
-    return this.acBitsInst
+  this.acBitsInstFlag = true
+  return this.acBitsInst
 
 proc acsInSector(this: MifareClassic_Trailer): int8 = 
-  if this.acsInSectorInst != nil:
+  if this.acsInSectorInstFlag:
     return this.acsInSectorInst
   let acsInSectorInstExpr = int8(4)
   this.acsInSectorInst = acsInSectorInstExpr
-  if this.acsInSectorInst != nil:
-    return this.acsInSectorInst
+  this.acsInSectorInstFlag = true
+  return this.acsInSectorInst
 
 proc acCountOfChunks(this: MifareClassic_Trailer): int = 
-  if this.acCountOfChunksInst != nil:
+  if this.acCountOfChunksInstFlag:
     return this.acCountOfChunksInst
   let acCountOfChunksInstExpr = int((this.acBits * 2))
   this.acCountOfChunksInst = acCountOfChunksInstExpr
-  if this.acCountOfChunksInst != nil:
-    return this.acCountOfChunksInst
+  this.acCountOfChunksInstFlag = true
+  return this.acCountOfChunksInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer], filename: string): MifareClassic_Trailer =
   MifareClassic_Trailer.read(newKaitaiFileStream(filename), nil, nil)
@@ -450,7 +486,7 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions], io: KaitaiStream
     this.rawChunks.add(it)
 
 proc dataAcs(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_DataAc] = 
-  if this.dataAcsInst.len != 0:
+  if this.dataAcsInstFlag:
     return this.dataAcsInst
   let pos = this.io.pos()
   this.io.seek(int(0))
@@ -458,11 +494,11 @@ proc dataAcs(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Tr
     let it = MifareClassic_Trailer_AccessConditions_DataAc.read(this.io, this.root, this, this.acsRaw[i])
     this.dataAcsInst.add(it)
   this.io.seek(pos)
-  if this.dataAcsInst.len != 0:
-    return this.dataAcsInst
+  this.dataAcsInstFlag = true
+  return this.dataAcsInst
 
 proc remaps(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_ChunkBitRemap] = 
-  if this.remapsInst.len != 0:
+  if this.remapsInstFlag:
     return this.remapsInst
   let pos = this.io.pos()
   this.io.seek(int(0))
@@ -470,11 +506,11 @@ proc remaps(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Tra
     let it = MifareClassic_Trailer_AccessConditions_ChunkBitRemap.read(this.io, this.root, this, i)
     this.remapsInst.add(it)
   this.io.seek(pos)
-  if this.remapsInst.len != 0:
-    return this.remapsInst
+  this.remapsInstFlag = true
+  return this.remapsInst
 
 proc acsRaw(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_Ac] = 
-  if this.acsRawInst.len != 0:
+  if this.acsRawInstFlag:
     return this.acsRawInst
   let pos = this.io.pos()
   this.io.seek(int(0))
@@ -482,22 +518,22 @@ proc acsRaw(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Tra
     let it = MifareClassic_Trailer_AccessConditions_Ac.read(this.io, this.root, this, i)
     this.acsRawInst.add(it)
   this.io.seek(pos)
-  if this.acsRawInst.len != 0:
-    return this.acsRawInst
+  this.acsRawInstFlag = true
+  return this.acsRawInst
 
 proc trailerAc(this: MifareClassic_Trailer_AccessConditions): MifareClassic_Trailer_AccessConditions_TrailerAc = 
-  if this.trailerAcInst != nil:
+  if this.trailerAcInstFlag:
     return this.trailerAcInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let trailerAcInstExpr = MifareClassic_Trailer_AccessConditions_TrailerAc.read(this.io, this.root, this, this.acsRaw[(this.parent.acsInSector - 1)])
   this.trailerAcInst = trailerAcInstExpr
   this.io.seek(pos)
-  if this.trailerAcInst != nil:
-    return this.trailerAcInst
+  this.trailerAcInstFlag = true
+  return this.trailerAcInst
 
 proc chunks(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_ValidChunk] = 
-  if this.chunksInst.len != 0:
+  if this.chunksInstFlag:
     return this.chunksInst
   let pos = this.io.pos()
   this.io.seek(int(0))
@@ -505,8 +541,8 @@ proc chunks(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Tra
     let it = MifareClassic_Trailer_AccessConditions_ValidChunk.read(this.io, this.root, this, this.rawChunks[this.remaps[i].invChunkNo], this.rawChunks[this.remaps[i].chunkNo])
     this.chunksInst.add(it)
   this.io.seek(pos)
-  if this.chunksInst.len != 0:
-    return this.chunksInst
+  this.chunksInstFlag = true
+  return this.chunksInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions], filename: string): MifareClassic_Trailer_AccessConditions =
   MifareClassic_Trailer_AccessConditions.read(newKaitaiFileStream(filename), nil, nil)
@@ -527,36 +563,36 @@ proc canReadKeyB(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool =
   ##[
   key A is required
   ]##
-  if this.canReadKeyBInst != nil:
+  if this.canReadKeyBInstFlag:
     return this.canReadKeyBInst
   let canReadKeyBInstExpr = bool(this.ac.invShiftVal <= 2)
   this.canReadKeyBInst = canReadKeyBInstExpr
-  if this.canReadKeyBInst != nil:
-    return this.canReadKeyBInst
+  this.canReadKeyBInstFlag = true
+  return this.canReadKeyBInst
 
 proc canWriteKeys(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
-  if this.canWriteKeysInst != nil:
+  if this.canWriteKeysInstFlag:
     return this.canWriteKeysInst
   let canWriteKeysInstExpr = bool( ((((this.ac.invShiftVal + 1) %%% 3) != 0) and (this.ac.invShiftVal < 6)) )
   this.canWriteKeysInst = canWriteKeysInstExpr
-  if this.canWriteKeysInst != nil:
-    return this.canWriteKeysInst
+  this.canWriteKeysInstFlag = true
+  return this.canWriteKeysInst
 
 proc canWriteAccessBits(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
-  if this.canWriteAccessBitsInst != nil:
+  if this.canWriteAccessBitsInstFlag:
     return this.canWriteAccessBitsInst
   let canWriteAccessBitsInstExpr = bool(this.ac.bits[2].b)
   this.canWriteAccessBitsInst = canWriteAccessBitsInstExpr
-  if this.canWriteAccessBitsInst != nil:
-    return this.canWriteAccessBitsInst
+  this.canWriteAccessBitsInstFlag = true
+  return this.canWriteAccessBitsInst
 
 proc keyBControlsWrite(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
-  if this.keyBControlsWriteInst != nil:
+  if this.keyBControlsWriteInstFlag:
     return this.keyBControlsWriteInst
   let keyBControlsWriteInstExpr = bool(not(this.canReadKeyB))
   this.keyBControlsWriteInst = keyBControlsWriteInstExpr
-  if this.keyBControlsWriteInst != nil:
-    return this.keyBControlsWriteInst
+  this.keyBControlsWriteInstFlag = true
+  return this.keyBControlsWriteInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_TrailerAc], filename: string): MifareClassic_Trailer_AccessConditions_TrailerAc =
   MifareClassic_Trailer_AccessConditions_TrailerAc.read(newKaitaiFileStream(filename), nil, nil)
@@ -573,28 +609,28 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], io
 
 
 proc shiftValue(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
-  if this.shiftValueInst != nil:
+  if this.shiftValueInstFlag:
     return this.shiftValueInst
   let shiftValueInstExpr = int((if this.bitNo == 1: -1 else: 1))
   this.shiftValueInst = shiftValueInstExpr
-  if this.shiftValueInst != nil:
-    return this.shiftValueInst
+  this.shiftValueInstFlag = true
+  return this.shiftValueInst
 
 proc chunkNo(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
-  if this.chunkNoInst != nil:
+  if this.chunkNoInstFlag:
     return this.chunkNoInst
   let chunkNoInstExpr = int((((this.invChunkNo + this.shiftValue) + this.parent.parent.acCountOfChunks) %%% this.parent.parent.acCountOfChunks))
   this.chunkNoInst = chunkNoInstExpr
-  if this.chunkNoInst != nil:
-    return this.chunkNoInst
+  this.chunkNoInstFlag = true
+  return this.chunkNoInst
 
 proc invChunkNo(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
-  if this.invChunkNoInst != nil:
+  if this.invChunkNoInstFlag:
     return this.invChunkNoInst
   let invChunkNoInstExpr = int((this.bitNo + this.shiftValue))
   this.invChunkNoInst = invChunkNoInstExpr
-  if this.invChunkNoInst != nil:
-    return this.invChunkNoInst
+  this.invChunkNoInstFlag = true
+  return this.invChunkNoInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], filename: string): MifareClassic_Trailer_AccessConditions_ChunkBitRemap =
   MifareClassic_Trailer_AccessConditions_ChunkBitRemap.read(newKaitaiFileStream(filename), nil, nil)
@@ -611,52 +647,52 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], io: Kaita
 
 
 proc readKeyARequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.readKeyARequiredInst != nil:
+  if this.readKeyARequiredInstFlag:
     return this.readKeyARequiredInst
   let readKeyARequiredInstExpr = bool(this.ac.val <= 4)
   this.readKeyARequiredInst = readKeyARequiredInstExpr
-  if this.readKeyARequiredInst != nil:
-    return this.readKeyARequiredInst
+  this.readKeyARequiredInstFlag = true
+  return this.readKeyARequiredInst
 
 proc writeKeyBRequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.writeKeyBRequiredInst != nil:
+  if this.writeKeyBRequiredInstFlag:
     return this.writeKeyBRequiredInst
   let writeKeyBRequiredInstExpr = bool( (( ((not(this.readKeyARequired)) or (this.readKeyBRequired)) ) and (not(this.ac.bits[0].b))) )
   this.writeKeyBRequiredInst = writeKeyBRequiredInstExpr
-  if this.writeKeyBRequiredInst != nil:
-    return this.writeKeyBRequiredInst
+  this.writeKeyBRequiredInstFlag = true
+  return this.writeKeyBRequiredInst
 
 proc writeKeyARequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.writeKeyARequiredInst != nil:
+  if this.writeKeyARequiredInstFlag:
     return this.writeKeyARequiredInst
   let writeKeyARequiredInstExpr = bool(this.ac.val == 0)
   this.writeKeyARequiredInst = writeKeyARequiredInstExpr
-  if this.writeKeyARequiredInst != nil:
-    return this.writeKeyARequiredInst
+  this.writeKeyARequiredInstFlag = true
+  return this.writeKeyARequiredInst
 
 proc readKeyBRequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.readKeyBRequiredInst != nil:
+  if this.readKeyBRequiredInstFlag:
     return this.readKeyBRequiredInst
   let readKeyBRequiredInstExpr = bool(this.ac.val <= 6)
   this.readKeyBRequiredInst = readKeyBRequiredInstExpr
-  if this.readKeyBRequiredInst != nil:
-    return this.readKeyBRequiredInst
+  this.readKeyBRequiredInstFlag = true
+  return this.readKeyBRequiredInst
 
 proc decrementAvailable(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.decrementAvailableInst != nil:
+  if this.decrementAvailableInstFlag:
     return this.decrementAvailableInst
   let decrementAvailableInstExpr = bool( (( ((this.ac.bits[1].b) or (not(this.ac.bits[0].b))) ) and (not(this.ac.bits[2].b))) )
   this.decrementAvailableInst = decrementAvailableInstExpr
-  if this.decrementAvailableInst != nil:
-    return this.decrementAvailableInst
+  this.decrementAvailableInstFlag = true
+  return this.decrementAvailableInst
 
 proc incrementAvailable(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.incrementAvailableInst != nil:
+  if this.incrementAvailableInstFlag:
     return this.incrementAvailableInst
   let incrementAvailableInstExpr = bool( (( ((not(this.ac.bits[0].b)) and (not(this.readKeyARequired)) and (not(this.readKeyBRequired))) ) or ( ((not(this.ac.bits[0].b)) and (this.readKeyARequired) and (this.readKeyBRequired)) )) )
   this.incrementAvailableInst = incrementAvailableInstExpr
-  if this.incrementAvailableInst != nil:
-    return this.incrementAvailableInst
+  this.incrementAvailableInstFlag = true
+  return this.incrementAvailableInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], filename: string): MifareClassic_Trailer_AccessConditions_DataAc =
   MifareClassic_Trailer_AccessConditions_DataAc.read(newKaitaiFileStream(filename), nil, nil)
@@ -673,7 +709,7 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac], io: KaitaiStr
 
 
 proc bits(this: MifareClassic_Trailer_AccessConditions_Ac): seq[MifareClassic_Trailer_AccessConditions_Ac_AcBit] = 
-  if this.bitsInst.len != 0:
+  if this.bitsInstFlag:
     return this.bitsInst
   let pos = this.io.pos()
   this.io.seek(int(0))
@@ -681,28 +717,28 @@ proc bits(this: MifareClassic_Trailer_AccessConditions_Ac): seq[MifareClassic_Tr
     let it = MifareClassic_Trailer_AccessConditions_Ac_AcBit.read(this.io, this.root, this, this.index, this.parent.chunks[i].chunk)
     this.bitsInst.add(it)
   this.io.seek(pos)
-  if this.bitsInst.len != 0:
-    return this.bitsInst
+  this.bitsInstFlag = true
+  return this.bitsInst
 
 proc val(this: MifareClassic_Trailer_AccessConditions_Ac): int = 
 
   ##[
   c3 c2 c1
   ]##
-  if this.valInst != nil:
+  if this.valInstFlag:
     return this.valInst
   let valInstExpr = int((((this.bits[2].n shl 2) or (this.bits[1].n shl 1)) or this.bits[0].n))
   this.valInst = valInstExpr
-  if this.valInst != nil:
-    return this.valInst
+  this.valInstFlag = true
+  return this.valInst
 
 proc invShiftVal(this: MifareClassic_Trailer_AccessConditions_Ac): int = 
-  if this.invShiftValInst != nil:
+  if this.invShiftValInstFlag:
     return this.invShiftValInst
   let invShiftValInstExpr = int((((this.bits[0].n shl 2) or (this.bits[1].n shl 1)) or this.bits[2].n))
   this.invShiftValInst = invShiftValInstExpr
-  if this.invShiftValInst != nil:
-    return this.invShiftValInst
+  this.invShiftValInstFlag = true
+  return this.invShiftValInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac], filename: string): MifareClassic_Trailer_AccessConditions_Ac =
   MifareClassic_Trailer_AccessConditions_Ac.read(newKaitaiFileStream(filename), nil, nil)
@@ -721,20 +757,20 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac_AcBit], io: Kai
 
 
 proc n(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): int = 
-  if this.nInst != nil:
+  if this.nInstFlag:
     return this.nInst
   let nInstExpr = int(((this.chunk shr this.i) and 1))
   this.nInst = nInstExpr
-  if this.nInst != nil:
-    return this.nInst
+  this.nInstFlag = true
+  return this.nInst
 
 proc b(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): bool = 
-  if this.bInst != nil:
+  if this.bInstFlag:
     return this.bInst
   let bInstExpr = bool(this.n == 1)
   this.bInst = bInstExpr
-  if this.bInst != nil:
-    return this.bInst
+  this.bInstFlag = true
+  return this.bInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac_AcBit], filename: string): MifareClassic_Trailer_AccessConditions_Ac_AcBit =
   MifareClassic_Trailer_AccessConditions_Ac_AcBit.read(newKaitaiFileStream(filename), nil, nil)
@@ -753,12 +789,12 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ValidChunk], io: K
 
 
 proc valid(this: MifareClassic_Trailer_AccessConditions_ValidChunk): bool = 
-  if this.validInst != nil:
+  if this.validInstFlag:
     return this.validInst
   let validInstExpr = bool((this.invChunk xor this.chunk) == 15)
   this.validInst = validInstExpr
-  if this.validInst != nil:
-    return this.validInst
+  this.validInstFlag = true
+  return this.validInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_ValidChunk], filename: string): MifareClassic_Trailer_AccessConditions_ValidChunk =
   MifareClassic_Trailer_AccessConditions_ValidChunk.read(newKaitaiFileStream(filename), nil, nil)

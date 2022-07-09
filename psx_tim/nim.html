@@ -287,8 +287,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">clut</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PsxTim_Bitmap</span>
     <span class="p">`</span><span class="n">img</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PsxTim_Bitmap</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">hasClutInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">bppInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">hasClutInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasClutInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bppInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">bppInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">PsxTim_BppType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">bpp_4</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">bpp_8</span> <span class="o">=</span> <span class="mi">1</span>
@@ -342,20 +344,20 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">img</span> <span class="o">=</span> <span class="n">imgExpr</span>
 
 <span class="k">proc </span><span class="nf">hasClut</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PsxTim</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasClutInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasClutInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasClutInst</span>
   <span class="k">let</span> <span class="n">hasClutInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">hasClutInst</span> <span class="o">=</span> <span class="n">hasClutInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasClutInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasClutInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasClutInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasClutInst</span>
 
 <span class="k">proc </span><span class="nf">bpp</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PsxTim</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bppInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bppInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bppInst</span>
   <span class="k">let</span> <span class="n">bppInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="ow">and</span> <span class="mi">3</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bppInst</span> <span class="o">=</span> <span class="n">bppInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bppInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bppInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bppInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bppInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PsxTim], filename: string): PsxTim =</span>
   <span class="n">PsxTim</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

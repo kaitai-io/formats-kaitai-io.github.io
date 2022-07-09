@@ -8,7 +8,7 @@
   } else {
     root.GltfBinary = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * glTF is a format for distribution of 3D models optimized for being used in software
  * @see {@link https://github.com/KhronosGroup/glTF/tree/2354846/specification/2.0#binary-gltf-layout|Source}

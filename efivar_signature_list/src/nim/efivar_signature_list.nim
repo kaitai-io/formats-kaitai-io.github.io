@@ -15,19 +15,32 @@ type
     `signatures`*: seq[EfivarSignatureList_SignatureData]
     `parent`*: EfivarSignatureList
     `rawSignatures`*: seq[seq[byte]]
-    `isCertSha512X509Inst`*: bool
-    `isCertSha224Inst`*: bool
-    `isCertX509Inst`*: bool
-    `isCertSha256X509Inst`*: bool
-    `isCertRsa2048KeyInst`*: bool
-    `isCertSha512Inst`*: bool
-    `isCertSha384Inst`*: bool
-    `isCertSha1Inst`*: bool
-    `isCertRsa2048Sha1Inst`*: bool
-    `isCertSha256Inst`*: bool
-    `isCertSha384X509Inst`*: bool
-    `isCertRsa2048Sha256Inst`*: bool
-    `isCertDerPkcs7Inst`*: bool
+    `isCertSha512X509Inst`: bool
+    `isCertSha512X509InstFlag`: bool
+    `isCertSha224Inst`: bool
+    `isCertSha224InstFlag`: bool
+    `isCertX509Inst`: bool
+    `isCertX509InstFlag`: bool
+    `isCertSha256X509Inst`: bool
+    `isCertSha256X509InstFlag`: bool
+    `isCertRsa2048KeyInst`: bool
+    `isCertRsa2048KeyInstFlag`: bool
+    `isCertSha512Inst`: bool
+    `isCertSha512InstFlag`: bool
+    `isCertSha384Inst`: bool
+    `isCertSha384InstFlag`: bool
+    `isCertSha1Inst`: bool
+    `isCertSha1InstFlag`: bool
+    `isCertRsa2048Sha1Inst`: bool
+    `isCertRsa2048Sha1InstFlag`: bool
+    `isCertSha256Inst`: bool
+    `isCertSha256InstFlag`: bool
+    `isCertSha384X509Inst`: bool
+    `isCertSha384X509InstFlag`: bool
+    `isCertRsa2048Sha256Inst`: bool
+    `isCertRsa2048Sha256InstFlag`: bool
+    `isCertDerPkcs7Inst`: bool
+    `isCertDerPkcs7InstFlag`: bool
   EfivarSignatureList_SignatureData* = ref object of KaitaiStruct
     `owner`*: seq[byte]
     `data`*: seq[byte]
@@ -163,12 +176,12 @@ proc isCertSha512X509(this: EfivarSignatureList_SignatureList): bool =
   SHA512 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
   @see "EFI_CERT_X509_SHA512_GUID"
   ]##
-  if this.isCertSha512X509Inst != nil:
+  if this.isCertSha512X509InstFlag:
     return this.isCertSha512X509Inst
-  let isCertSha512X509InstExpr = bool(this.signatureType == @[99'u8, -65'u8, 109'u8, 68'u8, 2'u8, 37'u8, -38'u8, 76'u8, -68'u8, -6'u8, 36'u8, 101'u8, -46'u8, -80'u8, -2'u8, -99'u8])
+  let isCertSha512X509InstExpr = bool(this.signatureType == @[99'u8, 191'u8, 109'u8, 68'u8, 2'u8, 37'u8, 218'u8, 76'u8, 188'u8, 250'u8, 36'u8, 101'u8, 210'u8, 176'u8, 254'u8, 157'u8])
   this.isCertSha512X509Inst = isCertSha512X509InstExpr
-  if this.isCertSha512X509Inst != nil:
-    return this.isCertSha512X509Inst
+  this.isCertSha512X509InstFlag = true
+  return this.isCertSha512X509Inst
 
 proc isCertSha224(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -176,12 +189,12 @@ proc isCertSha224(this: EfivarSignatureList_SignatureList): bool =
   SHA-224 hash
   @see "EFI_CERT_SHA224_GUID"
   ]##
-  if this.isCertSha224Inst != nil:
+  if this.isCertSha224InstFlag:
     return this.isCertSha224Inst
-  let isCertSha224InstExpr = bool(this.signatureType == @[51'u8, 82'u8, 110'u8, 11'u8, 92'u8, -90'u8, -55'u8, 68'u8, -108'u8, 7'u8, -39'u8, -85'u8, -125'u8, -65'u8, -56'u8, -67'u8])
+  let isCertSha224InstExpr = bool(this.signatureType == @[51'u8, 82'u8, 110'u8, 11'u8, 92'u8, 166'u8, 201'u8, 68'u8, 148'u8, 7'u8, 217'u8, 171'u8, 131'u8, 191'u8, 200'u8, 189'u8])
   this.isCertSha224Inst = isCertSha224InstExpr
-  if this.isCertSha224Inst != nil:
-    return this.isCertSha224Inst
+  this.isCertSha224InstFlag = true
+  return this.isCertSha224Inst
 
 proc isCertX509(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -189,12 +202,12 @@ proc isCertX509(this: EfivarSignatureList_SignatureList): bool =
   X.509 certificate
   @see "EFI_CERT_X509_GUID"
   ]##
-  if this.isCertX509Inst != nil:
+  if this.isCertX509InstFlag:
     return this.isCertX509Inst
-  let isCertX509InstExpr = bool(this.signatureType == @[-95'u8, 89'u8, -64'u8, -91'u8, -28'u8, -108'u8, -89'u8, 74'u8, -121'u8, -75'u8, -85'u8, 21'u8, 92'u8, 43'u8, -16'u8, 114'u8])
+  let isCertX509InstExpr = bool(this.signatureType == @[161'u8, 89'u8, 192'u8, 165'u8, 228'u8, 148'u8, 167'u8, 74'u8, 135'u8, 181'u8, 171'u8, 21'u8, 92'u8, 43'u8, 240'u8, 114'u8])
   this.isCertX509Inst = isCertX509InstExpr
-  if this.isCertX509Inst != nil:
-    return this.isCertX509Inst
+  this.isCertX509InstFlag = true
+  return this.isCertX509Inst
 
 proc isCertSha256X509(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -202,12 +215,12 @@ proc isCertSha256X509(this: EfivarSignatureList_SignatureList): bool =
   SHA256 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
   @see "EFI_CERT_X509_SHA256_GUID"
   ]##
-  if this.isCertSha256X509Inst != nil:
+  if this.isCertSha256X509InstFlag:
     return this.isCertSha256X509Inst
-  let isCertSha256X509InstExpr = bool(this.signatureType == @[-110'u8, -92'u8, -46'u8, 59'u8, -64'u8, -106'u8, 121'u8, 64'u8, -76'u8, 32'u8, -4'u8, -7'u8, -114'u8, -15'u8, 3'u8, -19'u8])
+  let isCertSha256X509InstExpr = bool(this.signatureType == @[146'u8, 164'u8, 210'u8, 59'u8, 192'u8, 150'u8, 121'u8, 64'u8, 180'u8, 32'u8, 252'u8, 249'u8, 142'u8, 241'u8, 3'u8, 237'u8])
   this.isCertSha256X509Inst = isCertSha256X509InstExpr
-  if this.isCertSha256X509Inst != nil:
-    return this.isCertSha256X509Inst
+  this.isCertSha256X509InstFlag = true
+  return this.isCertSha256X509Inst
 
 proc isCertRsa2048Key(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -215,12 +228,12 @@ proc isCertRsa2048Key(this: EfivarSignatureList_SignatureList): bool =
   RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)
   @see "EFI_CERT_RSA2048_GUID"
   ]##
-  if this.isCertRsa2048KeyInst != nil:
+  if this.isCertRsa2048KeyInstFlag:
     return this.isCertRsa2048KeyInst
-  let isCertRsa2048KeyInstExpr = bool(this.signatureType == @[-24'u8, 102'u8, 87'u8, 60'u8, -100'u8, 38'u8, 52'u8, 78'u8, -86'u8, 20'u8, -19'u8, 119'u8, 110'u8, -123'u8, -77'u8, -74'u8])
+  let isCertRsa2048KeyInstExpr = bool(this.signatureType == @[232'u8, 102'u8, 87'u8, 60'u8, 156'u8, 38'u8, 52'u8, 78'u8, 170'u8, 20'u8, 237'u8, 119'u8, 110'u8, 133'u8, 179'u8, 182'u8])
   this.isCertRsa2048KeyInst = isCertRsa2048KeyInstExpr
-  if this.isCertRsa2048KeyInst != nil:
-    return this.isCertRsa2048KeyInst
+  this.isCertRsa2048KeyInstFlag = true
+  return this.isCertRsa2048KeyInst
 
 proc isCertSha512(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -228,12 +241,12 @@ proc isCertSha512(this: EfivarSignatureList_SignatureList): bool =
   SHA-512 hash
   @see "EFI_CERT_SHA512_GUID"
   ]##
-  if this.isCertSha512Inst != nil:
+  if this.isCertSha512InstFlag:
     return this.isCertSha512Inst
-  let isCertSha512InstExpr = bool(this.signatureType == @[-82'u8, 15'u8, 62'u8, 9'u8, -60'u8, -90'u8, 80'u8, 79'u8, -97'u8, 27'u8, -44'u8, 30'u8, 43'u8, -119'u8, -63'u8, -102'u8])
+  let isCertSha512InstExpr = bool(this.signatureType == @[174'u8, 15'u8, 62'u8, 9'u8, 196'u8, 166'u8, 80'u8, 79'u8, 159'u8, 27'u8, 212'u8, 30'u8, 43'u8, 137'u8, 193'u8, 154'u8])
   this.isCertSha512Inst = isCertSha512InstExpr
-  if this.isCertSha512Inst != nil:
-    return this.isCertSha512Inst
+  this.isCertSha512InstFlag = true
+  return this.isCertSha512Inst
 
 proc isCertSha384(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -241,12 +254,12 @@ proc isCertSha384(this: EfivarSignatureList_SignatureList): bool =
   SHA-384 hash
   @see "EFI_CERT_SHA384_GUID"
   ]##
-  if this.isCertSha384Inst != nil:
+  if this.isCertSha384InstFlag:
     return this.isCertSha384Inst
-  let isCertSha384InstExpr = bool(this.signatureType == @[7'u8, 83'u8, 62'u8, -1'u8, -48'u8, -97'u8, -55'u8, 72'u8, -123'u8, -15'u8, -118'u8, -43'u8, 108'u8, 112'u8, 30'u8, 1'u8])
+  let isCertSha384InstExpr = bool(this.signatureType == @[7'u8, 83'u8, 62'u8, 255'u8, 208'u8, 159'u8, 201'u8, 72'u8, 133'u8, 241'u8, 138'u8, 213'u8, 108'u8, 112'u8, 30'u8, 1'u8])
   this.isCertSha384Inst = isCertSha384InstExpr
-  if this.isCertSha384Inst != nil:
-    return this.isCertSha384Inst
+  this.isCertSha384InstFlag = true
+  return this.isCertSha384Inst
 
 proc isCertSha1(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -254,12 +267,12 @@ proc isCertSha1(this: EfivarSignatureList_SignatureList): bool =
   SHA-1 hash
   @see "EFI_CERT_SHA1_GUID"
   ]##
-  if this.isCertSha1Inst != nil:
+  if this.isCertSha1InstFlag:
     return this.isCertSha1Inst
-  let isCertSha1InstExpr = bool(this.signatureType == @[18'u8, -91'u8, 108'u8, -126'u8, 16'u8, -49'u8, -55'u8, 74'u8, -79'u8, -121'u8, -66'u8, 1'u8, 73'u8, 102'u8, 49'u8, -67'u8])
+  let isCertSha1InstExpr = bool(this.signatureType == @[18'u8, 165'u8, 108'u8, 130'u8, 16'u8, 207'u8, 201'u8, 74'u8, 177'u8, 135'u8, 190'u8, 1'u8, 73'u8, 102'u8, 49'u8, 189'u8])
   this.isCertSha1Inst = isCertSha1InstExpr
-  if this.isCertSha1Inst != nil:
-    return this.isCertSha1Inst
+  this.isCertSha1InstFlag = true
+  return this.isCertSha1Inst
 
 proc isCertRsa2048Sha1(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -267,12 +280,12 @@ proc isCertRsa2048Sha1(this: EfivarSignatureList_SignatureList): bool =
   RSA-2048 signature of a SHA-1 hash
   @see "EFI_CERT_RSA2048_SHA1_GUID"
   ]##
-  if this.isCertRsa2048Sha1Inst != nil:
+  if this.isCertRsa2048Sha1InstFlag:
     return this.isCertRsa2048Sha1Inst
-  let isCertRsa2048Sha1InstExpr = bool(this.signatureType == @[79'u8, 68'u8, -8'u8, 103'u8, 67'u8, -121'u8, -15'u8, 72'u8, -93'u8, 40'u8, 30'u8, -86'u8, -72'u8, 115'u8, 96'u8, -128'u8])
+  let isCertRsa2048Sha1InstExpr = bool(this.signatureType == @[79'u8, 68'u8, 248'u8, 103'u8, 67'u8, 135'u8, 241'u8, 72'u8, 163'u8, 40'u8, 30'u8, 170'u8, 184'u8, 115'u8, 96'u8, 128'u8])
   this.isCertRsa2048Sha1Inst = isCertRsa2048Sha1InstExpr
-  if this.isCertRsa2048Sha1Inst != nil:
-    return this.isCertRsa2048Sha1Inst
+  this.isCertRsa2048Sha1InstFlag = true
+  return this.isCertRsa2048Sha1Inst
 
 proc isCertSha256(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -280,12 +293,12 @@ proc isCertSha256(this: EfivarSignatureList_SignatureList): bool =
   SHA-256 hash
   @see "EFI_CERT_SHA256_GUID"
   ]##
-  if this.isCertSha256Inst != nil:
+  if this.isCertSha256InstFlag:
     return this.isCertSha256Inst
-  let isCertSha256InstExpr = bool(this.signatureType == @[38'u8, 22'u8, -60'u8, -63'u8, 76'u8, 80'u8, -110'u8, 64'u8, -84'u8, -87'u8, 65'u8, -7'u8, 54'u8, -109'u8, 67'u8, 40'u8])
+  let isCertSha256InstExpr = bool(this.signatureType == @[38'u8, 22'u8, 196'u8, 193'u8, 76'u8, 80'u8, 146'u8, 64'u8, 172'u8, 169'u8, 65'u8, 249'u8, 54'u8, 147'u8, 67'u8, 40'u8])
   this.isCertSha256Inst = isCertSha256InstExpr
-  if this.isCertSha256Inst != nil:
-    return this.isCertSha256Inst
+  this.isCertSha256InstFlag = true
+  return this.isCertSha256Inst
 
 proc isCertSha384X509(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -293,12 +306,12 @@ proc isCertSha384X509(this: EfivarSignatureList_SignatureList): bool =
   SHA384 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
   @see "EFI_CERT_X509_SHA384_GUID"
   ]##
-  if this.isCertSha384X509Inst != nil:
+  if this.isCertSha384X509InstFlag:
     return this.isCertSha384X509Inst
-  let isCertSha384X509InstExpr = bool(this.signatureType == @[110'u8, -121'u8, 118'u8, 112'u8, -62'u8, -128'u8, -26'u8, 78'u8, -86'u8, -46'u8, 40'u8, -77'u8, 73'u8, -90'u8, -122'u8, 91'u8])
+  let isCertSha384X509InstExpr = bool(this.signatureType == @[110'u8, 135'u8, 118'u8, 112'u8, 194'u8, 128'u8, 230'u8, 78'u8, 170'u8, 210'u8, 40'u8, 179'u8, 73'u8, 166'u8, 134'u8, 91'u8])
   this.isCertSha384X509Inst = isCertSha384X509InstExpr
-  if this.isCertSha384X509Inst != nil:
-    return this.isCertSha384X509Inst
+  this.isCertSha384X509InstFlag = true
+  return this.isCertSha384X509Inst
 
 proc isCertRsa2048Sha256(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -306,12 +319,12 @@ proc isCertRsa2048Sha256(this: EfivarSignatureList_SignatureList): bool =
   RSA-2048 signature of a SHA-256 hash
   @see "EFI_CERT_RSA2048_SHA256_GUID"
   ]##
-  if this.isCertRsa2048Sha256Inst != nil:
+  if this.isCertRsa2048Sha256InstFlag:
     return this.isCertRsa2048Sha256Inst
-  let isCertRsa2048Sha256InstExpr = bool(this.signatureType == @[-112'u8, 97'u8, -77'u8, -30'u8, -101'u8, -121'u8, 61'u8, 74'u8, -83'u8, -115'u8, -14'u8, -25'u8, -69'u8, -93'u8, 39'u8, -124'u8])
+  let isCertRsa2048Sha256InstExpr = bool(this.signatureType == @[144'u8, 97'u8, 179'u8, 226'u8, 155'u8, 135'u8, 61'u8, 74'u8, 173'u8, 141'u8, 242'u8, 231'u8, 187'u8, 163'u8, 39'u8, 132'u8])
   this.isCertRsa2048Sha256Inst = isCertRsa2048Sha256InstExpr
-  if this.isCertRsa2048Sha256Inst != nil:
-    return this.isCertRsa2048Sha256Inst
+  this.isCertRsa2048Sha256InstFlag = true
+  return this.isCertRsa2048Sha256Inst
 
 proc isCertDerPkcs7(this: EfivarSignatureList_SignatureList): bool = 
 
@@ -319,12 +332,12 @@ proc isCertDerPkcs7(this: EfivarSignatureList_SignatureList): bool =
   DER-encoded PKCS #7 version 1.5 [RFC2315]
   @see "EFI_CERT_TYPE_PKCS7_GUID"
   ]##
-  if this.isCertDerPkcs7Inst != nil:
+  if this.isCertDerPkcs7InstFlag:
     return this.isCertDerPkcs7Inst
-  let isCertDerPkcs7InstExpr = bool(this.signatureType == @[-99'u8, -46'u8, -81'u8, 74'u8, -33'u8, 104'u8, -18'u8, 73'u8, -118'u8, -87'u8, 52'u8, 125'u8, 55'u8, 86'u8, 101'u8, -89'u8])
+  let isCertDerPkcs7InstExpr = bool(this.signatureType == @[157'u8, 210'u8, 175'u8, 74'u8, 223'u8, 104'u8, 238'u8, 73'u8, 138'u8, 169'u8, 52'u8, 125'u8, 55'u8, 86'u8, 101'u8, 167'u8])
   this.isCertDerPkcs7Inst = isCertDerPkcs7InstExpr
-  if this.isCertDerPkcs7Inst != nil:
-    return this.isCertDerPkcs7Inst
+  this.isCertDerPkcs7InstFlag = true
+  return this.isCertDerPkcs7Inst
 
 proc fromFile*(_: typedesc[EfivarSignatureList_SignatureList], filename: string): EfivarSignatureList_SignatureList =
   EfivarSignatureList_SignatureList.read(newKaitaiFileStream(filename), nil, nil)

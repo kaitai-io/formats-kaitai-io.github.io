@@ -8,7 +8,7 @@
   } else {
     root.PsxTim = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)|Source}
  * @see {@link http://mrclick.zophar.net/TilEd/download/timgfx.txt|Source}

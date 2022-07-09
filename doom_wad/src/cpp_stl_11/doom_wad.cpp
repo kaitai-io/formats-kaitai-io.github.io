@@ -77,9 +77,8 @@ doom_wad_t::texture12_t::texture12_t(kaitai::kstream* p__io, doom_wad_t::index_e
 
 void doom_wad_t::texture12_t::_read() {
     m_num_textures = m__io->read_s4le();
-    int l_textures = num_textures();
     m_textures = std::unique_ptr<std::vector<std::unique_ptr<texture_index_t>>>(new std::vector<std::unique_ptr<texture_index_t>>());
-    m_textures->reserve(l_textures);
+    const int l_textures = num_textures();
     for (int i = 0; i < l_textures; i++) {
         m_textures->push_back(std::move(std::unique_ptr<texture_index_t>(new texture_index_t(m__io, this, m__root))));
     }
@@ -138,9 +137,8 @@ void doom_wad_t::texture12_t::texture_body_t::_read() {
     m_height = m__io->read_u2le();
     m_column_directory = m__io->read_u4le();
     m_num_patches = m__io->read_u2le();
-    int l_patches = num_patches();
     m_patches = std::unique_ptr<std::vector<std::unique_ptr<patch_t>>>(new std::vector<std::unique_ptr<patch_t>>());
-    m_patches->reserve(l_patches);
+    const int l_patches = num_patches();
     for (int i = 0; i < l_patches; i++) {
         m_patches->push_back(std::move(std::unique_ptr<patch_t>(new patch_t(m__io, this, m__root))));
     }
@@ -206,9 +204,8 @@ doom_wad_t::pnames_t::pnames_t(kaitai::kstream* p__io, doom_wad_t::index_entry_t
 
 void doom_wad_t::pnames_t::_read() {
     m_num_patches = m__io->read_u4le();
-    int l_names = num_patches();
     m_names = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m_names->reserve(l_names);
+    const int l_names = num_patches();
     for (int i = 0; i < l_names; i++) {
         m_names->push_back(std::move(kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(8), 0), std::string("ASCII"))));
     }
@@ -494,9 +491,8 @@ void doom_wad_t::blockmap_t::_read() {
     m_origin_y = m__io->read_s2le();
     m_num_cols = m__io->read_s2le();
     m_num_rows = m__io->read_s2le();
-    int l_linedefs_in_block = (num_cols() * num_rows());
     m_linedefs_in_block = std::unique_ptr<std::vector<std::unique_ptr<blocklist_t>>>(new std::vector<std::unique_ptr<blocklist_t>>());
-    m_linedefs_in_block->reserve(l_linedefs_in_block);
+    const int l_linedefs_in_block = (num_cols() * num_rows());
     for (int i = 0; i < l_linedefs_in_block; i++) {
         m_linedefs_in_block->push_back(std::move(std::unique_ptr<blocklist_t>(new blocklist_t(m__io, this, m__root))));
     }
@@ -555,9 +551,8 @@ std::vector<std::unique_ptr<doom_wad_t::index_entry_t>>* doom_wad_t::index() {
         return m_index.get();
     std::streampos _pos = m__io->pos();
     m__io->seek(index_offset());
-    int l_index = num_index_entries();
     m_index = std::unique_ptr<std::vector<std::unique_ptr<index_entry_t>>>(new std::vector<std::unique_ptr<index_entry_t>>());
-    m_index->reserve(l_index);
+    const int l_index = num_index_entries();
     for (int i = 0; i < l_index; i++) {
         m_index->push_back(std::move(std::unique_ptr<index_entry_t>(new index_entry_t(m__io, this, m__root))));
     }

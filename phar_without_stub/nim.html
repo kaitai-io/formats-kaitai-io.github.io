@@ -332,7 +332,8 @@ standard encoding of the system on which the phar was created.</p>
   <span class="n">PharWithoutStub_SerializedValue</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">raw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">parsedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">parsedInst</span><span class="p">`:</span> <span class="n">PhpSerializedValue</span>
+    <span class="p">`</span><span class="n">parsedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">PharWithoutStub_Signature</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_SignatureType</span>
@@ -341,9 +342,12 @@ standard encoding of the system on which the phar was created.</p>
   <span class="n">PharWithoutStub_FileFlags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_FileEntry</span>
-    <span class="p">`</span><span class="n">permissionsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">zlibCompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">bzip2CompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">permissionsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">permissionsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">zlibCompressedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">zlibCompressedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bzip2CompressedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bzip2CompressedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">PharWithoutStub_ApiVersion</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">release</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">major</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
@@ -353,9 +357,12 @@ standard encoding of the system on which the phar was created.</p>
   <span class="n">PharWithoutStub_GlobalFlags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PharWithoutStub_Manifest</span>
-    <span class="p">`</span><span class="n">anyZlibCompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">anyBzip2CompressedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">hasSignatureInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">anyZlibCompressedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">anyZlibCompressedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">anyBzip2CompressedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">anyBzip2CompressedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasSignatureInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">hasSignatureInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">PharWithoutStub_Manifest</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lenManifest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">numFiles</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -512,15 +519,15 @@ standard encoding of the system on which the phar was created.</p>
   <span class="sd">##[</span>
   <span class="n">The</span> <span class="n">serialized</span> <span class="n">value</span><span class="p">,</span> <span class="n">parsed</span> <span class="k">as</span> <span class="n">a</span> <span class="n">structure</span><span class="p">.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">parsedInstExpr</span> <span class="o">=</span> <span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span> <span class="o">=</span> <span class="n">parsedInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parsedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], filename: string): PharWithoutStub_SerializedValue =</span>
   <span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -573,36 +580,36 @@ standard encoding of the system on which the phar was created.</p>
   <span class="sd">##[</span>
   <span class="n">The</span> <span class="n">file</span><span class="sc">&#39;s permission bits.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
   <span class="k">let</span> <span class="n">permissionsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">511</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span> <span class="o">=</span> <span class="n">permissionsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">permissionsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
 
 <span class="k">proc </span><span class="nf">zlibCompressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Whether</span> <span class="n">this</span> <span class="n">file</span><span class="sc">&#39;s data is stored using zlib compression.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
   <span class="k">let</span> <span class="n">zlibCompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span> <span class="o">=</span> <span class="n">zlibCompressedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
 
 <span class="k">proc </span><span class="nf">bzip2Compressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Whether</span> <span class="n">this</span> <span class="n">file</span><span class="sc">&#39;s data is stored using bzip2 compression.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
   <span class="k">let</span> <span class="n">bzip2CompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span> <span class="o">=</span> <span class="n">bzip2CompressedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], filename: string): PharWithoutStub_FileFlags =</span>
   <span class="n">PharWithoutStub_FileFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -685,12 +692,12 @@ standard encoding of the system on which the phar was created.</p>
 <span class="n">zlib</span> <span class="n">compression</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
   <span class="k">let</span> <span class="n">anyZlibCompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span> <span class="o">=</span> <span class="n">anyZlibCompressedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
 
 <span class="k">proc </span><span class="nf">anyBzip2Compressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
 
@@ -699,24 +706,24 @@ standard encoding of the system on which the phar was created.</p>
 <span class="n">bzip2</span> <span class="n">compression</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span>
   <span class="k">let</span> <span class="n">anyBzip2CompressedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span> <span class="o">=</span> <span class="n">anyBzip2CompressedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span>
 
 <span class="k">proc </span><span class="nf">hasSignature</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Whether</span> <span class="n">this</span> <span class="n">phar</span> <span class="n">contains</span> <span class="n">a</span> <span class="n">signature</span><span class="p">.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span>
   <span class="k">let</span> <span class="n">hasSignatureInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span> <span class="o">=</span> <span class="n">hasSignatureInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">hasSignatureInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_GlobalFlags], filename: string): PharWithoutStub_GlobalFlags =</span>
   <span class="n">PharWithoutStub_GlobalFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

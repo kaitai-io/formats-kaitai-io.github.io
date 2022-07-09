@@ -149,11 +149,11 @@ public class MifareClassic extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    valuez = new ArrayList<Long>(((Number) (3)).intValue());
+                    this.valuez = new ArrayList<Long>();
                     for (int i = 0; i < 3; i++) {
                         this.valuez.add(this._io.readU4le());
                     }
-                    addrz = new ArrayList<Integer>(((Number) (4)).intValue());
+                    this.addrz = new ArrayList<Integer>();
                     for (int i = 0; i < 4; i++) {
                         this.addrz.add(this._io.readU1());
                     }
@@ -406,7 +406,7 @@ public class MifareClassic extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                rawChunks = new ArrayList<Long>(((Number) (_parent().acCountOfChunks())).intValue());
+                this.rawChunks = new ArrayList<Long>();
                 for (int i = 0; i < _parent().acCountOfChunks(); i++) {
                     this.rawChunks.add(this._io.readBitsIntBe(4));
                 }
@@ -667,7 +667,7 @@ public class MifareClassic extends KaitaiStruct {
                         return this.bits;
                     long _pos = this._io.pos();
                     this._io.seek(0);
-                    bits = new ArrayList<AcBit>(((Number) (_parent()._parent().acBits())).intValue());
+                    this.bits = new ArrayList<AcBit>();
                     for (int i = 0; i < _parent()._parent().acBits(); i++) {
                         this.bits.add(new AcBit(this._io, this, _root, index(), _parent().chunks().get((int) i).chunk()));
                     }
@@ -748,7 +748,7 @@ public class MifareClassic extends KaitaiStruct {
                     return this.dataAcs;
                 long _pos = this._io.pos();
                 this._io.seek(0);
-                dataAcs = new ArrayList<DataAc>(((Number) ((_parent().acsInSector() - 1))).intValue());
+                this.dataAcs = new ArrayList<DataAc>();
                 for (int i = 0; i < (_parent().acsInSector() - 1); i++) {
                     this.dataAcs.add(new DataAc(this._io, this, _root, acsRaw().get((int) i)));
                 }
@@ -761,7 +761,7 @@ public class MifareClassic extends KaitaiStruct {
                     return this.remaps;
                 long _pos = this._io.pos();
                 this._io.seek(0);
-                remaps = new ArrayList<ChunkBitRemap>(((Number) (_parent().acBits())).intValue());
+                this.remaps = new ArrayList<ChunkBitRemap>();
                 for (int i = 0; i < _parent().acBits(); i++) {
                     this.remaps.add(new ChunkBitRemap(this._io, this, _root, i));
                 }
@@ -774,7 +774,7 @@ public class MifareClassic extends KaitaiStruct {
                     return this.acsRaw;
                 long _pos = this._io.pos();
                 this._io.seek(0);
-                acsRaw = new ArrayList<Ac>(((Number) (_parent().acsInSector())).intValue());
+                this.acsRaw = new ArrayList<Ac>();
                 for (int i = 0; i < _parent().acsInSector(); i++) {
                     this.acsRaw.add(new Ac(this._io, this, _root, i));
                 }
@@ -797,7 +797,7 @@ public class MifareClassic extends KaitaiStruct {
                     return this.chunks;
                 long _pos = this._io.pos();
                 this._io.seek(0);
-                chunks = new ArrayList<ValidChunk>(((Number) (_parent().acBits())).intValue());
+                this.chunks = new ArrayList<ValidChunk>();
                 for (int i = 0; i < _parent().acBits(); i++) {
                     this.chunks.add(new ValidChunk(this._io, this, _root, rawChunks().get((int) remaps().get((int) i).invChunkNo()), rawChunks().get((int) remaps().get((int) i).chunkNo())));
                 }

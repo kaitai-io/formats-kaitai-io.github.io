@@ -25,9 +25,9 @@ class AndroidDto < Kaitai::Struct::Struct
 
   def _read
     @header = DtTableHeader.new(@_io, self, @_root)
-    @entries = Array.new(header.dt_entry_count)
+    @entries = []
     (header.dt_entry_count).times { |i|
-      @entries[i] = DtTableEntry.new(@_io, self, @_root)
+      @entries << DtTableEntry.new(@_io, self, @_root)
     }
     self
   end
@@ -90,9 +90,9 @@ class AndroidDto < Kaitai::Struct::Struct
       @dt_offset = @_io.read_u4be
       @id = @_io.read_u4be
       @rev = @_io.read_u4be
-      @custom = Array.new(4)
+      @custom = []
       (4).times { |i|
-        @custom[i] = @_io.read_u4be
+        @custom << @_io.read_u4be
       }
       self
     end

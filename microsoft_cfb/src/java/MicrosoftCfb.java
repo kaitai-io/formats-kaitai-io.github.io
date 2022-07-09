@@ -78,7 +78,7 @@ public class MicrosoftCfb extends KaitaiStruct {
             this.sizeMiniFat = this._io.readS4le();
             this.ofsDifat = this._io.readS4le();
             this.sizeDifat = this._io.readS4le();
-            difat = new ArrayList<Integer>(((Number) (109)).intValue());
+            this.difat = new ArrayList<Integer>();
             for (int i = 0; i < 109; i++) {
                 this.difat.add(this._io.readS4le());
             }
@@ -279,9 +279,9 @@ public class MicrosoftCfb extends KaitaiStruct {
             if (this.miniStream != null)
                 return this.miniStream;
             if (objectType() == ObjType.ROOT_STORAGE) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek(((ofs() + 1) * _root.sectorSize()));
+                io.seek(((ofs() + 1) * _root().sectorSize()));
                 this.miniStream = io.readBytes(size());
                 io.seek(_pos);
             }
@@ -292,9 +292,9 @@ public class MicrosoftCfb extends KaitaiStruct {
             if (this.child != null)
                 return this.child;
             if (childId() != -1) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((((_root.header().ofsDir() + 1) * _root.sectorSize()) + (childId() * 128)));
+                io.seek((((_root().header().ofsDir() + 1) * _root().sectorSize()) + (childId() * 128)));
                 this.child = new DirEntry(io, this, _root);
                 io.seek(_pos);
             }
@@ -305,9 +305,9 @@ public class MicrosoftCfb extends KaitaiStruct {
             if (this.leftSibling != null)
                 return this.leftSibling;
             if (leftSiblingId() != -1) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((((_root.header().ofsDir() + 1) * _root.sectorSize()) + (leftSiblingId() * 128)));
+                io.seek((((_root().header().ofsDir() + 1) * _root().sectorSize()) + (leftSiblingId() * 128)));
                 this.leftSibling = new DirEntry(io, this, _root);
                 io.seek(_pos);
             }
@@ -318,9 +318,9 @@ public class MicrosoftCfb extends KaitaiStruct {
             if (this.rightSibling != null)
                 return this.rightSibling;
             if (rightSiblingId() != -1) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((((_root.header().ofsDir() + 1) * _root.sectorSize()) + (rightSiblingId() * 128)));
+                io.seek((((_root().header().ofsDir() + 1) * _root().sectorSize()) + (rightSiblingId() * 128)));
                 this.rightSibling = new DirEntry(io, this, _root);
                 io.seek(_pos);
             }

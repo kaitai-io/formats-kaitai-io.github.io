@@ -184,6 +184,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="go.html" title="GPT (GUID) partition table parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="GPT (GUID) partition table parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -260,9 +265,12 @@ section#format-index .row {
 <span class="k">type</span>
   <span class="n">GptPartitionTable</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">primaryInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GptPartitionTable_PartitionHeader</span>
-    <span class="p">`</span><span class="n">backupInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GptPartitionTable_PartitionHeader</span>
+    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">primaryInst</span><span class="p">`:</span> <span class="n">GptPartitionTable_PartitionHeader</span>
+    <span class="p">`</span><span class="n">primaryInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">backupInst</span><span class="p">`:</span> <span class="n">GptPartitionTable_PartitionHeader</span>
+    <span class="p">`</span><span class="n">backupInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">GptPartitionTable_PartitionEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">typeGuid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">guid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -288,7 +296,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">crc32Array</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GptPartitionTable</span>
     <span class="p">`</span><span class="n">rawEntriesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
-    <span class="p">`</span><span class="n">entriesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">GptPartitionTable_PartitionEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">entriesInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">GptPartitionTable_PartitionEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">entriesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GptPartitionTable], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GptPartitionTable</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GptPartitionTable_PartitionEntry], io: KaitaiStream, root: KaitaiStruct, parent: GptPartitionTable_PartitionHeader): GptPartitionTable_PartitionEntry</span>
@@ -313,15 +322,15 @@ section#format-index .row {
 
 
 <span class="k">proc </span><span class="nf">sectorSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GptPartitionTable</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
   <span class="k">let</span> <span class="n">sectorSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">=</span> <span class="n">sectorSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
 
 <span class="k">proc </span><span class="nf">primary</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GptPartitionTable</span><span class="p">):</span> <span class="n">GptPartitionTable_PartitionHeader</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">GptPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -329,11 +338,11 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">primaryInstExpr</span> <span class="o">=</span> <span class="n">GptPartitionTable_PartitionHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">primaryInst</span> <span class="o">=</span> <span class="n">primaryInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">primaryInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryInst</span>
 
 <span class="k">proc </span><span class="nf">backup</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GptPartitionTable</span><span class="p">):</span> <span class="n">GptPartitionTable_PartitionHeader</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">backupInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">backupInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">backupInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">GptPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -341,8 +350,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">backupInstExpr</span> <span class="o">=</span> <span class="n">GptPartitionTable_PartitionHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">backupInst</span> <span class="o">=</span> <span class="n">backupInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">backupInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">backupInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">backupInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">backupInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GptPartitionTable], filename: string): GptPartitionTable =</span>
   <span class="n">GptPartitionTable</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -409,7 +418,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">crc32Array</span> <span class="o">=</span> <span class="n">crc32ArrayExpr</span>
 
 <span class="k">proc </span><span class="nf">entries</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GptPartitionTable_PartitionHeader</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">GptPartitionTable_PartitionEntry</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">GptPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -421,8 +430,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">GptPartitionTable_PartitionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawEntriesInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">entriesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entriesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GptPartitionTable_PartitionHeader], filename: string): GptPartitionTable_PartitionHeader =</span>
   <span class="n">GptPartitionTable_PartitionHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

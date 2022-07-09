@@ -35,9 +35,8 @@ ruby_marshal_t::ruby_array_t::ruby_array_t(kaitai::kstream* p__io, ruby_marshal_
 
 void ruby_marshal_t::ruby_array_t::_read() {
     m_num_elements = std::unique_ptr<packed_int_t>(new packed_int_t(m__io, this, m__root));
-    int l_elements = num_elements()->value();
     m_elements = std::unique_ptr<std::vector<std::unique_ptr<record_t>>>(new std::vector<std::unique_ptr<record_t>>());
-    m_elements->reserve(l_elements);
+    const int l_elements = num_elements()->value();
     for (int i = 0; i < l_elements; i++) {
         m_elements->push_back(std::move(std::unique_ptr<record_t>(new record_t(m__io, this, m__root))));
     }
@@ -82,9 +81,8 @@ ruby_marshal_t::ruby_struct_t::ruby_struct_t(kaitai::kstream* p__io, ruby_marsha
 void ruby_marshal_t::ruby_struct_t::_read() {
     m_name = std::unique_ptr<record_t>(new record_t(m__io, this, m__root));
     m_num_members = std::unique_ptr<packed_int_t>(new packed_int_t(m__io, this, m__root));
-    int l_members = num_members()->value();
     m_members = std::unique_ptr<std::vector<std::unique_ptr<pair_t>>>(new std::vector<std::unique_ptr<pair_t>>());
-    m_members->reserve(l_members);
+    const int l_members = num_members()->value();
     for (int i = 0; i < l_members; i++) {
         m_members->push_back(std::move(std::unique_ptr<pair_t>(new pair_t(m__io, this, m__root))));
     }
@@ -243,9 +241,8 @@ ruby_marshal_t::instance_var_t::instance_var_t(kaitai::kstream* p__io, ruby_mars
 void ruby_marshal_t::instance_var_t::_read() {
     m_obj = std::unique_ptr<record_t>(new record_t(m__io, this, m__root));
     m_num_vars = std::unique_ptr<packed_int_t>(new packed_int_t(m__io, this, m__root));
-    int l_vars = num_vars()->value();
     m_vars = std::unique_ptr<std::vector<std::unique_ptr<pair_t>>>(new std::vector<std::unique_ptr<pair_t>>());
-    m_vars->reserve(l_vars);
+    const int l_vars = num_vars()->value();
     for (int i = 0; i < l_vars; i++) {
         m_vars->push_back(std::move(std::unique_ptr<pair_t>(new pair_t(m__io, this, m__root))));
     }
@@ -340,9 +337,8 @@ ruby_marshal_t::ruby_hash_t::ruby_hash_t(kaitai::kstream* p__io, ruby_marshal_t:
 
 void ruby_marshal_t::ruby_hash_t::_read() {
     m_num_pairs = std::unique_ptr<packed_int_t>(new packed_int_t(m__io, this, m__root));
-    int l_pairs = num_pairs()->value();
     m_pairs = std::unique_ptr<std::vector<std::unique_ptr<pair_t>>>(new std::vector<std::unique_ptr<pair_t>>());
-    m_pairs->reserve(l_pairs);
+    const int l_pairs = num_pairs()->value();
     for (int i = 0; i < l_pairs; i++) {
         m_pairs->push_back(std::move(std::unique_ptr<pair_t>(new pair_t(m__io, this, m__root))));
     }

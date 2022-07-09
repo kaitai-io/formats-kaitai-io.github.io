@@ -385,11 +385,11 @@ and the underlying serialization/wire format.</p>
 
 <span class="kr">function</span> <span class="nc">SomeIp</span><span class="p">.</span><span class="nc">Header</span><span class="p">.</span><span class="nc">MessageId</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">service_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">==</span> <span class="kc">false</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">method_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
   <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">==</span> <span class="mi">1</span> <span class="kr">then</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">sub_id</span> <span class="o">==</span> <span class="kc">true</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">event_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
   <span class="kr">end</span>
 <span class="kr">end</span>

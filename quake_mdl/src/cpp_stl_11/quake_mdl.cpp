@@ -16,27 +16,23 @@ quake_mdl_t::quake_mdl_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, qua
 
 void quake_mdl_t::_read() {
     m_header = std::unique_ptr<mdl_header_t>(new mdl_header_t(m__io, this, m__root));
-    int l_skins = header()->num_skins();
     m_skins = std::unique_ptr<std::vector<std::unique_ptr<mdl_skin_t>>>(new std::vector<std::unique_ptr<mdl_skin_t>>());
-    m_skins->reserve(l_skins);
+    const int l_skins = header()->num_skins();
     for (int i = 0; i < l_skins; i++) {
         m_skins->push_back(std::move(std::unique_ptr<mdl_skin_t>(new mdl_skin_t(m__io, this, m__root))));
     }
-    int l_texture_coordinates = header()->num_verts();
     m_texture_coordinates = std::unique_ptr<std::vector<std::unique_ptr<mdl_texcoord_t>>>(new std::vector<std::unique_ptr<mdl_texcoord_t>>());
-    m_texture_coordinates->reserve(l_texture_coordinates);
+    const int l_texture_coordinates = header()->num_verts();
     for (int i = 0; i < l_texture_coordinates; i++) {
         m_texture_coordinates->push_back(std::move(std::unique_ptr<mdl_texcoord_t>(new mdl_texcoord_t(m__io, this, m__root))));
     }
-    int l_triangles = header()->num_tris();
     m_triangles = std::unique_ptr<std::vector<std::unique_ptr<mdl_triangle_t>>>(new std::vector<std::unique_ptr<mdl_triangle_t>>());
-    m_triangles->reserve(l_triangles);
+    const int l_triangles = header()->num_tris();
     for (int i = 0; i < l_triangles; i++) {
         m_triangles->push_back(std::move(std::unique_ptr<mdl_triangle_t>(new mdl_triangle_t(m__io, this, m__root))));
     }
-    int l_frames = header()->num_frames();
     m_frames = std::unique_ptr<std::vector<std::unique_ptr<mdl_frame_t>>>(new std::vector<std::unique_ptr<mdl_frame_t>>());
-    m_frames->reserve(l_frames);
+    const int l_frames = header()->num_frames();
     for (int i = 0; i < l_frames; i++) {
         m_frames->push_back(std::move(std::unique_ptr<mdl_frame_t>(new mdl_frame_t(m__io, this, m__root))));
     }
@@ -57,9 +53,8 @@ quake_mdl_t::mdl_vertex_t::mdl_vertex_t(kaitai::kstream* p__io, kaitai::kstruct*
 }
 
 void quake_mdl_t::mdl_vertex_t::_read() {
-    int l_values = 3;
     m_values = std::unique_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>());
-    m_values->reserve(l_values);
+    const int l_values = 3;
     for (int i = 0; i < l_values; i++) {
         m_values->push_back(std::move(m__io->read_u1()));
     }
@@ -173,9 +168,8 @@ void quake_mdl_t::mdl_skin_t::_read() {
     n_frame_times = true;
     if (group() != 0) {
         n_frame_times = false;
-        int l_frame_times = num_frames();
         m_frame_times = std::unique_ptr<std::vector<float>>(new std::vector<float>());
-        m_frame_times->reserve(l_frame_times);
+        const int l_frame_times = num_frames();
         for (int i = 0; i < l_frame_times; i++) {
             m_frame_times->push_back(std::move(m__io->read_f4le()));
         }
@@ -183,9 +177,8 @@ void quake_mdl_t::mdl_skin_t::_read() {
     n_group_texture_data = true;
     if (group() != 0) {
         n_group_texture_data = false;
-        int l_group_texture_data = num_frames();
         m_group_texture_data = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-        m_group_texture_data->reserve(l_group_texture_data);
+        const int l_group_texture_data = num_frames();
         for (int i = 0; i < l_group_texture_data; i++) {
             m_group_texture_data->push_back(std::move(m__io->read_bytes(_root()->header()->skin_size())));
         }
@@ -233,16 +226,14 @@ void quake_mdl_t::mdl_frame_t::_read() {
     n_time = true;
     if (type() != 0) {
         n_time = false;
-        int l_time = type();
         m_time = std::unique_ptr<std::vector<float>>(new std::vector<float>());
-        m_time->reserve(l_time);
+        const int l_time = type();
         for (int i = 0; i < l_time; i++) {
             m_time->push_back(std::move(m__io->read_f4le()));
         }
     }
-    int l_frames = num_simple_frames();
     m_frames = std::unique_ptr<std::vector<std::unique_ptr<mdl_simple_frame_t>>>(new std::vector<std::unique_ptr<mdl_simple_frame_t>>());
-    m_frames->reserve(l_frames);
+    const int l_frames = num_simple_frames();
     for (int i = 0; i < l_frames; i++) {
         m_frames->push_back(std::move(std::unique_ptr<mdl_simple_frame_t>(new mdl_simple_frame_t(m__io, this, m__root))));
     }
@@ -282,9 +273,8 @@ void quake_mdl_t::mdl_simple_frame_t::_read() {
     m_bbox_min = std::unique_ptr<mdl_vertex_t>(new mdl_vertex_t(m__io, this, m__root));
     m_bbox_max = std::unique_ptr<mdl_vertex_t>(new mdl_vertex_t(m__io, this, m__root));
     m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(kaitai::kstream::bytes_strip_right(m__io->read_bytes(16), 0), 0, false), std::string("ASCII"));
-    int l_vertices = _root()->header()->num_verts();
     m_vertices = std::unique_ptr<std::vector<std::unique_ptr<mdl_vertex_t>>>(new std::vector<std::unique_ptr<mdl_vertex_t>>());
-    m_vertices->reserve(l_vertices);
+    const int l_vertices = _root()->header()->num_verts();
     for (int i = 0; i < l_vertices; i++) {
         m_vertices->push_back(std::move(std::unique_ptr<mdl_vertex_t>(new mdl_vertex_t(m__io, this, m__root))));
     }
@@ -306,9 +296,8 @@ quake_mdl_t::mdl_triangle_t::mdl_triangle_t(kaitai::kstream* p__io, quake_mdl_t*
 
 void quake_mdl_t::mdl_triangle_t::_read() {
     m_faces_front = m__io->read_s4le();
-    int l_vertices = 3;
     m_vertices = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    m_vertices->reserve(l_vertices);
+    const int l_vertices = 3;
     for (int i = 0; i < l_vertices; i++) {
         m_vertices->push_back(std::move(m__io->read_s4le()));
     }

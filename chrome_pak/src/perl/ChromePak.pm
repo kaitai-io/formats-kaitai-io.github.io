@@ -49,12 +49,12 @@ sub _read {
     $self->{resources} = ();
     my $n_resources = ($self->num_resources() + 1);
     for (my $i = 0; $i < $n_resources; $i++) {
-        $self->{resources}[$i] = ChromePak::Resource->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{resources}}, ChromePak::Resource->new($self->{_io}, $self, $self->{_root});
     }
     $self->{aliases} = ();
     my $n_aliases = $self->num_aliases();
     for (my $i = 0; $i < $n_aliases; $i++) {
-        $self->{aliases}[$i] = ChromePak::Alias->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{aliases}}, ChromePak::Alias->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -147,7 +147,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _rows = new List<Row>((int) (M_Root.Header.Height));
+                _rows = new List<Row>();
                 for (var i = 0; i < M_Root.Header.Height; i++)
                 {
                     _rows.Add(new Row(m_io, this, m_root));
@@ -175,7 +175,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _pixels = new List<KaitaiStruct>((int) (M_Root.Header.Width));
+                _pixels = new List<KaitaiStruct>();
                 for (var i = 0; i < M_Root.Header.Width; i++)
                 {
                     switch (M_Root.Header.BytesPerPixel) {

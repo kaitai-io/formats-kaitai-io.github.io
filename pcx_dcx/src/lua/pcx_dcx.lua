@@ -28,7 +28,7 @@ function PcxDcx:_read()
   self.files = {}
   local i = 0
   while true do
-    _ = PcxDcx.PcxOffset(self._io, self, self._root)
+    local _ = PcxDcx.PcxOffset(self._io, self, self._root)
     self.files[i + 1] = _
     if _.ofs_body == 0 then
       break
@@ -41,29 +41,29 @@ end
 PcxDcx.PcxOffset = class.class(KaitaiStruct)
 
 function PcxDcx.PcxOffset:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function PcxDcx.PcxOffset:_read()
-self.ofs_body = self._io:read_u4le()
+  self.ofs_body = self._io:read_u4le()
 end
 
 PcxDcx.PcxOffset.property.body = {}
 function PcxDcx.PcxOffset.property.body:get()
-if self._m_body ~= nil then
-  return self._m_body
-end
+  if self._m_body ~= nil then
+    return self._m_body
+  end
 
-if self.ofs_body ~= 0 then
-  local _pos = self._io:pos()
-  self._io:seek(self.ofs_body)
-  self._m_body = Pcx(self._io)
-  self._io:seek(_pos)
-end
-return self._m_body
+  if self.ofs_body ~= 0 then
+    local _pos = self._io:pos()
+    self._io:seek(self.ofs_body)
+    self._m_body = Pcx(self._io)
+    self._io:seek(_pos)
+  end
+  return self._m_body
 end
 
 

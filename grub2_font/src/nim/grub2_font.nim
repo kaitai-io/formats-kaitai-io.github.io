@@ -38,7 +38,8 @@ type
     `flags`*: uint8
     `ofsDefinition`*: uint32
     `parent`*: Grub2Font_ChixSection
-    `definitionInst`*: Grub2Font_ChixSection_CharacterDefinition
+    `definitionInst`: Grub2Font_ChixSection_CharacterDefinition
+    `definitionInstFlag`: bool
   Grub2Font_ChixSection_CharacterDefinition* = ref object of KaitaiStruct
     `width`*: uint16
     `height`*: uint16
@@ -318,7 +319,7 @@ proc read*(_: typedesc[Grub2Font_ChixSection_Character], io: KaitaiStream, root:
   this.ofsDefinition = ofsDefinitionExpr
 
 proc definition(this: Grub2Font_ChixSection_Character): Grub2Font_ChixSection_CharacterDefinition = 
-  if this.definitionInst != nil:
+  if this.definitionInstFlag:
     return this.definitionInst
   let io = Grub2Font(this.root).io
   let pos = io.pos()
@@ -326,8 +327,8 @@ proc definition(this: Grub2Font_ChixSection_Character): Grub2Font_ChixSection_Ch
   let definitionInstExpr = Grub2Font_ChixSection_CharacterDefinition.read(io, this.root, this)
   this.definitionInst = definitionInstExpr
   io.seek(pos)
-  if this.definitionInst != nil:
-    return this.definitionInst
+  this.definitionInstFlag = true
+  return this.definitionInst
 
 proc fromFile*(_: typedesc[Grub2Font_ChixSection_Character], filename: string): Grub2Font_ChixSection_Character =
   Grub2Font_ChixSection_Character.read(newKaitaiFileStream(filename), nil, nil)

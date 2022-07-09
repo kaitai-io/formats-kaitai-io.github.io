@@ -129,9 +129,9 @@ class MagicavoxelVox < Kaitai::Struct::Struct
     end
 
     def _read
-      @colors = Array.new(256)
+      @colors = []
       (256).times { |i|
-        @colors[i] = Color.new(@_io, self, @_root)
+        @colors << Color.new(@_io, self, @_root)
       }
       self
     end
@@ -247,9 +247,9 @@ class MagicavoxelVox < Kaitai::Struct::Struct
 
     def _read
       @num_voxels = @_io.read_u4le
-      @voxels = Array.new(num_voxels)
+      @voxels = []
       (num_voxels).times { |i|
-        @voxels[i] = Voxel.new(@_io, self, @_root)
+        @voxels << Voxel.new(@_io, self, @_root)
       }
       self
     end

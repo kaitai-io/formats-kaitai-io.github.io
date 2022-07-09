@@ -32,7 +32,7 @@ function WindowsShellItems:_read()
   self.items = {}
   local i = 0
   while true do
-    _ = WindowsShellItems.ShellItem(self._io, self, self._root)
+    local _ = WindowsShellItems.ShellItem(self._io, self, self._root)
     self.items[i + 1] = _
     if _.len_data == 0 then
       break
@@ -47,24 +47,24 @@ end
 WindowsShellItems.ShellItemData = class.class(KaitaiStruct)
 
 function WindowsShellItems.ShellItemData:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function WindowsShellItems.ShellItemData:_read()
-self.code = self._io:read_u1()
-local _on = self.code
-if _on == 31 then
-  self.body1 = WindowsShellItems.RootFolderBody(self._io, self, self._root)
-end
-local _on = (self.code & 112)
-if _on == 32 then
-  self.body2 = WindowsShellItems.VolumeBody(self._io, self, self._root)
-elseif _on == 48 then
-  self.body2 = WindowsShellItems.FileEntryBody(self._io, self, self._root)
-end
+  self.code = self._io:read_u1()
+  local _on = self.code
+  if _on == 31 then
+    self.body1 = WindowsShellItems.RootFolderBody(self._io, self, self._root)
+  end
+  local _on = (self.code & 112)
+  if _on == 32 then
+    self.body2 = WindowsShellItems.VolumeBody(self._io, self, self._root)
+  elseif _on == 48 then
+    self.body2 = WindowsShellItems.FileEntryBody(self._io, self, self._root)
+  end
 end
 
 
@@ -73,19 +73,19 @@ end
 WindowsShellItems.ShellItem = class.class(KaitaiStruct)
 
 function WindowsShellItems.ShellItem:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function WindowsShellItems.ShellItem:_read()
-self.len_data = self._io:read_u2le()
-if self.len_data >= 2 then
-  self._raw_data = self._io:read_bytes((self.len_data - 2))
-  local _io = KaitaiStream(stringstream(self._raw_data))
-  self.data = WindowsShellItems.ShellItemData(_io, self, self._root)
-end
+  self.len_data = self._io:read_u2le()
+  if self.len_data >= 2 then
+    self._raw_data = self._io:read_bytes((self.len_data - 2))
+    local _io = KaitaiStream(stringstream(self._raw_data))
+    self.data = WindowsShellItems.ShellItemData(_io, self, self._root)
+  end
 end
 
 
@@ -94,15 +94,15 @@ end
 WindowsShellItems.RootFolderBody = class.class(KaitaiStruct)
 
 function WindowsShellItems.RootFolderBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function WindowsShellItems.RootFolderBody:_read()
-self.sort_index = self._io:read_u1()
-self.shell_folder_id = self._io:read_bytes(16)
+  self.sort_index = self._io:read_u1()
+  self.shell_folder_id = self._io:read_bytes(16)
 end
 
 
@@ -111,14 +111,14 @@ end
 WindowsShellItems.VolumeBody = class.class(KaitaiStruct)
 
 function WindowsShellItems.VolumeBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function WindowsShellItems.VolumeBody:_read()
-self.flags = self._io:read_u1()
+  self.flags = self._io:read_u1()
 end
 
 
@@ -127,37 +127,37 @@ end
 WindowsShellItems.FileEntryBody = class.class(KaitaiStruct)
 
 function WindowsShellItems.FileEntryBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function WindowsShellItems.FileEntryBody:_read()
-self._unnamed0 = self._io:read_u1()
-self.file_size = self._io:read_u4le()
-self.last_mod_time = self._io:read_u4le()
-self.file_attrs = self._io:read_u2le()
+  self._unnamed0 = self._io:read_u1()
+  self.file_size = self._io:read_u4le()
+  self.last_mod_time = self._io:read_u4le()
+  self.file_attrs = self._io:read_u2le()
 end
 
 WindowsShellItems.FileEntryBody.property.is_dir = {}
 function WindowsShellItems.FileEntryBody.property.is_dir:get()
-if self._m_is_dir ~= nil then
-  return self._m_is_dir
-end
+  if self._m_is_dir ~= nil then
+    return self._m_is_dir
+  end
 
-self._m_is_dir = (self._parent.code & 1) ~= 0
-return self._m_is_dir
+  self._m_is_dir = (self._parent.code & 1) ~= 0
+  return self._m_is_dir
 end
 
 WindowsShellItems.FileEntryBody.property.is_file = {}
 function WindowsShellItems.FileEntryBody.property.is_file:get()
-if self._m_is_file ~= nil then
-  return self._m_is_file
-end
+  if self._m_is_file ~= nil then
+    return self._m_is_file
+  end
 
-self._m_is_file = (self._parent.code & 2) ~= 0
-return self._m_is_file
+  self._m_is_file = (self._parent.code & 2) ~= 0
+  return self._m_is_file
 end
 
 

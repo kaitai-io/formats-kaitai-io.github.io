@@ -391,8 +391,8 @@ end
 function PcfFont.Format:_read()
   self.padding1 = self._io:read_bits_int_be(2)
   self.scan_unit_mask = self._io:read_bits_int_be(2)
-  self.is_most_significant_bit_first = self._io:read_bits_int_be(1)
-  self.is_big_endian = self._io:read_bits_int_be(1)
+  self.is_most_significant_bit_first = self._io:read_bits_int_be(1) ~= 0
+  self.is_big_endian = self._io:read_bits_int_be(1) ~= 0
   self.glyph_pad_mask = self._io:read_bits_int_be(2)
   self._io:align_to_byte()
   self.format = self._io:read_u1()

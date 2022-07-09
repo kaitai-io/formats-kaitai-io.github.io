@@ -29,9 +29,9 @@ class Zisofs < Kaitai::Struct::Struct
     @_raw_header = @_io.read_bytes(16)
     _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
     @header = Header.new(_io__raw_header, self, @_root)
-    @block_pointers = Array.new((header.num_blocks + 1))
+    @block_pointers = []
     ((header.num_blocks + 1)).times { |i|
-      @block_pointers[i] = @_io.read_u4le
+      @block_pointers << @_io.read_u4le
     }
     self
   end
@@ -108,9 +108,9 @@ class Zisofs < Kaitai::Struct::Struct
   end
   def blocks
     return @blocks unless @blocks.nil?
-    @blocks = Array.new(header.num_blocks)
+    @blocks = []
     (header.num_blocks).times { |i|
-      @blocks[i] = Block.new(@_io, self, @_root, block_pointers[i], block_pointers[(i + 1)])
+      @blocks << Block.new(@_io, self, @_root, block_pointers[i], block_pointers[(i + 1)])
     }
     @blocks
   end

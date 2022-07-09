@@ -6,7 +6,8 @@ type
     `dir`*: Dune2Pak_Files
     `parent`*: KaitaiStruct
     `rawDir`*: seq[byte]
-    `dirSizeInst`*: uint32
+    `dirSizeInst`: uint32
+    `dirSizeInstFlag`: bool
   Dune2Pak_Files* = ref object of KaitaiStruct
     `files`*: seq[Dune2Pak_File]
     `parent`*: Dune2Pak
@@ -15,9 +16,12 @@ type
     `fileName`*: string
     `idx`*: uint32
     `parent`*: Dune2Pak_Files
-    `nextOfs0Inst`*: uint32
-    `nextOfsInst`*: int
-    `bodyInst`*: seq[byte]
+    `nextOfs0Inst`: uint32
+    `nextOfs0InstFlag`: bool
+    `nextOfsInst`: int
+    `nextOfsInstFlag`: bool
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[Dune2Pak], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dune2Pak
 proc read*(_: typedesc[Dune2Pak_Files], io: KaitaiStream, root: KaitaiStruct, parent: Dune2Pak): Dune2Pak_Files
@@ -47,15 +51,15 @@ proc read*(_: typedesc[Dune2Pak], io: KaitaiStream, root: KaitaiStruct, parent: 
   this.dir = dirExpr
 
 proc dirSize(this: Dune2Pak): uint32 = 
-  if this.dirSizeInst != nil:
+  if this.dirSizeInstFlag:
     return this.dirSizeInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let dirSizeInstExpr = this.io.readU4le()
   this.dirSizeInst = dirSizeInstExpr
   this.io.seek(pos)
-  if this.dirSizeInst != nil:
-    return this.dirSizeInst
+  this.dirSizeInstFlag = true
+  return this.dirSizeInst
 
 proc fromFile*(_: typedesc[Dune2Pak], filename: string): Dune2Pak =
   Dune2Pak.read(newKaitaiFileStream(filename), nil, nil)
@@ -95,25 +99,25 @@ proc read*(_: typedesc[Dune2Pak_File], io: KaitaiStream, root: KaitaiStruct, par
     this.fileName = fileNameExpr
 
 proc nextOfs0(this: Dune2Pak_File): uint32 = 
-  if this.nextOfs0Inst != nil:
+  if this.nextOfs0InstFlag:
     return this.nextOfs0Inst
   if this.ofs != 0:
     let nextOfs0InstExpr = uint32(Dune2Pak(this.root).dir.files[(this.idx + 1)].ofs)
     this.nextOfs0Inst = nextOfs0InstExpr
-  if this.nextOfs0Inst != nil:
-    return this.nextOfs0Inst
+  this.nextOfs0InstFlag = true
+  return this.nextOfs0Inst
 
 proc nextOfs(this: Dune2Pak_File): int = 
-  if this.nextOfsInst != nil:
+  if this.nextOfsInstFlag:
     return this.nextOfsInst
   if this.ofs != 0:
     let nextOfsInstExpr = int((if this.nextOfs0 == 0: Dune2Pak(this.root).io.size else: this.nextOfs0))
     this.nextOfsInst = nextOfsInstExpr
-  if this.nextOfsInst != nil:
-    return this.nextOfsInst
+  this.nextOfsInstFlag = true
+  return this.nextOfsInst
 
 proc body(this: Dune2Pak_File): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   if this.ofs != 0:
     let io = Dune2Pak(this.root).io
@@ -122,8 +126,8 @@ proc body(this: Dune2Pak_File): seq[byte] =
     let bodyInstExpr = io.readBytes(int((this.nextOfs - this.ofs)))
     this.bodyInst = bodyInstExpr
     io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[Dune2Pak_File], filename: string): Dune2Pak_File =
   Dune2Pak_File.read(newKaitaiFileStream(filename), nil, nil)

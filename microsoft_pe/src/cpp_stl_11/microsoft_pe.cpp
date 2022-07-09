@@ -282,9 +282,8 @@ void microsoft_pe_t::pe_header_t::_read() {
     m__raw_optional_hdr = m__io->read_bytes(coff_hdr()->size_of_optional_header());
     m__io__raw_optional_hdr = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_optional_hdr));
     m_optional_hdr = std::unique_ptr<optional_header_t>(new optional_header_t(m__io__raw_optional_hdr.get(), this, m__root));
-    int l_sections = coff_hdr()->number_of_sections();
     m_sections = std::unique_ptr<std::vector<std::unique_ptr<section_t>>>(new std::vector<std::unique_ptr<section_t>>());
-    m_sections->reserve(l_sections);
+    const int l_sections = coff_hdr()->number_of_sections();
     for (int i = 0; i < l_sections; i++) {
         m_sections->push_back(std::move(std::unique_ptr<section_t>(new section_t(m__io, this, m__root))));
     }
@@ -520,9 +519,8 @@ std::vector<std::unique_ptr<microsoft_pe_t::coff_symbol_t>>* microsoft_pe_t::cof
         return m_symbol_table.get();
     std::streampos _pos = m__io->pos();
     m__io->seek(pointer_to_symbol_table());
-    int l_symbol_table = number_of_symbols();
     m_symbol_table = std::unique_ptr<std::vector<std::unique_ptr<coff_symbol_t>>>(new std::vector<std::unique_ptr<coff_symbol_t>>());
-    m_symbol_table->reserve(l_symbol_table);
+    const int l_symbol_table = number_of_symbols();
     for (int i = 0; i < l_symbol_table; i++) {
         m_symbol_table->push_back(std::move(std::unique_ptr<coff_symbol_t>(new coff_symbol_t(m__io, this, m__root))));
     }

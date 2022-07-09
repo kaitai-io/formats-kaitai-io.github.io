@@ -23,9 +23,9 @@ class Ico < Kaitai::Struct::Struct
     @magic = @_io.read_bytes(4)
     raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 1, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [0, 0, 1, 0].pack('C*')
     @num_images = @_io.read_u2le
-    @images = Array.new(num_images)
+    @images = []
     (num_images).times { |i|
-      @images[i] = IconDirEntry.new(@_io, self, @_root)
+      @images << IconDirEntry.new(@_io, self, @_root)
     }
     self
   end

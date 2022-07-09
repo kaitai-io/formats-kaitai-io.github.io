@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class DoomWad(KaitaiStruct):
@@ -67,9 +66,9 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.num_textures = self._io.read_s4le()
-            self.textures = [None] * (self.num_textures)
+            self.textures = []
             for i in range(self.num_textures):
-                self.textures[i] = DoomWad.Texture12.TextureIndex(self._io, self, self._root)
+                self.textures.append(DoomWad.Texture12.TextureIndex(self._io, self, self._root))
 
 
         class TextureIndex(KaitaiStruct):
@@ -85,13 +84,13 @@ class DoomWad(KaitaiStruct):
             @property
             def body(self):
                 if hasattr(self, '_m_body'):
-                    return self._m_body if hasattr(self, '_m_body') else None
+                    return self._m_body
 
                 _pos = self._io.pos()
                 self._io.seek(self.offset)
                 self._m_body = DoomWad.Texture12.TextureBody(self._io, self, self._root)
                 self._io.seek(_pos)
-                return self._m_body if hasattr(self, '_m_body') else None
+                return getattr(self, '_m_body', None)
 
 
         class TextureBody(KaitaiStruct):
@@ -108,9 +107,9 @@ class DoomWad(KaitaiStruct):
                 self.height = self._io.read_u2le()
                 self.column_directory = self._io.read_u4le()
                 self.num_patches = self._io.read_u2le()
-                self.patches = [None] * (self.num_patches)
+                self.patches = []
                 for i in range(self.num_patches):
-                    self.patches[i] = DoomWad.Texture12.Patch(self._io, self, self._root)
+                    self.patches.append(DoomWad.Texture12.Patch(self._io, self, self._root))
 
 
 
@@ -160,9 +159,9 @@ class DoomWad(KaitaiStruct):
 
         def _read(self):
             self.num_patches = self._io.read_u4le()
-            self.names = [None] * (self.num_patches)
+            self.names = []
             for i in range(self.num_patches):
-                self.names[i] = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u"ASCII")
+                self.names.append((KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u"ASCII"))
 
 
 
@@ -303,7 +302,7 @@ class DoomWad(KaitaiStruct):
         @property
         def contents(self):
             if hasattr(self, '_m_contents'):
-                return self._m_contents if hasattr(self, '_m_contents') else None
+                return self._m_contents
 
             io = self._root._io
             _pos = io.pos()
@@ -348,7 +347,7 @@ class DoomWad(KaitaiStruct):
             else:
                 self._m_contents = io.read_bytes(self.size)
             io.seek(_pos)
-            return self._m_contents if hasattr(self, '_m_contents') else None
+            return getattr(self, '_m_contents', None)
 
 
     class Sidedefs(KaitaiStruct):
@@ -379,9 +378,9 @@ class DoomWad(KaitaiStruct):
             self.origin_y = self._io.read_s2le()
             self.num_cols = self._io.read_s2le()
             self.num_rows = self._io.read_s2le()
-            self.linedefs_in_block = [None] * ((self.num_cols * self.num_rows))
+            self.linedefs_in_block = []
             for i in range((self.num_cols * self.num_rows)):
-                self.linedefs_in_block[i] = DoomWad.Blockmap.Blocklist(self._io, self, self._root)
+                self.linedefs_in_block.append(DoomWad.Blockmap.Blocklist(self._io, self, self._root))
 
 
         class Blocklist(KaitaiStruct):
@@ -398,7 +397,7 @@ class DoomWad(KaitaiStruct):
             def linedefs(self):
                 """List of linedefs found in this block."""
                 if hasattr(self, '_m_linedefs'):
-                    return self._m_linedefs if hasattr(self, '_m_linedefs') else None
+                    return self._m_linedefs
 
                 _pos = self._io.pos()
                 self._io.seek((self.offset * 2))
@@ -411,22 +410,22 @@ class DoomWad(KaitaiStruct):
                         break
                     i += 1
                 self._io.seek(_pos)
-                return self._m_linedefs if hasattr(self, '_m_linedefs') else None
+                return getattr(self, '_m_linedefs', None)
 
 
 
     @property
     def index(self):
         if hasattr(self, '_m_index'):
-            return self._m_index if hasattr(self, '_m_index') else None
+            return self._m_index
 
         _pos = self._io.pos()
         self._io.seek(self.index_offset)
-        self._m_index = [None] * (self.num_index_entries)
+        self._m_index = []
         for i in range(self.num_index_entries):
-            self._m_index[i] = DoomWad.IndexEntry(self._io, self, self._root)
+            self._m_index.append(DoomWad.IndexEntry(self._io, self, self._root))
 
         self._io.seek(_pos)
-        return self._m_index if hasattr(self, '_m_index') else None
+        return getattr(self, '_m_index', None)
 
 

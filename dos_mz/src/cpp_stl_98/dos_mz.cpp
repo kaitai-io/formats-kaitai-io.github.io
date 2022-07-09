@@ -159,9 +159,8 @@ std::vector<dos_mz_t::relocation_t*>* dos_mz_t::relocations() {
         kaitai::kstream *io = header()->_io();
         std::streampos _pos = io->pos();
         io->seek(header()->mz()->ofs_relocations());
-        int l_relocations = header()->mz()->num_relocations();
         m_relocations = new std::vector<relocation_t*>();
-        m_relocations->reserve(l_relocations);
+        const int l_relocations = header()->mz()->num_relocations();
         for (int i = 0; i < l_relocations; i++) {
             m_relocations->push_back(new relocation_t(io, this, m__root));
         }

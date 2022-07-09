@@ -28,7 +28,8 @@ type
     `entries`*: seq[PhpSerializedValue_MappingEntry]
     `closingBrace`*: seq[byte]
     `parent`*: KaitaiStruct
-    `numEntriesInst`*: int
+    `numEntriesInst`: int
+    `numEntriesInstFlag`: bool
   PhpSerializedValue_FloatContents* = ref object of KaitaiStruct
     `colon`*: seq[byte]
     `valueDec`*: string
@@ -39,7 +40,8 @@ type
     `data`*: seq[byte]
     `closingQuote`*: seq[byte]
     `parent`*: KaitaiStruct
-    `lenDataInst`*: int
+    `lenDataInst`: int
+    `lenDataInstFlag`: bool
   PhpSerializedValue_ObjectContents* = ref object of KaitaiStruct
     `colon1`*: seq[byte]
     `className`*: PhpSerializedValue_LengthPrefixedQuotedString
@@ -59,7 +61,8 @@ type
     `data`*: seq[byte]
     `closingQuote`*: seq[byte]
     `parent`*: PhpSerializedValue
-    `lenDataInst`*: int
+    `lenDataInst`: int
+    `lenDataInstFlag`: bool
   PhpSerializedValue_NullContents* = ref object of KaitaiStruct
     `semicolon`*: seq[byte]
     `parent`*: PhpSerializedValue
@@ -72,18 +75,21 @@ type
     `valueDec`*: PhpSerializedValue_BoolValue
     `semicolon`*: seq[byte]
     `parent`*: PhpSerializedValue
-    `valueInst`*: bool
+    `valueInst`: bool
+    `valueInstFlag`: bool
   PhpSerializedValue_StringContents* = ref object of KaitaiStruct
     `colon`*: seq[byte]
     `string`*: PhpSerializedValue_LengthPrefixedQuotedString
     `semicolon`*: seq[byte]
     `parent`*: PhpSerializedValue
-    `valueInst`*: seq[byte]
+    `valueInst`: seq[byte]
+    `valueInstFlag`: bool
   PhpSerializedValue_IntContents* = ref object of KaitaiStruct
     `colon`*: seq[byte]
     `valueDec`*: string
     `parent`*: PhpSerializedValue
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
   PhpSerializedValue_MappingEntry* = ref object of KaitaiStruct
     `key`*: PhpSerializedValue
     `value`*: PhpSerializedValue
@@ -231,12 +237,12 @@ proc numEntries(this: PhpSerializedValue_CountPrefixedMapping): int =
   The number of key-value pairs in the mapping, parsed as an integer.
 
   ]##
-  if this.numEntriesInst != nil:
+  if this.numEntriesInstFlag:
     return this.numEntriesInst
   let numEntriesInstExpr = int(this.numEntriesDec.parseInt(10))
   this.numEntriesInst = numEntriesInstExpr
-  if this.numEntriesInst != nil:
-    return this.numEntriesInst
+  this.numEntriesInstFlag = true
+  return this.numEntriesInst
 
 proc fromFile*(_: typedesc[PhpSerializedValue_CountPrefixedMapping], filename: string): PhpSerializedValue_CountPrefixedMapping =
   PhpSerializedValue_CountPrefixedMapping.read(newKaitaiFileStream(filename), nil, nil)
@@ -317,12 +323,12 @@ proc lenData(this: PhpSerializedValue_LengthPrefixedQuotedString): int =
 The quotes are not counted in this size number.
 
   ]##
-  if this.lenDataInst != nil:
+  if this.lenDataInstFlag:
     return this.lenDataInst
   let lenDataInstExpr = int(this.lenDataDec.parseInt(10))
   this.lenDataInst = lenDataInstExpr
-  if this.lenDataInst != nil:
-    return this.lenDataInst
+  this.lenDataInstFlag = true
+  return this.lenDataInst
 
 proc fromFile*(_: typedesc[PhpSerializedValue_LengthPrefixedQuotedString], filename: string): PhpSerializedValue_LengthPrefixedQuotedString =
   PhpSerializedValue_LengthPrefixedQuotedString.read(newKaitaiFileStream(filename), nil, nil)
@@ -445,12 +451,12 @@ proc lenData(this: PhpSerializedValue_CustomSerializedObjectContents): int =
 The braces are not counted in this length number.
 
   ]##
-  if this.lenDataInst != nil:
+  if this.lenDataInstFlag:
     return this.lenDataInst
   let lenDataInstExpr = int(this.lenDataDec.parseInt(10))
   this.lenDataInst = lenDataInstExpr
-  if this.lenDataInst != nil:
-    return this.lenDataInst
+  this.lenDataInstFlag = true
+  return this.lenDataInst
 
 proc fromFile*(_: typedesc[PhpSerializedValue_CustomSerializedObjectContents], filename: string): PhpSerializedValue_CustomSerializedObjectContents =
   PhpSerializedValue_CustomSerializedObjectContents.read(newKaitaiFileStream(filename), nil, nil)
@@ -532,12 +538,12 @@ proc value(this: PhpSerializedValue_BoolContents): bool =
   ##[
   The value of the `bool`, parsed as a boolean.
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = bool(this.valueDec == php_serialized_value.true)
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[PhpSerializedValue_BoolContents], filename: string): PhpSerializedValue_BoolContents =
   PhpSerializedValue_BoolContents.read(newKaitaiFileStream(filename), nil, nil)
@@ -570,12 +576,12 @@ proc value(this: PhpSerializedValue_StringContents): seq[byte] =
   ##[
   The value of the string, as a byte array.
   ]##
-  if this.valueInst.len != 0:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = seq[byte](this.string.data)
   this.valueInst = valueInstExpr
-  if this.valueInst.len != 0:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[PhpSerializedValue_StringContents], filename: string): PhpSerializedValue_StringContents =
   PhpSerializedValue_StringContents.read(newKaitaiFileStream(filename), nil, nil)
@@ -609,12 +615,12 @@ proc value(this: PhpSerializedValue_IntContents): int =
   ##[
   The value of the `int`, parsed as an integer.
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int(this.valueDec.parseInt(10))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[PhpSerializedValue_IntContents], filename: string): PhpSerializedValue_IntContents =
   PhpSerializedValue_IntContents.read(newKaitaiFileStream(filename), nil, nil)

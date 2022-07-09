@@ -8,7 +8,7 @@
   } else {
     root.Xwd = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * xwd is a file format written by eponymous X11 screen capture
  * application (xwd stands for "X Window Dump"). Typically, an average
@@ -68,12 +68,12 @@ var Xwd = (function() {
     this._raw_hdr = this._io.readBytes((this.lenHeader - 4));
     var _io__raw_hdr = new KaitaiStream(this._raw_hdr);
     this.hdr = new Header(_io__raw_hdr, this, this._root);
-    this._raw_colorMap = new Array(this.hdr.colorMapEntries);
-    this.colorMap = new Array(this.hdr.colorMapEntries);
+    this._raw_colorMap = [];
+    this.colorMap = [];
     for (var i = 0; i < this.hdr.colorMapEntries; i++) {
-      this._raw_colorMap[i] = this._io.readBytes(12);
+      this._raw_colorMap.push(this._io.readBytes(12));
       var _io__raw_colorMap = new KaitaiStream(this._raw_colorMap[i]);
-      this.colorMap[i] = new ColorMapEntry(_io__raw_colorMap, this, this._root);
+      this.colorMap.push(new ColorMapEntry(_io__raw_colorMap, this, this._root));
     }
   }
 

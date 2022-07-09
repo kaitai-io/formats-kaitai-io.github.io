@@ -11,7 +11,8 @@ type
   PcxDcx_PcxOffset* = ref object of KaitaiStruct
     `ofsBody`*: uint32
     `parent`*: PcxDcx
-    `bodyInst`*: Pcx
+    `bodyInst`: Pcx
+    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[PcxDcx], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcxDcx
 proc read*(_: typedesc[PcxDcx_PcxOffset], io: KaitaiStream, root: KaitaiStruct, parent: PcxDcx): PcxDcx_PcxOffset
@@ -60,7 +61,7 @@ proc read*(_: typedesc[PcxDcx_PcxOffset], io: KaitaiStream, root: KaitaiStruct, 
   this.ofsBody = ofsBodyExpr
 
 proc body(this: PcxDcx_PcxOffset): Pcx = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   if this.ofsBody != 0:
     let pos = this.io.pos()
@@ -68,8 +69,8 @@ proc body(this: PcxDcx_PcxOffset): Pcx =
     let bodyInstExpr = Pcx.read(this.io, this.root, this)
     this.bodyInst = bodyInstExpr
     this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[PcxDcx_PcxOffset], filename: string): PcxDcx_PcxOffset =
   PcxDcx_PcxOffset.read(newKaitaiFileStream(filename), nil, nil)

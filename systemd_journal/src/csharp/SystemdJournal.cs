@@ -46,7 +46,7 @@ namespace Kaitai
             __raw_header = m_io.ReadBytes(LenHeader);
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new Header(io___raw_header, this, m_root);
-            _objects = new List<JournalObject>((int) (Header.NumObjects));
+            _objects = new List<JournalObject>();
             for (var i = 0; i < Header.NumObjects; i++)
             {
                 _objects.Add(new JournalObject(m_io, this, m_root));

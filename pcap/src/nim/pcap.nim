@@ -3,8 +3,8 @@ import options
 import /network/ethernet_frame
 import /network/packet_ppi
 
-import "ethernet_frame"
 import "packet_ppi"
+import "ethernet_frame"
 type
   Pcap* = ref object of KaitaiStruct
     `hdr`*: Pcap_Header

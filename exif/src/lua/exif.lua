@@ -39,9 +39,9 @@ function Exif.ExifBody:_read()
     self._is_le = false
   end
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -88,9 +88,9 @@ end
 
 function Exif.ExifBody.Ifd:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -619,9 +619,9 @@ end
 
 function Exif.ExifBody.IfdField:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")

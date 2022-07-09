@@ -8,7 +8,7 @@
   } else {
     root.Utf8String = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * UTF-8 is a popular character encoding scheme that allows to
  * represent strings as sequence of code points defined in Unicode

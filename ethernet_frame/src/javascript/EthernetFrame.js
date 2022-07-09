@@ -8,7 +8,7 @@
   } else {
     root.EthernetFrame = factory(root.KaitaiStream, root.Ipv4Packet, root.Ipv6Packet);
   }
-}(this, function (KaitaiStream, Ipv4Packet, Ipv6Packet) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Ipv4Packet, Ipv6Packet) {
 /**
  * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
  * for Ethernet networks. In practice, many other networks and/or

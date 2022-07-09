@@ -372,13 +372,13 @@ encoding parameters, and gets result using either <code>as_int</code> or
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="n">_read</span>
-    <span class="vi">@digits</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_digits</span><span class="p">)</span>
+    <span class="vi">@digits</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">num_digits</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
       <span class="k">case</span> <span class="n">bits_per_digit</span>
       <span class="k">when</span> <span class="mi">4</span>
-        <span class="vi">@digits</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="vi">@digits</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
       <span class="k">when</span> <span class="mi">8</span>
-        <span class="vi">@digits</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@digits</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">end</span>
     <span class="p">}</span>
     <span class="nb">self</span>

@@ -61,17 +61,17 @@ public class AvantesRoh60 extends KaitaiStruct {
         this.wlx2 = this._io.readF4le();
         this.wlx3 = this._io.readF4le();
         this.wlx4 = this._io.readF4le();
-        unknown2 = new ArrayList<Float>(((Number) (9)).intValue());
+        this.unknown2 = new ArrayList<Float>();
         for (int i = 0; i < 9; i++) {
             this.unknown2.add(this._io.readF4le());
         }
         this.ipixfirst = this._io.readF4le();
         this.ipixlast = this._io.readF4le();
-        unknown3 = new ArrayList<Float>(((Number) (4)).intValue());
+        this.unknown3 = new ArrayList<Float>();
         for (int i = 0; i < 4; i++) {
             this.unknown3.add(this._io.readF4le());
         }
-        spectrum = new ArrayList<Float>(((Number) ((((int) (ipixlast() + 0) - (int) (ipixfirst() + 0)) - 1))).intValue());
+        this.spectrum = new ArrayList<Float>();
         for (int i = 0; i < (((int) (ipixlast() + 0) - (int) (ipixfirst() + 0)) - 1); i++) {
             this.spectrum.add(this._io.readF4le());
         }

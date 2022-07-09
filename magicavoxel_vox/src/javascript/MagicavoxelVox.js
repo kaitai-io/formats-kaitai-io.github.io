@@ -8,7 +8,7 @@
   } else {
     root.MagicavoxelVox = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://ephtracy.github.io/|MagicaVoxel Homepage}
  * @see {@link https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt|Format Description}
@@ -162,9 +162,9 @@ var MagicavoxelVox = (function() {
       this._read();
     }
     Rgba.prototype._read = function() {
-      this.colors = new Array(256);
+      this.colors = [];
       for (var i = 0; i < 256; i++) {
-        this.colors[i] = new Color(this._io, this, this._root);
+        this.colors.push(new Color(this._io, this, this._root));
       }
     }
 
@@ -302,9 +302,9 @@ var MagicavoxelVox = (function() {
     }
     Xyzi.prototype._read = function() {
       this.numVoxels = this._io.readU4le();
-      this.voxels = new Array(this.numVoxels);
+      this.voxels = [];
       for (var i = 0; i < this.numVoxels; i++) {
-        this.voxels[i] = new Voxel(this._io, this, this._root);
+        this.voxels.push(new Voxel(this._io, this, this._root));
       }
     }
 

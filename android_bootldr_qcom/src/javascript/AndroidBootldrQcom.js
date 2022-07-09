@@ -8,7 +8,7 @@
   } else {
     root.AndroidBootldrQcom = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A bootloader for Android used on various devices powered by Qualcomm
  * Snapdragon chips:
@@ -132,9 +132,9 @@ var AndroidBootldrQcom = (function() {
     this.numImages = this._io.readU4le();
     this.ofsImgBodies = this._io.readU4le();
     this.bootloaderSize = this._io.readU4le();
-    this.imgHeaders = new Array(this.numImages);
+    this.imgHeaders = [];
     for (var i = 0; i < this.numImages; i++) {
-      this.imgHeaders[i] = new ImgHeader(this._io, this, this._root);
+      this.imgHeaders.push(new ImgHeader(this._io, this, this._root));
     }
   }
 
@@ -183,9 +183,9 @@ var AndroidBootldrQcom = (function() {
         return this._m_imgBodies;
       var _pos = this._io.pos;
       this._io.seek(this.ofsImgBodies);
-      this._m_imgBodies = new Array(this.numImages);
+      this._m_imgBodies = [];
       for (var i = 0; i < this.numImages; i++) {
-        this._m_imgBodies[i] = new ImgBody(this._io, this, this._root, i);
+        this._m_imgBodies.push(new ImgBody(this._io, this, this._root, i));
       }
       this._io.seek(_pos);
       return this._m_imgBodies;

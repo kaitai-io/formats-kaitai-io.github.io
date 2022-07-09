@@ -22,32 +22,32 @@ class JavaClass < Kaitai::Struct::Struct
     @version_major = @_io.read_u2be
     raise Kaitai::Struct::ValidationLessThanError.new(43, version_major, _io, "/seq/2") if not version_major >= 43
     @constant_pool_count = @_io.read_u2be
-    @constant_pool = Array.new((constant_pool_count - 1))
+    @constant_pool = []
     ((constant_pool_count - 1)).times { |i|
-      @constant_pool[i] = ConstantPoolEntry.new(@_io, self, @_root, (i != 0 ? constant_pool[(i - 1)].is_two_entries : false))
+      @constant_pool << ConstantPoolEntry.new(@_io, self, @_root, (i != 0 ? constant_pool[(i - 1)].is_two_entries : false))
     }
     @access_flags = @_io.read_u2be
     @this_class = @_io.read_u2be
     @super_class = @_io.read_u2be
     @interfaces_count = @_io.read_u2be
-    @interfaces = Array.new(interfaces_count)
+    @interfaces = []
     (interfaces_count).times { |i|
-      @interfaces[i] = @_io.read_u2be
+      @interfaces << @_io.read_u2be
     }
     @fields_count = @_io.read_u2be
-    @fields = Array.new(fields_count)
+    @fields = []
     (fields_count).times { |i|
-      @fields[i] = FieldInfo.new(@_io, self, @_root)
+      @fields << FieldInfo.new(@_io, self, @_root)
     }
     @methods_count = @_io.read_u2be
-    @methods = Array.new(methods_count)
+    @methods = []
     (methods_count).times { |i|
-      @methods[i] = MethodInfo.new(@_io, self, @_root)
+      @methods << MethodInfo.new(@_io, self, @_root)
     }
     @attributes_count = @_io.read_u2be
-    @attributes = Array.new(attributes_count)
+    @attributes = []
     (attributes_count).times { |i|
-      @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+      @attributes << AttributeInfo.new(@_io, self, @_root)
     }
     self
   end
@@ -115,14 +115,14 @@ class JavaClass < Kaitai::Struct::Struct
         @code_length = @_io.read_u4be
         @code = @_io.read_bytes(code_length)
         @exception_table_length = @_io.read_u2be
-        @exception_table = Array.new(exception_table_length)
+        @exception_table = []
         (exception_table_length).times { |i|
-          @exception_table[i] = ExceptionEntry.new(@_io, self, @_root)
+          @exception_table << ExceptionEntry.new(@_io, self, @_root)
         }
         @attributes_count = @_io.read_u2be
-        @attributes = Array.new(attributes_count)
+        @attributes = []
         (attributes_count).times { |i|
-          @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+          @attributes << AttributeInfo.new(@_io, self, @_root)
         }
         self
       end
@@ -190,9 +190,9 @@ class JavaClass < Kaitai::Struct::Struct
 
       def _read
         @number_of_exceptions = @_io.read_u2be
-        @exceptions = Array.new(number_of_exceptions)
+        @exceptions = []
         (number_of_exceptions).times { |i|
-          @exceptions[i] = ExceptionTableEntry.new(@_io, self, @_root)
+          @exceptions << ExceptionTableEntry.new(@_io, self, @_root)
         }
         self
       end
@@ -252,9 +252,9 @@ class JavaClass < Kaitai::Struct::Struct
 
       def _read
         @line_number_table_length = @_io.read_u2be
-        @line_number_table = Array.new(line_number_table_length)
+        @line_number_table = []
         (line_number_table_length).times { |i|
-          @line_number_table[i] = LineNumberTableEntry.new(@_io, self, @_root)
+          @line_number_table << LineNumberTableEntry.new(@_io, self, @_root)
         }
         self
       end
@@ -326,9 +326,9 @@ class JavaClass < Kaitai::Struct::Struct
       @name_index = @_io.read_u2be
       @descriptor_index = @_io.read_u2be
       @attributes_count = @_io.read_u2be
-      @attributes = Array.new(attributes_count)
+      @attributes = []
       (attributes_count).times { |i|
-        @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+        @attributes << AttributeInfo.new(@_io, self, @_root)
       }
       self
     end
@@ -645,9 +645,9 @@ class JavaClass < Kaitai::Struct::Struct
       @name_index = @_io.read_u2be
       @descriptor_index = @_io.read_u2be
       @attributes_count = @_io.read_u2be
-      @attributes = Array.new(attributes_count)
+      @attributes = []
       (attributes_count).times { |i|
-        @attributes[i] = AttributeInfo.new(@_io, self, @_root)
+        @attributes << AttributeInfo.new(@_io, self, @_root)
       }
       self
     end

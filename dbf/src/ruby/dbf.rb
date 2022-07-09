@@ -25,9 +25,9 @@ class Dbf < Kaitai::Struct::Struct
     @_raw_header2 = @_io.read_bytes((header1.len_header - 12))
     _io__raw_header2 = Kaitai::Struct::Stream.new(@_raw_header2)
     @header2 = Header2.new(_io__raw_header2, self, @_root)
-    @records = Array.new(header1.num_records)
+    @records = []
     (header1.num_records).times { |i|
-      @records[i] = @_io.read_bytes(header1.len_record)
+      @records << @_io.read_bytes(header1.len_record)
     }
     self
   end
@@ -44,9 +44,9 @@ class Dbf < Kaitai::Struct::Struct
       if _root.header1.dbase_level == 7
         @header_dbase_7 = HeaderDbase7.new(@_io, self, @_root)
       end
-      @fields = Array.new(11)
+      @fields = []
       (11).times { |i|
-        @fields[i] = Field.new(@_io, self, @_root)
+        @fields << Field.new(@_io, self, @_root)
       }
       self
     end

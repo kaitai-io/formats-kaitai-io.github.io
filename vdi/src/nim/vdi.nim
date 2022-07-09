@@ -6,10 +6,14 @@ type
     `header`*: Vdi_Header
     `parent`*: KaitaiStruct
     `rawBlocksMapInst`*: seq[byte]
-    `blockDiscardedInst`*: int
-    `blockUnallocatedInst`*: int
-    `blocksMapInst`*: Vdi_BlocksMap
-    `diskInst`*: Vdi_Disk
+    `blockDiscardedInst`: int
+    `blockDiscardedInstFlag`: bool
+    `blockUnallocatedInst`: int
+    `blockUnallocatedInstFlag`: bool
+    `blocksMapInst`: Vdi_BlocksMap
+    `blocksMapInstFlag`: bool
+    `diskInst`: Vdi_Disk
+    `diskInstFlag`: bool
   Vdi_ImageType* = enum
     dynamic = 1
     static = 2
@@ -23,12 +27,18 @@ type
     `headerMain`*: Vdi_Header_HeaderMain
     `parent`*: Vdi
     `rawHeaderMain`*: seq[byte]
-    `headerSizeInst`*: int
-    `blocksMapOffsetInst`*: uint32
-    `subheaderSizeIsDynamicInst`*: bool
-    `blocksOffsetInst`*: uint32
-    `blockSizeInst`*: int
-    `blocksMapSizeInst`*: int
+    `headerSizeInst`: int
+    `headerSizeInstFlag`: bool
+    `blocksMapOffsetInst`: uint32
+    `blocksMapOffsetInstFlag`: bool
+    `subheaderSizeIsDynamicInst`: bool
+    `subheaderSizeIsDynamicInstFlag`: bool
+    `blocksOffsetInst`: uint32
+    `blocksOffsetInstFlag`: bool
+    `blockSizeInst`: int
+    `blockSizeInstFlag`: bool
+    `blocksMapSizeInst`: int
+    `blocksMapSizeInstFlag`: bool
   Vdi_Header_Uuid* = ref object of KaitaiStruct
     `uuid`*: seq[byte]
     `parent`*: Vdi_Header_HeaderMain
@@ -75,8 +85,10 @@ type
   Vdi_BlocksMap_BlockIndex* = ref object of KaitaiStruct
     `index`*: uint32
     `parent`*: Vdi_BlocksMap
-    `isAllocatedInst`*: bool
-    `blockInst`*: Vdi_Disk_Block
+    `isAllocatedInst`: bool
+    `isAllocatedInstFlag`: bool
+    `blockInst`: Vdi_Disk_Block
+    `blockInstFlag`: bool
   Vdi_Disk* = ref object of KaitaiStruct
     `blocks`*: seq[Vdi_Disk_Block]
     `parent`*: Vdi
@@ -137,20 +149,20 @@ proc read*(_: typedesc[Vdi], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
   this.header = headerExpr
 
 proc blockDiscarded(this: Vdi): int = 
-  if this.blockDiscardedInst != nil:
+  if this.blockDiscardedInstFlag:
     return this.blockDiscardedInst
   let blockDiscardedInstExpr = int(4294967294'i64)
   this.blockDiscardedInst = blockDiscardedInstExpr
-  if this.blockDiscardedInst != nil:
-    return this.blockDiscardedInst
+  this.blockDiscardedInstFlag = true
+  return this.blockDiscardedInst
 
 proc blockUnallocated(this: Vdi): int = 
-  if this.blockUnallocatedInst != nil:
+  if this.blockUnallocatedInstFlag:
     return this.blockUnallocatedInst
   let blockUnallocatedInstExpr = int(4294967295'i64)
   this.blockUnallocatedInst = blockUnallocatedInstExpr
-  if this.blockUnallocatedInst != nil:
-    return this.blockUnallocatedInst
+  this.blockUnallocatedInstFlag = true
+  return this.blockUnallocatedInst
 
 proc blocksMap(this: Vdi): Vdi_BlocksMap = 
 
@@ -159,7 +171,7 @@ proc blocksMap(this: Vdi): Vdi_BlocksMap =
 The blocks_map will take up blocks_in_image_max * sizeof(uint32_t) bytes; since the blocks_map is read and written in a single operation, its size needs to be limited to INT_MAX; furthermore, when opening an image, the blocks_map size is rounded up to be aligned on BDRV_SECTOR_SIZE. Therefore this should satisfy the following: blocks_in_image_max * sizeof(uint32_t) + BDRV_SECTOR_SIZE == INT_MAX + 1 (INT_MAX + 1 is the first value not representable as an int) This guarantees that any value below or equal to the constant will, when multiplied by sizeof(uint32_t) and rounded up to a BDRV_SECTOR_SIZE boundary, still be below or equal to INT_MAX.
 
   ]##
-  if this.blocksMapInst != nil:
+  if this.blocksMapInstFlag:
     return this.blocksMapInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.blocksMapOffset))
@@ -169,19 +181,19 @@ The blocks_map will take up blocks_in_image_max * sizeof(uint32_t) bytes; since 
   let blocksMapInstExpr = Vdi_BlocksMap.read(rawBlocksMapInstIo, this.root, this)
   this.blocksMapInst = blocksMapInstExpr
   this.io.seek(pos)
-  if this.blocksMapInst != nil:
-    return this.blocksMapInst
+  this.blocksMapInstFlag = true
+  return this.blocksMapInst
 
 proc disk(this: Vdi): Vdi_Disk = 
-  if this.diskInst != nil:
+  if this.diskInstFlag:
     return this.diskInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.blocksOffset))
   let diskInstExpr = Vdi_Disk.read(this.io, this.root, this)
   this.diskInst = diskInstExpr
   this.io.seek(pos)
-  if this.diskInst != nil:
-    return this.diskInst
+  this.diskInstFlag = true
+  return this.diskInst
 
 proc fromFile*(_: typedesc[Vdi], filename: string): Vdi =
   Vdi.read(newKaitaiFileStream(filename), nil, nil)
@@ -210,52 +222,52 @@ proc read*(_: typedesc[Vdi_Header], io: KaitaiStream, root: KaitaiStruct, parent
   this.headerMain = headerMainExpr
 
 proc headerSize(this: Vdi_Header): int = 
-  if this.headerSizeInst != nil:
+  if this.headerSizeInstFlag:
     return this.headerSizeInst
   let headerSizeInstExpr = int((if this.subheaderSizeIsDynamic: this.headerSizeOptional else: 336))
   this.headerSizeInst = headerSizeInstExpr
-  if this.headerSizeInst != nil:
-    return this.headerSizeInst
+  this.headerSizeInstFlag = true
+  return this.headerSizeInst
 
 proc blocksMapOffset(this: Vdi_Header): uint32 = 
-  if this.blocksMapOffsetInst != nil:
+  if this.blocksMapOffsetInstFlag:
     return this.blocksMapOffsetInst
   let blocksMapOffsetInstExpr = uint32(this.headerMain.blocksMapOffset)
   this.blocksMapOffsetInst = blocksMapOffsetInstExpr
-  if this.blocksMapOffsetInst != nil:
-    return this.blocksMapOffsetInst
+  this.blocksMapOffsetInstFlag = true
+  return this.blocksMapOffsetInst
 
 proc subheaderSizeIsDynamic(this: Vdi_Header): bool = 
-  if this.subheaderSizeIsDynamicInst != nil:
+  if this.subheaderSizeIsDynamicInstFlag:
     return this.subheaderSizeIsDynamicInst
   let subheaderSizeIsDynamicInstExpr = bool(this.version.major >= 1)
   this.subheaderSizeIsDynamicInst = subheaderSizeIsDynamicInstExpr
-  if this.subheaderSizeIsDynamicInst != nil:
-    return this.subheaderSizeIsDynamicInst
+  this.subheaderSizeIsDynamicInstFlag = true
+  return this.subheaderSizeIsDynamicInst
 
 proc blocksOffset(this: Vdi_Header): uint32 = 
-  if this.blocksOffsetInst != nil:
+  if this.blocksOffsetInstFlag:
     return this.blocksOffsetInst
   let blocksOffsetInstExpr = uint32(this.headerMain.offsetData)
   this.blocksOffsetInst = blocksOffsetInstExpr
-  if this.blocksOffsetInst != nil:
-    return this.blocksOffsetInst
+  this.blocksOffsetInstFlag = true
+  return this.blocksOffsetInst
 
 proc blockSize(this: Vdi_Header): int = 
-  if this.blockSizeInst != nil:
+  if this.blockSizeInstFlag:
     return this.blockSizeInst
   let blockSizeInstExpr = int((this.headerMain.blockMetadataSize + this.headerMain.blockDataSize))
   this.blockSizeInst = blockSizeInstExpr
-  if this.blockSizeInst != nil:
-    return this.blockSizeInst
+  this.blockSizeInstFlag = true
+  return this.blockSizeInst
 
 proc blocksMapSize(this: Vdi_Header): int = 
-  if this.blocksMapSizeInst != nil:
+  if this.blocksMapSizeInstFlag:
     return this.blocksMapSizeInst
   let blocksMapSizeInstExpr = int((((((this.headerMain.blocksInImage * 4) + this.headerMain.geometry.sectorSize) - 1) div this.headerMain.geometry.sectorSize) * this.headerMain.geometry.sectorSize))
   this.blocksMapSizeInst = blocksMapSizeInstExpr
-  if this.blocksMapSizeInst != nil:
-    return this.blocksMapSizeInst
+  this.blocksMapSizeInstFlag = true
+  return this.blocksMapSizeInst
 
 proc fromFile*(_: typedesc[Vdi_Header], filename: string): Vdi_Header =
   Vdi_Header.read(newKaitaiFileStream(filename), nil, nil)
@@ -417,21 +429,21 @@ proc read*(_: typedesc[Vdi_BlocksMap_BlockIndex], io: KaitaiStream, root: Kaitai
   this.index = indexExpr
 
 proc isAllocated(this: Vdi_BlocksMap_BlockIndex): bool = 
-  if this.isAllocatedInst != nil:
+  if this.isAllocatedInstFlag:
     return this.isAllocatedInst
   let isAllocatedInstExpr = bool(this.index < Vdi(this.root).blockDiscarded)
   this.isAllocatedInst = isAllocatedInstExpr
-  if this.isAllocatedInst != nil:
-    return this.isAllocatedInst
+  this.isAllocatedInstFlag = true
+  return this.isAllocatedInst
 
 proc block(this: Vdi_BlocksMap_BlockIndex): Vdi_Disk_Block = 
-  if this.blockInst != nil:
+  if this.blockInstFlag:
     return this.blockInst
   if this.isAllocated:
     let blockInstExpr = Vdi_Disk_Block(Vdi(this.root).disk.blocks[this.index])
     this.blockInst = blockInstExpr
-  if this.blockInst != nil:
-    return this.blockInst
+  this.blockInstFlag = true
+  return this.blockInst
 
 proc fromFile*(_: typedesc[Vdi_BlocksMap_BlockIndex], filename: string): Vdi_BlocksMap_BlockIndex =
   Vdi_BlocksMap_BlockIndex.read(newKaitaiFileStream(filename), nil, nil)

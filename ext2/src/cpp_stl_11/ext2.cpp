@@ -79,9 +79,8 @@ void ext2_t::super_block_struct_t::_read() {
     m_journal_inum = m__io->read_u4le();
     m_journal_dev = m__io->read_u4le();
     m_last_orphan = m__io->read_u4le();
-    int l_hash_seed = 4;
     m_hash_seed = std::unique_ptr<std::vector<uint32_t>>(new std::vector<uint32_t>());
-    m_hash_seed->reserve(l_hash_seed);
+    const int l_hash_seed = 4;
     for (int i = 0; i < l_hash_seed; i++) {
         m_hash_seed->push_back(std::move(m__io->read_u4le()));
     }
@@ -164,9 +163,8 @@ void ext2_t::inode_t::_read() {
     m_blocks = m__io->read_u4le();
     m_flags = m__io->read_u4le();
     m_osd1 = m__io->read_u4le();
-    int l_block = 15;
     m_block = std::unique_ptr<std::vector<std::unique_ptr<block_ptr_t>>>(new std::vector<std::unique_ptr<block_ptr_t>>());
-    m_block->reserve(l_block);
+    const int l_block = 15;
     for (int i = 0; i < l_block; i++) {
         m_block->push_back(std::move(std::unique_ptr<block_ptr_t>(new block_ptr_t(m__io, this, m__root))));
     }
@@ -271,9 +269,8 @@ void ext2_t::block_group_t::_read() {
     m__raw_super_block = m__io->read_bytes(1024);
     m__io__raw_super_block = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_super_block));
     m_super_block = std::unique_ptr<super_block_struct_t>(new super_block_struct_t(m__io__raw_super_block.get(), this, m__root));
-    int l_block_groups = super_block()->block_group_count();
     m_block_groups = std::unique_ptr<std::vector<std::unique_ptr<bgd_t>>>(new std::vector<std::unique_ptr<bgd_t>>());
-    m_block_groups->reserve(l_block_groups);
+    const int l_block_groups = super_block()->block_group_count();
     for (int i = 0; i < l_block_groups; i++) {
         m_block_groups->push_back(std::move(std::unique_ptr<bgd_t>(new bgd_t(m__io, this, m__root))));
     }
@@ -346,9 +343,8 @@ std::vector<std::unique_ptr<ext2_t::inode_t>>* ext2_t::bgd_t::inodes() {
         return m_inodes.get();
     std::streampos _pos = m__io->pos();
     m__io->seek((inode_table_block() * _root()->bg1()->super_block()->block_size()));
-    int l_inodes = _root()->bg1()->super_block()->inodes_per_group();
     m_inodes = std::unique_ptr<std::vector<std::unique_ptr<inode_t>>>(new std::vector<std::unique_ptr<inode_t>>());
-    m_inodes->reserve(l_inodes);
+    const int l_inodes = _root()->bg1()->super_block()->inodes_per_group();
     for (int i = 0; i < l_inodes; i++) {
         m_inodes->push_back(std::move(std::unique_ptr<inode_t>(new inode_t(m__io, this, m__root))));
     }

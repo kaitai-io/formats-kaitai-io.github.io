@@ -58,7 +58,7 @@ sub string_ids {
     $self->{string_ids} = ();
     my $n_string_ids = $self->header()->string_ids_size();
     for (my $i = 0; $i < $n_string_ids; $i++) {
-        $self->{string_ids}[$i] = Dex::StringIdItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{string_ids}}, Dex::StringIdItem->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{string_ids};
@@ -72,7 +72,7 @@ sub method_ids {
     $self->{method_ids} = ();
     my $n_method_ids = $self->header()->method_ids_size();
     for (my $i = 0; $i < $n_method_ids; $i++) {
-        $self->{method_ids}[$i] = Dex::MethodIdItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{method_ids}}, Dex::MethodIdItem->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{method_ids};
@@ -106,7 +106,7 @@ sub class_defs {
     $self->{class_defs} = ();
     my $n_class_defs = $self->header()->class_defs_size();
     for (my $i = 0; $i < $n_class_defs; $i++) {
-        $self->{class_defs}[$i] = Dex::ClassDefItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{class_defs}}, Dex::ClassDefItem->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{class_defs};
@@ -130,7 +130,7 @@ sub type_ids {
     $self->{type_ids} = ();
     my $n_type_ids = $self->header()->type_ids_size();
     for (my $i = 0; $i < $n_type_ids; $i++) {
-        $self->{type_ids}[$i] = Dex::TypeIdItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{type_ids}}, Dex::TypeIdItem->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{type_ids};
@@ -144,7 +144,7 @@ sub proto_ids {
     $self->{proto_ids} = ();
     my $n_proto_ids = $self->header()->proto_ids_size();
     for (my $i = 0; $i < $n_proto_ids; $i++) {
-        $self->{proto_ids}[$i] = Dex::ProtoIdItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{proto_ids}}, Dex::ProtoIdItem->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{proto_ids};
@@ -158,7 +158,7 @@ sub field_ids {
     $self->{field_ids} = ();
     my $n_field_ids = $self->header()->field_ids_size();
     for (my $i = 0; $i < $n_field_ids; $i++) {
-        $self->{field_ids}[$i] = Dex::FieldIdItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{field_ids}}, Dex::FieldIdItem->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{field_ids};
@@ -382,7 +382,7 @@ sub _read {
     $self->{list} = ();
     my $n_list = $self->size();
     for (my $i = 0; $i < $n_list; $i++) {
-        $self->{list}[$i] = Dex::MapItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{list}}, Dex::MapItem->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -876,22 +876,22 @@ sub _read {
     $self->{static_fields} = ();
     my $n_static_fields = $self->static_fields_size()->value();
     for (my $i = 0; $i < $n_static_fields; $i++) {
-        $self->{static_fields}[$i] = Dex::EncodedField->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{static_fields}}, Dex::EncodedField->new($self->{_io}, $self, $self->{_root});
     }
     $self->{instance_fields} = ();
     my $n_instance_fields = $self->instance_fields_size()->value();
     for (my $i = 0; $i < $n_instance_fields; $i++) {
-        $self->{instance_fields}[$i] = Dex::EncodedField->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{instance_fields}}, Dex::EncodedField->new($self->{_io}, $self, $self->{_root});
     }
     $self->{direct_methods} = ();
     my $n_direct_methods = $self->direct_methods_size()->value();
     for (my $i = 0; $i < $n_direct_methods; $i++) {
-        $self->{direct_methods}[$i] = Dex::EncodedMethod->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{direct_methods}}, Dex::EncodedMethod->new($self->{_io}, $self, $self->{_root});
     }
     $self->{virtual_methods} = ();
     my $n_virtual_methods = $self->virtual_methods_size()->value();
     for (my $i = 0; $i < $n_virtual_methods; $i++) {
-        $self->{virtual_methods}[$i] = Dex::EncodedMethod->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{virtual_methods}}, Dex::EncodedMethod->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1041,7 +1041,7 @@ sub _read {
     $self->{elements} = ();
     my $n_elements = $self->size()->value();
     for (my $i = 0; $i < $n_elements; $i++) {
-        $self->{elements}[$i] = Dex::AnnotationElement->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{elements}}, Dex::AnnotationElement->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1205,7 +1205,7 @@ sub _read {
     $self->{list} = ();
     my $n_list = $self->size();
     for (my $i = 0; $i < $n_list; $i++) {
-        $self->{list}[$i] = Dex::TypeItem->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{list}}, Dex::TypeItem->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1549,7 +1549,7 @@ sub _read {
     $self->{values} = ();
     my $n_values = $self->size()->value();
     for (my $i = 0; $i < $n_values; $i++) {
-        $self->{values}[$i] = Dex::EncodedValue->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{values}}, Dex::EncodedValue->new($self->{_io}, $self, $self->{_root});
     }
 }
 

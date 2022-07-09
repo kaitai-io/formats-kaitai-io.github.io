@@ -8,7 +8,7 @@
   } else {
     root.AllegroDat = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Allegro library for C (mostly used for game and multimedia apps
  * programming) used its own container file format.
@@ -45,9 +45,9 @@ var AllegroDat = (function() {
       throw new KaitaiStream.ValidationNotEqualError([65, 76, 76, 46], this.datMagic, this._io, "/seq/1");
     }
     this.numObjects = this._io.readU4be();
-    this.objects = new Array(this.numObjects);
+    this.objects = [];
     for (var i = 0; i < this.numObjects; i++) {
-      this.objects[i] = new DatObject(this._io, this, this._root);
+      this.objects.push(new DatObject(this._io, this, this._root));
     }
   }
 
@@ -65,9 +65,9 @@ var AllegroDat = (function() {
       this._read();
     }
     DatFont16.prototype._read = function() {
-      this.chars = new Array(95);
+      this.chars = [];
       for (var i = 0; i < 95; i++) {
-        this.chars[i] = this._io.readBytes(16);
+        this.chars.push(this._io.readBytes(16));
       }
     }
 
@@ -132,9 +132,9 @@ var AllegroDat = (function() {
       this._read();
     }
     DatFont8.prototype._read = function() {
-      this.chars = new Array(95);
+      this.chars = [];
       for (var i = 0; i < 95; i++) {
-        this.chars[i] = this._io.readBytes(8);
+        this.chars.push(this._io.readBytes(8));
       }
     }
 
@@ -150,7 +150,7 @@ var AllegroDat = (function() {
       this._read();
     }
     DatObject.prototype._read = function() {
-      this.properties = []
+      this.properties = [];
       var i = 0;
       do {
         var _ = new Property(this._io, this, this._root);
@@ -208,9 +208,9 @@ var AllegroDat = (function() {
     }
     DatFont39.prototype._read = function() {
       this.numRanges = this._io.readS2be();
-      this.ranges = new Array(this.numRanges);
+      this.ranges = [];
       for (var i = 0; i < this.numRanges; i++) {
-        this.ranges[i] = new Range(this._io, this, this._root);
+        this.ranges.push(new Range(this._io, this, this._root));
       }
     }
 
@@ -226,9 +226,9 @@ var AllegroDat = (function() {
         this.mono = this._io.readU1();
         this.startChar = this._io.readU4be();
         this.endChar = this._io.readU4be();
-        this.chars = new Array(((this.endChar - this.startChar) + 1));
+        this.chars = [];
         for (var i = 0; i < ((this.endChar - this.startChar) + 1); i++) {
-          this.chars[i] = new FontChar(this._io, this, this._root);
+          this.chars.push(new FontChar(this._io, this, this._root));
         }
       }
 

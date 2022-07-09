@@ -8,7 +8,7 @@
   } else {
     root.Dbf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * .dbf is a relational database format introduced in DOS database
  * management system dBASE in 1982.
@@ -31,9 +31,9 @@ var Dbf = (function() {
     this._raw_header2 = this._io.readBytes((this.header1.lenHeader - 12));
     var _io__raw_header2 = new KaitaiStream(this._raw_header2);
     this.header2 = new Header2(_io__raw_header2, this, this._root);
-    this.records = new Array(this.header1.numRecords);
+    this.records = [];
     for (var i = 0; i < this.header1.numRecords; i++) {
-      this.records[i] = this._io.readBytes(this.header1.lenRecord);
+      this.records.push(this._io.readBytes(this.header1.lenRecord));
     }
   }
 
@@ -52,9 +52,9 @@ var Dbf = (function() {
       if (this._root.header1.dbaseLevel == 7) {
         this.headerDbase7 = new HeaderDbase7(this._io, this, this._root);
       }
-      this.fields = new Array(11);
+      this.fields = [];
       for (var i = 0; i < 11; i++) {
-        this.fields[i] = new Field(this._io, this, this._root);
+        this.fields.push(new Field(this._io, this, this._root));
       }
     }
 

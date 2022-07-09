@@ -139,9 +139,8 @@ void sqlite3_t::btree_page_t::_read() {
         n_right_ptr = false;
         m_right_ptr = m__io->read_u4be();
     }
-    int l_cells = num_cells();
     m_cells = new std::vector<ref_cell_t*>();
-    m_cells->reserve(l_cells);
+    const int l_cells = num_cells();
     for (int i = 0; i < l_cells; i++) {
         m_cells->push_back(new ref_cell_t(m__io, this, m__root));
     }
@@ -301,9 +300,8 @@ void sqlite3_t::cell_payload_t::_read() {
     m__raw_column_serials = m__io->read_bytes((len_header_and_len()->value() - 1));
     m__io__raw_column_serials = new kaitai::kstream(m__raw_column_serials);
     m_column_serials = new serials_t(m__io__raw_column_serials, this, m__root);
-    int l_column_contents = column_serials()->entries()->size();
     m_column_contents = new std::vector<column_content_t*>();
-    m_column_contents->reserve(l_column_contents);
+    const int l_column_contents = column_serials()->entries()->size();
     for (int i = 0; i < l_column_contents; i++) {
         m_column_contents->push_back(new column_content_t(column_serials()->entries()->at(i), m__io, this, m__root));
     }

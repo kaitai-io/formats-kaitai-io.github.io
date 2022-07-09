@@ -250,7 +250,7 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         public Frame body() {
             if (this.body != null)
                 return this.body;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofs());
             this.body = new Frame(io, this, _root);
@@ -299,9 +299,9 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
             this.origLen = this._io.readU4le();
             this.incLen = this._io.readU4le();
             {
-                Linktype on = _root.macType();
+                Linktype on = _root().macType();
                 if (on != null) {
-                    switch (_root.macType()) {
+                    switch (_root().macType()) {
                     case ETHERNET: {
                         this._raw_body = this._io.readBytes(incLen());
                         KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);

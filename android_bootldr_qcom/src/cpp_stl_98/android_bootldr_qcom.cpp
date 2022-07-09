@@ -26,9 +26,8 @@ void android_bootldr_qcom_t::_read() {
     m_num_images = m__io->read_u4le();
     m_ofs_img_bodies = m__io->read_u4le();
     m_bootloader_size = m__io->read_u4le();
-    int l_img_headers = num_images();
     m_img_headers = new std::vector<img_header_t*>();
-    m_img_headers->reserve(l_img_headers);
+    const int l_img_headers = num_images();
     for (int i = 0; i < l_img_headers; i++) {
         m_img_headers->push_back(new img_header_t(m__io, this, m__root));
     }
@@ -117,9 +116,8 @@ std::vector<android_bootldr_qcom_t::img_body_t*>* android_bootldr_qcom_t::img_bo
         return m_img_bodies;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_img_bodies());
-    int l_img_bodies = num_images();
     m_img_bodies = new std::vector<img_body_t*>();
-    m_img_bodies->reserve(l_img_bodies);
+    const int l_img_bodies = num_images();
     for (int i = 0; i < l_img_bodies; i++) {
         m_img_bodies->push_back(new img_body_t(i, m__io, this, m__root));
     }

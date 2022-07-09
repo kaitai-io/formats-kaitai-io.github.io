@@ -8,7 +8,7 @@
   } else {
     root.HashcatRestore = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://hashcat.net/wiki/doku.php?id=restore|Source}
  */
@@ -30,9 +30,9 @@ var HashcatRestore = (function() {
     this.currentRestorePoint = this._io.readU8le();
     this.argc = this._io.readU4le();
     this.padding2 = this._io.readBytes(12);
-    this.argv = new Array(this.argc);
+    this.argv = [];
     for (var i = 0; i < this.argc; i++) {
-      this.argv[i] = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), "UTF-8");
+      this.argv.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), "UTF-8"));
     }
   }
 

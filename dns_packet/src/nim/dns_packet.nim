@@ -45,13 +45,15 @@ type
   DnsPacket_PointerStruct* = ref object of KaitaiStruct
     `value`*: uint8
     `parent`*: DnsPacket_Label
-    `contentsInst`*: DnsPacket_DomainName
+    `contentsInst`: DnsPacket_DomainName
+    `contentsInstFlag`: bool
   DnsPacket_Label* = ref object of KaitaiStruct
     `length`*: uint8
     `pointer`*: DnsPacket_PointerStruct
     `name`*: string
     `parent`*: DnsPacket_DomainName
-    `isPointerInst`*: bool
+    `isPointerInst`: bool
+    `isPointerInstFlag`: bool
   DnsPacket_Query* = ref object of KaitaiStruct
     `name`*: DnsPacket_DomainName
     `type`*: DnsPacket_TypeType
@@ -91,17 +93,28 @@ type
   DnsPacket_PacketFlags* = ref object of KaitaiStruct
     `flag`*: uint16
     `parent`*: DnsPacket
-    `qrInst`*: int
-    `raInst`*: int
-    `tcInst`*: int
-    `isOpcodeValidInst`*: bool
-    `rcodeInst`*: int
-    `opcodeInst`*: int
-    `aaInst`*: int
-    `zInst`*: int
-    `rdInst`*: int
-    `cdInst`*: int
-    `adInst`*: int
+    `qrInst`: int
+    `qrInstFlag`: bool
+    `raInst`: int
+    `raInstFlag`: bool
+    `tcInst`: int
+    `tcInstFlag`: bool
+    `isOpcodeValidInst`: bool
+    `isOpcodeValidInstFlag`: bool
+    `rcodeInst`: int
+    `rcodeInstFlag`: bool
+    `opcodeInst`: int
+    `opcodeInstFlag`: bool
+    `aaInst`: int
+    `aaInstFlag`: bool
+    `zInst`: int
+    `zInstFlag`: bool
+    `rdInst`: int
+    `rdInstFlag`: bool
+    `cdInst`: int
+    `cdInstFlag`: bool
+    `adInst`: int
+    `adInstFlag`: bool
   DnsPacket_AuthorityInfo* = ref object of KaitaiStruct
     `primaryNs`*: DnsPacket_DomainName
     `resoponsibleMailbox`*: DnsPacket_DomainName
@@ -242,7 +255,7 @@ proc read*(_: typedesc[DnsPacket_PointerStruct], io: KaitaiStream, root: KaitaiS
   this.value = valueExpr
 
 proc contents(this: DnsPacket_PointerStruct): DnsPacket_DomainName = 
-  if this.contentsInst != nil:
+  if this.contentsInstFlag:
     return this.contentsInst
   let io = DnsPacket(this.root).io
   let pos = io.pos()
@@ -250,8 +263,8 @@ proc contents(this: DnsPacket_PointerStruct): DnsPacket_DomainName =
   let contentsInstExpr = DnsPacket_DomainName.read(io, this.root, this)
   this.contentsInst = contentsInstExpr
   io.seek(pos)
-  if this.contentsInst != nil:
-    return this.contentsInst
+  this.contentsInstFlag = true
+  return this.contentsInst
 
 proc fromFile*(_: typedesc[DnsPacket_PointerStruct], filename: string): DnsPacket_PointerStruct =
   DnsPacket_PointerStruct.read(newKaitaiFileStream(filename), nil, nil)
@@ -282,12 +295,12 @@ proc read*(_: typedesc[DnsPacket_Label], io: KaitaiStream, root: KaitaiStruct, p
     this.name = nameExpr
 
 proc isPointer(this: DnsPacket_Label): bool = 
-  if this.isPointerInst != nil:
+  if this.isPointerInstFlag:
     return this.isPointerInst
   let isPointerInstExpr = bool(this.length >= 192)
   this.isPointerInst = isPointerInstExpr
-  if this.isPointerInst != nil:
-    return this.isPointerInst
+  this.isPointerInstFlag = true
+  return this.isPointerInst
 
 proc fromFile*(_: typedesc[DnsPacket_Label], filename: string): DnsPacket_Label =
   DnsPacket_Label.read(newKaitaiFileStream(filename), nil, nil)
@@ -517,92 +530,92 @@ proc read*(_: typedesc[DnsPacket_PacketFlags], io: KaitaiStream, root: KaitaiStr
   this.flag = flagExpr
 
 proc qr(this: DnsPacket_PacketFlags): int = 
-  if this.qrInst != nil:
+  if this.qrInstFlag:
     return this.qrInst
   let qrInstExpr = int(((this.flag and 32768) shr 15))
   this.qrInst = qrInstExpr
-  if this.qrInst != nil:
-    return this.qrInst
+  this.qrInstFlag = true
+  return this.qrInst
 
 proc ra(this: DnsPacket_PacketFlags): int = 
-  if this.raInst != nil:
+  if this.raInstFlag:
     return this.raInst
   let raInstExpr = int(((this.flag and 128) shr 7))
   this.raInst = raInstExpr
-  if this.raInst != nil:
-    return this.raInst
+  this.raInstFlag = true
+  return this.raInst
 
 proc tc(this: DnsPacket_PacketFlags): int = 
-  if this.tcInst != nil:
+  if this.tcInstFlag:
     return this.tcInst
   let tcInstExpr = int(((this.flag and 512) shr 9))
   this.tcInst = tcInstExpr
-  if this.tcInst != nil:
-    return this.tcInst
+  this.tcInstFlag = true
+  return this.tcInst
 
 proc isOpcodeValid(this: DnsPacket_PacketFlags): bool = 
-  if this.isOpcodeValidInst != nil:
+  if this.isOpcodeValidInstFlag:
     return this.isOpcodeValidInst
   let isOpcodeValidInstExpr = bool( ((this.opcode == 0) or (this.opcode == 1) or (this.opcode == 2)) )
   this.isOpcodeValidInst = isOpcodeValidInstExpr
-  if this.isOpcodeValidInst != nil:
-    return this.isOpcodeValidInst
+  this.isOpcodeValidInstFlag = true
+  return this.isOpcodeValidInst
 
 proc rcode(this: DnsPacket_PacketFlags): int = 
-  if this.rcodeInst != nil:
+  if this.rcodeInstFlag:
     return this.rcodeInst
   let rcodeInstExpr = int(((this.flag and 15) shr 0))
   this.rcodeInst = rcodeInstExpr
-  if this.rcodeInst != nil:
-    return this.rcodeInst
+  this.rcodeInstFlag = true
+  return this.rcodeInst
 
 proc opcode(this: DnsPacket_PacketFlags): int = 
-  if this.opcodeInst != nil:
+  if this.opcodeInstFlag:
     return this.opcodeInst
   let opcodeInstExpr = int(((this.flag and 30720) shr 11))
   this.opcodeInst = opcodeInstExpr
-  if this.opcodeInst != nil:
-    return this.opcodeInst
+  this.opcodeInstFlag = true
+  return this.opcodeInst
 
 proc aa(this: DnsPacket_PacketFlags): int = 
-  if this.aaInst != nil:
+  if this.aaInstFlag:
     return this.aaInst
   let aaInstExpr = int(((this.flag and 1024) shr 10))
   this.aaInst = aaInstExpr
-  if this.aaInst != nil:
-    return this.aaInst
+  this.aaInstFlag = true
+  return this.aaInst
 
 proc z(this: DnsPacket_PacketFlags): int = 
-  if this.zInst != nil:
+  if this.zInstFlag:
     return this.zInst
   let zInstExpr = int(((this.flag and 64) shr 6))
   this.zInst = zInstExpr
-  if this.zInst != nil:
-    return this.zInst
+  this.zInstFlag = true
+  return this.zInst
 
 proc rd(this: DnsPacket_PacketFlags): int = 
-  if this.rdInst != nil:
+  if this.rdInstFlag:
     return this.rdInst
   let rdInstExpr = int(((this.flag and 256) shr 8))
   this.rdInst = rdInstExpr
-  if this.rdInst != nil:
-    return this.rdInst
+  this.rdInstFlag = true
+  return this.rdInst
 
 proc cd(this: DnsPacket_PacketFlags): int = 
-  if this.cdInst != nil:
+  if this.cdInstFlag:
     return this.cdInst
   let cdInstExpr = int(((this.flag and 16) shr 4))
   this.cdInst = cdInstExpr
-  if this.cdInst != nil:
-    return this.cdInst
+  this.cdInstFlag = true
+  return this.cdInst
 
 proc ad(this: DnsPacket_PacketFlags): int = 
-  if this.adInst != nil:
+  if this.adInstFlag:
     return this.adInst
   let adInstExpr = int(((this.flag and 32) shr 5))
   this.adInst = adInstExpr
-  if this.adInst != nil:
-    return this.adInst
+  this.adInstFlag = true
+  return this.adInst
 
 proc fromFile*(_: typedesc[DnsPacket_PacketFlags], filename: string): DnsPacket_PacketFlags =
   DnsPacket_PacketFlags.read(newKaitaiFileStream(filename), nil, nil)

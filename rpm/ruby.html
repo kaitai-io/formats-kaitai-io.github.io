@@ -731,9 +731,9 @@ are not covered by this specification.</p>
     <span class="k">if</span> <span class="n">ofs_payload</span> <span class="o">&lt;</span> <span class="mi">0</span>
       <span class="vi">@_unnamed5</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">end</span>
-    <span class="vi">@signature_tags_steps</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">header_record</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">)</span>
+    <span class="vi">@signature_tags_steps</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">header_record</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@signature_tags_steps</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">SignatureTagsStep</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="n">signature_tags_steps</span><span class="o">[</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">].</span><span class="n">size_tag_idx</span><span class="p">))</span>
+      <span class="vi">@signature_tags_steps</span> <span class="o">&lt;&lt;</span> <span class="no">SignatureTagsStep</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="n">signature_tags_steps</span><span class="o">[</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">].</span><span class="n">size_tag_idx</span><span class="p">))</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -745,9 +745,9 @@ are not covered by this specification.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_values</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_values</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -804,9 +804,9 @@ are not covered by this specification.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -839,9 +839,9 @@ are not covered by this specification.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_values</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_values</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -856,9 +856,9 @@ are not covered by this specification.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_values</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_values</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -982,9 +982,9 @@ are not covered by this specification.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_values</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_values</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -999,9 +999,9 @@ are not covered by this specification.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_values</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_values</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8be</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8be</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1016,9 +1016,9 @@ are not covered by this specification.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_value</span><span class="p">)</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_value</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1064,9 +1064,9 @@ are not covered by this specification.</p>
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@header_record</span> <span class="o">=</span> <span class="no">HeaderRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@index_records</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header_record</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">)</span>
+      <span class="vi">@index_records</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">header_record</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@index_records</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">HeaderIndexRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@index_records</span> <span class="o">&lt;&lt;</span> <span class="no">HeaderIndexRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="vi">@_raw_storage_section</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header_record</span><span class="o">.</span><span class="n">len_storage_section</span><span class="p">)</span>
       <span class="n">_io__raw_storage_section</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_storage_section</span><span class="p">)</span>

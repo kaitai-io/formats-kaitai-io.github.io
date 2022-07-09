@@ -34,9 +34,8 @@ void tga_t::_read() {
     n_color_map = true;
     if (color_map_type() == tga_t::COLOR_MAP_ENUM_HAS_COLOR_MAP) {
         n_color_map = false;
-        int l_color_map = num_color_map();
         m_color_map = new std::vector<std::string>();
-        m_color_map->reserve(l_color_map);
+        const int l_color_map = num_color_map();
         for (int i = 0; i < l_color_map; i++) {
             m_color_map->push_back(m__io->read_bytes(((color_map_depth() + 7) / 8)));
         }
@@ -132,9 +131,8 @@ tga_t::tga_ext_area_t::tga_ext_area_t(kaitai::kstream* p__io, tga_t::tga_footer_
 void tga_t::tga_ext_area_t::_read() {
     m_ext_area_size = m__io->read_u2le();
     m_author_name = kaitai::kstream::bytes_to_str(m__io->read_bytes(41), std::string("ASCII"));
-    int l_comments = 4;
     m_comments = new std::vector<std::string>();
-    m_comments->reserve(l_comments);
+    const int l_comments = 4;
     for (int i = 0; i < l_comments; i++) {
         m_comments->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes(81), std::string("ASCII")));
     }

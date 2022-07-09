@@ -145,7 +145,7 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
             if (version() >= 3) {
                 this.buildId = new PrefixedString(this._io, this, _root);
             }
-            entries = new ArrayList<Entry>(((Number) (numEntries())).intValue());
+            this.entries = new ArrayList<Entry>();
             for (int i = 0; i < numEntries(); i++) {
                 this.entries.add(new Entry(this._io, this, _root));
             }

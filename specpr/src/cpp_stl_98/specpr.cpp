@@ -73,9 +73,8 @@ void specpr_t::data_initial_t::_read() {
     m_itchan = m__io->read_s4be();
     m_irmas = m__io->read_s4be();
     m_revs = m__io->read_s4be();
-    int l_iband = 2;
     m_iband = new std::vector<int32_t>();
-    m_iband->reserve(l_iband);
+    const int l_iband = 2;
     for (int i = 0; i < l_iband; i++) {
         m_iband->push_back(m__io->read_s4be());
     }
@@ -84,9 +83,8 @@ void specpr_t::data_initial_t::_read() {
     m_irecno = m__io->read_s4be();
     m_itpntr = m__io->read_s4be();
     m_ihist = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(60), 32), std::string("ascii"));
-    int l_mhist = 4;
     m_mhist = new std::vector<std::string>();
-    m_mhist->reserve(l_mhist);
+    const int l_mhist = 4;
     for (int i = 0; i < l_mhist; i++) {
         m_mhist->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes(74), std::string("ascii")));
     }
@@ -100,9 +98,8 @@ void specpr_t::data_initial_t::_read() {
     m_scatim = m__io->read_f4be();
     m_timint = m__io->read_f4be();
     m_tempd = m__io->read_f4be();
-    int l_data = 256;
     m_data = new std::vector<float>();
-    m_data->reserve(l_data);
+    const int l_data = 256;
     for (int i = 0; i < l_data; i++) {
         m_data->push_back(m__io->read_f4be());
     }
@@ -234,9 +231,8 @@ specpr_t::data_continuation_t::data_continuation_t(kaitai::kstream* p__io, specp
 }
 
 void specpr_t::data_continuation_t::_read() {
-    int l_cdata = 383;
     m_cdata = new std::vector<float>();
-    m_cdata->reserve(l_cdata);
+    const int l_cdata = 383;
     for (int i = 0; i < l_cdata; i++) {
         m_cdata->push_back(m__io->read_f4be());
     }

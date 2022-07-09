@@ -174,12 +174,12 @@ public class PhpSerializedValue extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.numEntriesDec = new String(this._io.readBytesTerm(58, false, true, true), Charset.forName("ASCII"));
+            this.numEntriesDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), Charset.forName("ASCII"));
             this.openingBrace = this._io.readBytes(1);
             if (!(Arrays.equals(openingBrace(), new byte[] { 123 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 123 }, openingBrace(), _io(), "/types/count_prefixed_mapping/seq/1");
             }
-            entries = new ArrayList<MappingEntry>(((Number) (numEntries())).intValue());
+            this.entries = new ArrayList<MappingEntry>();
             for (int i = 0; i < numEntries(); i++) {
                 this.entries.add(new MappingEntry(this._io, this, _root));
             }
@@ -249,7 +249,7 @@ public class PhpSerializedValue extends KaitaiStruct {
             if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/float_contents/seq/0");
             }
-            this.valueDec = new String(this._io.readBytesTerm(59, false, true, true), Charset.forName("ASCII"));
+            this.valueDec = new String(this._io.readBytesTerm((byte) 59, false, true, true), Charset.forName("ASCII"));
         }
         private byte[] colon;
         private String valueDec;
@@ -300,7 +300,7 @@ public class PhpSerializedValue extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.lenDataDec = new String(this._io.readBytesTerm(58, false, true, true), Charset.forName("ASCII"));
+            this.lenDataDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), Charset.forName("ASCII"));
             this.openingQuote = this._io.readBytes(1);
             if (!(Arrays.equals(openingQuote(), new byte[] { 34 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34 }, openingQuote(), _io(), "/types/length_prefixed_quoted_string/seq/1");
@@ -482,7 +482,7 @@ public class PhpSerializedValue extends KaitaiStruct {
             if (!(Arrays.equals(colon2(), new byte[] { 58 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon2(), _io(), "/types/custom_serialized_object_contents/seq/2");
             }
-            this.lenDataDec = new String(this._io.readBytesTerm(58, false, true, true), Charset.forName("ASCII"));
+            this.lenDataDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), Charset.forName("ASCII"));
             this.openingBrace = this._io.readBytes(1);
             if (!(Arrays.equals(openingBrace(), new byte[] { 123 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 123 }, openingBrace(), _io(), "/types/custom_serialized_object_contents/seq/4");
@@ -775,7 +775,7 @@ public class PhpSerializedValue extends KaitaiStruct {
             if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/int_contents/seq/0");
             }
-            this.valueDec = new String(this._io.readBytesTerm(59, false, true, true), Charset.forName("ASCII"));
+            this.valueDec = new String(this._io.readBytesTerm((byte) 59, false, true, true), Charset.forName("ASCII"));
         }
         private Integer value;
 

@@ -23,24 +23,35 @@ type
     `literal`*: seq[byte]
     `tag`*: uint8
     `parent`*: Dcmp0_Chunk
-    `doStoreInst`*: bool
-    `lenLiteralDiv2Inst`*: int
-    `lenLiteralInst`*: int
-    `lenLiteralDiv2InTagInst`*: int
-    `isLenLiteralDiv2SeparateInst`*: bool
+    `doStoreInst`: bool
+    `doStoreInstFlag`: bool
+    `lenLiteralDiv2Inst`: int
+    `lenLiteralDiv2InstFlag`: bool
+    `lenLiteralInst`: int
+    `lenLiteralInstFlag`: bool
+    `lenLiteralDiv2InTagInst`: int
+    `lenLiteralDiv2InTagInstFlag`: bool
+    `isLenLiteralDiv2SeparateInst`: bool
+    `isLenLiteralDiv2SeparateInstFlag`: bool
   Dcmp0_Chunk_BackreferenceBody* = ref object of KaitaiStruct
     `indexSeparateMinus`*: uint16
     `tag`*: uint8
     `parent`*: Dcmp0_Chunk
-    `isIndexSeparateInst`*: bool
-    `indexInTagInst`*: int
-    `indexSeparateInst`*: int
-    `indexInst`*: int
+    `isIndexSeparateInst`: bool
+    `isIndexSeparateInstFlag`: bool
+    `indexInTagInst`: int
+    `indexInTagInstFlag`: bool
+    `indexSeparateInst`: int
+    `indexSeparateInstFlag`: bool
+    `indexInst`: int
+    `indexInstFlag`: bool
   Dcmp0_Chunk_TableLookupBody* = ref object of KaitaiStruct
     `tag`*: uint8
     `parent`*: Dcmp0_Chunk
-    `lookupTableInst`*: seq[seq[byte]]
-    `valueInst`*: seq[byte]
+    `lookupTableInst`: seq[seq[byte]]
+    `lookupTableInstFlag`: bool
+    `valueInst`: seq[byte]
+    `valueInstFlag`: bool
   Dcmp0_Chunk_EndBody* = ref object of KaitaiStruct
     `parent`*: Dcmp0_Chunk
   Dcmp0_Chunk_ExtendedBody* = ref object of KaitaiStruct
@@ -52,31 +63,41 @@ type
     `numAddressesRaw`*: DcmpVariableLengthInteger
     `addressesRaw`*: seq[DcmpVariableLengthInteger]
     `parent`*: Dcmp0_Chunk_ExtendedBody
-    `segmentNumberInst`*: int
-    `numAddressesInst`*: int
+    `segmentNumberInst`: int
+    `segmentNumberInstFlag`: bool
+    `numAddressesInst`: int
+    `numAddressesInstFlag`: bool
   Dcmp0_Chunk_ExtendedBody_RepeatBody* = ref object of KaitaiStruct
     `toRepeatRaw`*: DcmpVariableLengthInteger
     `repeatCountM1Raw`*: DcmpVariableLengthInteger
     `tag`*: uint8
     `parent`*: Dcmp0_Chunk_ExtendedBody
-    `byteCountInst`*: int
-    `toRepeatInst`*: int
-    `repeatCountM1Inst`*: int
-    `repeatCountInst`*: int
+    `byteCountInst`: int
+    `byteCountInstFlag`: bool
+    `toRepeatInst`: int
+    `toRepeatInstFlag`: bool
+    `repeatCountM1Inst`: int
+    `repeatCountM1InstFlag`: bool
+    `repeatCountInst`: int
+    `repeatCountInstFlag`: bool
   Dcmp0_Chunk_ExtendedBody_DeltaEncoding16BitBody* = ref object of KaitaiStruct
     `firstValueRaw`*: DcmpVariableLengthInteger
     `numDeltasRaw`*: DcmpVariableLengthInteger
     `deltas`*: seq[int8]
     `parent`*: Dcmp0_Chunk_ExtendedBody
-    `firstValueInst`*: int
-    `numDeltasInst`*: int
+    `firstValueInst`: int
+    `firstValueInstFlag`: bool
+    `numDeltasInst`: int
+    `numDeltasInstFlag`: bool
   Dcmp0_Chunk_ExtendedBody_DeltaEncoding32BitBody* = ref object of KaitaiStruct
     `firstValueRaw`*: DcmpVariableLengthInteger
     `numDeltasRaw`*: DcmpVariableLengthInteger
     `deltasRaw`*: seq[DcmpVariableLengthInteger]
     `parent`*: Dcmp0_Chunk_ExtendedBody
-    `firstValueInst`*: int
-    `numDeltasInst`*: int
+    `firstValueInst`: int
+    `firstValueInstFlag`: bool
+    `numDeltasInst`: int
+    `numDeltasInstFlag`: bool
 
 proc read*(_: typedesc[Dcmp0], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dcmp0
 proc read*(_: typedesc[Dcmp0_Chunk], io: KaitaiStream, root: KaitaiStruct, parent: Dcmp0): Dcmp0_Chunk
@@ -280,12 +301,12 @@ proc doStore(this: Dcmp0_Chunk_LiteralBody): bool =
 See the documentation of the `backreference_body` type for details about backreference chunks.
 
   ]##
-  if this.doStoreInst != nil:
+  if this.doStoreInstFlag:
     return this.doStoreInst
   let doStoreInstExpr = bool((this.tag and 16) != 0)
   this.doStoreInst = doStoreInstExpr
-  if this.doStoreInst != nil:
-    return this.doStoreInst
+  this.doStoreInstFlag = true
+  return this.doStoreInst
 
 proc lenLiteralDiv2(this: Dcmp0_Chunk_LiteralBody): int = 
 
@@ -298,12 +319,12 @@ this value is always greater than zero,
 as there is no use in storing a zero-length literal.
 
   ]##
-  if this.lenLiteralDiv2Inst != nil:
+  if this.lenLiteralDiv2InstFlag:
     return this.lenLiteralDiv2Inst
   let lenLiteralDiv2InstExpr = int((if this.isLenLiteralDiv2Separate: this.lenLiteralDiv2Separate else: this.lenLiteralDiv2InTag))
   this.lenLiteralDiv2Inst = lenLiteralDiv2InstExpr
-  if this.lenLiteralDiv2Inst != nil:
-    return this.lenLiteralDiv2Inst
+  this.lenLiteralDiv2InstFlag = true
+  return this.lenLiteralDiv2Inst
 
 proc lenLiteral(this: Dcmp0_Chunk_LiteralBody): int = 
 
@@ -312,12 +333,12 @@ proc lenLiteral(this: Dcmp0_Chunk_LiteralBody): int =
 in bytes.
 
   ]##
-  if this.lenLiteralInst != nil:
+  if this.lenLiteralInstFlag:
     return this.lenLiteralInst
   let lenLiteralInstExpr = int((this.lenLiteralDiv2 * 2))
   this.lenLiteralInst = lenLiteralInstExpr
-  if this.lenLiteralInst != nil:
-    return this.lenLiteralInst
+  this.lenLiteralInstFlag = true
+  return this.lenLiteralInst
 
 proc lenLiteralDiv2InTag(this: Dcmp0_Chunk_LiteralBody): int = 
 
@@ -328,12 +349,12 @@ If this value is 0,
 the length is stored in a separate byte after the tag byte and before the literal data.
 
   ]##
-  if this.lenLiteralDiv2InTagInst != nil:
+  if this.lenLiteralDiv2InTagInstFlag:
     return this.lenLiteralDiv2InTagInst
   let lenLiteralDiv2InTagInstExpr = int((this.tag and 15))
   this.lenLiteralDiv2InTagInst = lenLiteralDiv2InTagInstExpr
-  if this.lenLiteralDiv2InTagInst != nil:
-    return this.lenLiteralDiv2InTagInst
+  this.lenLiteralDiv2InTagInstFlag = true
+  return this.lenLiteralDiv2InTagInst
 
 proc isLenLiteralDiv2Separate(this: Dcmp0_Chunk_LiteralBody): bool = 
 
@@ -341,12 +362,12 @@ proc isLenLiteralDiv2Separate(this: Dcmp0_Chunk_LiteralBody): bool =
   Whether the length of the literal is stored separately from the tag.
 
   ]##
-  if this.isLenLiteralDiv2SeparateInst != nil:
+  if this.isLenLiteralDiv2SeparateInstFlag:
     return this.isLenLiteralDiv2SeparateInst
   let isLenLiteralDiv2SeparateInstExpr = bool(this.lenLiteralDiv2InTag == 0)
   this.isLenLiteralDiv2SeparateInst = isLenLiteralDiv2SeparateInstExpr
-  if this.isLenLiteralDiv2SeparateInst != nil:
-    return this.isLenLiteralDiv2SeparateInst
+  this.isLenLiteralDiv2SeparateInstFlag = true
+  return this.isLenLiteralDiv2SeparateInst
 
 proc fromFile*(_: typedesc[Dcmp0_Chunk_LiteralBody], filename: string): Dcmp0_Chunk_LiteralBody =
   Dcmp0_Chunk_LiteralBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -410,12 +431,12 @@ proc isIndexSeparate(this: Dcmp0_Chunk_BackreferenceBody): bool =
   Whether the index is stored separately from the tag.
 
   ]##
-  if this.isIndexSeparateInst != nil:
+  if this.isIndexSeparateInstFlag:
     return this.isIndexSeparateInst
   let isIndexSeparateInstExpr = bool( ((this.tag >= 32) and (this.tag <= 34)) )
   this.isIndexSeparateInst = isIndexSeparateInstExpr
-  if this.isIndexSeparateInst != nil:
-    return this.isIndexSeparateInst
+  this.isIndexSeparateInstFlag = true
+  return this.isIndexSeparateInst
 
 proc indexInTag(this: Dcmp0_Chunk_BackreferenceBody): int = 
 
@@ -424,12 +445,12 @@ proc indexInTag(this: Dcmp0_Chunk_BackreferenceBody): int =
 as stored in the tag byte.
 
   ]##
-  if this.indexInTagInst != nil:
+  if this.indexInTagInstFlag:
     return this.indexInTagInst
   let indexInTagInstExpr = int((this.tag - 35))
   this.indexInTagInst = indexInTagInstExpr
-  if this.indexInTagInst != nil:
-    return this.indexInTagInst
+  this.indexInTagInstFlag = true
+  return this.indexInTagInst
 
 proc indexSeparate(this: Dcmp0_Chunk_BackreferenceBody): int = 
 
@@ -439,13 +460,13 @@ as stored separately from the tag byte,
 with the implicit offset corrected for.
 
   ]##
-  if this.indexSeparateInst != nil:
+  if this.indexSeparateInstFlag:
     return this.indexSeparateInst
   if this.isIndexSeparate:
     let indexSeparateInstExpr = int(((this.indexSeparateMinus + 40) + (if this.tag == 33: 256 else: 0)))
     this.indexSeparateInst = indexSeparateInstExpr
-  if this.indexSeparateInst != nil:
-    return this.indexSeparateInst
+  this.indexSeparateInstFlag = true
+  return this.indexSeparateInst
 
 proc index(this: Dcmp0_Chunk_BackreferenceBody): int = 
 
@@ -463,12 +484,12 @@ a backreference can only reference stored literal chunks found *before* the back
 not ones that come after it.
 
   ]##
-  if this.indexInst != nil:
+  if this.indexInstFlag:
     return this.indexInst
   let indexInstExpr = int((if this.isIndexSeparate: this.indexSeparate else: this.indexInTag))
   this.indexInst = indexInstExpr
-  if this.indexInst != nil:
-    return this.indexInst
+  this.indexInstFlag = true
+  return this.indexInst
 
 proc fromFile*(_: typedesc[Dcmp0_Chunk_BackreferenceBody], filename: string): Dcmp0_Chunk_BackreferenceBody =
   Dcmp0_Chunk_BackreferenceBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -503,12 +524,12 @@ The entries in the lookup table are offset -
 index 0 stands for tag 0x4b, 1 for 0x4c, etc.
 
   ]##
-  if this.lookupTableInst.len != 0:
+  if this.lookupTableInstFlag:
     return this.lookupTableInst
-  let lookupTableInstExpr = seq[seq[byte]](@[seq[byte](@[0'u8, 0'u8]), seq[byte](@[78'u8, -70'u8]), seq[byte](@[0'u8, 8'u8]), seq[byte](@[78'u8, 117'u8]), seq[byte](@[0'u8, 12'u8]), seq[byte](@[78'u8, -83'u8]), seq[byte](@[32'u8, 83'u8]), seq[byte](@[47'u8, 11'u8]), seq[byte](@[97'u8, 0'u8]), seq[byte](@[0'u8, 16'u8]), seq[byte](@[112'u8, 0'u8]), seq[byte](@[47'u8, 0'u8]), seq[byte](@[72'u8, 110'u8]), seq[byte](@[32'u8, 80'u8]), seq[byte](@[32'u8, 110'u8]), seq[byte](@[47'u8, 46'u8]), seq[byte](@[-1'u8, -4'u8]), seq[byte](@[72'u8, -25'u8]), seq[byte](@[63'u8, 60'u8]), seq[byte](@[0'u8, 4'u8]), seq[byte](@[-1'u8, -8'u8]), seq[byte](@[47'u8, 12'u8]), seq[byte](@[32'u8, 6'u8]), seq[byte](@[78'u8, -19'u8]), seq[byte](@[78'u8, 86'u8]), seq[byte](@[32'u8, 104'u8]), seq[byte](@[78'u8, 94'u8]), seq[byte](@[0'u8, 1'u8]), seq[byte](@[88'u8, -113'u8]), seq[byte](@[79'u8, -17'u8]), seq[byte](@[0'u8, 2'u8]), seq[byte](@[0'u8, 24'u8]), seq[byte](@[96'u8, 0'u8]), seq[byte](@[-1'u8, -1'u8]), seq[byte](@[80'u8, -113'u8]), seq[byte](@[78'u8, -112'u8]), seq[byte](@[0'u8, 6'u8]), seq[byte](@[38'u8, 110'u8]), seq[byte](@[0'u8, 20'u8]), seq[byte](@[-1'u8, -12'u8]), seq[byte](@[76'u8, -18'u8]), seq[byte](@[0'u8, 10'u8]), seq[byte](@[0'u8, 14'u8]), seq[byte](@[65'u8, -18'u8]), seq[byte](@[76'u8, -33'u8]), seq[byte](@[72'u8, -64'u8]), seq[byte](@[-1'u8, -16'u8]), seq[byte](@[45'u8, 64'u8]), seq[byte](@[0'u8, 18'u8]), seq[byte](@[48'u8, 46'u8]), seq[byte](@[112'u8, 1'u8]), seq[byte](@[47'u8, 40'u8]), seq[byte](@[32'u8, 84'u8]), seq[byte](@[103'u8, 0'u8]), seq[byte](@[0'u8, 32'u8]), seq[byte](@[0'u8, 28'u8]), seq[byte](@[32'u8, 95'u8]), seq[byte](@[24'u8, 0'u8]), seq[byte](@[38'u8, 111'u8]), seq[byte](@[72'u8, 120'u8]), seq[byte](@[0'u8, 22'u8]), seq[byte](@[65'u8, -6'u8]), seq[byte](@[48'u8, 60'u8]), seq[byte](@[40'u8, 64'u8]), seq[byte](@[114'u8, 0'u8]), seq[byte](@[40'u8, 110'u8]), seq[byte](@[32'u8, 12'u8]), seq[byte](@[102'u8, 0'u8]), seq[byte](@[32'u8, 107'u8]), seq[byte](@[47'u8, 7'u8]), seq[byte](@[85'u8, -113'u8]), seq[byte](@[0'u8, 40'u8]), seq[byte](@[-1'u8, -2'u8]), seq[byte](@[-1'u8, -20'u8]), seq[byte](@[34'u8, -40'u8]), seq[byte](@[32'u8, 11'u8]), seq[byte](@[0'u8, 15'u8]), seq[byte](@[89'u8, -113'u8]), seq[byte](@[47'u8, 60'u8]), seq[byte](@[-1'u8, 0'u8]), seq[byte](@[1'u8, 24'u8]), seq[byte](@[-127'u8, -31'u8]), seq[byte](@[74'u8, 0'u8]), seq[byte](@[78'u8, -80'u8]), seq[byte](@[-1'u8, -24'u8]), seq[byte](@[72'u8, -57'u8]), seq[byte](@[0'u8, 3'u8]), seq[byte](@[0'u8, 34'u8]), seq[byte](@[0'u8, 7'u8]), seq[byte](@[0'u8, 26'u8]), seq[byte](@[103'u8, 6'u8]), seq[byte](@[103'u8, 8'u8]), seq[byte](@[78'u8, -7'u8]), seq[byte](@[0'u8, 36'u8]), seq[byte](@[32'u8, 120'u8]), seq[byte](@[8'u8, 0'u8]), seq[byte](@[102'u8, 4'u8]), seq[byte](@[0'u8, 42'u8]), seq[byte](@[78'u8, -48'u8]), seq[byte](@[48'u8, 40'u8]), seq[byte](@[38'u8, 95'u8]), seq[byte](@[103'u8, 4'u8]), seq[byte](@[0'u8, 48'u8]), seq[byte](@[67'u8, -18'u8]), seq[byte](@[63'u8, 0'u8]), seq[byte](@[32'u8, 31'u8]), seq[byte](@[0'u8, 30'u8]), seq[byte](@[-1'u8, -10'u8]), seq[byte](@[32'u8, 46'u8]), seq[byte](@[66'u8, -89'u8]), seq[byte](@[32'u8, 7'u8]), seq[byte](@[-1'u8, -6'u8]), seq[byte](@[96'u8, 2'u8]), seq[byte](@[61'u8, 64'u8]), seq[byte](@[12'u8, 64'u8]), seq[byte](@[102'u8, 6'u8]), seq[byte](@[0'u8, 38'u8]), seq[byte](@[45'u8, 72'u8]), seq[byte](@[47'u8, 1'u8]), seq[byte](@[112'u8, -1'u8]), seq[byte](@[96'u8, 4'u8]), seq[byte](@[24'u8, -128'u8]), seq[byte](@[74'u8, 64'u8]), seq[byte](@[0'u8, 64'u8]), seq[byte](@[0'u8, 44'u8]), seq[byte](@[47'u8, 8'u8]), seq[byte](@[0'u8, 17'u8]), seq[byte](@[-1'u8, -28'u8]), seq[byte](@[33'u8, 64'u8]), seq[byte](@[38'u8, 64'u8]), seq[byte](@[-1'u8, -14'u8]), seq[byte](@[66'u8, 110'u8]), seq[byte](@[78'u8, -71'u8]), seq[byte](@[61'u8, 124'u8]), seq[byte](@[0'u8, 56'u8]), seq[byte](@[0'u8, 13'u8]), seq[byte](@[96'u8, 6'u8]), seq[byte](@[66'u8, 46'u8]), seq[byte](@[32'u8, 60'u8]), seq[byte](@[103'u8, 12'u8]), seq[byte](@[45'u8, 104'u8]), seq[byte](@[102'u8, 8'u8]), seq[byte](@[74'u8, 46'u8]), seq[byte](@[74'u8, -82'u8]), seq[byte](@[0'u8, 46'u8]), seq[byte](@[72'u8, 64'u8]), seq[byte](@[34'u8, 95'u8]), seq[byte](@[34'u8, 0'u8]), seq[byte](@[103'u8, 10'u8]), seq[byte](@[48'u8, 7'u8]), seq[byte](@[66'u8, 103'u8]), seq[byte](@[0'u8, 50'u8]), seq[byte](@[32'u8, 40'u8]), seq[byte](@[0'u8, 9'u8]), seq[byte](@[72'u8, 122'u8]), seq[byte](@[2'u8, 0'u8]), seq[byte](@[47'u8, 43'u8]), seq[byte](@[0'u8, 5'u8]), seq[byte](@[34'u8, 110'u8]), seq[byte](@[102'u8, 2'u8]), seq[byte](@[-27'u8, -128'u8]), seq[byte](@[103'u8, 14'u8]), seq[byte](@[102'u8, 10'u8]), seq[byte](@[0'u8, 80'u8]), seq[byte](@[62'u8, 0'u8]), seq[byte](@[102'u8, 12'u8]), seq[byte](@[46'u8, 0'u8]), seq[byte](@[-1'u8, -18'u8]), seq[byte](@[32'u8, 109'u8]), seq[byte](@[32'u8, 64'u8]), seq[byte](@[-1'u8, -32'u8]), seq[byte](@[83'u8, 64'u8]), seq[byte](@[96'u8, 8'u8]), seq[byte](@[4'u8, -128'u8]), seq[byte](@[0'u8, 104'u8]), seq[byte](@[11'u8, 124'u8]), seq[byte](@[68'u8, 0'u8]), seq[byte](@[65'u8, -24'u8]), seq[byte](@[72'u8, 65'u8])])
+  let lookupTableInstExpr = seq[seq[byte]](@[seq[byte](@[0'u8, 0'u8]), seq[byte](@[78'u8, 186'u8]), seq[byte](@[0'u8, 8'u8]), seq[byte](@[78'u8, 117'u8]), seq[byte](@[0'u8, 12'u8]), seq[byte](@[78'u8, 173'u8]), seq[byte](@[32'u8, 83'u8]), seq[byte](@[47'u8, 11'u8]), seq[byte](@[97'u8, 0'u8]), seq[byte](@[0'u8, 16'u8]), seq[byte](@[112'u8, 0'u8]), seq[byte](@[47'u8, 0'u8]), seq[byte](@[72'u8, 110'u8]), seq[byte](@[32'u8, 80'u8]), seq[byte](@[32'u8, 110'u8]), seq[byte](@[47'u8, 46'u8]), seq[byte](@[255'u8, 252'u8]), seq[byte](@[72'u8, 231'u8]), seq[byte](@[63'u8, 60'u8]), seq[byte](@[0'u8, 4'u8]), seq[byte](@[255'u8, 248'u8]), seq[byte](@[47'u8, 12'u8]), seq[byte](@[32'u8, 6'u8]), seq[byte](@[78'u8, 237'u8]), seq[byte](@[78'u8, 86'u8]), seq[byte](@[32'u8, 104'u8]), seq[byte](@[78'u8, 94'u8]), seq[byte](@[0'u8, 1'u8]), seq[byte](@[88'u8, 143'u8]), seq[byte](@[79'u8, 239'u8]), seq[byte](@[0'u8, 2'u8]), seq[byte](@[0'u8, 24'u8]), seq[byte](@[96'u8, 0'u8]), seq[byte](@[255'u8, 255'u8]), seq[byte](@[80'u8, 143'u8]), seq[byte](@[78'u8, 144'u8]), seq[byte](@[0'u8, 6'u8]), seq[byte](@[38'u8, 110'u8]), seq[byte](@[0'u8, 20'u8]), seq[byte](@[255'u8, 244'u8]), seq[byte](@[76'u8, 238'u8]), seq[byte](@[0'u8, 10'u8]), seq[byte](@[0'u8, 14'u8]), seq[byte](@[65'u8, 238'u8]), seq[byte](@[76'u8, 223'u8]), seq[byte](@[72'u8, 192'u8]), seq[byte](@[255'u8, 240'u8]), seq[byte](@[45'u8, 64'u8]), seq[byte](@[0'u8, 18'u8]), seq[byte](@[48'u8, 46'u8]), seq[byte](@[112'u8, 1'u8]), seq[byte](@[47'u8, 40'u8]), seq[byte](@[32'u8, 84'u8]), seq[byte](@[103'u8, 0'u8]), seq[byte](@[0'u8, 32'u8]), seq[byte](@[0'u8, 28'u8]), seq[byte](@[32'u8, 95'u8]), seq[byte](@[24'u8, 0'u8]), seq[byte](@[38'u8, 111'u8]), seq[byte](@[72'u8, 120'u8]), seq[byte](@[0'u8, 22'u8]), seq[byte](@[65'u8, 250'u8]), seq[byte](@[48'u8, 60'u8]), seq[byte](@[40'u8, 64'u8]), seq[byte](@[114'u8, 0'u8]), seq[byte](@[40'u8, 110'u8]), seq[byte](@[32'u8, 12'u8]), seq[byte](@[102'u8, 0'u8]), seq[byte](@[32'u8, 107'u8]), seq[byte](@[47'u8, 7'u8]), seq[byte](@[85'u8, 143'u8]), seq[byte](@[0'u8, 40'u8]), seq[byte](@[255'u8, 254'u8]), seq[byte](@[255'u8, 236'u8]), seq[byte](@[34'u8, 216'u8]), seq[byte](@[32'u8, 11'u8]), seq[byte](@[0'u8, 15'u8]), seq[byte](@[89'u8, 143'u8]), seq[byte](@[47'u8, 60'u8]), seq[byte](@[255'u8, 0'u8]), seq[byte](@[1'u8, 24'u8]), seq[byte](@[129'u8, 225'u8]), seq[byte](@[74'u8, 0'u8]), seq[byte](@[78'u8, 176'u8]), seq[byte](@[255'u8, 232'u8]), seq[byte](@[72'u8, 199'u8]), seq[byte](@[0'u8, 3'u8]), seq[byte](@[0'u8, 34'u8]), seq[byte](@[0'u8, 7'u8]), seq[byte](@[0'u8, 26'u8]), seq[byte](@[103'u8, 6'u8]), seq[byte](@[103'u8, 8'u8]), seq[byte](@[78'u8, 249'u8]), seq[byte](@[0'u8, 36'u8]), seq[byte](@[32'u8, 120'u8]), seq[byte](@[8'u8, 0'u8]), seq[byte](@[102'u8, 4'u8]), seq[byte](@[0'u8, 42'u8]), seq[byte](@[78'u8, 208'u8]), seq[byte](@[48'u8, 40'u8]), seq[byte](@[38'u8, 95'u8]), seq[byte](@[103'u8, 4'u8]), seq[byte](@[0'u8, 48'u8]), seq[byte](@[67'u8, 238'u8]), seq[byte](@[63'u8, 0'u8]), seq[byte](@[32'u8, 31'u8]), seq[byte](@[0'u8, 30'u8]), seq[byte](@[255'u8, 246'u8]), seq[byte](@[32'u8, 46'u8]), seq[byte](@[66'u8, 167'u8]), seq[byte](@[32'u8, 7'u8]), seq[byte](@[255'u8, 250'u8]), seq[byte](@[96'u8, 2'u8]), seq[byte](@[61'u8, 64'u8]), seq[byte](@[12'u8, 64'u8]), seq[byte](@[102'u8, 6'u8]), seq[byte](@[0'u8, 38'u8]), seq[byte](@[45'u8, 72'u8]), seq[byte](@[47'u8, 1'u8]), seq[byte](@[112'u8, 255'u8]), seq[byte](@[96'u8, 4'u8]), seq[byte](@[24'u8, 128'u8]), seq[byte](@[74'u8, 64'u8]), seq[byte](@[0'u8, 64'u8]), seq[byte](@[0'u8, 44'u8]), seq[byte](@[47'u8, 8'u8]), seq[byte](@[0'u8, 17'u8]), seq[byte](@[255'u8, 228'u8]), seq[byte](@[33'u8, 64'u8]), seq[byte](@[38'u8, 64'u8]), seq[byte](@[255'u8, 242'u8]), seq[byte](@[66'u8, 110'u8]), seq[byte](@[78'u8, 185'u8]), seq[byte](@[61'u8, 124'u8]), seq[byte](@[0'u8, 56'u8]), seq[byte](@[0'u8, 13'u8]), seq[byte](@[96'u8, 6'u8]), seq[byte](@[66'u8, 46'u8]), seq[byte](@[32'u8, 60'u8]), seq[byte](@[103'u8, 12'u8]), seq[byte](@[45'u8, 104'u8]), seq[byte](@[102'u8, 8'u8]), seq[byte](@[74'u8, 46'u8]), seq[byte](@[74'u8, 174'u8]), seq[byte](@[0'u8, 46'u8]), seq[byte](@[72'u8, 64'u8]), seq[byte](@[34'u8, 95'u8]), seq[byte](@[34'u8, 0'u8]), seq[byte](@[103'u8, 10'u8]), seq[byte](@[48'u8, 7'u8]), seq[byte](@[66'u8, 103'u8]), seq[byte](@[0'u8, 50'u8]), seq[byte](@[32'u8, 40'u8]), seq[byte](@[0'u8, 9'u8]), seq[byte](@[72'u8, 122'u8]), seq[byte](@[2'u8, 0'u8]), seq[byte](@[47'u8, 43'u8]), seq[byte](@[0'u8, 5'u8]), seq[byte](@[34'u8, 110'u8]), seq[byte](@[102'u8, 2'u8]), seq[byte](@[229'u8, 128'u8]), seq[byte](@[103'u8, 14'u8]), seq[byte](@[102'u8, 10'u8]), seq[byte](@[0'u8, 80'u8]), seq[byte](@[62'u8, 0'u8]), seq[byte](@[102'u8, 12'u8]), seq[byte](@[46'u8, 0'u8]), seq[byte](@[255'u8, 238'u8]), seq[byte](@[32'u8, 109'u8]), seq[byte](@[32'u8, 64'u8]), seq[byte](@[255'u8, 224'u8]), seq[byte](@[83'u8, 64'u8]), seq[byte](@[96'u8, 8'u8]), seq[byte](@[4'u8, 128'u8]), seq[byte](@[0'u8, 104'u8]), seq[byte](@[11'u8, 124'u8]), seq[byte](@[68'u8, 0'u8]), seq[byte](@[65'u8, 232'u8]), seq[byte](@[72'u8, 65'u8])])
   this.lookupTableInst = lookupTableInstExpr
-  if this.lookupTableInst.len != 0:
-    return this.lookupTableInst
+  this.lookupTableInstFlag = true
+  return this.lookupTableInst
 
 proc value(this: Dcmp0_Chunk_TableLookupBody): seq[byte] = 
 
@@ -517,12 +538,12 @@ proc value(this: Dcmp0_Chunk_TableLookupBody): seq[byte] =
 based on the fixed lookup table.
 
   ]##
-  if this.valueInst.len != 0:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = seq[byte](this.lookupTable[(this.tag - 75)])
   this.valueInst = valueInstExpr
-  if this.valueInst.len != 0:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Dcmp0_Chunk_TableLookupBody], filename: string): Dcmp0_Chunk_TableLookupBody =
   Dcmp0_Chunk_TableLookupBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -674,12 +695,12 @@ the segment number must be in the range `0x0 <= x <= 0xffff`,
 i. e. an unsigned 16-bit integer.
 
   ]##
-  if this.segmentNumberInst != nil:
+  if this.segmentNumberInstFlag:
     return this.segmentNumberInst
   let segmentNumberInstExpr = int(this.segmentNumberRaw.value)
   this.segmentNumberInst = segmentNumberInstExpr
-  if this.segmentNumberInst != nil:
-    return this.segmentNumberInst
+  this.segmentNumberInstFlag = true
+  return this.segmentNumberInst
 
 proc numAddresses(this: Dcmp0_Chunk_ExtendedBody_JumpTableBody): int = 
 
@@ -689,12 +710,12 @@ proc numAddresses(this: Dcmp0_Chunk_ExtendedBody_JumpTableBody): int =
 This number must be greater than 0.
 
   ]##
-  if this.numAddressesInst != nil:
+  if this.numAddressesInstFlag:
     return this.numAddressesInst
   let numAddressesInstExpr = int(this.numAddressesRaw.value)
   this.numAddressesInst = numAddressesInstExpr
-  if this.numAddressesInst != nil:
-    return this.numAddressesInst
+  this.numAddressesInstFlag = true
+  return this.numAddressesInst
 
 proc fromFile*(_: typedesc[Dcmp0_Chunk_ExtendedBody_JumpTableBody], filename: string): Dcmp0_Chunk_ExtendedBody_JumpTableBody =
   Dcmp0_Chunk_ExtendedBody_JumpTableBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -740,12 +761,12 @@ Regardless of the byte count,
 the value to be repeated is stored as a variable-length integer.
 
   ]##
-  if this.byteCountInst != nil:
+  if this.byteCountInstFlag:
     return this.byteCountInst
   let byteCountInstExpr = int((if this.tag == 2: 1 else: (if this.tag == 3: 2 else: -1)))
   this.byteCountInst = byteCountInstExpr
-  if this.byteCountInst != nil:
-    return this.byteCountInst
+  this.byteCountInstFlag = true
+  return this.byteCountInst
 
 proc toRepeat(this: Dcmp0_Chunk_ExtendedBody_RepeatBody): int = 
 
@@ -757,12 +778,12 @@ this value must fit into an unsigned big-endian integer that is as long as `byte
 i. e. either 8 or 16 bits.
 
   ]##
-  if this.toRepeatInst != nil:
+  if this.toRepeatInstFlag:
     return this.toRepeatInst
   let toRepeatInstExpr = int(this.toRepeatRaw.value)
   this.toRepeatInst = toRepeatInstExpr
-  if this.toRepeatInst != nil:
-    return this.toRepeatInst
+  this.toRepeatInstFlag = true
+  return this.toRepeatInst
 
 proc repeatCountM1(this: Dcmp0_Chunk_ExtendedBody_RepeatBody): int = 
 
@@ -773,12 +794,12 @@ minus one.
 This value must not be negative.
 
   ]##
-  if this.repeatCountM1Inst != nil:
+  if this.repeatCountM1InstFlag:
     return this.repeatCountM1Inst
   let repeatCountM1InstExpr = int(this.repeatCountM1Raw.value)
   this.repeatCountM1Inst = repeatCountM1InstExpr
-  if this.repeatCountM1Inst != nil:
-    return this.repeatCountM1Inst
+  this.repeatCountM1InstFlag = true
+  return this.repeatCountM1Inst
 
 proc repeatCount(this: Dcmp0_Chunk_ExtendedBody_RepeatBody): int = 
 
@@ -788,12 +809,12 @@ proc repeatCount(this: Dcmp0_Chunk_ExtendedBody_RepeatBody): int =
 This value must be positive.
 
   ]##
-  if this.repeatCountInst != nil:
+  if this.repeatCountInstFlag:
     return this.repeatCountInst
   let repeatCountInstExpr = int((this.repeatCountM1 + 1))
   this.repeatCountInst = repeatCountInstExpr
-  if this.repeatCountInst != nil:
-    return this.repeatCountInst
+  this.repeatCountInstFlag = true
+  return this.repeatCountInst
 
 proc fromFile*(_: typedesc[Dcmp0_Chunk_ExtendedBody_RepeatBody], filename: string): Dcmp0_Chunk_ExtendedBody_RepeatBody =
   Dcmp0_Chunk_ExtendedBody_RepeatBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -853,12 +874,12 @@ this value must be in the range `-0x8000 <= x <= 0x7fff`,
 i. e. a signed 16-bit integer.
 
   ]##
-  if this.firstValueInst != nil:
+  if this.firstValueInstFlag:
     return this.firstValueInst
   let firstValueInstExpr = int(this.firstValueRaw.value)
   this.firstValueInst = firstValueInstExpr
-  if this.firstValueInst != nil:
-    return this.firstValueInst
+  this.firstValueInstFlag = true
+  return this.firstValueInst
 
 proc numDeltas(this: Dcmp0_Chunk_ExtendedBody_DeltaEncoding16BitBody): int = 
 
@@ -868,12 +889,12 @@ proc numDeltas(this: Dcmp0_Chunk_ExtendedBody_DeltaEncoding16BitBody): int =
 This number must not be negative.
 
   ]##
-  if this.numDeltasInst != nil:
+  if this.numDeltasInstFlag:
     return this.numDeltasInst
   let numDeltasInstExpr = int(this.numDeltasRaw.value)
   this.numDeltasInst = numDeltasInstExpr
-  if this.numDeltasInst != nil:
-    return this.numDeltasInst
+  this.numDeltasInstFlag = true
+  return this.numDeltasInst
 
 proc fromFile*(_: typedesc[Dcmp0_Chunk_ExtendedBody_DeltaEncoding16BitBody], filename: string): Dcmp0_Chunk_ExtendedBody_DeltaEncoding16BitBody =
   Dcmp0_Chunk_ExtendedBody_DeltaEncoding16BitBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -930,12 +951,12 @@ proc firstValue(this: Dcmp0_Chunk_ExtendedBody_DeltaEncoding32BitBody): int =
   The first value in the sequence.
 
   ]##
-  if this.firstValueInst != nil:
+  if this.firstValueInstFlag:
     return this.firstValueInst
   let firstValueInstExpr = int(this.firstValueRaw.value)
   this.firstValueInst = firstValueInstExpr
-  if this.firstValueInst != nil:
-    return this.firstValueInst
+  this.firstValueInstFlag = true
+  return this.firstValueInst
 
 proc numDeltas(this: Dcmp0_Chunk_ExtendedBody_DeltaEncoding32BitBody): int = 
 
@@ -945,12 +966,12 @@ proc numDeltas(this: Dcmp0_Chunk_ExtendedBody_DeltaEncoding32BitBody): int =
 This number must not be negative.
 
   ]##
-  if this.numDeltasInst != nil:
+  if this.numDeltasInstFlag:
     return this.numDeltasInst
   let numDeltasInstExpr = int(this.numDeltasRaw.value)
   this.numDeltasInst = numDeltasInstExpr
-  if this.numDeltasInst != nil:
-    return this.numDeltasInst
+  this.numDeltasInstFlag = true
+  return this.numDeltasInst
 
 proc fromFile*(_: typedesc[Dcmp0_Chunk_ExtendedBody_DeltaEncoding32BitBody], filename: string): Dcmp0_Chunk_ExtendedBody_DeltaEncoding32BitBody =
   Dcmp0_Chunk_ExtendedBody_DeltaEncoding32BitBody.read(newKaitaiFileStream(filename), nil, nil)

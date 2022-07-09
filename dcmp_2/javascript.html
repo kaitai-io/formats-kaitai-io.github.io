@@ -309,7 +309,7 @@ to differentiate literals and table references.</p>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">root</span><span class="p">.</span><span class="nx">Dcmp2</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="ow">typeof</span> <span class="nx">self</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">self</span> <span class="o">:</span> <span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * Compressed resource data in `&#39;dcmp&#39; (2)` format,</span>
 <span class="cm"> * as stored in compressed resources with header type `9` and decompressor ID `2`.</span>
@@ -345,9 +345,9 @@ to differentiate literals and table references.</p>
   <span class="p">}</span>
   <span class="nx">Dcmp2</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerParameters</span><span class="p">.</span><span class="nx">flags</span><span class="p">.</span><span class="nx">hasCustomLookupTable</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">customLookupTable</span> <span class="o">=</span> <span class="ow">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerParameters</span><span class="p">.</span><span class="nx">numCustomLookupTableEntries</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">customLookupTable</span> <span class="o">=</span> <span class="p">[];</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">headerParameters</span><span class="p">.</span><span class="nx">numCustomLookupTableEntries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">customLookupTable</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">customLookupTable</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">2</span><span class="p">));</span>
       <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerParameters</span><span class="p">.</span><span class="nx">flags</span><span class="p">.</span><span class="nx">tagged</span><span class="p">)</span> <span class="p">{</span>
@@ -547,13 +547,13 @@ to differentiate literals and table references.</p>
         <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
       <span class="p">}</span>
       <span class="nx">Chunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="ow">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mf">8</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="p">[];</span>
         <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mf">8</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">alignToByte</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_units</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">units</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_units</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">units</span> <span class="o">=</span> <span class="p">[];</span>
         <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
         <span class="k">do</span> <span class="p">{</span>
           <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">{</span>

@@ -267,9 +267,12 @@ section#format-index .row {
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawPartitionLookupInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawPartitionEntriesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
-    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">partitionLookupInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">ApmPartitionTable_PartitionEntry</span>
-    <span class="p">`</span><span class="n">partitionEntriesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">ApmPartitionTable_PartitionEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">partitionLookupInst</span><span class="p">`:</span> <span class="n">ApmPartitionTable_PartitionEntry</span>
+    <span class="p">`</span><span class="n">partitionLookupInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">partitionEntriesInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">ApmPartitionTable_PartitionEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">partitionEntriesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">ApmPartitionTable_PartitionEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -290,9 +293,12 @@ section#format-index .row {
     <span class="p">`</span><span class="n">bootCodeCksum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">processorType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">ApmPartitionTable</span>
-    <span class="p">`</span><span class="n">partitionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">bootCodeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">partitionInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">partitionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">dataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bootCodeInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bootCodeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ApmPartitionTable], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ApmPartitionTable</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ApmPartitionTable_PartitionEntry], io: KaitaiStream, root: KaitaiStruct, parent: ApmPartitionTable): ApmPartitionTable_PartitionEntry</span>
@@ -324,12 +330,12 @@ section#format-index .row {
 <span class="mh">0x800</span> <span class="p">(</span><span class="mi">2048</span><span class="p">)</span> <span class="n">bytes</span> <span class="k">for</span> <span class="n">CDROM</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
   <span class="k">let</span> <span class="n">sectorSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">=</span> <span class="n">sectorSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
 
 <span class="k">proc </span><span class="nf">partitionLookup</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">ApmPartitionTable</span><span class="p">):</span> <span class="n">ApmPartitionTable_PartitionEntry</span> <span class="o">=</span> 
 
@@ -339,7 +345,7 @@ section#format-index .row {
 <span class="n">No</span> <span class="n">logic</span> <span class="ow">is</span> <span class="n">given</span> <span class="n">what</span> <span class="n">to</span> <span class="k">do</span> <span class="k">if</span> <span class="n">other</span> <span class="n">entries</span> <span class="n">have</span> <span class="n">a</span> <span class="n">different</span> <span class="n">number</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">ApmPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -350,11 +356,11 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">partitionLookupInstExpr</span> <span class="o">=</span> <span class="n">ApmPartitionTable_PartitionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawPartitionLookupInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInst</span> <span class="o">=</span> <span class="n">partitionLookupInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionLookupInst</span>
 
 <span class="k">proc </span><span class="nf">partitionEntries</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">ApmPartitionTable</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">ApmPartitionTable_PartitionEntry</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">ApmPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -366,8 +372,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">ApmPartitionTable_PartitionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawPartitionEntriesInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionEntriesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ApmPartitionTable], filename: string): ApmPartitionTable =</span>
   <span class="n">ApmPartitionTable</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -454,7 +460,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">processorType</span> <span class="o">=</span> <span class="n">processorTypeExpr</span>
 
 <span class="k">proc </span><span class="nf">partition</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">ApmPartitionTable_PartitionEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionInst</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">partitionStatus</span> <span class="ow">and</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">ApmPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -463,11 +469,11 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">partitionInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">partitionSize</span> <span class="o">*</span> <span class="n">ApmPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">sectorSize</span><span class="p">)))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">partitionInst</span> <span class="o">=</span> <span class="n">partitionInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">partitionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">partitionInst</span>
 
 <span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">ApmPartitionTable_PartitionEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">ApmPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -475,11 +481,11 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">dataSize</span> <span class="o">*</span> <span class="n">ApmPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">sectorSize</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
 
 <span class="k">proc </span><span class="nf">bootCode</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">ApmPartitionTable_PartitionEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">ApmPartitionTable</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -487,8 +493,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">bootCodeInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bootCodeSize</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInst</span> <span class="o">=</span> <span class="n">bootCodeInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bootCodeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ApmPartitionTable_PartitionEntry], filename: string): ApmPartitionTable_PartitionEntry =</span>
   <span class="n">ApmPartitionTable_PartitionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

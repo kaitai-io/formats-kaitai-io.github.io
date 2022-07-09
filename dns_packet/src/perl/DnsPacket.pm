@@ -77,28 +77,28 @@ sub _read {
         $self->{queries} = ();
         my $n_queries = $self->qdcount();
         for (my $i = 0; $i < $n_queries; $i++) {
-            $self->{queries}[$i] = DnsPacket::Query->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{queries}}, DnsPacket::Query->new($self->{_io}, $self, $self->{_root});
         }
     }
     if ($self->flags()->is_opcode_valid()) {
         $self->{answers} = ();
         my $n_answers = $self->ancount();
         for (my $i = 0; $i < $n_answers; $i++) {
-            $self->{answers}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{answers}}, DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
         }
     }
     if ($self->flags()->is_opcode_valid()) {
         $self->{authorities} = ();
         my $n_authorities = $self->nscount();
         for (my $i = 0; $i < $n_authorities; $i++) {
-            $self->{authorities}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{authorities}}, DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
         }
     }
     if ($self->flags()->is_opcode_valid()) {
         $self->{additionals} = ();
         my $n_additionals = $self->arcount();
         for (my $i = 0; $i < $n_additionals; $i++) {
-            $self->{additionals}[$i] = DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{additionals}}, DnsPacket::Answer->new($self->{_io}, $self, $self->{_root});
         }
     }
 }

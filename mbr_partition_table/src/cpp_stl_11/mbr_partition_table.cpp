@@ -12,9 +12,8 @@ mbr_partition_table_t::mbr_partition_table_t(kaitai::kstream* p__io, kaitai::kst
 
 void mbr_partition_table_t::_read() {
     m_bootstrap_code = m__io->read_bytes(446);
-    int l_partitions = 4;
     m_partitions = std::unique_ptr<std::vector<std::unique_ptr<partition_entry_t>>>(new std::vector<std::unique_ptr<partition_entry_t>>());
-    m_partitions->reserve(l_partitions);
+    const int l_partitions = 4;
     for (int i = 0; i < l_partitions; i++) {
         m_partitions->push_back(std::move(std::unique_ptr<partition_entry_t>(new partition_entry_t(m__io, this, m__root))));
     }

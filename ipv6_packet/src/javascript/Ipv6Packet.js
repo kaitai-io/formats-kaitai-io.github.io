@@ -8,7 +8,7 @@
   } else {
     root.Ipv6Packet = factory(root.KaitaiStream, root.ProtocolBody);
   }
-}(this, function (KaitaiStream, ProtocolBody) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, ProtocolBody) {
 var Ipv6Packet = (function() {
   function Ipv6Packet(_io, _parent, _root) {
     this._io = _io;

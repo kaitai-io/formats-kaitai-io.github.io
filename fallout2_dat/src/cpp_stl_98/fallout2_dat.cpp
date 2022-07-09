@@ -101,9 +101,8 @@ fallout2_dat_t::index_t::index_t(kaitai::kstream* p__io, fallout2_dat_t* p__pare
 
 void fallout2_dat_t::index_t::_read() {
     m_file_count = m__io->read_u4le();
-    int l_files = file_count();
     m_files = new std::vector<file_t*>();
-    m_files->reserve(l_files);
+    const int l_files = file_count();
     for (int i = 0; i < l_files; i++) {
         m_files->push_back(new file_t(m__io, this, m__root));
     }

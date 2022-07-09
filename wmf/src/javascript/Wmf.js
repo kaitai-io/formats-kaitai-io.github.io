@@ -8,7 +8,7 @@
   } else {
     root.Wmf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * WMF (Windows Metafile) is a relatively early vector image format
  * introduced for Microsoft Windows in 1990.
@@ -227,7 +227,7 @@ var Wmf = (function() {
   Wmf.prototype._read = function() {
     this.specialHeader = new SpecialHeader(this._io, this, this._root);
     this.header = new Header(this._io, this, this._root);
-    this.records = []
+    this.records = [];
     var i = 0;
     do {
       var _ = new Record(this._io, this, this._root);
@@ -357,9 +357,9 @@ var Wmf = (function() {
     }
     ParamsPolygon.prototype._read = function() {
       this.numPoints = this._io.readS2le();
-      this.points = new Array(this.numPoints);
+      this.points = [];
       for (var i = 0; i < this.numPoints; i++) {
-        this.points[i] = new PointS(this._io, this, this._root);
+        this.points.push(new PointS(this._io, this, this._root));
       }
     }
 
@@ -477,9 +477,9 @@ var Wmf = (function() {
     }
     ParamsPolyline.prototype._read = function() {
       this.numPoints = this._io.readS2le();
-      this.points = new Array(this.numPoints);
+      this.points = [];
       for (var i = 0; i < this.numPoints; i++) {
-        this.points[i] = new PointS(this._io, this, this._root);
+        this.points.push(new PointS(this._io, this, this._root));
       }
     }
 

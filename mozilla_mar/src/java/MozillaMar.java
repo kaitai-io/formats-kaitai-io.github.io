@@ -74,12 +74,12 @@ public class MozillaMar extends KaitaiStruct {
         this.ofsIndex = this._io.readU4be();
         this.fileSize = this._io.readU8be();
         this.lenSignatures = this._io.readU4be();
-        signatures = new ArrayList<Signature>(((Number) (lenSignatures())).intValue());
+        this.signatures = new ArrayList<Signature>();
         for (int i = 0; i < lenSignatures(); i++) {
             this.signatures.add(new Signature(this._io, this, _root));
         }
         this.lenAdditionalSections = this._io.readU4be();
-        additionalSections = new ArrayList<AdditionalSection>(((Number) (lenAdditionalSections())).intValue());
+        this.additionalSections = new ArrayList<AdditionalSection>();
         for (int i = 0; i < lenAdditionalSections(); i++) {
             this.additionalSections.add(new AdditionalSection(this._io, this, _root));
         }
@@ -246,13 +246,13 @@ public class MozillaMar extends KaitaiStruct {
             this.ofsContent = this._io.readU4be();
             this.lenContent = this._io.readU4be();
             this.flags = this._io.readU4be();
-            this.fileName = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+            this.fileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
         }
         private byte[] body;
         public byte[] body() {
             if (this.body != null)
                 return this.body;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsContent());
             this.body = io.readBytes(lenContent());

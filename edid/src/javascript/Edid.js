@@ -8,7 +8,7 @@
   } else {
     root.Edid = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var Edid = (function() {
   function Edid(_io, _parent, _root) {
     this._io = _io;
@@ -36,12 +36,12 @@ var Edid = (function() {
     this.featuresFlags = this._io.readU1();
     this.chromacity = new ChromacityInfo(this._io, this, this._root);
     this.estTimings = new EstTimingsInfo(this._io, this, this._root);
-    this._raw_stdTimings = new Array(8);
-    this.stdTimings = new Array(8);
+    this._raw_stdTimings = [];
+    this.stdTimings = [];
     for (var i = 0; i < 8; i++) {
-      this._raw_stdTimings[i] = this._io.readBytes(2);
+      this._raw_stdTimings.push(this._io.readBytes(2));
       var _io__raw_stdTimings = new KaitaiStream(this._raw_stdTimings[i]);
-      this.stdTimings[i] = new StdTiming(_io__raw_stdTimings, this, this._root);
+      this.stdTimings.push(new StdTiming(_io__raw_stdTimings, this, this._root));
     }
   }
 

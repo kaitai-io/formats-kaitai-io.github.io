@@ -106,10 +106,10 @@ public class Gzip extends KaitaiStruct {
             this.extras = new Extras(this._io, this, _root);
         }
         if (flags().hasName()) {
-            this.name = this._io.readBytesTerm(0, false, true, true);
+            this.name = this._io.readBytesTerm((byte) 0, false, true, true);
         }
         if (flags().hasComment()) {
-            this.comment = this._io.readBytesTerm(0, false, true, true);
+            this.comment = this._io.readBytesTerm((byte) 0, false, true, true);
         }
         if (flags().hasHeaderCrc()) {
             this.headerCrc16 = this._io.readU2le();

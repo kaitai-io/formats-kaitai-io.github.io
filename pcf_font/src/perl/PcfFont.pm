@@ -51,7 +51,7 @@ sub _read {
     $self->{tables} = ();
     my $n_tables = $self->num_tables();
     for (my $i = 0; $i < $n_tables; $i++) {
-        $self->{tables}[$i] = PcfFont::Table->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{tables}}, PcfFont::Table->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -204,7 +204,7 @@ sub _read {
     $self->{swidths} = ();
     my $n_swidths = $self->num_glyphs();
     for (my $i = 0; $i < $n_swidths; $i++) {
-        $self->{swidths}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{swidths}}, $self->{_io}->read_u4le();
     }
 }
 
@@ -258,7 +258,7 @@ sub _read {
     $self->{props} = ();
     my $n_props = $self->num_props();
     for (my $i = 0; $i < $n_props; $i++) {
-        $self->{props}[$i] = PcfFont::Table::Properties::Prop->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{props}}, PcfFont::Table::Properties::Prop->new($self->{_io}, $self, $self->{_root});
     }
     $self->{padding} = $self->{_io}->read_bytes((($self->num_props() & 3) == 0 ? 0 : (4 - ($self->num_props() & 3))));
     $self->{len_strings} = $self->{_io}->read_u4le();
@@ -424,7 +424,7 @@ sub _read {
     $self->{glyph_indexes} = ();
     my $n_glyph_indexes = ((($self->max_char_or_byte2() - $self->min_char_or_byte2()) + 1) * (($self->max_byte1() - $self->min_byte1()) + 1));
     for (my $i = 0; $i < $n_glyph_indexes; $i++) {
-        $self->{glyph_indexes}[$i] = $self->{_io}->read_u2le();
+        push @{$self->{glyph_indexes}}, $self->{_io}->read_u2le();
     }
 }
 
@@ -498,7 +498,7 @@ sub _read {
     $self->{names} = ();
     my $n_names = $self->num_glyphs();
     for (my $i = 0; $i < $n_names; $i++) {
-        $self->{names}[$i] = PcfFont::Table::GlyphNames::StringRef->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{names}}, PcfFont::Table::GlyphNames::StringRef->new($self->{_io}, $self, $self->{_root});
     }
     $self->{len_strings} = $self->{_io}->read_u4le();
     $self->{_raw_strings} = $self->{_io}->read_bytes($self->len_strings());
@@ -620,12 +620,12 @@ sub _read {
     $self->{offsets} = ();
     my $n_offsets = $self->num_glyphs();
     for (my $i = 0; $i < $n_offsets; $i++) {
-        $self->{offsets}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{offsets}}, $self->{_io}->read_u4le();
     }
     $self->{bitmap_sizes} = ();
     my $n_bitmap_sizes = 4;
     for (my $i = 0; $i < $n_bitmap_sizes; $i++) {
-        $self->{bitmap_sizes}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{bitmap_sizes}}, $self->{_io}->read_u4le();
     }
 }
 

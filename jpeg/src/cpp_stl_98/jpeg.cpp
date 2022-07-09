@@ -144,9 +144,8 @@ jpeg_t::segment_sos_t::segment_sos_t(kaitai::kstream* p__io, jpeg_t::segment_t* 
 
 void jpeg_t::segment_sos_t::_read() {
     m_num_components = m__io->read_u1();
-    int l_components = num_components();
     m_components = new std::vector<component_t*>();
-    m_components->reserve(l_components);
+    const int l_components = num_components();
     for (int i = 0; i < l_components; i++) {
         m_components->push_back(new component_t(m__io, this, m__root));
     }
@@ -246,9 +245,8 @@ void jpeg_t::segment_sof0_t::_read() {
     m_image_height = m__io->read_u2be();
     m_image_width = m__io->read_u2be();
     m_num_components = m__io->read_u1();
-    int l_components = num_components();
     m_components = new std::vector<component_t*>();
-    m_components->reserve(l_components);
+    const int l_components = num_components();
     for (int i = 0; i < l_components; i++) {
         m_components->push_back(new component_t(m__io, this, m__root));
     }

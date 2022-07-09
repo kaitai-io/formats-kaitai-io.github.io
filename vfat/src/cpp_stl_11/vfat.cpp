@@ -263,9 +263,8 @@ vfat_t::root_directory_t::root_directory_t(kaitai::kstream* p__io, vfat_t* p__pa
 }
 
 void vfat_t::root_directory_t::_read() {
-    int l_records = _root()->boot_sector()->bpb()->max_root_dir_rec();
     m_records = std::unique_ptr<std::vector<std::unique_ptr<root_directory_rec_t>>>(new std::vector<std::unique_ptr<root_directory_rec_t>>());
-    m_records->reserve(l_records);
+    const int l_records = _root()->boot_sector()->bpb()->max_root_dir_rec();
     for (int i = 0; i < l_records; i++) {
         m_records->push_back(std::move(std::unique_ptr<root_directory_rec_t>(new root_directory_rec_t(m__io, this, m__root))));
     }
@@ -305,9 +304,8 @@ std::vector<std::string>* vfat_t::fats() {
         return m_fats.get();
     std::streampos _pos = m__io->pos();
     m__io->seek(boot_sector()->pos_fats());
-    int l_fats = boot_sector()->bpb()->num_fats();
     m_fats = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m_fats->reserve(l_fats);
+    const int l_fats = boot_sector()->bpb()->num_fats();
     for (int i = 0; i < l_fats; i++) {
         m_fats->push_back(std::move(m__io->read_bytes(boot_sector()->size_fat())));
     }

@@ -10,7 +10,8 @@ type
     `rsaE`*: SshPublicKey_Bignum2
     `rsaN`*: SshPublicKey_Bignum2
     `parent`*: SshPublicKey
-    `keyLengthInst`*: int
+    `keyLengthInst`: int
+    `keyLengthInstFlag`: bool
   SshPublicKey_KeyEd25519* = ref object of KaitaiStruct
     `lenPk`*: uint32
     `pk`*: seq[byte]
@@ -37,7 +38,8 @@ type
     `len`*: uint32
     `body`*: seq[byte]
     `parent`*: KaitaiStruct
-    `lengthInBitsInst`*: int
+    `lengthInBitsInst`: int
+    `lengthInBitsInstFlag`: bool
 
 proc read*(_: typedesc[SshPublicKey], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SshPublicKey
 proc read*(_: typedesc[SshPublicKey_KeyRsa], io: KaitaiStream, root: KaitaiStruct, parent: SshPublicKey): SshPublicKey_KeyRsa
@@ -125,12 +127,12 @@ proc keyLength(this: SshPublicKey_KeyRsa): int =
   ##[
   Key length in bits
   ]##
-  if this.keyLengthInst != nil:
+  if this.keyLengthInstFlag:
     return this.keyLengthInst
   let keyLengthInstExpr = int(this.rsaN.lengthInBits)
   this.keyLengthInst = keyLengthInstExpr
-  if this.keyLengthInst != nil:
-    return this.keyLengthInst
+  this.keyLengthInstFlag = true
+  return this.keyLengthInst
 
 proc fromFile*(_: typedesc[SshPublicKey_KeyRsa], filename: string): SshPublicKey_KeyRsa =
   SshPublicKey_KeyRsa.read(newKaitaiFileStream(filename), nil, nil)
@@ -285,12 +287,12 @@ proc lengthInBits(this: SshPublicKey_Bignum2): int =
 `BN_num_bits` function.
 
   ]##
-  if this.lengthInBitsInst != nil:
+  if this.lengthInBitsInstFlag:
     return this.lengthInBitsInst
   let lengthInBitsInstExpr = int(((this.len - 1) * 8))
   this.lengthInBitsInst = lengthInBitsInstExpr
-  if this.lengthInBitsInst != nil:
-    return this.lengthInBitsInst
+  this.lengthInBitsInstFlag = true
+  return this.lengthInBitsInst
 
 proc fromFile*(_: typedesc[SshPublicKey_Bignum2], filename: string): SshPublicKey_Bignum2 =
   SshPublicKey_Bignum2.read(newKaitaiFileStream(filename), nil, nil)

@@ -21,12 +21,18 @@ type
     `stdTimings`*: seq[Edid_StdTiming]
     `parent`*: KaitaiStruct
     `rawStdTimings`*: seq[seq[byte]]
-    `mfgYearInst`*: int
-    `mfgIdCh1Inst`*: int
-    `mfgIdCh3Inst`*: int
-    `gammaInst`*: float64
-    `mfgStrInst`*: string
-    `mfgIdCh2Inst`*: int
+    `mfgYearInst`: int
+    `mfgYearInstFlag`: bool
+    `mfgIdCh1Inst`: int
+    `mfgIdCh1InstFlag`: bool
+    `mfgIdCh3Inst`: int
+    `mfgIdCh3InstFlag`: bool
+    `gammaInst`: float64
+    `gammaInstFlag`: bool
+    `mfgStrInst`: string
+    `mfgStrInstFlag`: bool
+    `mfgIdCh2Inst`: int
+    `mfgIdCh2InstFlag`: bool
   Edid_ChromacityInfo* = ref object of KaitaiStruct
     `redX10`*: uint64
     `redY10`*: uint64
@@ -45,22 +51,38 @@ type
     `whiteX92`*: uint8
     `whiteY92`*: uint8
     `parent`*: Edid
-    `greenXIntInst`*: int
-    `redYInst`*: float64
-    `greenYIntInst`*: int
-    `whiteYInst`*: float64
-    `redXInst`*: float64
-    `whiteXInst`*: float64
-    `blueXInst`*: float64
-    `whiteXIntInst`*: int
-    `whiteYIntInst`*: int
-    `greenXInst`*: float64
-    `redXIntInst`*: int
-    `redYIntInst`*: int
-    `blueXIntInst`*: int
-    `blueYInst`*: float64
-    `greenYInst`*: float64
-    `blueYIntInst`*: int
+    `greenXIntInst`: int
+    `greenXIntInstFlag`: bool
+    `redYInst`: float64
+    `redYInstFlag`: bool
+    `greenYIntInst`: int
+    `greenYIntInstFlag`: bool
+    `whiteYInst`: float64
+    `whiteYInstFlag`: bool
+    `redXInst`: float64
+    `redXInstFlag`: bool
+    `whiteXInst`: float64
+    `whiteXInstFlag`: bool
+    `blueXInst`: float64
+    `blueXInstFlag`: bool
+    `whiteXIntInst`: int
+    `whiteXIntInstFlag`: bool
+    `whiteYIntInst`: int
+    `whiteYIntInstFlag`: bool
+    `greenXInst`: float64
+    `greenXInstFlag`: bool
+    `redXIntInst`: int
+    `redXIntInstFlag`: bool
+    `redYIntInst`: int
+    `redYIntInstFlag`: bool
+    `blueXIntInst`: int
+    `blueXIntInstFlag`: bool
+    `blueYInst`: float64
+    `blueYInstFlag`: bool
+    `greenYInst`: float64
+    `greenYInstFlag`: bool
+    `blueYIntInst`: int
+    `blueYIntInstFlag`: bool
   Edid_EstTimingsInfo* = ref object of KaitaiStruct
     `can720x400px70hz`*: bool
     `can720x400px88hz`*: bool
@@ -86,10 +108,14 @@ type
     `aspectRatio`*: Edid_StdTiming_AspectRatios
     `refreshRateMod`*: uint64
     `parent`*: Edid
-    `bytesLookaheadInst`*: seq[byte]
-    `isUsedInst`*: bool
-    `horizActivePixelsInst`*: int
-    `refreshRateInst`*: int
+    `bytesLookaheadInst`: seq[byte]
+    `bytesLookaheadInstFlag`: bool
+    `isUsedInst`: bool
+    `isUsedInstFlag`: bool
+    `horizActivePixelsInst`: int
+    `horizActivePixelsInstFlag`: bool
+    `refreshRateInst`: int
+    `refreshRateInstFlag`: bool
   Edid_StdTiming_AspectRatios* = enum
     ratio_16_10 = 0
     ratio_4_3 = 1
@@ -230,53 +256,53 @@ used to specify up to 8 additional timings not included in
     this.stdTimings.add(it)
 
 proc mfgYear(this: Edid): int = 
-  if this.mfgYearInst != nil:
+  if this.mfgYearInstFlag:
     return this.mfgYearInst
   let mfgYearInstExpr = int((this.mfgYearMod + 1990))
   this.mfgYearInst = mfgYearInstExpr
-  if this.mfgYearInst != nil:
-    return this.mfgYearInst
+  this.mfgYearInstFlag = true
+  return this.mfgYearInst
 
 proc mfgIdCh1(this: Edid): int = 
-  if this.mfgIdCh1Inst != nil:
+  if this.mfgIdCh1InstFlag:
     return this.mfgIdCh1Inst
   let mfgIdCh1InstExpr = int(((this.mfgBytes and 31744) shr 10))
   this.mfgIdCh1Inst = mfgIdCh1InstExpr
-  if this.mfgIdCh1Inst != nil:
-    return this.mfgIdCh1Inst
+  this.mfgIdCh1InstFlag = true
+  return this.mfgIdCh1Inst
 
 proc mfgIdCh3(this: Edid): int = 
-  if this.mfgIdCh3Inst != nil:
+  if this.mfgIdCh3InstFlag:
     return this.mfgIdCh3Inst
   let mfgIdCh3InstExpr = int((this.mfgBytes and 31))
   this.mfgIdCh3Inst = mfgIdCh3InstExpr
-  if this.mfgIdCh3Inst != nil:
-    return this.mfgIdCh3Inst
+  this.mfgIdCh3InstFlag = true
+  return this.mfgIdCh3Inst
 
 proc gamma(this: Edid): float64 = 
-  if this.gammaInst != nil:
+  if this.gammaInstFlag:
     return this.gammaInst
   if this.gammaMod != 255:
     let gammaInstExpr = float64(((this.gammaMod + 100) div 100.0))
     this.gammaInst = gammaInstExpr
-  if this.gammaInst != nil:
-    return this.gammaInst
+  this.gammaInstFlag = true
+  return this.gammaInst
 
 proc mfgStr(this: Edid): string = 
-  if this.mfgStrInst.len != 0:
+  if this.mfgStrInstFlag:
     return this.mfgStrInst
   let mfgStrInstExpr = string(encode(@[(this.mfgIdCh1 + 64), (this.mfgIdCh2 + 64), (this.mfgIdCh3 + 64)], "ASCII"))
   this.mfgStrInst = mfgStrInstExpr
-  if this.mfgStrInst.len != 0:
-    return this.mfgStrInst
+  this.mfgStrInstFlag = true
+  return this.mfgStrInst
 
 proc mfgIdCh2(this: Edid): int = 
-  if this.mfgIdCh2Inst != nil:
+  if this.mfgIdCh2InstFlag:
     return this.mfgIdCh2Inst
   let mfgIdCh2InstExpr = int(((this.mfgBytes and 992) shr 5))
   this.mfgIdCh2Inst = mfgIdCh2InstExpr
-  if this.mfgIdCh2Inst != nil:
-    return this.mfgIdCh2Inst
+  this.mfgIdCh2InstFlag = true
+  return this.mfgIdCh2Inst
 
 proc fromFile*(_: typedesc[Edid], filename: string): Edid =
   Edid.read(newKaitaiFileStream(filename), nil, nil)
@@ -395,164 +421,164 @@ proc read*(_: typedesc[Edid_ChromacityInfo], io: KaitaiStream, root: KaitaiStruc
   this.whiteY92 = whiteY92Expr
 
 proc greenXInt(this: Edid_ChromacityInfo): int = 
-  if this.greenXIntInst != nil:
+  if this.greenXIntInstFlag:
     return this.greenXIntInst
   let greenXIntInstExpr = int(((this.greenX92 shl 2) or this.greenX10))
   this.greenXIntInst = greenXIntInstExpr
-  if this.greenXIntInst != nil:
-    return this.greenXIntInst
+  this.greenXIntInstFlag = true
+  return this.greenXIntInst
 
 proc redY(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   Red Y coordinate
   ]##
-  if this.redYInst != nil:
+  if this.redYInstFlag:
     return this.redYInst
   let redYInstExpr = float64((this.redYInt div 1024.0))
   this.redYInst = redYInstExpr
-  if this.redYInst != nil:
-    return this.redYInst
+  this.redYInstFlag = true
+  return this.redYInst
 
 proc greenYInt(this: Edid_ChromacityInfo): int = 
-  if this.greenYIntInst != nil:
+  if this.greenYIntInstFlag:
     return this.greenYIntInst
   let greenYIntInstExpr = int(((this.greenY92 shl 2) or this.greenY10))
   this.greenYIntInst = greenYIntInstExpr
-  if this.greenYIntInst != nil:
-    return this.greenYIntInst
+  this.greenYIntInstFlag = true
+  return this.greenYIntInst
 
 proc whiteY(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   White Y coordinate
   ]##
-  if this.whiteYInst != nil:
+  if this.whiteYInstFlag:
     return this.whiteYInst
   let whiteYInstExpr = float64((this.whiteYInt div 1024.0))
   this.whiteYInst = whiteYInstExpr
-  if this.whiteYInst != nil:
-    return this.whiteYInst
+  this.whiteYInstFlag = true
+  return this.whiteYInst
 
 proc redX(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   Red X coordinate
   ]##
-  if this.redXInst != nil:
+  if this.redXInstFlag:
     return this.redXInst
   let redXInstExpr = float64((this.redXInt div 1024.0))
   this.redXInst = redXInstExpr
-  if this.redXInst != nil:
-    return this.redXInst
+  this.redXInstFlag = true
+  return this.redXInst
 
 proc whiteX(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   White X coordinate
   ]##
-  if this.whiteXInst != nil:
+  if this.whiteXInstFlag:
     return this.whiteXInst
   let whiteXInstExpr = float64((this.whiteXInt div 1024.0))
   this.whiteXInst = whiteXInstExpr
-  if this.whiteXInst != nil:
-    return this.whiteXInst
+  this.whiteXInstFlag = true
+  return this.whiteXInst
 
 proc blueX(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   Blue X coordinate
   ]##
-  if this.blueXInst != nil:
+  if this.blueXInstFlag:
     return this.blueXInst
   let blueXInstExpr = float64((this.blueXInt div 1024.0))
   this.blueXInst = blueXInstExpr
-  if this.blueXInst != nil:
-    return this.blueXInst
+  this.blueXInstFlag = true
+  return this.blueXInst
 
 proc whiteXInt(this: Edid_ChromacityInfo): int = 
-  if this.whiteXIntInst != nil:
+  if this.whiteXIntInstFlag:
     return this.whiteXIntInst
   let whiteXIntInstExpr = int(((this.whiteX92 shl 2) or this.whiteX10))
   this.whiteXIntInst = whiteXIntInstExpr
-  if this.whiteXIntInst != nil:
-    return this.whiteXIntInst
+  this.whiteXIntInstFlag = true
+  return this.whiteXIntInst
 
 proc whiteYInt(this: Edid_ChromacityInfo): int = 
-  if this.whiteYIntInst != nil:
+  if this.whiteYIntInstFlag:
     return this.whiteYIntInst
   let whiteYIntInstExpr = int(((this.whiteY92 shl 2) or this.whiteY10))
   this.whiteYIntInst = whiteYIntInstExpr
-  if this.whiteYIntInst != nil:
-    return this.whiteYIntInst
+  this.whiteYIntInstFlag = true
+  return this.whiteYIntInst
 
 proc greenX(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   Green X coordinate
   ]##
-  if this.greenXInst != nil:
+  if this.greenXInstFlag:
     return this.greenXInst
   let greenXInstExpr = float64((this.greenXInt div 1024.0))
   this.greenXInst = greenXInstExpr
-  if this.greenXInst != nil:
-    return this.greenXInst
+  this.greenXInstFlag = true
+  return this.greenXInst
 
 proc redXInt(this: Edid_ChromacityInfo): int = 
-  if this.redXIntInst != nil:
+  if this.redXIntInstFlag:
     return this.redXIntInst
   let redXIntInstExpr = int(((this.redX92 shl 2) or this.redX10))
   this.redXIntInst = redXIntInstExpr
-  if this.redXIntInst != nil:
-    return this.redXIntInst
+  this.redXIntInstFlag = true
+  return this.redXIntInst
 
 proc redYInt(this: Edid_ChromacityInfo): int = 
-  if this.redYIntInst != nil:
+  if this.redYIntInstFlag:
     return this.redYIntInst
   let redYIntInstExpr = int(((this.redY92 shl 2) or this.redY10))
   this.redYIntInst = redYIntInstExpr
-  if this.redYIntInst != nil:
-    return this.redYIntInst
+  this.redYIntInstFlag = true
+  return this.redYIntInst
 
 proc blueXInt(this: Edid_ChromacityInfo): int = 
-  if this.blueXIntInst != nil:
+  if this.blueXIntInstFlag:
     return this.blueXIntInst
   let blueXIntInstExpr = int(((this.blueX92 shl 2) or this.blueX10))
   this.blueXIntInst = blueXIntInstExpr
-  if this.blueXIntInst != nil:
-    return this.blueXIntInst
+  this.blueXIntInstFlag = true
+  return this.blueXIntInst
 
 proc blueY(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   Blue Y coordinate
   ]##
-  if this.blueYInst != nil:
+  if this.blueYInstFlag:
     return this.blueYInst
   let blueYInstExpr = float64((this.blueYInt div 1024.0))
   this.blueYInst = blueYInstExpr
-  if this.blueYInst != nil:
-    return this.blueYInst
+  this.blueYInstFlag = true
+  return this.blueYInst
 
 proc greenY(this: Edid_ChromacityInfo): float64 = 
 
   ##[
   Green Y coordinate
   ]##
-  if this.greenYInst != nil:
+  if this.greenYInstFlag:
     return this.greenYInst
   let greenYInstExpr = float64((this.greenYInt div 1024.0))
   this.greenYInst = greenYInstExpr
-  if this.greenYInst != nil:
-    return this.greenYInst
+  this.greenYInstFlag = true
+  return this.greenYInst
 
 proc blueYInt(this: Edid_ChromacityInfo): int = 
-  if this.blueYIntInst != nil:
+  if this.blueYIntInstFlag:
     return this.blueYIntInst
   let blueYIntInstExpr = int(((this.blueY92 shl 2) or this.blueY10))
   this.blueYIntInst = blueYIntInstExpr
-  if this.blueYIntInst != nil:
-    return this.blueYIntInst
+  this.blueYIntInstFlag = true
+  return this.blueYIntInst
 
 proc fromFile*(_: typedesc[Edid_ChromacityInfo], filename: string): Edid_ChromacityInfo =
   Edid_ChromacityInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -708,49 +734,49 @@ of vertical pixels.
   this.refreshRateMod = refreshRateModExpr
 
 proc bytesLookahead(this: Edid_StdTiming): seq[byte] = 
-  if this.bytesLookaheadInst.len != 0:
+  if this.bytesLookaheadInstFlag:
     return this.bytesLookaheadInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let bytesLookaheadInstExpr = this.io.readBytes(int(2))
   this.bytesLookaheadInst = bytesLookaheadInstExpr
   this.io.seek(pos)
-  if this.bytesLookaheadInst.len != 0:
-    return this.bytesLookaheadInst
+  this.bytesLookaheadInstFlag = true
+  return this.bytesLookaheadInst
 
 proc isUsed(this: Edid_StdTiming): bool = 
-  if this.isUsedInst != nil:
+  if this.isUsedInstFlag:
     return this.isUsedInst
   let isUsedInstExpr = bool(this.bytesLookahead != @[1'u8, 1'u8])
   this.isUsedInst = isUsedInstExpr
-  if this.isUsedInst != nil:
-    return this.isUsedInst
+  this.isUsedInstFlag = true
+  return this.isUsedInst
 
 proc horizActivePixels(this: Edid_StdTiming): int = 
 
   ##[
   Range of horizontal active pixels.
   ]##
-  if this.horizActivePixelsInst != nil:
+  if this.horizActivePixelsInstFlag:
     return this.horizActivePixelsInst
   if this.isUsed:
     let horizActivePixelsInstExpr = int(((this.horizActivePixelsMod + 31) * 8))
     this.horizActivePixelsInst = horizActivePixelsInstExpr
-  if this.horizActivePixelsInst != nil:
-    return this.horizActivePixelsInst
+  this.horizActivePixelsInstFlag = true
+  return this.horizActivePixelsInst
 
 proc refreshRate(this: Edid_StdTiming): int = 
 
   ##[
   Vertical refresh rate, Hz.
   ]##
-  if this.refreshRateInst != nil:
+  if this.refreshRateInstFlag:
     return this.refreshRateInst
   if this.isUsed:
     let refreshRateInstExpr = int((this.refreshRateMod + 60))
     this.refreshRateInst = refreshRateInstExpr
-  if this.refreshRateInst != nil:
-    return this.refreshRateInst
+  this.refreshRateInstFlag = true
+  return this.refreshRateInst
 
 proc fromFile*(_: typedesc[Edid_StdTiming], filename: string): Edid_StdTiming =
   Edid_StdTiming.read(newKaitaiFileStream(filename), nil, nil)

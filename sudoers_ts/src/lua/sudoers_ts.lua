@@ -89,8 +89,8 @@ end
 
 function SudoersTs.TsFlag:_read()
   self.reserved0 = self._io:read_bits_int_be(6)
-  self.anyuid = self._io:read_bits_int_be(1)
-  self.disabled = self._io:read_bits_int_be(1)
+  self.anyuid = self._io:read_bits_int_be(1) ~= 0
+  self.disabled = self._io:read_bits_int_be(1) ~= 0
   self.reserved1 = self._io:read_bits_int_be(8)
 end
 

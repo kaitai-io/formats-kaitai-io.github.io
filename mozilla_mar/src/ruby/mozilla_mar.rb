@@ -36,14 +36,14 @@ class MozillaMar < Kaitai::Struct::Struct
     @ofs_index = @_io.read_u4be
     @file_size = @_io.read_u8be
     @len_signatures = @_io.read_u4be
-    @signatures = Array.new(len_signatures)
+    @signatures = []
     (len_signatures).times { |i|
-      @signatures[i] = Signature.new(@_io, self, @_root)
+      @signatures << Signature.new(@_io, self, @_root)
     }
     @len_additional_sections = @_io.read_u4be
-    @additional_sections = Array.new(len_additional_sections)
+    @additional_sections = []
     (len_additional_sections).times { |i|
-      @additional_sections[i] = AdditionalSection.new(@_io, self, @_root)
+      @additional_sections << AdditionalSection.new(@_io, self, @_root)
     }
     self
   end

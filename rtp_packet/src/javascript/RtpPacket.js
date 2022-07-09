@@ -8,7 +8,7 @@
   } else {
     root.RtpPacket = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The Real-time Transport Protocol (RTP) is a widely used network
  * protocol for transmitting audio or video. It usually works with the

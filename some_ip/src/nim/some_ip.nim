@@ -20,7 +20,8 @@ type
     `parent`*: SomeIp
     `rawMessageId`*: seq[byte]
     `rawRequestId`*: seq[byte]
-    `isValidServiceDiscoveryInst`*: bool
+    `isValidServiceDiscoveryInst`: bool
+    `isValidServiceDiscoveryInstFlag`: bool
   SomeIp_Header_MessageTypeEnum* = enum
     request = 0
     request_no_return = 1
@@ -50,12 +51,14 @@ type
     `methodId`*: uint64
     `eventId`*: uint64
     `parent`*: SomeIp_Header
-    `valueInst`*: uint32
+    `valueInst`: uint32
+    `valueInstFlag`: bool
   SomeIp_Header_RequestId* = ref object of KaitaiStruct
     `clientId`*: uint16
     `sessionId`*: uint16
     `parent`*: SomeIp_Header
-    `valueInst`*: uint32
+    `valueInst`: uint32
+    `valueInstFlag`: bool
 
 proc read*(_: typedesc[SomeIp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SomeIp
 proc read*(_: typedesc[SomeIp_Header], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp): SomeIp_Header
@@ -178,12 +181,12 @@ proc isValidServiceDiscovery(this: SomeIp_Header): bool =
   auxillary value
   @see "AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements"
   ]##
-  if this.isValidServiceDiscoveryInst != nil:
+  if this.isValidServiceDiscoveryInstFlag:
     return this.isValidServiceDiscoveryInst
   let isValidServiceDiscoveryInstExpr = bool( ((this.messageId.value == 4294934784'i64) and (this.protocolVersion == 1) and (this.interfaceVersion == 1) and (this.messageType == some_ip.notification) and (this.returnCode == some_ip.ok)) )
   this.isValidServiceDiscoveryInst = isValidServiceDiscoveryInstExpr
-  if this.isValidServiceDiscoveryInst != nil:
-    return this.isValidServiceDiscoveryInst
+  this.isValidServiceDiscoveryInstFlag = true
+  return this.isValidServiceDiscoveryInst
 
 proc fromFile*(_: typedesc[SomeIp_Header], filename: string): SomeIp_Header =
   SomeIp_Header.read(newKaitaiFileStream(filename), nil, nil)
@@ -241,15 +244,15 @@ proc value(this: SomeIp_Header_MessageId): uint32 =
   ##[
   The value provides the undissected Message ID
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let valueInstExpr = this.io.readU4be()
   this.valueInst = valueInstExpr
   this.io.seek(pos)
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[SomeIp_Header_MessageId], filename: string): SomeIp_Header_MessageId =
   SomeIp_Header_MessageId.read(newKaitaiFileStream(filename), nil, nil)
@@ -279,15 +282,15 @@ proc value(this: SomeIp_Header_RequestId): uint32 =
   ##[
   The value provides the undissected Request ID
   ]##
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let valueInstExpr = this.io.readU4be()
   this.valueInst = valueInstExpr
   this.io.seek(pos)
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[SomeIp_Header_RequestId], filename: string): SomeIp_Header_RequestId =
   SomeIp_Header_RequestId.read(newKaitaiFileStream(filename), nil, nil)

@@ -4,7 +4,8 @@ import options
 type
   Id3v11* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `id3v1TagInst`*: Id3v11_Id3V11Tag
+    `id3v1TagInst`: Id3v11_Id3V11Tag
+    `id3v1TagInstFlag`: bool
   Id3v11_Id3V11Tag* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `title`*: seq[byte]
@@ -168,15 +169,15 @@ proc read*(_: typedesc[Id3v11], io: KaitaiStream, root: KaitaiStruct, parent: Ka
 
 
 proc id3v1Tag(this: Id3v11): Id3v11_Id3V11Tag = 
-  if this.id3v1TagInst != nil:
+  if this.id3v1TagInstFlag:
     return this.id3v1TagInst
   let pos = this.io.pos()
   this.io.seek(int((this.io.size - 128)))
   let id3v1TagInstExpr = Id3v11_Id3V11Tag.read(this.io, this.root, this)
   this.id3v1TagInst = id3v1TagInstExpr
   this.io.seek(pos)
-  if this.id3v1TagInst != nil:
-    return this.id3v1TagInst
+  this.id3v1TagInstFlag = true
+  return this.id3v1TagInst
 
 proc fromFile*(_: typedesc[Id3v11], filename: string): Id3v11 =
   Id3v11.read(newKaitaiFileStream(filename), nil, nil)

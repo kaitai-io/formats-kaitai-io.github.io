@@ -312,7 +312,7 @@ namespace Kaitai
                 if (!(IsNative)) {
                     _geometry = new GeometryNonNative(m_io, this, m_root);
                 }
-                _morphTargets = new List<MorphTarget>((int) (NumMorphTargets));
+                _morphTargets = new List<MorphTarget>();
                 for (var i = 0; i < NumMorphTargets; i++)
                 {
                     _morphTargets.Add(new MorphTarget(m_io, this, m_root));
@@ -405,20 +405,20 @@ namespace Kaitai
             private void _read()
             {
                 if (M_Parent.IsPrelit) {
-                    _prelitColors = new List<Rgba>((int) (M_Parent.NumVertices));
+                    _prelitColors = new List<Rgba>();
                     for (var i = 0; i < M_Parent.NumVertices; i++)
                     {
                         _prelitColors.Add(new Rgba(m_io, this, m_root));
                     }
                 }
                 if ( ((M_Parent.IsTextured) || (M_Parent.IsTextured2)) ) {
-                    _texCoords = new List<TexCoord>((int) (M_Parent.NumVertices));
+                    _texCoords = new List<TexCoord>();
                     for (var i = 0; i < M_Parent.NumVertices; i++)
                     {
                         _texCoords.Add(new TexCoord(m_io, this, m_root));
                     }
                 }
-                _triangles = new List<Triangle>((int) (M_Parent.NumTriangles));
+                _triangles = new List<Triangle>();
                 for (var i = 0; i < M_Parent.NumTriangles; i++)
                 {
                     _triangles.Add(new Triangle(m_io, this, m_root));
@@ -548,14 +548,14 @@ namespace Kaitai
                 _hasVertices = m_io.ReadU4le();
                 _hasNormals = m_io.ReadU4le();
                 if (HasVertices != 0) {
-                    _vertices = new List<Vector3d>((int) (M_Parent.NumVertices));
+                    _vertices = new List<Vector3d>();
                     for (var i = 0; i < M_Parent.NumVertices; i++)
                     {
                         _vertices.Add(new Vector3d(m_io, this, m_root));
                     }
                 }
                 if (HasNormals != 0) {
-                    _normals = new List<Vector3d>((int) (M_Parent.NumVertices));
+                    _normals = new List<Vector3d>();
                     for (var i = 0; i < M_Parent.NumVertices; i++)
                     {
                         _normals.Add(new Vector3d(m_io, this, m_root));
@@ -631,7 +631,7 @@ namespace Kaitai
             private void _read()
             {
                 _numFrames = m_io.ReadU4le();
-                _frames = new List<Frame>((int) (NumFrames));
+                _frames = new List<Frame>();
                 for (var i = 0; i < NumFrames; i++)
                 {
                     _frames.Add(new Frame(m_io, this, m_root));
@@ -665,7 +665,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _entries = new List<Vector3d>((int) (3));
+                _entries = new List<Vector3d>();
                 for (var i = 0; i < 3; i++)
                 {
                     _entries.Add(new Vector3d(m_io, this, m_root));

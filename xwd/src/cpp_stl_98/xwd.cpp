@@ -24,13 +24,10 @@ void xwd_t::_read() {
     m__raw_hdr = m__io->read_bytes((len_header() - 4));
     m__io__raw_hdr = new kaitai::kstream(m__raw_hdr);
     m_hdr = new header_t(m__io__raw_hdr, this, m__root);
-    int l_color_map = hdr()->color_map_entries();
     m__raw_color_map = new std::vector<std::string>();
-    m__raw_color_map->reserve(l_color_map);
     m__io__raw_color_map = new std::vector<kaitai::kstream*>();
-    m__io__raw_color_map->reserve(l_color_map);
     m_color_map = new std::vector<color_map_entry_t*>();
-    m_color_map->reserve(l_color_map);
+    const int l_color_map = hdr()->color_map_entries();
     for (int i = 0; i < l_color_map; i++) {
         m__raw_color_map->push_back(m__io->read_bytes(12));
         kaitai::kstream* io__raw_color_map = new kaitai::kstream(m__raw_color_map->at(m__raw_color_map->size() - 1));

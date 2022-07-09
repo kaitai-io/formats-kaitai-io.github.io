@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 import vlq_base128_be
@@ -34,9 +33,9 @@ class StandardMidiFile(KaitaiStruct):
 
     def _read(self):
         self.hdr = StandardMidiFile.Header(self._io, self, self._root)
-        self.tracks = [None] * (self.hdr.num_tracks)
+        self.tracks = []
         for i in range(self.hdr.num_tracks):
-            self.tracks[i] = StandardMidiFile.Track(self._io, self, self._root)
+            self.tracks.append(StandardMidiFile.Track(self._io, self, self._root))
 
 
     class TrackEvents(KaitaiStruct):
@@ -90,20 +89,20 @@ class StandardMidiFile(KaitaiStruct):
         @property
         def event_type(self):
             if hasattr(self, '_m_event_type'):
-                return self._m_event_type if hasattr(self, '_m_event_type') else None
+                return self._m_event_type
 
             self._m_event_type = (self.event_header & 240)
-            return self._m_event_type if hasattr(self, '_m_event_type') else None
+            return getattr(self, '_m_event_type', None)
 
         @property
         def channel(self):
             if hasattr(self, '_m_channel'):
-                return self._m_channel if hasattr(self, '_m_channel') else None
+                return self._m_channel
 
             if self.event_type != 240:
                 self._m_channel = (self.event_header & 15)
 
-            return self._m_channel if hasattr(self, '_m_channel') else None
+            return getattr(self, '_m_channel', None)
 
 
     class PitchBendEvent(KaitaiStruct):
@@ -120,18 +119,18 @@ class StandardMidiFile(KaitaiStruct):
         @property
         def bend_value(self):
             if hasattr(self, '_m_bend_value'):
-                return self._m_bend_value if hasattr(self, '_m_bend_value') else None
+                return self._m_bend_value
 
             self._m_bend_value = (((self.b2 << 7) + self.b1) - 16384)
-            return self._m_bend_value if hasattr(self, '_m_bend_value') else None
+            return getattr(self, '_m_bend_value', None)
 
         @property
         def adj_bend_value(self):
             if hasattr(self, '_m_adj_bend_value'):
-                return self._m_adj_bend_value if hasattr(self, '_m_adj_bend_value') else None
+                return self._m_adj_bend_value
 
             self._m_adj_bend_value = (self.bend_value - 16384)
-            return self._m_adj_bend_value if hasattr(self, '_m_adj_bend_value') else None
+            return getattr(self, '_m_adj_bend_value', None)
 
 
     class ProgramChangeEvent(KaitaiStruct):

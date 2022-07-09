@@ -66,7 +66,7 @@ public class Lvm2 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.emptySector = this._io.readBytes(_root.sectorSize());
+            this.emptySector = this._io.readBytes(_root().sectorSize());
             this.label = new Label(this._io, this, _root);
         }
         public static class Label extends KaitaiStruct {

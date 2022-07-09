@@ -62,10 +62,10 @@ end
 
 function RtpPacket:_read()
   self.version = self._io:read_bits_int_be(2)
-  self.has_padding = self._io:read_bits_int_be(1)
-  self.has_extension = self._io:read_bits_int_be(1)
+  self.has_padding = self._io:read_bits_int_be(1) ~= 0
+  self.has_extension = self._io:read_bits_int_be(1) ~= 0
   self.csrc_count = self._io:read_bits_int_be(4)
-  self.marker = self._io:read_bits_int_be(1)
+  self.marker = self._io:read_bits_int_be(1) ~= 0
   self.payload_type = RtpPacket.PayloadTypeEnum(self._io:read_bits_int_be(7))
   self._io:align_to_byte()
   self.sequence_number = self._io:read_u2be()

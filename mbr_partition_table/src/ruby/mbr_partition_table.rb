@@ -25,9 +25,9 @@ class MbrPartitionTable < Kaitai::Struct::Struct
 
   def _read
     @bootstrap_code = @_io.read_bytes(446)
-    @partitions = Array.new(4)
+    @partitions = []
     (4).times { |i|
-      @partitions[i] = PartitionEntry.new(@_io, self, @_root)
+      @partitions << PartitionEntry.new(@_io, self, @_root)
     }
     @boot_signature = @_io.read_bytes(2)
     raise Kaitai::Struct::ValidationNotEqualError.new([85, 170].pack('C*'), boot_signature, _io, "/seq/2") if not boot_signature == [85, 170].pack('C*')

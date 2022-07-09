@@ -40,7 +40,7 @@ namespace Kaitai
         {
             _header = m_io.ReadBytes(80);
             _numTriangles = m_io.ReadU4le();
-            _triangles = new List<Triangle>((int) (NumTriangles));
+            _triangles = new List<Triangle>();
             for (var i = 0; i < NumTriangles; i++)
             {
                 _triangles.Add(new Triangle(m_io, this, m_root));
@@ -68,7 +68,7 @@ namespace Kaitai
             private void _read()
             {
                 _normal = new Vec3d(m_io, this, m_root);
-                _vertices = new List<Vec3d>((int) (3));
+                _vertices = new List<Vec3d>();
                 for (var i = 0; i < 3; i++)
                 {
                     _vertices.Add(new Vec3d(m_io, this, m_root));

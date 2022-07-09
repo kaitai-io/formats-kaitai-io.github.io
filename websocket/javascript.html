@@ -311,7 +311,7 @@ frames with the <code>fin</code> bit set.</p>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">root</span><span class="p">.</span><span class="nx">Websocket</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="ow">typeof</span> <span class="nx">self</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">self</span> <span class="o">:</span> <span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * The WebSocket protocol establishes a two-way communication channel via TCP.</span>
 <span class="cm"> * Messages are made up of one or more dataframes, and are delineated by</span>
@@ -365,7 +365,7 @@ frames with the <code>fin</code> bit set.</p>
   <span class="nx">Websocket</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">initialFrame</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">InitialFrame</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">initialFrame</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">finished</span> <span class="o">!=</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">trailingFrames</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">trailingFrames</span> <span class="o">=</span> <span class="p">[];</span>
       <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
       <span class="k">do</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Dataframe</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>

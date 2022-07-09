@@ -8,7 +8,7 @@
   } else {
     root.Zisofs = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * zisofs is a compression format for files on ISO9660 file system. It has
  * limited support across operating systems, mainly Linux kernel. Typically a
@@ -35,9 +35,9 @@ var Zisofs = (function() {
     this._raw_header = this._io.readBytes(16);
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new Header(_io__raw_header, this, this._root);
-    this.blockPointers = new Array((this.header.numBlocks + 1));
+    this.blockPointers = [];
     for (var i = 0; i < (this.header.numBlocks + 1); i++) {
-      this.blockPointers[i] = this._io.readU4le();
+      this.blockPointers.push(this._io.readU4le());
     }
   }
 
@@ -139,9 +139,9 @@ var Zisofs = (function() {
     get: function() {
       if (this._m_blocks !== undefined)
         return this._m_blocks;
-      this._m_blocks = new Array(this.header.numBlocks);
+      this._m_blocks = [];
       for (var i = 0; i < this.header.numBlocks; i++) {
-        this._m_blocks[i] = new Block(this._io, this, this._root, this.blockPointers[i], this.blockPointers[(i + 1)]);
+        this._m_blocks.push(new Block(this._io, this, this._root, this.blockPointers[i], this.blockPointers[(i + 1)]));
       }
       return this._m_blocks;
     }

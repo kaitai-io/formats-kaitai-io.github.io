@@ -195,6 +195,11 @@ with certain preconfigured arguments and some other options.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Windows shell link file parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Windows shell link file parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -313,15 +318,19 @@ with certain preconfigured arguments and some other options.</p>
     <span class="p">`</span><span class="n">ofsVolumeLabel</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">ofsVolumeLabelUnicode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdSpec</span>
-    <span class="p">`</span><span class="n">isUnicodeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">volumeLabelAnsiInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">isUnicodeInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isUnicodeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">volumeLabelAnsiInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">volumeLabelAnsiInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">WindowsLnkFile_LinkInfo_All</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_Header</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo</span>
     <span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">volumeIdInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdSpec</span>
-    <span class="p">`</span><span class="n">localBasePathInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">volumeIdInst</span><span class="p">`:</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdSpec</span>
+    <span class="p">`</span><span class="n">volumeIdInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">localBasePathInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">localBasePathInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">WindowsLnkFile_LinkInfo_VolumeIdSpec</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lenAll</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdBody</span>
@@ -518,15 +527,15 @@ with certain preconfigured arguments and some other options.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">ofsVolumeLabelUnicode</span> <span class="o">=</span> <span class="n">ofsVolumeLabelUnicodeExpr</span>
 
 <span class="k">proc </span><span class="nf">isUnicode</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdBody</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInst</span>
   <span class="k">let</span> <span class="n">isUnicodeInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsVolumeLabel</span> <span class="o">==</span> <span class="mi">20</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInst</span> <span class="o">=</span> <span class="n">isUnicodeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isUnicodeInst</span>
 
 <span class="k">proc </span><span class="nf">volumeLabelAnsi</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdBody</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInst</span>
   <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">isUnicode</span><span class="p">):</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -534,8 +543,8 @@ with certain preconfigured arguments and some other options.</p>
     <span class="k">let</span> <span class="n">volumeLabelAnsiInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;cp437&quot;</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInst</span> <span class="o">=</span> <span class="n">volumeLabelAnsiInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeLabelAnsiInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsLnkFile_LinkInfo_VolumeIdBody], filename: string): WindowsLnkFile_LinkInfo_VolumeIdBody =</span>
   <span class="n">WindowsLnkFile_LinkInfo_VolumeIdBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -561,7 +570,7 @@ with certain preconfigured arguments and some other options.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
 
 <span class="k">proc </span><span class="nf">volumeId</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_All</span><span class="p">):</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdSpec</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasVolumeIdAndLocalBasePath</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -569,11 +578,11 @@ with certain preconfigured arguments and some other options.</p>
     <span class="k">let</span> <span class="n">volumeIdInstExpr</span> <span class="o">=</span> <span class="n">WindowsLnkFile_LinkInfo_VolumeIdSpec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInst</span> <span class="o">=</span> <span class="n">volumeIdInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">volumeIdInst</span>
 
 <span class="k">proc </span><span class="nf">localBasePath</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsLnkFile_LinkInfo_All</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasVolumeIdAndLocalBasePath</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -581,8 +590,8 @@ with certain preconfigured arguments and some other options.</p>
     <span class="k">let</span> <span class="n">localBasePathInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInst</span> <span class="o">=</span> <span class="n">localBasePathInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">localBasePathInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsLnkFile_LinkInfo_All], filename: string): WindowsLnkFile_LinkInfo_All =</span>
   <span class="n">WindowsLnkFile_LinkInfo_All</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

@@ -160,7 +160,8 @@ type
     `sizeOfDataElement`*: uint32
     `parent`*: Icc4_TagTable
     `rawTagDataElementInst`*: seq[byte]
-    `tagDataElementInst`*: KaitaiStruct
+    `tagDataElementInst`: KaitaiStruct
+    `tagDataElementInstFlag`: bool
   Icc4_TagTable_TagDefinition_TagSignatures* = enum
     a_to_b_0 = 1093812784
     a_to_b_1 = 1093812785
@@ -596,7 +597,8 @@ type
     `stringLength`*: uint32
     `stringOffset`*: uint32
     `parent`*: Icc4_TagTable_TagDefinition_MultiLocalizedUnicodeType
-    `stringDataInst`*: string
+    `stringDataInst`: string
+    `stringDataInstFlag`: bool
   Icc4_TagTable_TagDefinition_AToB2Tag* = ref object of KaitaiStruct
     `tagType`*: Icc4_TagTable_TagDefinition_TagTypeSignatures
     `tagData`*: KaitaiStruct
@@ -1369,7 +1371,7 @@ proc read*(_: typedesc[Icc4_TagTable_TagDefinition], io: KaitaiStream, root: Kai
   this.sizeOfDataElement = sizeOfDataElementExpr
 
 proc tagDataElement(this: Icc4_TagTable_TagDefinition): KaitaiStruct = 
-  if this.tagDataElementInst != nil:
+  if this.tagDataElementInstFlag:
     return this.tagDataElementInst
   let pos = this.io.pos()
   this.io.seek(int(this.offsetToDataElement))
@@ -1673,8 +1675,8 @@ proc tagDataElement(this: Icc4_TagTable_TagDefinition): KaitaiStruct =
       let tagDataElementInstExpr = this.io.readBytes(int(this.sizeOfDataElement))
       this.tagDataElementInst = tagDataElementInstExpr
   this.io.seek(pos)
-  if this.tagDataElementInst != nil:
-    return this.tagDataElementInst
+  this.tagDataElementInstFlag = true
+  return this.tagDataElementInst
 
 proc fromFile*(_: typedesc[Icc4_TagTable_TagDefinition], filename: string): Icc4_TagTable_TagDefinition =
   Icc4_TagTable_TagDefinition.read(newKaitaiFileStream(filename), nil, nil)
@@ -3020,15 +3022,15 @@ proc read*(_: typedesc[Icc4_TagTable_TagDefinition_MultiLocalizedUnicodeType_Rec
   this.stringOffset = stringOffsetExpr
 
 proc stringData(this: Icc4_TagTable_TagDefinition_MultiLocalizedUnicodeType_Record): string = 
-  if this.stringDataInst.len != 0:
+  if this.stringDataInstFlag:
     return this.stringDataInst
   let pos = this.io.pos()
   this.io.seek(int(this.stringOffset))
   let stringDataInstExpr = encode(this.io.readBytes(int(this.stringLength)), "UTF-16BE")
   this.stringDataInst = stringDataInstExpr
   this.io.seek(pos)
-  if this.stringDataInst.len != 0:
-    return this.stringDataInst
+  this.stringDataInstFlag = true
+  return this.stringDataInst
 
 proc fromFile*(_: typedesc[Icc4_TagTable_TagDefinition_MultiLocalizedUnicodeType_Record], filename: string): Icc4_TagTable_TagDefinition_MultiLocalizedUnicodeType_Record =
   Icc4_TagTable_TagDefinition_MultiLocalizedUnicodeType_Record.read(newKaitaiFileStream(filename), nil, nil)

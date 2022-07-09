@@ -47,19 +47,19 @@ class AvantesRoh60 < Kaitai::Struct::Struct
     @wlx2 = @_io.read_f4le
     @wlx3 = @_io.read_f4le
     @wlx4 = @_io.read_f4le
-    @unknown2 = Array.new(9)
+    @unknown2 = []
     (9).times { |i|
-      @unknown2[i] = @_io.read_f4le
+      @unknown2 << @_io.read_f4le
     }
     @ipixfirst = @_io.read_f4le
     @ipixlast = @_io.read_f4le
-    @unknown3 = Array.new(4)
+    @unknown3 = []
     (4).times { |i|
-      @unknown3[i] = @_io.read_f4le
+      @unknown3 << @_io.read_f4le
     }
-    @spectrum = Array.new((((ipixlast).to_i - (ipixfirst).to_i) - 1))
+    @spectrum = []
     ((((ipixlast).to_i - (ipixfirst).to_i) - 1)).times { |i|
-      @spectrum[i] = @_io.read_f4le
+      @spectrum << @_io.read_f4le
     }
     @integration_ms = @_io.read_f4le
     @averaging = @_io.read_f4le

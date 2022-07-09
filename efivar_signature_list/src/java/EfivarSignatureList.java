@@ -82,8 +82,8 @@ public class EfivarSignatureList extends KaitaiStruct {
             this.lenSignature = this._io.readU4le();
             this.header = this._io.readBytes(lenSignatureHeader());
             if (lenSignature() > 0) {
-                this._raw_signatures = new ArrayList<byte[]>(((Number) ((((lenSignatureList() - lenSignatureHeader()) - 28) / lenSignature()))).intValue());
-                signatures = new ArrayList<SignatureData>(((Number) ((((lenSignatureList() - lenSignatureHeader()) - 28) / lenSignature()))).intValue());
+                this._raw_signatures = new ArrayList<byte[]>();
+                this.signatures = new ArrayList<SignatureData>();
                 for (int i = 0; i < (((lenSignatureList() - lenSignatureHeader()) - 28) / lenSignature()); i++) {
                     this._raw_signatures.add(this._io.readBytes(lenSignature()));
                     KaitaiStream _io__raw_signatures = new ByteBufferKaitaiStream(_raw_signatures.get(_raw_signatures.size() - 1));

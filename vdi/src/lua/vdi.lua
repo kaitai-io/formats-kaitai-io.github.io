@@ -274,10 +274,10 @@ end
 
 function Vdi.Header.HeaderMain.Flags:_read()
   self.reserved0 = self._io:read_bits_int_be(15)
-  self.zero_expand = self._io:read_bits_int_be(1)
+  self.zero_expand = self._io:read_bits_int_be(1) ~= 0
   self.reserved1 = self._io:read_bits_int_be(6)
-  self.diff = self._io:read_bits_int_be(1)
-  self.fixed = self._io:read_bits_int_be(1)
+  self.diff = self._io:read_bits_int_be(1) ~= 0
+  self.fixed = self._io:read_bits_int_be(1) ~= 0
   self.reserved2 = self._io:read_bits_int_be(8)
 end
 

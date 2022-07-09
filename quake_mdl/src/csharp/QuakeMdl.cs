@@ -20,22 +20,22 @@ namespace Kaitai
         private void _read()
         {
             _header = new MdlHeader(m_io, this, m_root);
-            _skins = new List<MdlSkin>((int) (Header.NumSkins));
+            _skins = new List<MdlSkin>();
             for (var i = 0; i < Header.NumSkins; i++)
             {
                 _skins.Add(new MdlSkin(m_io, this, m_root));
             }
-            _textureCoordinates = new List<MdlTexcoord>((int) (Header.NumVerts));
+            _textureCoordinates = new List<MdlTexcoord>();
             for (var i = 0; i < Header.NumVerts; i++)
             {
                 _textureCoordinates.Add(new MdlTexcoord(m_io, this, m_root));
             }
-            _triangles = new List<MdlTriangle>((int) (Header.NumTris));
+            _triangles = new List<MdlTriangle>();
             for (var i = 0; i < Header.NumTris; i++)
             {
                 _triangles.Add(new MdlTriangle(m_io, this, m_root));
             }
-            _frames = new List<MdlFrame>((int) (Header.NumFrames));
+            _frames = new List<MdlFrame>();
             for (var i = 0; i < Header.NumFrames; i++)
             {
                 _frames.Add(new MdlFrame(m_io, this, m_root));
@@ -56,7 +56,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<byte>((int) (3));
+                _values = new List<byte>();
                 for (var i = 0; i < 3; i++)
                 {
                     _values.Add(m_io.ReadU1());
@@ -227,14 +227,14 @@ namespace Kaitai
                     _numFrames = m_io.ReadU4le();
                 }
                 if (Group != 0) {
-                    _frameTimes = new List<float>((int) (NumFrames));
+                    _frameTimes = new List<float>();
                     for (var i = 0; i < NumFrames; i++)
                     {
                         _frameTimes.Add(m_io.ReadF4le());
                     }
                 }
                 if (Group != 0) {
-                    _groupTextureData = new List<byte[]>((int) (NumFrames));
+                    _groupTextureData = new List<byte[]>();
                     for (var i = 0; i < NumFrames; i++)
                     {
                         _groupTextureData.Add(m_io.ReadBytes(M_Root.Header.SkinSize));
@@ -280,13 +280,13 @@ namespace Kaitai
                     _max = new MdlVertex(m_io, this, m_root);
                 }
                 if (Type != 0) {
-                    _time = new List<float>((int) (Type));
+                    _time = new List<float>();
                     for (var i = 0; i < Type; i++)
                     {
                         _time.Add(m_io.ReadF4le());
                     }
                 }
-                _frames = new List<MdlSimpleFrame>((int) (NumSimpleFrames));
+                _frames = new List<MdlSimpleFrame>();
                 for (var i = 0; i < NumSimpleFrames; i++)
                 {
                     _frames.Add(new MdlSimpleFrame(m_io, this, m_root));
@@ -338,7 +338,7 @@ namespace Kaitai
                 _bboxMin = new MdlVertex(m_io, this, m_root);
                 _bboxMax = new MdlVertex(m_io, this, m_root);
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0), 0, false));
-                _vertices = new List<MdlVertex>((int) (M_Root.Header.NumVerts));
+                _vertices = new List<MdlVertex>();
                 for (var i = 0; i < M_Root.Header.NumVerts; i++)
                 {
                     _vertices.Add(new MdlVertex(m_io, this, m_root));
@@ -373,7 +373,7 @@ namespace Kaitai
             private void _read()
             {
                 _facesFront = m_io.ReadS4le();
-                _vertices = new List<int>((int) (3));
+                _vertices = new List<int>();
                 for (var i = 0; i < 3; i++)
                 {
                     _vertices.Add(m_io.ReadS4le());

@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Tga(KaitaiStruct):
@@ -49,9 +48,9 @@ class Tga(KaitaiStruct):
         self.img_descriptor = self._io.read_u1()
         self.image_id = self._io.read_bytes(self.image_id_len)
         if self.color_map_type == Tga.ColorMapEnum.has_color_map:
-            self.color_map = [None] * (self.num_color_map)
+            self.color_map = []
             for i in range(self.num_color_map):
-                self.color_map[i] = self._io.read_bytes((self.color_map_depth + 7) // 8)
+                self.color_map.append(self._io.read_bytes((self.color_map_depth + 7) // 8))
 
 
 
@@ -70,15 +69,15 @@ class Tga(KaitaiStruct):
         @property
         def is_valid(self):
             if hasattr(self, '_m_is_valid'):
-                return self._m_is_valid if hasattr(self, '_m_is_valid') else None
+                return self._m_is_valid
 
             self._m_is_valid = self.version_magic == b"\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00"
-            return self._m_is_valid if hasattr(self, '_m_is_valid') else None
+            return getattr(self, '_m_is_valid', None)
 
         @property
         def ext_area(self):
             if hasattr(self, '_m_ext_area'):
-                return self._m_ext_area if hasattr(self, '_m_ext_area') else None
+                return self._m_ext_area
 
             if self.is_valid:
                 _pos = self._io.pos()
@@ -86,7 +85,7 @@ class Tga(KaitaiStruct):
                 self._m_ext_area = Tga.TgaExtArea(self._io, self, self._root)
                 self._io.seek(_pos)
 
-            return self._m_ext_area if hasattr(self, '_m_ext_area') else None
+            return getattr(self, '_m_ext_area', None)
 
 
     class TgaExtArea(KaitaiStruct):
@@ -99,9 +98,9 @@ class Tga(KaitaiStruct):
         def _read(self):
             self.ext_area_size = self._io.read_u2le()
             self.author_name = (self._io.read_bytes(41)).decode(u"ASCII")
-            self.comments = [None] * (4)
+            self.comments = []
             for i in range(4):
-                self.comments[i] = (self._io.read_bytes(81)).decode(u"ASCII")
+                self.comments.append((self._io.read_bytes(81)).decode(u"ASCII"))
 
             self.timestamp = self._io.read_bytes(12)
             self.job_id = (self._io.read_bytes(41)).decode(u"ASCII")
@@ -120,12 +119,12 @@ class Tga(KaitaiStruct):
     @property
     def footer(self):
         if hasattr(self, '_m_footer'):
-            return self._m_footer if hasattr(self, '_m_footer') else None
+            return self._m_footer
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 26))
         self._m_footer = Tga.TgaFooter(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_footer if hasattr(self, '_m_footer') else None
+        return getattr(self, '_m_footer', None)
 
 

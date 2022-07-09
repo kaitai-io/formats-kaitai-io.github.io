@@ -395,7 +395,7 @@ public class PythonPickle extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.val = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
+            this.val = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
         }
         private String val;
         private PythonPickle _root;
@@ -428,7 +428,7 @@ public class PythonPickle extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.val = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
+            this.val = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
         }
         private String val;
         private PythonPickle _root;
@@ -497,7 +497,7 @@ public class PythonPickle extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.val = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
+            this.val = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
         }
         private String val;
         private PythonPickle _root;
@@ -657,7 +657,7 @@ public class PythonPickle extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.val = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
+            this.val = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
         }
         private String val;
         private PythonPickle _root;
@@ -726,7 +726,7 @@ public class PythonPickle extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.val = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
+            this.val = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
         }
         private String val;
         private PythonPickle _root;
@@ -1160,7 +1160,7 @@ public class PythonPickle extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.val = new String(this._io.readBytesTerm(10, false, true, true), Charset.forName("ascii"));
+            this.val = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
         }
         private String val;
         private PythonPickle _root;

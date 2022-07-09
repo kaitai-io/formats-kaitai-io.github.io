@@ -62,9 +62,9 @@ class Msgpack < Kaitai::Struct::Struct
       @num_array_elements_32 = @_io.read_u4be
     end
     if is_array
-      @array_elements = Array.new(num_array_elements)
+      @array_elements = []
       (num_array_elements).times { |i|
-        @array_elements[i] = Msgpack.new(@_io)
+        @array_elements << Msgpack.new(@_io)
       }
     end
     if is_map_16
@@ -74,9 +74,9 @@ class Msgpack < Kaitai::Struct::Struct
       @num_map_elements_32 = @_io.read_u4be
     end
     if is_map
-      @map_elements = Array.new(num_map_elements)
+      @map_elements = []
       (num_map_elements).times { |i|
-        @map_elements[i] = MapTuple.new(@_io, self, @_root)
+        @map_elements << MapTuple.new(@_io, self, @_root)
       }
     end
     self

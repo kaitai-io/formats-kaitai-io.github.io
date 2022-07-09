@@ -119,11 +119,11 @@ public class GptPartitionTable extends KaitaiStruct {
         public ArrayList<PartitionEntry> entries() {
             if (this.entries != null)
                 return this.entries;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
-            io.seek((entriesStart() * _root.sectorSize()));
-            this._raw_entries = new ArrayList<byte[]>(((Number) (entriesCount())).intValue());
-            entries = new ArrayList<PartitionEntry>(((Number) (entriesCount())).intValue());
+            io.seek((entriesStart() * _root().sectorSize()));
+            this._raw_entries = new ArrayList<byte[]>();
+            this.entries = new ArrayList<PartitionEntry>();
             for (int i = 0; i < entriesCount(); i++) {
                 this._raw_entries.add(io.readBytes(entriesSize()));
                 KaitaiStream _io__raw_entries = new ByteBufferKaitaiStream(_raw_entries.get(_raw_entries.size() - 1));
@@ -179,9 +179,9 @@ public class GptPartitionTable extends KaitaiStruct {
     public PartitionHeader primary() {
         if (this.primary != null)
             return this.primary;
-        KaitaiStream io = _root._io();
+        KaitaiStream io = _root()._io();
         long _pos = io.pos();
-        io.seek(_root.sectorSize());
+        io.seek(_root().sectorSize());
         this.primary = new PartitionHeader(io, this, _root);
         io.seek(_pos);
         return this.primary;
@@ -190,9 +190,9 @@ public class GptPartitionTable extends KaitaiStruct {
     public PartitionHeader backup() {
         if (this.backup != null)
             return this.backup;
-        KaitaiStream io = _root._io();
+        KaitaiStream io = _root()._io();
         long _pos = io.pos();
-        io.seek((_io().size() - _root.sectorSize()));
+        io.seek((_io().size() - _root().sectorSize()));
         this.backup = new PartitionHeader(io, this, _root);
         io.seek(_pos);
         return this.backup;

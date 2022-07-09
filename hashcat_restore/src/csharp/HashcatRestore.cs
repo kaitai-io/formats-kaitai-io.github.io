@@ -31,7 +31,7 @@ namespace Kaitai
             _currentRestorePoint = m_io.ReadU8le();
             _argc = m_io.ReadU4le();
             _padding2 = m_io.ReadBytes(12);
-            _argv = new List<string>((int) (Argc));
+            _argv = new List<string>();
             for (var i = 0; i < Argc; i++)
             {
                 _argv.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(10, false, true, true)));

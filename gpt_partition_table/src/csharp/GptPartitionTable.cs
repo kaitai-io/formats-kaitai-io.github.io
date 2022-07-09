@@ -112,8 +112,8 @@ namespace Kaitai
                     KaitaiStream io = M_Root.M_Io;
                     long _pos = io.Pos;
                     io.Seek((EntriesStart * M_Root.SectorSize));
-                    __raw_entries = new List<byte[]>((int) (EntriesCount));
-                    _entries = new List<PartitionEntry>((int) (EntriesCount));
+                    __raw_entries = new List<byte[]>();
+                    _entries = new List<PartitionEntry>();
                     for (var i = 0; i < EntriesCount; i++)
                     {
                         __raw_entries.Add(io.ReadBytes(EntriesSize));

@@ -54,9 +54,9 @@ sub _read {
     $self->{std_timings} = ();
     my $n_std_timings = 8;
     for (my $i = 0; $i < $n_std_timings; $i++) {
-        $self->{_raw_std_timings}[$i] = $self->{_io}->read_bytes(2);
+        push @{$self->{_raw_std_timings}}, $self->{_io}->read_bytes(2);
         my $io__raw_std_timings = IO::KaitaiStruct::Stream->new($self->{_raw_std_timings}[$i]);
-        $self->{std_timings}[$i] = Edid::StdTiming->new($io__raw_std_timings, $self, $self->{_root});
+        push @{$self->{std_timings}}, Edid::StdTiming->new($io__raw_std_timings, $self, $self->{_root});
     }
 }
 

@@ -733,7 +733,7 @@ sub _read {
     $self->{tags} = ();
     my $n_tags = $self->tag_count();
     for (my $i = 0; $i < $n_tags; $i++) {
-        $self->{tags}[$i] = Icc4::TagTable::TagDefinition->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{tags}}, Icc4::TagTable::TagDefinition->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1280,18 +1280,18 @@ sub _read {
     $self->{prefix_for_each_colour_name_padding} = ();
     my $n_prefix_for_each_colour_name_padding = (32 - length($self->prefix_for_each_colour_name()));
     for (my $i = 0; $i < $n_prefix_for_each_colour_name_padding; $i++) {
-        $self->{prefix_for_each_colour_name_padding}[$i] = $self->{_io}->read_bytes(1);
+        push @{$self->{prefix_for_each_colour_name_padding}}, $self->{_io}->read_bytes(1);
     }
     $self->{suffix_for_each_colour_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     $self->{suffix_for_each_colour_name_padding} = ();
     my $n_suffix_for_each_colour_name_padding = (32 - length($self->suffix_for_each_colour_name()));
     for (my $i = 0; $i < $n_suffix_for_each_colour_name_padding; $i++) {
-        $self->{suffix_for_each_colour_name_padding}[$i] = $self->{_io}->read_bytes(1);
+        push @{$self->{suffix_for_each_colour_name_padding}}, $self->{_io}->read_bytes(1);
     }
     $self->{named_colour_definitions} = ();
     my $n_named_colour_definitions = $self->count_of_named_colours();
     for (my $i = 0; $i < $n_named_colour_definitions; $i++) {
-        $self->{named_colour_definitions}[$i] = Icc4::TagTable::TagDefinition::NamedColor2Type::NamedColourDefinition->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{named_colour_definitions}}, Icc4::TagTable::TagDefinition::NamedColor2Type::NamedColourDefinition->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1374,14 +1374,14 @@ sub _read {
     $self->{root_name_padding} = ();
     my $n_root_name_padding = (32 - length($self->root_name()));
     for (my $i = 0; $i < $n_root_name_padding; $i++) {
-        $self->{root_name_padding}[$i] = $self->{_io}->read_bytes(1);
+        push @{$self->{root_name_padding}}, $self->{_io}->read_bytes(1);
     }
     $self->{pcs_coordinates} = $self->{_io}->read_bytes(6);
     if ($self->_parent()->number_of_device_coordinates_for_each_named_colour() > 0) {
         $self->{device_coordinates} = ();
         my $n_device_coordinates = $self->_parent()->number_of_device_coordinates_for_each_named_colour();
         for (my $i = 0; $i < $n_device_coordinates; $i++) {
-            $self->{device_coordinates}[$i] = $self->{_io}->read_u2be();
+            push @{$self->{device_coordinates}}, $self->{_io}->read_u2be();
         }
     }
 }
@@ -1539,7 +1539,7 @@ sub _read {
     $self->{response_curve_structure_offsets} = ();
     my $n_response_curve_structure_offsets = $self->count_of_measurement_types();
     for (my $i = 0; $i < $n_response_curve_structure_offsets; $i++) {
-        $self->{response_curve_structure_offsets}[$i] = $self->{_io}->read_u4be();
+        push @{$self->{response_curve_structure_offsets}}, $self->{_io}->read_u4be();
     }
     $self->{response_curve_structures} = $self->{_io}->read_bytes_full();
 }
@@ -1605,7 +1605,7 @@ sub _read {
         $self->{curve_values} = ();
         my $n_curve_values = $self->number_of_entries();
         for (my $i = 0; $i < $n_curve_values; $i++) {
-            $self->{curve_values}[$i] = $self->{_io}->read_u2be();
+            push @{$self->{curve_values}}, $self->{_io}->read_u2be();
         }
     }
     if ($self->number_of_entries() == 1) {
@@ -1765,7 +1765,7 @@ sub _read {
     $self->{encoded_e_parameters} = ();
     my $n_encoded_e_parameters = 9;
     for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
-        $self->{encoded_e_parameters}[$i] = $self->{_io}->read_s4be();
+        push @{$self->{encoded_e_parameters}}, $self->{_io}->read_s4be();
     }
     $self->{number_of_input_table_entries} = $self->{_io}->read_u4be();
     $self->{number_of_output_table_entries} = $self->{_io}->read_u4be();
@@ -2112,7 +2112,7 @@ sub _read {
     $self->{encoded_e_parameters} = ();
     my $n_encoded_e_parameters = 9;
     for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
-        $self->{encoded_e_parameters}[$i] = $self->{_io}->read_s4be();
+        push @{$self->{encoded_e_parameters}}, $self->{_io}->read_s4be();
     }
     $self->{number_of_input_table_entries} = $self->{_io}->read_u2be();
     $self->{number_of_output_table_entries} = $self->{_io}->read_u2be();
@@ -3558,12 +3558,12 @@ sub _read {
     $self->{positions_table} = ();
     my $n_positions_table = $self->number_of_structures();
     for (my $i = 0; $i < $n_positions_table; $i++) {
-        $self->{positions_table}[$i] = Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{positions_table}}, Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
     }
     $self->{profile_identifiers} = ();
     my $n_profile_identifiers = $self->number_of_structures();
     for (my $i = 0; $i < $n_profile_identifiers; $i++) {
-        $self->{profile_identifiers}[$i] = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType::ProfileIdentifier->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{profile_identifiers}}, Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType::ProfileIdentifier->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -3666,7 +3666,7 @@ sub _read {
     $self->{colorants} = ();
     my $n_colorants = $self->count_of_colorants();
     for (my $i = 0; $i < $n_colorants; $i++) {
-        $self->{colorants}[$i] = Icc4::TagTable::TagDefinition::ColorantTableType::Colorant->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{colorants}}, Icc4::TagTable::TagDefinition::ColorantTableType::Colorant->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -3719,7 +3719,7 @@ sub _read {
     $self->{padding} = ();
     my $n_padding = (32 - length($self->name()));
     for (my $i = 0; $i < $n_padding; $i++) {
-        $self->{padding}[$i] = $self->{_io}->read_bytes(1);
+        push @{$self->{padding}}, $self->{_io}->read_bytes(1);
     }
     $self->{pcs_values} = $self->{_io}->read_bytes(6);
 }
@@ -4114,7 +4114,7 @@ sub _read {
     $self->{process_element_positions_table} = ();
     my $n_process_element_positions_table = $self->number_of_processing_elements();
     for (my $i = 0; $i < $n_process_element_positions_table; $i++) {
-        $self->{process_element_positions_table}[$i] = Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{process_element_positions_table}}, Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
     }
     $self->{data} = $self->{_io}->read_bytes_full();
 }
@@ -4326,7 +4326,7 @@ sub _read {
     $self->{ciexy_coordinates_per_channel} = ();
     my $n_ciexy_coordinates_per_channel = $self->number_of_device_channels();
     for (my $i = 0; $i < $n_ciexy_coordinates_per_channel; $i++) {
-        $self->{ciexy_coordinates_per_channel}[$i] = Icc4::TagTable::TagDefinition::ChromaticityType::CiexyCoordinateValues->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{ciexy_coordinates_per_channel}}, Icc4::TagTable::TagDefinition::ChromaticityType::CiexyCoordinateValues->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -4524,7 +4524,7 @@ sub _read {
     $self->{records} = ();
     my $n_records = $self->number_of_records();
     for (my $i = 0; $i < $n_records; $i++) {
-        $self->{records}[$i] = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType::Record->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{records}}, Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType::Record->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -5084,7 +5084,7 @@ sub _read {
     $self->{profile_descriptions} = ();
     my $n_profile_descriptions = $self->number_of_description_structures();
     for (my $i = 0; $i < $n_profile_descriptions; $i++) {
-        $self->{profile_descriptions}[$i] = Icc4::TagTable::TagDefinition::ProfileSequenceDescType::ProfileDescription->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{profile_descriptions}}, Icc4::TagTable::TagDefinition::ProfileSequenceDescType::ProfileDescription->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -5300,7 +5300,7 @@ sub _read {
     $self->{numbers_of_colorants_in_order_of_printing} = ();
     my $n_numbers_of_colorants_in_order_of_printing = $self->count_of_colorants();
     for (my $i = 0; $i < $n_numbers_of_colorants_in_order_of_printing; $i++) {
-        $self->{numbers_of_colorants_in_order_of_printing}[$i] = $self->{_io}->read_u1();
+        push @{$self->{numbers_of_colorants_in_order_of_printing}}, $self->{_io}->read_u1();
     }
 }
 

@@ -106,9 +106,8 @@ void pcx_t::t_palette_256_t::_read() {
     if (!(magic() == std::string("\x0C", 1))) {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x0C", 1), magic(), _io(), std::string("/types/t_palette_256/seq/0"));
     }
-    int l_colors = 256;
     m_colors = new std::vector<rgb_t*>();
-    m_colors->reserve(l_colors);
+    const int l_colors = 256;
     for (int i = 0; i < l_colors; i++) {
         m_colors->push_back(new rgb_t(m__io, this, m__root));
     }

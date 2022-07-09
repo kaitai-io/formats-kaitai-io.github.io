@@ -295,8 +295,10 @@ and choose <strong>Brushes</strong> to see the recognized Brush Folders or to ad
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GimpBrush_Header</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenBodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">GimpBrush_ColorDepth</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">grayscale</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">rgba</span> <span class="o">=</span> <span class="mi">4</span>
@@ -318,10 +320,14 @@ and choose <strong>Brushes</strong> to see the recognized Brush Folders or to ad
   <span class="n">GimpBrush_Row_PixelGray</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">gray</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">redInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">greenInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">blueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">alphaInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">redInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">redInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">greenInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">greenInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">blueInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">blueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">alphaInst</span><span class="p">`:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">alphaInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">GimpBrush_Row_PixelRgba</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">red</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">green</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -375,23 +381,23 @@ and choose <strong>Brushes</strong> to see the recognized Brush Folders or to ad
   <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
 
 <span class="k">proc </span><span class="nf">lenBody</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GimpBrush</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
   <span class="k">let</span> <span class="n">lenBodyInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">*</span> <span class="n">ord</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bytesPerPixel</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">=</span> <span class="n">lenBodyInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
 
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GimpBrush</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GimpBrush], filename: string): GimpBrush =</span>
   <span class="n">GimpBrush</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -484,36 +490,36 @@ and choose <strong>Brushes</strong> to see the recognized Brush Folders or to ad
   <span class="n">this</span><span class="p">.</span><span class="n">gray</span> <span class="o">=</span> <span class="n">grayExpr</span>
 
 <span class="k">proc </span><span class="nf">red</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GimpBrush_Row_PixelGray</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">redInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">redInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">redInst</span>
   <span class="k">let</span> <span class="n">redInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">redInst</span> <span class="o">=</span> <span class="n">redInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">redInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">redInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">redInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">redInst</span>
 
 <span class="k">proc </span><span class="nf">green</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GimpBrush_Row_PixelGray</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">greenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">greenInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">greenInst</span>
   <span class="k">let</span> <span class="n">greenInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">greenInst</span> <span class="o">=</span> <span class="n">greenInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">greenInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">greenInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">greenInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">greenInst</span>
 
 <span class="k">proc </span><span class="nf">blue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GimpBrush_Row_PixelGray</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blueInst</span>
   <span class="k">let</span> <span class="n">blueInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">blueInst</span> <span class="o">=</span> <span class="n">blueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blueInst</span>
 
 <span class="k">proc </span><span class="nf">alpha</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GimpBrush_Row_PixelGray</span><span class="p">):</span> <span class="n">uint8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">alphaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">alphaInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">alphaInst</span>
   <span class="k">let</span> <span class="n">alphaInstExpr</span> <span class="o">=</span> <span class="n">uint8</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">gray</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">alphaInst</span> <span class="o">=</span> <span class="n">alphaInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">alphaInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">alphaInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">alphaInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">alphaInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GimpBrush_Row_PixelGray], filename: string): GimpBrush_Row_PixelGray =</span>
   <span class="n">GimpBrush_Row_PixelGray</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

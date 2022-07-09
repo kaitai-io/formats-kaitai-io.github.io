@@ -432,7 +432,7 @@ namespace Kaitai
             if (OfsPayload < 0) {
                 __unnamed5 = m_io.ReadBytes(0);
             }
-            _signatureTagsSteps = new List<SignatureTagsStep>((int) (Signature.HeaderRecord.NumIndexRecords));
+            _signatureTagsSteps = new List<SignatureTagsStep>();
             for (var i = 0; i < Signature.HeaderRecord.NumIndexRecords; i++)
             {
                 _signatureTagsSteps.Add(new SignatureTagsStep(i, (i < 1 ? -1 : SignatureTagsSteps[(i - 1)].SizeTagIdx), m_io, this, m_root));
@@ -449,7 +449,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<string>((int) (NumValues));
+                _values = new List<string>();
                 for (var i = 0; i < NumValues; i++)
                 {
                     _values.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
@@ -548,7 +548,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<string>((int) (1));
+                _values = new List<string>();
                 for (var i = 0; i < 1; i++)
                 {
                     _values.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
@@ -608,7 +608,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<uint>((int) (NumValues));
+                _values = new List<uint>();
                 for (var i = 0; i < NumValues; i++)
                 {
                     _values.Add(m_io.ReadU4be());
@@ -634,7 +634,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<ushort>((int) (NumValues));
+                _values = new List<ushort>();
                 for (var i = 0; i < NumValues; i++)
                 {
                     _values.Add(m_io.ReadU2be());
@@ -880,7 +880,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<byte>((int) (NumValues));
+                _values = new List<byte>();
                 for (var i = 0; i < NumValues; i++)
                 {
                     _values.Add(m_io.ReadU1());
@@ -906,7 +906,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<ulong>((int) (NumValues));
+                _values = new List<ulong>();
                 for (var i = 0; i < NumValues; i++)
                 {
                     _values.Add(m_io.ReadU8be());
@@ -932,7 +932,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _values = new List<byte[]>((int) (1));
+                _values = new List<byte[]>();
                 for (var i = 0; i < 1; i++)
                 {
                     _values.Add(m_io.ReadBytes(LenValue));
@@ -1016,7 +1016,7 @@ namespace Kaitai
             private void _read()
             {
                 _headerRecord = new HeaderRecord(m_io, this, m_root);
-                _indexRecords = new List<HeaderIndexRecord>((int) (HeaderRecord.NumIndexRecords));
+                _indexRecords = new List<HeaderIndexRecord>();
                 for (var i = 0; i < HeaderRecord.NumIndexRecords; i++)
                 {
                     _indexRecords.Add(new HeaderIndexRecord(m_io, this, m_root));

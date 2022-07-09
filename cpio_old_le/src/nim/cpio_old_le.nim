@@ -31,7 +31,8 @@ type
     `mostSignificantBits`*: uint16
     `leastSignificantBits`*: uint16
     `parent`*: CpioOldLe_FileHeader
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
 
 proc read*(_: typedesc[CpioOldLe], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CpioOldLe
 proc read*(_: typedesc[CpioOldLe_File], io: KaitaiStream, root: KaitaiStruct, parent: CpioOldLe): CpioOldLe_File
@@ -135,12 +136,12 @@ proc read*(_: typedesc[CpioOldLe_FourByteUnsignedInteger], io: KaitaiStream, roo
   this.leastSignificantBits = leastSignificantBitsExpr
 
 proc value(this: CpioOldLe_FourByteUnsignedInteger): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((this.leastSignificantBits + (this.mostSignificantBits shl 16)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[CpioOldLe_FourByteUnsignedInteger], filename: string): CpioOldLe_FourByteUnsignedInteger =
   CpioOldLe_FourByteUnsignedInteger.read(newKaitaiFileStream(filename), nil, nil)

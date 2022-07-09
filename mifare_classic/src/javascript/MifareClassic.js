@@ -8,7 +8,7 @@
   } else {
     root.MifareClassic = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * You can get a dump for testing by the link: https://github.com/zhovner/mfdread/raw/master/dump.mfd
  * @see {@link https://github.com/nfc-tools/libnfc
@@ -96,13 +96,13 @@ var MifareClassic = (function() {
           this._read();
         }
         ValueBlock.prototype._read = function() {
-          this.valuez = new Array(3);
+          this.valuez = [];
           for (var i = 0; i < 3; i++) {
-            this.valuez[i] = this._io.readU4le();
+            this.valuez.push(this._io.readU4le());
           }
-          this.addrz = new Array(4);
+          this.addrz = [];
           for (var i = 0; i < 4; i++) {
-            this.addrz[i] = this._io.readU1();
+            this.addrz.push(this._io.readU1());
           }
         }
         Object.defineProperty(ValueBlock.prototype, 'addr', {
@@ -276,9 +276,9 @@ var MifareClassic = (function() {
         this._read();
       }
       AccessConditions.prototype._read = function() {
-        this.rawChunks = new Array(this._parent.acCountOfChunks);
+        this.rawChunks = [];
         for (var i = 0; i < this._parent.acCountOfChunks; i++) {
-          this.rawChunks[i] = this._io.readBitsIntBe(4);
+          this.rawChunks.push(this._io.readBitsIntBe(4));
         }
       }
 
@@ -484,9 +484,9 @@ var MifareClassic = (function() {
               return this._m_bits;
             var _pos = this._io.pos;
             this._io.seek(0);
-            this._m_bits = new Array(this._parent._parent.acBits);
+            this._m_bits = [];
             for (var i = 0; i < this._parent._parent.acBits; i++) {
-              this._m_bits[i] = new AcBit(this._io, this, this._root, this.index, this._parent.chunks[i].chunk);
+              this._m_bits.push(new AcBit(this._io, this, this._root, this.index, this._parent.chunks[i].chunk));
             }
             this._io.seek(_pos);
             return this._m_bits;
@@ -549,9 +549,9 @@ var MifareClassic = (function() {
             return this._m_dataAcs;
           var _pos = this._io.pos;
           this._io.seek(0);
-          this._m_dataAcs = new Array((this._parent.acsInSector - 1));
+          this._m_dataAcs = [];
           for (var i = 0; i < (this._parent.acsInSector - 1); i++) {
-            this._m_dataAcs[i] = new DataAc(this._io, this, this._root, this.acsRaw[i]);
+            this._m_dataAcs.push(new DataAc(this._io, this, this._root, this.acsRaw[i]));
           }
           this._io.seek(_pos);
           return this._m_dataAcs;
@@ -563,9 +563,9 @@ var MifareClassic = (function() {
             return this._m_remaps;
           var _pos = this._io.pos;
           this._io.seek(0);
-          this._m_remaps = new Array(this._parent.acBits);
+          this._m_remaps = [];
           for (var i = 0; i < this._parent.acBits; i++) {
-            this._m_remaps[i] = new ChunkBitRemap(this._io, this, this._root, i);
+            this._m_remaps.push(new ChunkBitRemap(this._io, this, this._root, i));
           }
           this._io.seek(_pos);
           return this._m_remaps;
@@ -577,9 +577,9 @@ var MifareClassic = (function() {
             return this._m_acsRaw;
           var _pos = this._io.pos;
           this._io.seek(0);
-          this._m_acsRaw = new Array(this._parent.acsInSector);
+          this._m_acsRaw = [];
           for (var i = 0; i < this._parent.acsInSector; i++) {
-            this._m_acsRaw[i] = new Ac(this._io, this, this._root, i);
+            this._m_acsRaw.push(new Ac(this._io, this, this._root, i));
           }
           this._io.seek(_pos);
           return this._m_acsRaw;
@@ -602,9 +602,9 @@ var MifareClassic = (function() {
             return this._m_chunks;
           var _pos = this._io.pos;
           this._io.seek(0);
-          this._m_chunks = new Array(this._parent.acBits);
+          this._m_chunks = [];
           for (var i = 0; i < this._parent.acBits; i++) {
-            this._m_chunks[i] = new ValidChunk(this._io, this, this._root, this.rawChunks[this.remaps[i].invChunkNo], this.rawChunks[this.remaps[i].chunkNo]);
+            this._m_chunks.push(new ValidChunk(this._io, this, this._root, this.rawChunks[this.remaps[i].invChunkNo], this.rawChunks[this.remaps[i].chunkNo]));
           }
           this._io.seek(_pos);
           return this._m_chunks;

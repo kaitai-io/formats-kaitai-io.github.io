@@ -19,9 +19,9 @@ class GranTurismoVol < Kaitai::Struct::Struct
     @num_entries = @_io.read_u2le
     @reserved = @_io.read_bytes(4)
     raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), reserved, _io, "/seq/3") if not reserved == [0, 0, 0, 0].pack('C*')
-    @offsets = Array.new(num_files)
+    @offsets = []
     (num_files).times { |i|
-      @offsets[i] = @_io.read_u4le
+      @offsets << @_io.read_u4le
     }
     self
   end
@@ -77,9 +77,9 @@ class GranTurismoVol < Kaitai::Struct::Struct
     return @files unless @files.nil?
     _pos = @_io.pos
     @_io.seek((ofs_dir & 4294965248))
-    @files = Array.new(_root.num_entries)
+    @files = []
     (_root.num_entries).times { |i|
-      @files[i] = FileInfo.new(@_io, self, @_root)
+      @files << FileInfo.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @files

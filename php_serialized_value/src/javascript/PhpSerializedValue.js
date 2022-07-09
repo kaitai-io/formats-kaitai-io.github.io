@@ -8,7 +8,7 @@
   } else {
     root.PhpSerializedValue = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A serialized PHP value, in the format used by PHP's built-in `serialize` and
  * `unserialize` functions. This format closely mirrors PHP's data model:
@@ -136,9 +136,9 @@ var PhpSerializedValue = (function() {
       if (!((KaitaiStream.byteArrayCompare(this.openingBrace, [123]) == 0))) {
         throw new KaitaiStream.ValidationNotEqualError([123], this.openingBrace, this._io, "/types/count_prefixed_mapping/seq/1");
       }
-      this.entries = new Array(this.numEntries);
+      this.entries = [];
       for (var i = 0; i < this.numEntries; i++) {
-        this.entries[i] = new MappingEntry(this._io, this, this._root);
+        this.entries.push(new MappingEntry(this._io, this, this._root));
       }
       this.closingBrace = this._io.readBytes(1);
       if (!((KaitaiStream.byteArrayCompare(this.closingBrace, [125]) == 0))) {

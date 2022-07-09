@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class MbrPartitionTable(KaitaiStruct):
@@ -27,9 +26,9 @@ class MbrPartitionTable(KaitaiStruct):
 
     def _read(self):
         self.bootstrap_code = self._io.read_bytes(446)
-        self.partitions = [None] * (4)
+        self.partitions = []
         for i in range(4):
-            self.partitions[i] = MbrPartitionTable.PartitionEntry(self._io, self, self._root)
+            self.partitions.append(MbrPartitionTable.PartitionEntry(self._io, self, self._root))
 
         self.boot_signature = self._io.read_bytes(2)
         if not self.boot_signature == b"\x55\xAA":
@@ -66,18 +65,18 @@ class MbrPartitionTable(KaitaiStruct):
         @property
         def sector(self):
             if hasattr(self, '_m_sector'):
-                return self._m_sector if hasattr(self, '_m_sector') else None
+                return self._m_sector
 
             self._m_sector = (self.b2 & 63)
-            return self._m_sector if hasattr(self, '_m_sector') else None
+            return getattr(self, '_m_sector', None)
 
         @property
         def cylinder(self):
             if hasattr(self, '_m_cylinder'):
-                return self._m_cylinder if hasattr(self, '_m_cylinder') else None
+                return self._m_cylinder
 
             self._m_cylinder = (self.b3 + ((self.b2 & 192) << 2))
-            return self._m_cylinder if hasattr(self, '_m_cylinder') else None
+            return getattr(self, '_m_cylinder', None)
 
 
 

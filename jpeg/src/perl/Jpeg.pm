@@ -217,7 +217,7 @@ sub _read {
     $self->{components} = ();
     my $n_components = $self->num_components();
     for (my $i = 0; $i < $n_components; $i++) {
-        $self->{components}[$i] = Jpeg::SegmentSos::Component->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{components}}, Jpeg::SegmentSos::Component->new($self->{_io}, $self, $self->{_root});
     }
     $self->{start_spectral_selection} = $self->{_io}->read_u1();
     $self->{end_spectral} = $self->{_io}->read_u1();
@@ -377,7 +377,7 @@ sub _read {
     $self->{components} = ();
     my $n_components = $self->num_components();
     for (my $i = 0; $i < $n_components; $i++) {
-        $self->{components}[$i] = Jpeg::SegmentSof0::Component->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{components}}, Jpeg::SegmentSof0::Component->new($self->{_io}, $self, $self->{_root});
     }
 }
 

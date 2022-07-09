@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AvantesRoh60(KaitaiStruct):
@@ -49,19 +48,19 @@ class AvantesRoh60(KaitaiStruct):
         self.wlx2 = self._io.read_f4le()
         self.wlx3 = self._io.read_f4le()
         self.wlx4 = self._io.read_f4le()
-        self.unknown2 = [None] * (9)
+        self.unknown2 = []
         for i in range(9):
-            self.unknown2[i] = self._io.read_f4le()
+            self.unknown2.append(self._io.read_f4le())
 
         self.ipixfirst = self._io.read_f4le()
         self.ipixlast = self._io.read_f4le()
-        self.unknown3 = [None] * (4)
+        self.unknown3 = []
         for i in range(4):
-            self.unknown3[i] = self._io.read_f4le()
+            self.unknown3.append(self._io.read_f4le())
 
-        self.spectrum = [None] * (((int(self.ipixlast) - int(self.ipixfirst)) - 1))
+        self.spectrum = []
         for i in range(((int(self.ipixlast) - int(self.ipixfirst)) - 1)):
-            self.spectrum[i] = self._io.read_f4le()
+            self.spectrum.append(self._io.read_f4le())
 
         self.integration_ms = self._io.read_f4le()
         self.averaging = self._io.read_f4le()

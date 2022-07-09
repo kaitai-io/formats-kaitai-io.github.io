@@ -220,9 +220,9 @@ class Vdi < Kaitai::Struct::Struct
     end
 
     def _read
-      @index = Array.new(_root.header.header_main.blocks_in_image)
+      @index = []
       (_root.header.header_main.blocks_in_image).times { |i|
-        @index[i] = BlockIndex.new(@_io, self, @_root)
+        @index << BlockIndex.new(@_io, self, @_root)
       }
       self
     end
@@ -259,9 +259,9 @@ class Vdi < Kaitai::Struct::Struct
     end
 
     def _read
-      @blocks = Array.new(_root.header.header_main.blocks_in_image)
+      @blocks = []
       (_root.header.header_main.blocks_in_image).times { |i|
-        @blocks[i] = Block.new(@_io, self, @_root)
+        @blocks << Block.new(@_io, self, @_root)
       }
       self
     end

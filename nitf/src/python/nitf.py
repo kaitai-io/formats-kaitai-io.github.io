@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Nitf(KaitaiStruct):
@@ -31,25 +30,25 @@ class Nitf(KaitaiStruct):
 
     def _read(self):
         self.header = Nitf.Header(self._io, self, self._root)
-        self.image_segments = [None] * (int(self.header.num_image_segments))
+        self.image_segments = []
         for i in range(int(self.header.num_image_segments)):
-            self.image_segments[i] = Nitf.ImageSegment(i, self._io, self, self._root)
+            self.image_segments.append(Nitf.ImageSegment(i, self._io, self, self._root))
 
-        self.graphics_segments = [None] * (int(self.header.num_graphics_segments))
+        self.graphics_segments = []
         for i in range(int(self.header.num_graphics_segments)):
-            self.graphics_segments[i] = Nitf.GraphicsSegment(i, self._io, self, self._root)
+            self.graphics_segments.append(Nitf.GraphicsSegment(i, self._io, self, self._root))
 
-        self.text_segments = [None] * (int(self.header.num_text_files))
+        self.text_segments = []
         for i in range(int(self.header.num_text_files)):
-            self.text_segments[i] = Nitf.TextSegment(i, self._io, self, self._root)
+            self.text_segments.append(Nitf.TextSegment(i, self._io, self, self._root))
 
-        self.data_extension_segments = [None] * (int(self.header.num_data_extension))
+        self.data_extension_segments = []
         for i in range(int(self.header.num_data_extension)):
-            self.data_extension_segments[i] = Nitf.DataExtensionSegment(i, self._io, self, self._root)
+            self.data_extension_segments.append(Nitf.DataExtensionSegment(i, self._io, self, self._root))
 
-        self.reserved_extension_segments = [None] * (int(self.header.num_reserved_extension))
+        self.reserved_extension_segments = []
         for i in range(int(self.header.num_reserved_extension)):
-            self.reserved_extension_segments[i] = Nitf.ReservedExtensionSegment(i, self._io, self, self._root)
+            self.reserved_extension_segments.append(Nitf.ReservedExtensionSegment(i, self._io, self, self._root))
 
 
     class ReservedExtensionSegment(KaitaiStruct):
@@ -121,9 +120,9 @@ class Nitf(KaitaiStruct):
             if int(self.num_luts) != 0:
                 self.num_lut_entries = (self._io.read_bytes(5)).decode(u"UTF-8")
 
-            self.luts = [None] * (int(self.num_luts))
+            self.luts = []
             for i in range(int(self.num_luts)):
-                self.luts[i] = self._io.read_bytes(int(self.num_lut_entries))
+                self.luts.append(self._io.read_bytes(int(self.num_lut_entries)))
 
 
 
@@ -147,10 +146,10 @@ class Nitf(KaitaiStruct):
         @property
         def has_mask(self):
             if hasattr(self, '_m_has_mask'):
-                return self._m_has_mask if hasattr(self, '_m_has_mask') else None
+                return self._m_has_mask
 
             self._m_has_mask = (self.image_sub_header.img_compression)[0:2] == u"MM"
-            return self._m_has_mask if hasattr(self, '_m_has_mask') else None
+            return getattr(self, '_m_has_mask', None)
 
 
     class TextSegment(KaitaiStruct):
@@ -258,73 +257,73 @@ class Nitf(KaitaiStruct):
             self.tpxcdlnth = self._io.read_u2be()
             self.tpxcd = self._io.read_bytes(self.tpxcd_size)
             if self.has_bmr:
-                self.bmrbnd = [None] * (self.bmrtmr_count)
+                self.bmrbnd = []
                 for i in range(self.bmrtmr_count):
-                    self.bmrbnd[i] = self._io.read_u4be()
+                    self.bmrbnd.append(self._io.read_u4be())
 
 
             if self.has_tmr:
-                self.tmrbnd = [None] * (self.bmrtmr_count)
+                self.tmrbnd = []
                 for i in range(self.bmrtmr_count):
-                    self.tmrbnd[i] = self._io.read_u4be()
+                    self.tmrbnd.append(self._io.read_u4be())
 
 
 
         @property
         def has_bmr(self):
             if hasattr(self, '_m_has_bmr'):
-                return self._m_has_bmr if hasattr(self, '_m_has_bmr') else None
+                return self._m_has_bmr
 
             self._m_has_bmr = self.bmrlnth != 0
-            return self._m_has_bmr if hasattr(self, '_m_has_bmr') else None
+            return getattr(self, '_m_has_bmr', None)
 
         @property
         def has_tmr(self):
             if hasattr(self, '_m_has_tmr'):
-                return self._m_has_tmr if hasattr(self, '_m_has_tmr') else None
+                return self._m_has_tmr
 
             self._m_has_tmr = self.tmrlnth != 0
-            return self._m_has_tmr if hasattr(self, '_m_has_tmr') else None
+            return getattr(self, '_m_has_tmr', None)
 
         @property
         def tmrbnd_size(self):
             if hasattr(self, '_m_tmrbnd_size'):
-                return self._m_tmrbnd_size if hasattr(self, '_m_tmrbnd_size') else None
+                return self._m_tmrbnd_size
 
             self._m_tmrbnd_size = ((self.bmrtmr_count * 4) if self.has_tmr else 0)
-            return self._m_tmrbnd_size if hasattr(self, '_m_tmrbnd_size') else None
+            return getattr(self, '_m_tmrbnd_size', None)
 
         @property
         def tpxcd_size(self):
             if hasattr(self, '_m_tpxcd_size'):
-                return self._m_tpxcd_size if hasattr(self, '_m_tpxcd_size') else None
+                return self._m_tpxcd_size
 
             self._m_tpxcd_size = (self.tpxcdlnth if (self.tpxcdlnth % 8) == 0 else (self.tpxcdlnth + (8 - (self.tpxcdlnth % 8)))) // 8
-            return self._m_tpxcd_size if hasattr(self, '_m_tpxcd_size') else None
+            return getattr(self, '_m_tpxcd_size', None)
 
         @property
         def total_size(self):
             if hasattr(self, '_m_total_size'):
-                return self._m_total_size if hasattr(self, '_m_total_size') else None
+                return self._m_total_size
 
             self._m_total_size = ((((((4 + 2) + 2) + 2) + self.tpxcd_size) + self.bmrbnd_size) + self.tmrbnd_size)
-            return self._m_total_size if hasattr(self, '_m_total_size') else None
+            return getattr(self, '_m_total_size', None)
 
         @property
         def bmrbnd_size(self):
             if hasattr(self, '_m_bmrbnd_size'):
-                return self._m_bmrbnd_size if hasattr(self, '_m_bmrbnd_size') else None
+                return self._m_bmrbnd_size
 
             self._m_bmrbnd_size = ((self.bmrtmr_count * 4) if self.has_bmr else 0)
-            return self._m_bmrbnd_size if hasattr(self, '_m_bmrbnd_size') else None
+            return getattr(self, '_m_bmrbnd_size', None)
 
         @property
         def bmrtmr_count(self):
             if hasattr(self, '_m_bmrtmr_count'):
-                return self._m_bmrtmr_count if hasattr(self, '_m_bmrtmr_count') else None
+                return self._m_bmrtmr_count
 
             self._m_bmrtmr_count = ((int(self._parent.image_sub_header.num_blocks_per_row) * int(self._parent.image_sub_header.num_blocks_per_col)) * (1 if self._parent.image_sub_header.img_mode != u"S" else (int(self._parent.image_sub_header.num_bands) if int(self._parent.image_sub_header.num_bands) != 0 else int(self._parent.image_sub_header.num_multispectral_bands))))
-            return self._m_bmrtmr_count if hasattr(self, '_m_bmrtmr_count') else None
+            return getattr(self, '_m_bmrtmr_count', None)
 
 
     class GraphicsSegment(KaitaiStruct):
@@ -362,10 +361,10 @@ class Nitf(KaitaiStruct):
         @property
         def tre_ofl(self):
             if hasattr(self, '_m_tre_ofl'):
-                return self._m_tre_ofl if hasattr(self, '_m_tre_ofl') else None
+                return self._m_tre_ofl
 
             self._m_tre_ofl = self.des_base.desid == u"TRE_OVERFLOW"
-            return self._m_tre_ofl if hasattr(self, '_m_tre_ofl') else None
+            return getattr(self, '_m_tre_ofl', None)
 
 
     class DataExtensionSegment(KaitaiStruct):
@@ -430,9 +429,9 @@ class Nitf(KaitaiStruct):
             self.image_coordinate_rep = (self._io.read_bytes(1)).decode(u"UTF-8")
             self.image_geo_loc = (self._io.read_bytes(60)).decode(u"UTF-8")
             self.num_img_comments = (self._io.read_bytes(1)).decode(u"UTF-8")
-            self.img_comments = [None] * (int(self.num_img_comments))
+            self.img_comments = []
             for i in range(int(self.num_img_comments)):
-                self.img_comments[i] = Nitf.ImageComment(self._io, self, self._root)
+                self.img_comments.append(Nitf.ImageComment(self._io, self, self._root))
 
             self.img_compression = (self._io.read_bytes(2)).decode(u"UTF-8")
             self.compression_rate_code = (self._io.read_bytes(4)).decode(u"UTF-8")
@@ -440,9 +439,9 @@ class Nitf(KaitaiStruct):
             if int(self.num_bands) == 0:
                 self.num_multispectral_bands = (self._io.read_bytes(5)).decode(u"UTF-8")
 
-            self.bands = [None] * ((int(self.num_bands) if int(self.num_bands) != 0 else int(self.num_multispectral_bands)))
+            self.bands = []
             for i in range((int(self.num_bands) if int(self.num_bands) != 0 else int(self.num_multispectral_bands))):
-                self.bands[i] = Nitf.BandInfo(self._io, self, self._root)
+                self.bands.append(Nitf.BandInfo(self._io, self, self._root))
 
             self.img_sync_code = (self._io.read_bytes(1)).decode(u"UTF-8")
             self.img_mode = (self._io.read_bytes(1)).decode(u"UTF-8")
@@ -460,9 +459,9 @@ class Nitf(KaitaiStruct):
                 self.user_def_overflow = (self._io.read_bytes(3)).decode(u"UTF-8")
 
             if int(self.user_def_img_data_len) > 2:
-                self.user_def_img_data = [None] * ((int(self.user_def_img_data_len) - 3))
+                self.user_def_img_data = []
                 for i in range((int(self.user_def_img_data_len) - 3)):
-                    self.user_def_img_data[i] = self._io.read_u1()
+                    self.user_def_img_data.append(self._io.read_u1())
 
 
             self.image_extended_sub_header = Nitf.TreHeader(self._io, self, self._root)
@@ -561,30 +560,30 @@ class Nitf(KaitaiStruct):
             self.file_length = (self._io.read_bytes(12)).decode(u"UTF-8")
             self.file_header_length = (self._io.read_bytes(6)).decode(u"UTF-8")
             self.num_image_segments = (self._io.read_bytes(3)).decode(u"UTF-8")
-            self.linfo = [None] * (int(self.num_image_segments))
+            self.linfo = []
             for i in range(int(self.num_image_segments)):
-                self.linfo[i] = Nitf.LengthImageInfo(self._io, self, self._root)
+                self.linfo.append(Nitf.LengthImageInfo(self._io, self, self._root))
 
             self.num_graphics_segments = (self._io.read_bytes(3)).decode(u"UTF-8")
-            self.lnnfo = [None] * (int(self.num_graphics_segments))
+            self.lnnfo = []
             for i in range(int(self.num_graphics_segments)):
-                self.lnnfo[i] = Nitf.LengthGraphicInfo(self._io, self, self._root)
+                self.lnnfo.append(Nitf.LengthGraphicInfo(self._io, self, self._root))
 
             self.reserved_numx = (self._io.read_bytes(3)).decode(u"UTF-8")
             self.num_text_files = (self._io.read_bytes(3)).decode(u"UTF-8")
-            self.ltnfo = [None] * (int(self.num_text_files))
+            self.ltnfo = []
             for i in range(int(self.num_text_files)):
-                self.ltnfo[i] = Nitf.LengthTextInfo(self._io, self, self._root)
+                self.ltnfo.append(Nitf.LengthTextInfo(self._io, self, self._root))
 
             self.num_data_extension = (self._io.read_bytes(3)).decode(u"UTF-8")
-            self.ldnfo = [None] * (int(self.num_data_extension))
+            self.ldnfo = []
             for i in range(int(self.num_data_extension)):
-                self.ldnfo[i] = Nitf.LengthDataInfo(self._io, self, self._root)
+                self.ldnfo.append(Nitf.LengthDataInfo(self._io, self, self._root))
 
             self.num_reserved_extension = (self._io.read_bytes(3)).decode(u"UTF-8")
-            self.lrnfo = [None] * (int(self.num_reserved_extension))
+            self.lrnfo = []
             for i in range(int(self.num_reserved_extension)):
-                self.lrnfo[i] = Nitf.LengthReservedInfo(self._io, self, self._root)
+                self.lrnfo.append(Nitf.LengthReservedInfo(self._io, self, self._root))
 
             self.user_defined_header = Nitf.TreHeader(self._io, self, self._root)
             self.extended_header = Nitf.TreHeader(self._io, self, self._root)
@@ -603,9 +602,9 @@ class Nitf(KaitaiStruct):
             self.des_defined_subheader_fields_len = (self._io.read_bytes(4)).decode(u"UTF-8")
             self.sfh_l1 = (self._io.read_bytes(7)).decode(u"UTF-8")
             self.sfh_delim1 = self._io.read_u4be()
-            self.sfh_dr = [None] * (int(self.sfh_l1))
+            self.sfh_dr = []
             for i in range(int(self.sfh_l1)):
-                self.sfh_dr[i] = self._io.read_u1()
+                self.sfh_dr.append(self._io.read_u1())
 
             self.sfh_delim2 = self._io.read_u4be()
             self.sfh_l2 = (self._io.read_bytes(7)).decode(u"UTF-8")
@@ -624,9 +623,9 @@ class Nitf(KaitaiStruct):
                 self.header_overflow = (self._io.read_bytes(3)).decode(u"UTF-8")
 
             if int(self.header_data_length) > 2:
-                self.header_data = [None] * ((int(self.header_data_length) - 3))
+                self.header_data = []
                 for i in range((int(self.header_data_length) - 3)):
-                    self.header_data[i] = self._io.read_u1()
+                    self.header_data.append(self._io.read_u1())
 
 
 

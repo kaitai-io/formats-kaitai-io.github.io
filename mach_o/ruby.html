@@ -423,9 +423,9 @@ section#format-index .row {
   <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@magic</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MAGIC_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
     <span class="vi">@header</span> <span class="o">=</span> <span class="no">MachHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@load_commands</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">ncmds</span><span class="p">)</span>
+    <span class="vi">@load_commands</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">ncmds</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@load_commands</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">LoadCommand</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@load_commands</span> <span class="o">&lt;&lt;</span> <span class="no">LoadCommand</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -614,9 +614,9 @@ section#format-index .row {
         <span class="k">return</span> <span class="vi">@hashes</span> <span class="k">unless</span> <span class="vi">@hashes</span><span class="o">.</span><span class="n">nil?</span>
         <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
         <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(((</span><span class="n">hash_offset</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">hash_size</span> <span class="o">*</span> <span class="n">n_special_slots</span><span class="p">)))</span>
-        <span class="vi">@hashes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">n_special_slots</span> <span class="o">+</span> <span class="n">n_code_slots</span><span class="p">))</span>
+        <span class="vi">@hashes</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">((</span><span class="n">n_special_slots</span> <span class="o">+</span> <span class="n">n_code_slots</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@hashes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">hash_size</span><span class="p">)</span>
+          <span class="vi">@hashes</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">hash_size</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
         <span class="vi">@hashes</span>
@@ -660,9 +660,9 @@ section#format-index .row {
 
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-        <span class="vi">@blobs</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="vi">@blobs</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@blobs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">BlobIndex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@blobs</span> <span class="o">&lt;&lt;</span> <span class="no">BlobIndex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -968,9 +968,9 @@ section#format-index .row {
 
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-        <span class="vi">@items</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">RequirementsBlobIndex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="no">RequirementsBlobIndex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -1047,9 +1047,9 @@ section#format-index .row {
       <span class="vi">@minos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@sdk</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@ntools</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@tools</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">ntools</span><span class="p">)</span>
+      <span class="vi">@tools</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">ntools</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@tools</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">BuildToolVersion</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@tools</span> <span class="o">&lt;&lt;</span> <span class="no">BuildToolVersion</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1321,9 +1321,9 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_strings</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@strings</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_strings</span><span class="p">)</span>
+      <span class="vi">@strings</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_strings</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@strings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="vi">@strings</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1346,9 +1346,9 @@ section#format-index .row {
       <span class="vi">@initprot</span> <span class="o">=</span> <span class="no">VmProt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@nsects</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@sections</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">nsects</span><span class="p">)</span>
+      <span class="vi">@sections</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">nsects</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@sections</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Section64</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@sections</span> <span class="o">&lt;&lt;</span> <span class="no">Section64</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -1737,9 +1737,9 @@ section#format-index .row {
       <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
       <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
       <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">indirect_sym_off</span><span class="p">)</span>
-      <span class="vi">@indirect_symbols</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n_indirect_syms</span><span class="p">)</span>
+      <span class="vi">@indirect_symbols</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">n_indirect_syms</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@indirect_symbols</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@indirect_symbols</span> <span class="o">&lt;&lt;</span> <span class="n">io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="p">}</span>
       <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
       <span class="vi">@indirect_symbols</span>
@@ -2038,9 +2038,9 @@ section#format-index .row {
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@terminal_size</span> <span class="o">=</span> <span class="no">Uleb128</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@children_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-        <span class="vi">@children</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">children_count</span><span class="p">)</span>
+        <span class="vi">@children</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">children_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@children</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Child</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@children</span> <span class="o">&lt;&lt;</span> <span class="no">Child</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="vi">@terminal</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">terminal_size</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="nb">self</span>
@@ -2214,9 +2214,9 @@ section#format-index .row {
       <span class="vi">@initprot</span> <span class="o">=</span> <span class="no">VmProt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@nsects</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@sections</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">nsects</span><span class="p">)</span>
+      <span class="vi">@sections</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">nsects</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@sections</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Section</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@sections</span> <span class="o">&lt;&lt;</span> <span class="no">Section</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -2576,17 +2576,17 @@ section#format-index .row {
       <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
       <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
       <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">sym_off</span><span class="p">)</span>
-      <span class="vi">@symbols</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n_syms</span><span class="p">)</span>
+      <span class="vi">@symbols</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">n_syms</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
         <span class="k">case</span> <span class="n">_root</span><span class="o">.</span><span class="n">magic</span>
         <span class="k">when</span> <span class="ss">:magic_type_macho_le_x64</span>
-          <span class="vi">@symbols</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Nlist64</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@symbols</span> <span class="o">&lt;&lt;</span> <span class="no">Nlist64</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">when</span> <span class="ss">:magic_type_macho_be_x64</span>
-          <span class="vi">@symbols</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Nlist64</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@symbols</span> <span class="o">&lt;&lt;</span> <span class="no">Nlist64</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">when</span> <span class="ss">:magic_type_macho_le_x86</span>
-          <span class="vi">@symbols</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Nlist</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@symbols</span> <span class="o">&lt;&lt;</span> <span class="no">Nlist</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">when</span> <span class="ss">:magic_type_macho_be_x86</span>
-          <span class="vi">@symbols</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Nlist</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@symbols</span> <span class="o">&lt;&lt;</span> <span class="no">Nlist</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="k">end</span>
       <span class="p">}</span>
       <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>

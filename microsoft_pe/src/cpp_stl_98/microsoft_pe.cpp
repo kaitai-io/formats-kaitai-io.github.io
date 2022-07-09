@@ -381,9 +381,8 @@ void microsoft_pe_t::pe_header_t::_read() {
     m__raw_optional_hdr = m__io->read_bytes(coff_hdr()->size_of_optional_header());
     m__io__raw_optional_hdr = new kaitai::kstream(m__raw_optional_hdr);
     m_optional_hdr = new optional_header_t(m__io__raw_optional_hdr, this, m__root);
-    int l_sections = coff_hdr()->number_of_sections();
     m_sections = new std::vector<section_t*>();
-    m_sections->reserve(l_sections);
+    const int l_sections = coff_hdr()->number_of_sections();
     for (int i = 0; i < l_sections; i++) {
         m_sections->push_back(new section_t(m__io, this, m__root));
     }
@@ -697,9 +696,8 @@ std::vector<microsoft_pe_t::coff_symbol_t*>* microsoft_pe_t::coff_header_t::symb
         return m_symbol_table;
     std::streampos _pos = m__io->pos();
     m__io->seek(pointer_to_symbol_table());
-    int l_symbol_table = number_of_symbols();
     m_symbol_table = new std::vector<coff_symbol_t*>();
-    m_symbol_table->reserve(l_symbol_table);
+    const int l_symbol_table = number_of_symbols();
     for (int i = 0; i < l_symbol_table; i++) {
         m_symbol_table->push_back(new coff_symbol_t(m__io, this, m__root));
     }

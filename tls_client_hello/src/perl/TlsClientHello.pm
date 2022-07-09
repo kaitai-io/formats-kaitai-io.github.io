@@ -293,7 +293,7 @@ sub _read {
     $self->{cipher_suites} = ();
     my $n_cipher_suites = int($self->len() / 2);
     for (my $i = 0; $i < $n_cipher_suites; $i++) {
-        $self->{cipher_suites}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{cipher_suites}}, $self->{_io}->read_u2be();
     }
 }
 

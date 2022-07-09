@@ -216,9 +216,9 @@ class Regf < Kaitai::Struct::Struct
 
       def _read
         @count = @_io.read_u2le
-        @items = Array.new(count)
+        @items = []
         (count).times { |i|
-          @items[i] = Item.new(@_io, self, @_root)
+          @items << Item.new(@_io, self, @_root)
         }
         self
       end
@@ -265,9 +265,9 @@ class Regf < Kaitai::Struct::Struct
 
       def _read
         @count = @_io.read_u2le
-        @items = Array.new(count)
+        @items = []
         (count).times { |i|
-          @items[i] = Item.new(@_io, self, @_root)
+          @items << Item.new(@_io, self, @_root)
         }
         self
       end
@@ -360,9 +360,9 @@ class Regf < Kaitai::Struct::Struct
 
       def _read
         @count = @_io.read_u2le
-        @items = Array.new(count)
+        @items = []
         (count).times { |i|
-          @items[i] = Item.new(@_io, self, @_root)
+          @items << Item.new(@_io, self, @_root)
         }
         self
       end

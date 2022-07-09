@@ -124,7 +124,7 @@ namespace Kaitai
             {
                 _version = new Version(m_io, this, m_root);
                 _productId = System.Text.Encoding.GetEncoding("utf-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(12), 0, false));
-                _compHw = new List<HwCompInfo>((int) (4));
+                _compHw = new List<HwCompInfo>();
                 for (var i = 0; i < 4; i++)
                 {
                     _compHw.Add(new HwCompInfo(m_io, this, m_root));
@@ -317,7 +317,7 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _flags = new List<bool>((int) (16));
+                    _flags = new List<bool>();
                     for (var i = 0; i < 16; i++)
                     {
                         _flags.Add(m_io.ReadBitsIntLe(1) != 0);

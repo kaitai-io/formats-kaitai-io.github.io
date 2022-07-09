@@ -312,7 +312,8 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
     <span class="p">`</span><span class="n">conversationStatsLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawFrameTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">frameTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
+    <span class="p">`</span><span class="n">frameTableInst</span><span class="p">`:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
+    <span class="p">`</span><span class="n">frameTableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftNetworkMonitorV2_Linktype</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">null_linktype</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">ethernet</span> <span class="o">=</span> <span class="mi">1</span>
@@ -424,7 +425,8 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
   <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">ofs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftNetworkMonitorV2_Frame</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="n">MicrosoftNetworkMonitorV2_Frame</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">tsDelta</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">origLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -518,7 +520,7 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
   <span class="sd">##[</span>
   <span class="n">Index</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">access</span> <span class="n">individual</span> <span class="n">captured</span> <span class="n">frames</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">frameTableOfs</span><span class="p">))</span>
@@ -528,8 +530,8 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
   <span class="k">let</span> <span class="n">frameTableInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawFrameTableInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span> <span class="o">=</span> <span class="n">frameTableInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">frameTableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">frameTableInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2], filename: string): MicrosoftNetworkMonitorV2 =</span>
   <span class="n">MicrosoftNetworkMonitorV2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -578,7 +580,7 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
   <span class="sd">##[</span>
   <span class="n">Frame</span> <span class="n">body</span> <span class="n">itself</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -586,8 +588,8 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
   <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], filename: string): MicrosoftNetworkMonitorV2_FrameIndexEntry =</span>
   <span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

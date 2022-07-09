@@ -19,9 +19,8 @@ standard_midi_file_t::standard_midi_file_t(kaitai::kstream* p__io, kaitai::kstru
 
 void standard_midi_file_t::_read() {
     m_hdr = new header_t(m__io, this, m__root);
-    int l_tracks = hdr()->num_tracks();
     m_tracks = new std::vector<track_t*>();
-    m_tracks->reserve(l_tracks);
+    const int l_tracks = hdr()->num_tracks();
     for (int i = 0; i < l_tracks; i++) {
         m_tracks->push_back(new track_t(m__io, this, m__root));
     }

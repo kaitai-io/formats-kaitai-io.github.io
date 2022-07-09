@@ -167,6 +167,11 @@ used for that purpose in Windows and Google Chrome projects.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Windows MiniDump parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Windows MiniDump parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -342,7 +347,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">streams</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
     <span class="k">my</span> <span class="nv">$n_streams</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_streams</span><span class="p">();</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_streams</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">streams</span><span class="p">}[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nn">WindowsMinidump::Dir</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">streams</span><span class="p">}},</span> <span class="nn">WindowsMinidump::Dir</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">streams</span><span class="p">};</span>
@@ -422,7 +427,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">threads</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
     <span class="k">my</span> <span class="nv">$n_threads</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_threads</span><span class="p">();</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_threads</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">threads</span><span class="p">}[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nn">WindowsMinidump::Thread</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">threads</span><span class="p">}},</span> <span class="nn">WindowsMinidump::Thread</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -697,7 +702,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">params</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
     <span class="k">my</span> <span class="nv">$n_params</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_params</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">params</span><span class="p">}[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">params</span><span class="p">}},</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -1035,7 +1040,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mem_ranges</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
     <span class="k">my</span> <span class="nv">$n_mem_ranges</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_mem_ranges</span><span class="p">();</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_mem_ranges</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mem_ranges</span><span class="p">}[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nn">WindowsMinidump::MemoryDescriptor</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mem_ranges</span><span class="p">}},</span> <span class="nn">WindowsMinidump::MemoryDescriptor</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
 <span class="p">}</span>
 

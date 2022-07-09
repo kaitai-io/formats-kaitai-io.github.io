@@ -536,16 +536,14 @@ std::vector<gettext_mo_t::mo_t::descriptor_t*>* gettext_mo_t::mo_t::originals() 
     std::streampos _pos = io->pos();
     io->seek(ofs_originals());
     if (m__is_le == 1) {
-        int l_originals = num_translations();
         m_originals = new std::vector<descriptor_t*>();
-        m_originals->reserve(l_originals);
+        const int l_originals = num_translations();
         for (int i = 0; i < l_originals; i++) {
             m_originals->push_back(new descriptor_t(io, this, m__root, m__is_le));
         }
     } else {
-        int l_originals = num_translations();
         m_originals = new std::vector<descriptor_t*>();
-        m_originals->reserve(l_originals);
+        const int l_originals = num_translations();
         for (int i = 0; i < l_originals; i++) {
             m_originals->push_back(new descriptor_t(io, this, m__root, m__is_le));
         }
@@ -562,16 +560,14 @@ std::vector<gettext_mo_t::mo_t::descriptor_t*>* gettext_mo_t::mo_t::translations
     std::streampos _pos = io->pos();
     io->seek(ofs_translations());
     if (m__is_le == 1) {
-        int l_translations = num_translations();
         m_translations = new std::vector<descriptor_t*>();
-        m_translations->reserve(l_translations);
+        const int l_translations = num_translations();
         for (int i = 0; i < l_translations; i++) {
             m_translations->push_back(new descriptor_t(io, this, m__root, m__is_le));
         }
     } else {
-        int l_translations = num_translations();
         m_translations = new std::vector<descriptor_t*>();
-        m_translations->reserve(l_translations);
+        const int l_translations = num_translations();
         for (int i = 0; i < l_translations; i++) {
             m_translations->push_back(new descriptor_t(io, this, m__root, m__is_le));
         }
@@ -591,16 +587,14 @@ std::vector<gettext_mo_t::mo_t::hashtable_item_t*>* gettext_mo_t::mo_t::hashtabl
         std::streampos _pos = io->pos();
         io->seek(ofs_hashtable_items());
         if (m__is_le == 1) {
-            int l_hashtable_items = num_hashtable_items();
             m_hashtable_items = new std::vector<hashtable_item_t*>();
-            m_hashtable_items->reserve(l_hashtable_items);
+            const int l_hashtable_items = num_hashtable_items();
             for (int i = 0; i < l_hashtable_items; i++) {
                 m_hashtable_items->push_back(new hashtable_item_t(io, this, m__root, m__is_le));
             }
         } else {
-            int l_hashtable_items = num_hashtable_items();
             m_hashtable_items = new std::vector<hashtable_item_t*>();
-            m_hashtable_items->reserve(l_hashtable_items);
+            const int l_hashtable_items = num_hashtable_items();
             for (int i = 0; i < l_hashtable_items; i++) {
                 m_hashtable_items->push_back(new hashtable_item_t(io, this, m__root, m__is_le));
             }

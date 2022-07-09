@@ -113,9 +113,9 @@ class Sqlite3 < Kaitai::Struct::Struct
       if  ((page_type == 2) || (page_type == 5)) 
         @right_ptr = @_io.read_u4be
       end
-      @cells = Array.new(num_cells)
+      @cells = []
       (num_cells).times { |i|
-        @cells[i] = RefCell.new(@_io, self, @_root)
+        @cells << RefCell.new(@_io, self, @_root)
       }
       self
     end
@@ -200,9 +200,9 @@ class Sqlite3 < Kaitai::Struct::Struct
       @_raw_column_serials = @_io.read_bytes((len_header_and_len.value - 1))
       _io__raw_column_serials = Kaitai::Struct::Stream.new(@_raw_column_serials)
       @column_serials = Serials.new(_io__raw_column_serials, self, @_root)
-      @column_contents = Array.new(column_serials.entries.length)
+      @column_contents = []
       (column_serials.entries.length).times { |i|
-        @column_contents[i] = ColumnContent.new(@_io, self, @_root, column_serials.entries[i])
+        @column_contents << ColumnContent.new(@_io, self, @_root, column_serials.entries[i])
       }
       self
     end

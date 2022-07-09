@@ -155,7 +155,7 @@ public class MinecraftNbt extends KaitaiStruct {
         }
         private void _read() {
             this.numTags = this._io.readS4be();
-            tags = new ArrayList<Long>(((Number) (numTags())).intValue());
+            this.tags = new ArrayList<Long>();
             for (int i = 0; i < numTags(); i++) {
                 this.tags.add(this._io.readS8be());
             }
@@ -229,7 +229,7 @@ public class MinecraftNbt extends KaitaiStruct {
         }
         private void _read() {
             this.numTags = this._io.readS4be();
-            tags = new ArrayList<Integer>(((Number) (numTags())).intValue());
+            this.tags = new ArrayList<Integer>();
             for (int i = 0; i < numTags(); i++) {
                 this.tags.add(this._io.readS4be());
             }
@@ -272,7 +272,7 @@ public class MinecraftNbt extends KaitaiStruct {
         private void _read() {
             this.tagsType = MinecraftNbt.Tag.byId(this._io.readU1());
             this.numTags = this._io.readS4be();
-            tags = new ArrayList<Object>(((Number) (numTags())).intValue());
+            this.tags = new ArrayList<Object>();
             for (int i = 0; i < numTags(); i++) {
                 {
                     Tag on = tagsType();

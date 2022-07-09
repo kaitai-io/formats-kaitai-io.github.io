@@ -78,9 +78,8 @@ gimp_brush_t::bitmap_t::bitmap_t(kaitai::kstream* p__io, kaitai::kstruct* p__par
 }
 
 void gimp_brush_t::bitmap_t::_read() {
-    int l_rows = _root()->header()->height();
     m_rows = std::unique_ptr<std::vector<std::unique_ptr<row_t>>>(new std::vector<std::unique_ptr<row_t>>());
-    m_rows->reserve(l_rows);
+    const int l_rows = _root()->header()->height();
     for (int i = 0; i < l_rows; i++) {
         m_rows->push_back(std::move(std::unique_ptr<row_t>(new row_t(m__io, this, m__root))));
     }
@@ -101,9 +100,8 @@ gimp_brush_t::row_t::row_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, g
 }
 
 void gimp_brush_t::row_t::_read() {
-    int l_pixels = _root()->header()->width();
     m_pixels = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstruct>>>(new std::vector<std::unique_ptr<kaitai::kstruct>>());
-    m_pixels->reserve(l_pixels);
+    const int l_pixels = _root()->header()->width();
     for (int i = 0; i < l_pixels; i++) {
         switch (_root()->header()->bytes_per_pixel()) {
         case gimp_brush_t::COLOR_DEPTH_GRAYSCALE: {

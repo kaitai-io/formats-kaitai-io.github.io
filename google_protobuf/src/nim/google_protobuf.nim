@@ -11,8 +11,10 @@ type
     `key`*: VlqBase128Le
     `value`*: KaitaiStruct
     `parent`*: GoogleProtobuf
-    `wireTypeInst`*: GoogleProtobuf_Pair_WireTypes
-    `fieldTagInst`*: int
+    `wireTypeInst`: GoogleProtobuf_Pair_WireTypes
+    `wireTypeInstFlag`: bool
+    `fieldTagInst`: int
+    `fieldTagInstFlag`: bool
   GoogleProtobuf_Pair_WireTypes* = enum
     varint = 0
     bit_64 = 1
@@ -143,12 +145,12 @@ signed zigzag-encoded varints from regular unsigned varints,
 arbitrary bytes from UTF-8 encoded strings, etc.
 
   ]##
-  if this.wireTypeInst != nil:
+  if this.wireTypeInstFlag:
     return this.wireTypeInst
   let wireTypeInstExpr = GoogleProtobuf_Pair_WireTypes(GoogleProtobuf_Pair_WireTypes((this.key.value and 7)))
   this.wireTypeInst = wireTypeInstExpr
-  if this.wireTypeInst != nil:
-    return this.wireTypeInst
+  this.wireTypeInstFlag = true
+  return this.wireTypeInst
 
 proc fieldTag(this: GoogleProtobuf_Pair): int = 
 
@@ -157,12 +159,12 @@ proc fieldTag(this: GoogleProtobuf_Pair): int =
 field name in a `.proto` file by this field tag.
 
   ]##
-  if this.fieldTagInst != nil:
+  if this.fieldTagInstFlag:
     return this.fieldTagInst
   let fieldTagInstExpr = int((this.key.value shr 3))
   this.fieldTagInst = fieldTagInstExpr
-  if this.fieldTagInst != nil:
-    return this.fieldTagInst
+  this.fieldTagInstFlag = true
+  return this.fieldTagInst
 
 proc fromFile*(_: typedesc[GoogleProtobuf_Pair], filename: string): GoogleProtobuf_Pair =
   GoogleProtobuf_Pair.read(newKaitaiFileStream(filename), nil, nil)

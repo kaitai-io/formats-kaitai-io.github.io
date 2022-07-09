@@ -8,7 +8,7 @@
   } else {
     root.WindowsLnkFile = factory(root.KaitaiStream, root.WindowsShellItems);
   }
-}(this, function (KaitaiStream, WindowsShellItems) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, WindowsShellItems) {
 /**
  * Windows .lnk files (AKA "shell link" file) are most frequently used
  * in Windows shell to create "shortcuts" to another files, usually for

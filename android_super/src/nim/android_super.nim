@@ -4,7 +4,8 @@ import options
 type
   AndroidSuper* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `rootInst`*: AndroidSuper_Root
+    `rootInst`: AndroidSuper_Root
+    `rootInstFlag`: bool
   AndroidSuper_Root* = ref object of KaitaiStruct
     `primaryGeometry`*: AndroidSuper_Geometry
     `backupGeometry`*: AndroidSuper_Geometry
@@ -66,7 +67,8 @@ type
     `kind`*: AndroidSuper_Metadata_TableKind
     `parent`*: AndroidSuper_Metadata
     `rawTableInst`*: seq[seq[byte]]
-    `tableInst`*: seq[KaitaiStruct]
+    `tableInst`: seq[KaitaiStruct]
+    `tableInstFlag`: bool
   AndroidSuper_Metadata_Partition* = ref object of KaitaiStruct
     `name`*: string
     `attrReadonly`*: bool
@@ -119,15 +121,15 @@ proc read*(_: typedesc[AndroidSuper], io: KaitaiStream, root: KaitaiStruct, pare
 
 
 proc root(this: AndroidSuper): AndroidSuper_Root = 
-  if this.rootInst != nil:
+  if this.rootInstFlag:
     return this.rootInst
   let pos = this.io.pos()
   this.io.seek(int(4096))
   let rootInstExpr = AndroidSuper_Root.read(this.io, this.root, this)
   this.rootInst = rootInstExpr
   this.io.seek(pos)
-  if this.rootInst != nil:
-    return this.rootInst
+  this.rootInstFlag = true
+  return this.rootInst
 
 proc fromFile*(_: typedesc[AndroidSuper], filename: string): AndroidSuper =
   AndroidSuper.read(newKaitaiFileStream(filename), nil, nil)
@@ -304,7 +306,7 @@ proc read*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], io: KaitaiStream,
   this.entrySize = entrySizeExpr
 
 proc table(this: AndroidSuper_Metadata_TableDescriptor): seq[KaitaiStruct] = 
-  if this.tableInst.len != 0:
+  if this.tableInstFlag:
     return this.tableInst
   let pos = this.io.pos()
   this.io.seek(int((this.parent.headerSize + this.offset)))
@@ -339,8 +341,8 @@ proc table(this: AndroidSuper_Metadata_TableDescriptor): seq[KaitaiStruct] =
         let it = this.io.readBytes(int(this.entrySize))
         this.tableInst.add(it)
   this.io.seek(pos)
-  if this.tableInst.len != 0:
-    return this.tableInst
+  this.tableInstFlag = true
+  return this.tableInst
 
 proc fromFile*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], filename: string): AndroidSuper_Metadata_TableDescriptor =
   AndroidSuper_Metadata_TableDescriptor.read(newKaitaiFileStream(filename), nil, nil)

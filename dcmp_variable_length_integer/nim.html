@@ -271,7 +271,8 @@ but technically any of the larger formats could be used as well.</p>
     <span class="p">`</span><span class="n">first</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">more</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DcmpVariableLengthInteger</span>
 
@@ -355,12 +356,12 @@ but technically any of the larger formats could be used as well.</p>
   <span class="n">The</span> <span class="n">decoded</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">variable</span><span class="o">-</span><span class="n">length</span> <span class="n">integer</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="mi">255</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">more</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="o">&gt;=</span> <span class="mi">128</span><span class="p">:</span> <span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="ow">shl</span> <span class="mi">8</span><span class="p">)</span> <span class="ow">or</span> <span class="n">this</span><span class="p">.</span><span class="n">more</span><span class="p">)</span> <span class="o">-</span> <span class="mi">49152</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], filename: string): DcmpVariableLengthInteger =</span>
   <span class="n">DcmpVariableLengthInteger</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

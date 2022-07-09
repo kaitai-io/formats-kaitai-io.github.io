@@ -299,14 +299,18 @@ these, but files employing this mechanism are relatively rare.</p>
     <span class="p">`</span><span class="n">sysexBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_SysexEventBody</span>
     <span class="p">`</span><span class="n">eventBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvents</span>
-    <span class="p">`</span><span class="n">eventTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">channelInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">eventTypeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">eventTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">channelInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">channelInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">StandardMidiFile_PitchBendEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">b1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">b2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
-    <span class="p">`</span><span class="n">bendValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">adjBendValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">bendValueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">bendValueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">adjBendValueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">adjBendValueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">StandardMidiFile_ProgramChangeEvent</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">program</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span>
@@ -484,21 +488,21 @@ these, but files employing this mechanism are relatively rare.</p>
       <span class="n">this</span><span class="p">.</span><span class="n">eventBody</span> <span class="o">=</span> <span class="n">eventBodyExpr</span>
 
 <span class="k">proc </span><span class="nf">eventType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span>
   <span class="k">let</span> <span class="n">eventTypeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">eventHeader</span> <span class="ow">and</span> <span class="mi">240</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span> <span class="o">=</span> <span class="n">eventTypeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">eventTypeInst</span>
 
 <span class="k">proc </span><span class="nf">channel</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_TrackEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">eventType</span> <span class="o">!=</span> <span class="mi">240</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">channelInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">eventHeader</span> <span class="ow">and</span> <span class="mi">15</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span> <span class="o">=</span> <span class="n">channelInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">channelInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">channelInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_TrackEvent], filename: string): StandardMidiFile_TrackEvent =</span>
   <span class="n">StandardMidiFile_TrackEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -517,20 +521,20 @@ these, but files employing this mechanism are relatively rare.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">b2Expr</span>
 
 <span class="k">proc </span><span class="nf">bendValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span>
   <span class="k">let</span> <span class="n">bendValueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((((</span><span class="n">this</span><span class="p">.</span><span class="n">b2</span> <span class="ow">shl</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">b1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span> <span class="o">=</span> <span class="n">bendValueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bendValueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bendValueInst</span>
 
 <span class="k">proc </span><span class="nf">adjBendValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span>
   <span class="k">let</span> <span class="n">adjBendValueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bendValue</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span> <span class="o">=</span> <span class="n">adjBendValueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">adjBendValueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[StandardMidiFile_PitchBendEvent], filename: string): StandardMidiFile_PitchBendEvent =</span>
   <span class="n">StandardMidiFile_PitchBendEvent</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

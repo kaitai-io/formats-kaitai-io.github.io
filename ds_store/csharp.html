@@ -186,6 +186,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="go.html" title="macOS '.DS_Store' format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="macOS '.DS_Store' format parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -412,18 +417,18 @@ can also be found there.</p>
             <span class="p">{</span>
                 <span class="n">_numBlocks</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
                 <span class="n">__unnamed1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                <span class="n">_blockAddresses</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">BlockDescriptor</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumBlockAddresses</span><span class="p">));</span>
+                <span class="n">_blockAddresses</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">BlockDescriptor</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumBlockAddresses</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_blockAddresses</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">BlockDescriptor</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
                 <span class="p">}</span>
                 <span class="n">_numDirectories</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_directoryEntries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">DirectoryEntry</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumDirectories</span><span class="p">));</span>
+                <span class="n">_directoryEntries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">DirectoryEntry</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumDirectories</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_directoryEntries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">DirectoryEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
                 <span class="p">}</span>
-                <span class="n">_freeLists</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">FreeList</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumFreeLists</span><span class="p">));</span>
+                <span class="n">_freeLists</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">FreeList</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumFreeLists</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_freeLists</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">FreeList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
@@ -527,7 +532,7 @@ can also be found there.</p>
                 <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
                 <span class="p">{</span>
                     <span class="n">_counter</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                    <span class="n">_offsets</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">Counter</span><span class="p">));</span>
+                    <span class="n">_offsets</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">uint</span><span class="p">&gt;();</span>
                     <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">Counter</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                     <span class="p">{</span>
                         <span class="n">_offsets</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
@@ -581,7 +586,7 @@ can also be found there.</p>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_directories</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_directories</span><span class="p">;</span>
                     <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                    <span class="n">_directories</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MasterBlockRef</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumDirectories</span><span class="p">));</span>
+                    <span class="n">_directories</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MasterBlockRef</span><span class="p">&gt;();</span>
                     <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumDirectories</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                     <span class="p">{</span>
                         <span class="n">_directories</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">MasterBlockRef</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
@@ -759,7 +764,7 @@ can also be found there.</p>
             <span class="p">{</span>
                 <span class="n">_mode</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
                 <span class="n">_counter</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">BlockData</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">Counter</span><span class="p">));</span>
+                <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">BlockData</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">Counter</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
                     <span class="n">_data</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">BlockData</span><span class="p">(</span><span class="n">Mode</span><span class="p">,</span> <span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>

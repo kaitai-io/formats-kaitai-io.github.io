@@ -8,7 +8,7 @@
   } else {
     root.MacOsResourceSnd = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Sound resources were introduced in Classic MacOS with the Sound Manager program.
  * They can contain sound commands to generate sounds with given frequencies as well as sampled sound data.
@@ -160,18 +160,18 @@ var MacOsResourceSnd = (function() {
       this.numDataFormats = this._io.readU2be();
     }
     if (this.format == 1) {
-      this.dataFormats = new Array(this.numDataFormats);
+      this.dataFormats = [];
       for (var i = 0; i < this.numDataFormats; i++) {
-        this.dataFormats[i] = new DataFormat(this._io, this, this._root);
+        this.dataFormats.push(new DataFormat(this._io, this, this._root));
       }
     }
     if (this.format == 2) {
       this.referenceCount = this._io.readU2be();
     }
     this.numSoundCommands = this._io.readU2be();
-    this.soundCommands = new Array(this.numSoundCommands);
+    this.soundCommands = [];
     for (var i = 0; i < this.numSoundCommands; i++) {
-      this.soundCommands[i] = new SoundCommand(this._io, this, this._root);
+      this.soundCommands.push(new SoundCommand(this._io, this, this._root));
     }
   }
 

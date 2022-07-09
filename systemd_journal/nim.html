@@ -283,9 +283,12 @@ format.</p>
     <span class="p">`</span><span class="n">objects</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">SystemdJournal_JournalObject</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">lenHeaderInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">dataHashTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">fieldHashTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">lenHeaderInst</span><span class="p">`:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">lenHeaderInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">dataHashTableInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">dataHashTableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">fieldHashTableInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">fieldHashTableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">SystemdJournal_State</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">offline</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">online</span> <span class="o">=</span> <span class="mi">1</span>
@@ -347,10 +350,14 @@ format.</p>
     <span class="p">`</span><span class="n">numEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">payload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SystemdJournal_JournalObject</span>
-    <span class="p">`</span><span class="n">nextHashInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SystemdJournal_JournalObject</span>
-    <span class="p">`</span><span class="n">headFieldInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SystemdJournal_JournalObject</span>
-    <span class="p">`</span><span class="n">entryInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SystemdJournal_JournalObject</span>
-    <span class="p">`</span><span class="n">entryArrayInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SystemdJournal_JournalObject</span>
+    <span class="p">`</span><span class="n">nextHashInst</span><span class="p">`:</span> <span class="n">SystemdJournal_JournalObject</span>
+    <span class="p">`</span><span class="n">nextHashInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">headFieldInst</span><span class="p">`:</span> <span class="n">SystemdJournal_JournalObject</span>
+    <span class="p">`</span><span class="n">headFieldInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">entryInst</span><span class="p">`:</span> <span class="n">SystemdJournal_JournalObject</span>
+    <span class="p">`</span><span class="n">entryInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">entryArrayInst</span><span class="p">`:</span> <span class="n">SystemdJournal_JournalObject</span>
+    <span class="p">`</span><span class="n">entryArrayInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SystemdJournal], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SystemdJournal</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SystemdJournal_Header], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal): SystemdJournal_Header</span>
@@ -402,37 +409,37 @@ format.</p>
 <span class="n">prior</span> <span class="n">to</span> <span class="n">declaration</span> <span class="k">of</span> <span class="n">header</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">88</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">lenHeaderInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span> <span class="o">=</span> <span class="n">lenHeaderInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>
 
 <span class="k">proc </span><span class="nf">dataHashTable</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SystemdJournal</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">ofsDataHashTable</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">dataHashTableInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenDataHashTable</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInst</span> <span class="o">=</span> <span class="n">dataHashTableInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataHashTableInst</span>
 
 <span class="k">proc </span><span class="nf">fieldHashTable</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SystemdJournal</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">ofsFieldHashTable</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">fieldHashTableInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenFieldHashTable</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInst</span> <span class="o">=</span> <span class="n">fieldHashTableInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldHashTableInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SystemdJournal], filename: string): SystemdJournal =</span>
   <span class="n">SystemdJournal</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -577,7 +584,7 @@ format.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">payloadExpr</span>
 
 <span class="k">proc </span><span class="nf">nextHash</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SystemdJournal_DataObject</span><span class="p">):</span> <span class="n">SystemdJournal_JournalObject</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nextHashInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nextHashInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nextHashInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsNextHash</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">SystemdJournal</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -586,11 +593,11 @@ format.</p>
     <span class="k">let</span> <span class="n">nextHashInstExpr</span> <span class="o">=</span> <span class="n">SystemdJournal_JournalObject</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">nextHashInst</span> <span class="o">=</span> <span class="n">nextHashInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nextHashInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nextHashInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nextHashInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nextHashInst</span>
 
 <span class="k">proc </span><span class="nf">headField</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SystemdJournal_DataObject</span><span class="p">):</span> <span class="n">SystemdJournal_JournalObject</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headFieldInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headFieldInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headFieldInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsHeadField</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">SystemdJournal</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -599,11 +606,11 @@ format.</p>
     <span class="k">let</span> <span class="n">headFieldInstExpr</span> <span class="o">=</span> <span class="n">SystemdJournal_JournalObject</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">headFieldInst</span> <span class="o">=</span> <span class="n">headFieldInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">headFieldInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headFieldInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">headFieldInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">headFieldInst</span>
 
 <span class="k">proc </span><span class="nf">entry</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SystemdJournal_DataObject</span><span class="p">):</span> <span class="n">SystemdJournal_JournalObject</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entryInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entryInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entryInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsEntry</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">SystemdJournal</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -612,11 +619,11 @@ format.</p>
     <span class="k">let</span> <span class="n">entryInstExpr</span> <span class="o">=</span> <span class="n">SystemdJournal_JournalObject</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">entryInst</span> <span class="o">=</span> <span class="n">entryInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entryInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entryInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">entryInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entryInst</span>
 
 <span class="k">proc </span><span class="nf">entryArray</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SystemdJournal_DataObject</span><span class="p">):</span> <span class="n">SystemdJournal_JournalObject</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsEntryArray</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">SystemdJournal</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -625,8 +632,8 @@ format.</p>
     <span class="k">let</span> <span class="n">entryArrayInstExpr</span> <span class="o">=</span> <span class="n">SystemdJournal_JournalObject</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInst</span> <span class="o">=</span> <span class="n">entryArrayInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">entryArrayInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SystemdJournal_DataObject], filename: string): SystemdJournal_DataObject =</span>
   <span class="n">SystemdJournal_DataObject</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

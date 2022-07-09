@@ -175,9 +175,8 @@ resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t::t
 
 void resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t::_read() {
     m_num_types_m1 = m__io->read_u2be();
-    int l_entries = num_types();
     m_entries = std::unique_ptr<std::vector<std::unique_ptr<type_list_entry_t>>>(new std::vector<std::unique_ptr<type_list_entry_t>>());
-    m_entries->reserve(l_entries);
+    const int l_entries = num_types();
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(std::move(std::unique_ptr<type_list_entry_t>(new type_list_entry_t(m__io, this, m__root))));
     }
@@ -251,9 +250,8 @@ resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list
 }
 
 void resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::_read() {
-    int l_references = num_references();
     m_references = std::unique_ptr<std::vector<std::unique_ptr<reference_t>>>(new std::vector<std::unique_ptr<reference_t>>());
-    m_references->reserve(l_references);
+    const int l_references = num_references();
     for (int i = 0; i < l_references; i++) {
         m_references->push_back(std::move(std::unique_ptr<reference_t>(new reference_t(m__io, this, m__root))));
     }

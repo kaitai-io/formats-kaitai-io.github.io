@@ -8,7 +8,7 @@
   } else {
     root.Asn1Der = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
  * Rules) is a standard-backed serialization scheme used in many

@@ -133,7 +133,7 @@ function Wmf:_read()
   self.records = {}
   local i = 0
   while true do
-    _ = Wmf.Record(self._io, self, self._root)
+    local _ = Wmf.Record(self._io, self, self._root)
     self.records[i + 1] = _
     if _.function == Wmf.Func.eof then
       break
@@ -148,15 +148,15 @@ end
 Wmf.ParamsSetwindoworg = class.class(KaitaiStruct)
 
 function Wmf.ParamsSetwindoworg:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ParamsSetwindoworg:_read()
-self.y = self._io:read_s2le()
-self.x = self._io:read_s2le()
+  self.y = self._io:read_s2le()
+  self.x = self._io:read_s2le()
 end
 
 -- 
@@ -169,14 +169,14 @@ end
 Wmf.ParamsSetbkmode = class.class(KaitaiStruct)
 
 function Wmf.ParamsSetbkmode:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ParamsSetbkmode:_read()
-self.bk_mode = Wmf.MixMode(self._io:read_u2le())
+  self.bk_mode = Wmf.MixMode(self._io:read_u2le())
 end
 
 -- 
@@ -187,15 +187,15 @@ end
 Wmf.PointS = class.class(KaitaiStruct)
 
 function Wmf.PointS:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.PointS:_read()
-self.x = self._io:read_s2le()
-self.y = self._io:read_s2le()
+  self.x = self._io:read_s2le()
+  self.y = self._io:read_s2le()
 end
 
 -- 
@@ -208,15 +208,15 @@ end
 Wmf.ParamsSetwindowext = class.class(KaitaiStruct)
 
 function Wmf.ParamsSetwindowext:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ParamsSetwindowext:_read()
-self.y = self._io:read_s2le()
-self.x = self._io:read_s2le()
+  self.y = self._io:read_s2le()
+  self.x = self._io:read_s2le()
 end
 
 -- 
@@ -229,43 +229,43 @@ end
 Wmf.ParamsPolygon = class.class(KaitaiStruct)
 
 function Wmf.ParamsPolygon:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ParamsPolygon:_read()
-self.num_points = self._io:read_s2le()
-self.points = {}
-for i = 0, self.num_points - 1 do
-  self.points[i + 1] = Wmf.PointS(self._io, self, self._root)
-end
+  self.num_points = self._io:read_s2le()
+  self.points = {}
+  for i = 0, self.num_points - 1 do
+    self.points[i + 1] = Wmf.PointS(self._io, self, self._root)
+  end
 end
 
 
 Wmf.Header = class.class(KaitaiStruct)
 
 Wmf.Header.MetafileType = enum.Enum {
-memory_metafile = 1,
-disk_metafile = 2,
+  memory_metafile = 1,
+  disk_metafile = 2,
 }
 
 function Wmf.Header:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.Header:_read()
-self.metafile_type = Wmf.Header.MetafileType(self._io:read_u2le())
-self.header_size = self._io:read_u2le()
-self.version = self._io:read_u2le()
-self.size = self._io:read_u4le()
-self.number_of_objects = self._io:read_u2le()
-self.max_record = self._io:read_u4le()
-self.number_of_members = self._io:read_u2le()
+  self.metafile_type = Wmf.Header.MetafileType(self._io:read_u2le())
+  self.header_size = self._io:read_u2le()
+  self.version = self._io:read_u2le()
+  self.size = self._io:read_u4le()
+  self.number_of_objects = self._io:read_u2le()
+  self.max_record = self._io:read_u4le()
+  self.number_of_members = self._io:read_u2le()
 end
 
 
@@ -274,17 +274,17 @@ end
 Wmf.ColorRef = class.class(KaitaiStruct)
 
 function Wmf.ColorRef:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ColorRef:_read()
-self.red = self._io:read_u1()
-self.green = self._io:read_u1()
-self.blue = self._io:read_u1()
-self.reserved = self._io:read_u1()
+  self.red = self._io:read_u1()
+  self.green = self._io:read_u1()
+  self.blue = self._io:read_u1()
+  self.reserved = self._io:read_u1()
 end
 
 
@@ -293,14 +293,14 @@ end
 Wmf.ParamsSetrop2 = class.class(KaitaiStruct)
 
 function Wmf.ParamsSetrop2:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ParamsSetrop2:_read()
-self.draw_mode = Wmf.BinRasterOp(self._io:read_u2le())
+  self.draw_mode = Wmf.BinRasterOp(self._io:read_u2le())
 end
 
 -- 
@@ -311,14 +311,14 @@ end
 Wmf.ParamsSetpolyfillmode = class.class(KaitaiStruct)
 
 function Wmf.ParamsSetpolyfillmode:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ParamsSetpolyfillmode:_read()
-self.poly_fill_mode = Wmf.PolyFillMode(self._io:read_u2le())
+  self.poly_fill_mode = Wmf.PolyFillMode(self._io:read_u2le())
 end
 
 -- 
@@ -329,100 +329,100 @@ end
 Wmf.ParamsPolyline = class.class(KaitaiStruct)
 
 function Wmf.ParamsPolyline:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.ParamsPolyline:_read()
-self.num_points = self._io:read_s2le()
-self.points = {}
-for i = 0, self.num_points - 1 do
-  self.points[i + 1] = Wmf.PointS(self._io, self, self._root)
-end
+  self.num_points = self._io:read_s2le()
+  self.points = {}
+  for i = 0, self.num_points - 1 do
+    self.points[i + 1] = Wmf.PointS(self._io, self, self._root)
+  end
 end
 
 
 Wmf.SpecialHeader = class.class(KaitaiStruct)
 
 function Wmf.SpecialHeader:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.SpecialHeader:_read()
-self.magic = self._io:read_bytes(4)
-if not(self.magic == "\215\205\198\154") then
-  error("not equal, expected " ..  "\215\205\198\154" .. ", but got " .. self.magic)
-end
-self.handle = self._io:read_bytes(2)
-if not(self.handle == "\000\000") then
-  error("not equal, expected " ..  "\000\000" .. ", but got " .. self.handle)
-end
-self.left = self._io:read_s2le()
-self.top = self._io:read_s2le()
-self.right = self._io:read_s2le()
-self.bottom = self._io:read_s2le()
-self.inch = self._io:read_u2le()
-self.reserved = self._io:read_bytes(4)
-if not(self.reserved == "\000\000\000\000") then
-  error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.reserved)
-end
-self.checksum = self._io:read_u2le()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\215\205\198\154") then
+    error("not equal, expected " ..  "\215\205\198\154" .. ", but got " .. self.magic)
+  end
+  self.handle = self._io:read_bytes(2)
+  if not(self.handle == "\000\000") then
+    error("not equal, expected " ..  "\000\000" .. ", but got " .. self.handle)
+  end
+  self.left = self._io:read_s2le()
+  self.top = self._io:read_s2le()
+  self.right = self._io:read_s2le()
+  self.bottom = self._io:read_s2le()
+  self.inch = self._io:read_u2le()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.checksum = self._io:read_u2le()
 end
 
 
 Wmf.Record = class.class(KaitaiStruct)
 
 function Wmf.Record:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Wmf.Record:_read()
-self.size = self._io:read_u4le()
-self.function = Wmf.Func(self._io:read_u2le())
-local _on = self.function
-if _on == Wmf.Func.setbkmode then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ParamsSetbkmode(_io, self, self._root)
-elseif _on == Wmf.Func.polygon then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ParamsPolygon(_io, self, self._root)
-elseif _on == Wmf.Func.setbkcolor then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ColorRef(_io, self, self._root)
-elseif _on == Wmf.Func.setpolyfillmode then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ParamsSetpolyfillmode(_io, self, self._root)
-elseif _on == Wmf.Func.setwindoworg then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ParamsSetwindoworg(_io, self, self._root)
-elseif _on == Wmf.Func.setrop2 then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ParamsSetrop2(_io, self, self._root)
-elseif _on == Wmf.Func.setwindowext then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ParamsSetwindowext(_io, self, self._root)
-elseif _on == Wmf.Func.polyline then
-  self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
-  local _io = KaitaiStream(stringstream(self._raw_params))
-  self.params = Wmf.ParamsPolyline(_io, self, self._root)
-else
-  self.params = self._io:read_bytes(((self.size - 3) * 2))
-end
+  self.size = self._io:read_u4le()
+  self.function = Wmf.Func(self._io:read_u2le())
+  local _on = self.function
+  if _on == Wmf.Func.setbkmode then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ParamsSetbkmode(_io, self, self._root)
+  elseif _on == Wmf.Func.polygon then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ParamsPolygon(_io, self, self._root)
+  elseif _on == Wmf.Func.setbkcolor then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ColorRef(_io, self, self._root)
+  elseif _on == Wmf.Func.setpolyfillmode then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ParamsSetpolyfillmode(_io, self, self._root)
+  elseif _on == Wmf.Func.setwindoworg then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ParamsSetwindoworg(_io, self, self._root)
+  elseif _on == Wmf.Func.setrop2 then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ParamsSetrop2(_io, self, self._root)
+  elseif _on == Wmf.Func.setwindowext then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ParamsSetwindowext(_io, self, self._root)
+  elseif _on == Wmf.Func.polyline then
+    self._raw_params = self._io:read_bytes(((self.size - 3) * 2))
+    local _io = KaitaiStream(stringstream(self._raw_params))
+    self.params = Wmf.ParamsPolyline(_io, self, self._root)
+  else
+    self.params = self._io:read_bytes(((self.size - 3) * 2))
+  end
 end
 
 

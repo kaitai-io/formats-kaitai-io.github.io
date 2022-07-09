@@ -170,7 +170,7 @@ namespace Kaitai
                 {
                     throw new ValidationNotEqualError(new byte[] { 12 }, Magic, M_Io, "/types/t_palette_256/seq/0");
                 }
-                _colors = new List<Rgb>((int) (256));
+                _colors = new List<Rgb>();
                 for (var i = 0; i < 256; i++)
                 {
                     _colors.Add(new Rgb(m_io, this, m_root));

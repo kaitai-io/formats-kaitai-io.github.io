@@ -50,7 +50,7 @@ public class Dcmp2 extends KaitaiStruct {
     }
     private void _read() {
         if (headerParameters().flags().hasCustomLookupTable()) {
-            customLookupTable = new ArrayList<byte[]>(((Number) (headerParameters().numCustomLookupTableEntries())).intValue());
+            this.customLookupTable = new ArrayList<byte[]>();
             for (int i = 0; i < headerParameters().numCustomLookupTableEntries(); i++) {
                 this.customLookupTable.add(this._io.readBytes(2));
             }
@@ -326,7 +326,7 @@ public class Dcmp2 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                tag = new ArrayList<Boolean>(((Number) (8)).intValue());
+                this.tag = new ArrayList<Boolean>();
                 for (int i = 0; i < 8; i++) {
                     this.tag.add(this._io.readBitsIntBe(1) != 0);
                 }

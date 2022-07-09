@@ -721,25 +721,25 @@ function Wav.ChannelMaskType:_init(io, parent, root)
 end
 
 function Wav.ChannelMaskType:_read()
-  self.front_right_of_center = self._io:read_bits_int_be(1)
-  self.front_left_of_center = self._io:read_bits_int_be(1)
-  self.back_right = self._io:read_bits_int_be(1)
-  self.back_left = self._io:read_bits_int_be(1)
-  self.low_frequency = self._io:read_bits_int_be(1)
-  self.front_center = self._io:read_bits_int_be(1)
-  self.front_right = self._io:read_bits_int_be(1)
-  self.front_left = self._io:read_bits_int_be(1)
-  self.top_center = self._io:read_bits_int_be(1)
-  self.side_right = self._io:read_bits_int_be(1)
-  self.side_left = self._io:read_bits_int_be(1)
-  self.back_center = self._io:read_bits_int_be(1)
-  self.top_back_left = self._io:read_bits_int_be(1)
-  self.top_front_right = self._io:read_bits_int_be(1)
-  self.top_front_center = self._io:read_bits_int_be(1)
-  self.top_front_left = self._io:read_bits_int_be(1)
+  self.front_right_of_center = self._io:read_bits_int_be(1) ~= 0
+  self.front_left_of_center = self._io:read_bits_int_be(1) ~= 0
+  self.back_right = self._io:read_bits_int_be(1) ~= 0
+  self.back_left = self._io:read_bits_int_be(1) ~= 0
+  self.low_frequency = self._io:read_bits_int_be(1) ~= 0
+  self.front_center = self._io:read_bits_int_be(1) ~= 0
+  self.front_right = self._io:read_bits_int_be(1) ~= 0
+  self.front_left = self._io:read_bits_int_be(1) ~= 0
+  self.top_center = self._io:read_bits_int_be(1) ~= 0
+  self.side_right = self._io:read_bits_int_be(1) ~= 0
+  self.side_left = self._io:read_bits_int_be(1) ~= 0
+  self.back_center = self._io:read_bits_int_be(1) ~= 0
+  self.top_back_left = self._io:read_bits_int_be(1) ~= 0
+  self.top_front_right = self._io:read_bits_int_be(1) ~= 0
+  self.top_front_center = self._io:read_bits_int_be(1) ~= 0
+  self.top_front_left = self._io:read_bits_int_be(1) ~= 0
   self.unused1 = self._io:read_bits_int_be(6)
-  self.top_back_right = self._io:read_bits_int_be(1)
-  self.top_back_center = self._io:read_bits_int_be(1)
+  self.top_back_right = self._io:read_bits_int_be(1) ~= 0
+  self.top_back_center = self._io:read_bits_int_be(1) ~= 0
   self.unused2 = self._io:read_bits_int_be(8)
 end
 

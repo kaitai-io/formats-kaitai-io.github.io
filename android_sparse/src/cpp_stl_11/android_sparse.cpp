@@ -18,9 +18,8 @@ void android_sparse_t::_read() {
     m__raw_header = m__io->read_bytes((header_prefix()->len_header() - 10));
     m__io__raw_header = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_header));
     m_header = std::unique_ptr<file_header_t>(new file_header_t(m__io__raw_header.get(), this, m__root));
-    int l_chunks = header()->num_chunks();
     m_chunks = std::unique_ptr<std::vector<std::unique_ptr<chunk_t>>>(new std::vector<std::unique_ptr<chunk_t>>());
-    m_chunks->reserve(l_chunks);
+    const int l_chunks = header()->num_chunks();
     for (int i = 0; i < l_chunks; i++) {
         m_chunks->push_back(std::move(std::unique_ptr<chunk_t>(new chunk_t(m__io, this, m__root))));
     }

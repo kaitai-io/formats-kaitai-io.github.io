@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dbf(KaitaiStruct):
@@ -29,9 +28,9 @@ class Dbf(KaitaiStruct):
         self._raw_header2 = self._io.read_bytes((self.header1.len_header - 12))
         _io__raw_header2 = KaitaiStream(BytesIO(self._raw_header2))
         self.header2 = Dbf.Header2(_io__raw_header2, self, self._root)
-        self.records = [None] * (self.header1.num_records)
+        self.records = []
         for i in range(self.header1.num_records):
-            self.records[i] = self._io.read_bytes(self.header1.len_record)
+            self.records.append(self._io.read_bytes(self.header1.len_record))
 
 
     class Header2(KaitaiStruct):
@@ -48,9 +47,9 @@ class Dbf(KaitaiStruct):
             if self._root.header1.dbase_level == 7:
                 self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
 
-            self.fields = [None] * (11)
+            self.fields = []
             for i in range(11):
-                self.fields[i] = Dbf.Field(self._io, self, self._root)
+                self.fields.append(Dbf.Field(self._io, self, self._root))
 
 
 
@@ -97,10 +96,10 @@ class Dbf(KaitaiStruct):
         @property
         def dbase_level(self):
             if hasattr(self, '_m_dbase_level'):
-                return self._m_dbase_level if hasattr(self, '_m_dbase_level') else None
+                return self._m_dbase_level
 
             self._m_dbase_level = (self.version & 7)
-            return self._m_dbase_level if hasattr(self, '_m_dbase_level') else None
+            return getattr(self, '_m_dbase_level', None)
 
 
     class HeaderDbase3(KaitaiStruct):

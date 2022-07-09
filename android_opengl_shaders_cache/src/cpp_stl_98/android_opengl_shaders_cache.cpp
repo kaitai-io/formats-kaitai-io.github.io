@@ -120,9 +120,8 @@ void android_opengl_shaders_cache_t::cache_t::_read() {
         n_build_id = false;
         m_build_id = new prefixed_string_t(m__io, this, m__root);
     }
-    int l_entries = num_entries();
     m_entries = new std::vector<entry_t*>();
-    m_entries->reserve(l_entries);
+    const int l_entries = num_entries();
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(new entry_t(m__io, this, m__root));
     }

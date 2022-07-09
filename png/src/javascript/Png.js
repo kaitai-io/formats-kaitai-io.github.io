@@ -8,7 +8,7 @@
   } else {
     root.Png = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Test files for APNG can be found at the following locations:
  * 
@@ -85,7 +85,7 @@ var Png = (function() {
     }
     this.ihdr = new IhdrChunk(this._io, this, this._root);
     this.ihdrCrc = this._io.readBytes(4);
-    this.chunks = []
+    this.chunks = [];
     var i = 0;
     do {
       var _ = new Chunk(this._io, this, this._root);

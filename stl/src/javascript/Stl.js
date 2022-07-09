@@ -8,7 +8,7 @@
   } else {
     root.Stl = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * STL files are used to represent simple 3D models, defined using
  * triangular 3D faces.
@@ -39,9 +39,9 @@ var Stl = (function() {
   Stl.prototype._read = function() {
     this.header = this._io.readBytes(80);
     this.numTriangles = this._io.readU4le();
-    this.triangles = new Array(this.numTriangles);
+    this.triangles = [];
     for (var i = 0; i < this.numTriangles; i++) {
-      this.triangles[i] = new Triangle(this._io, this, this._root);
+      this.triangles.push(new Triangle(this._io, this, this._root));
     }
   }
 
@@ -61,9 +61,9 @@ var Stl = (function() {
     }
     Triangle.prototype._read = function() {
       this.normal = new Vec3d(this._io, this, this._root);
-      this.vertices = new Array(3);
+      this.vertices = [];
       for (var i = 0; i < 3; i++) {
-        this.vertices[i] = new Vec3d(this._io, this, this._root);
+        this.vertices.push(new Vec3d(this._io, this, this._root));
       }
       this.abr = this._io.readU2le();
     }

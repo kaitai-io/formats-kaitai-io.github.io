@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class DsStore(KaitaiStruct):
@@ -55,18 +54,18 @@ class DsStore(KaitaiStruct):
         def _read(self):
             self.num_blocks = self._io.read_u4be()
             self._unnamed1 = self._io.read_bytes(4)
-            self.block_addresses = [None] * (self.num_block_addresses)
+            self.block_addresses = []
             for i in range(self.num_block_addresses):
-                self.block_addresses[i] = DsStore.BuddyAllocatorBody.BlockDescriptor(self._io, self, self._root)
+                self.block_addresses.append(DsStore.BuddyAllocatorBody.BlockDescriptor(self._io, self, self._root))
 
             self.num_directories = self._io.read_u4be()
-            self.directory_entries = [None] * (self.num_directories)
+            self.directory_entries = []
             for i in range(self.num_directories):
-                self.directory_entries[i] = DsStore.BuddyAllocatorBody.DirectoryEntry(self._io, self, self._root)
+                self.directory_entries.append(DsStore.BuddyAllocatorBody.DirectoryEntry(self._io, self, self._root))
 
-            self.free_lists = [None] * (self.num_free_lists)
+            self.free_lists = []
             for i in range(self.num_free_lists):
-                self.free_lists[i] = DsStore.BuddyAllocatorBody.FreeList(self._io, self, self._root)
+                self.free_lists.append(DsStore.BuddyAllocatorBody.FreeList(self._io, self, self._root))
 
 
         class BlockDescriptor(KaitaiStruct):
@@ -82,18 +81,18 @@ class DsStore(KaitaiStruct):
             @property
             def offset(self):
                 if hasattr(self, '_m_offset'):
-                    return self._m_offset if hasattr(self, '_m_offset') else None
+                    return self._m_offset
 
                 self._m_offset = ((self.address_raw & ~(self._root.block_address_mask)) + 4)
-                return self._m_offset if hasattr(self, '_m_offset') else None
+                return getattr(self, '_m_offset', None)
 
             @property
             def size(self):
                 if hasattr(self, '_m_size'):
-                    return self._m_size if hasattr(self, '_m_size') else None
+                    return self._m_size
 
                 self._m_size = ((1 << self.address_raw) & self._root.block_address_mask)
-                return self._m_size if hasattr(self, '_m_size') else None
+                return getattr(self, '_m_size', None)
 
 
         class DirectoryEntry(KaitaiStruct):
@@ -118,40 +117,40 @@ class DsStore(KaitaiStruct):
 
             def _read(self):
                 self.counter = self._io.read_u4be()
-                self.offsets = [None] * (self.counter)
+                self.offsets = []
                 for i in range(self.counter):
-                    self.offsets[i] = self._io.read_u4be()
+                    self.offsets.append(self._io.read_u4be())
 
 
 
         @property
         def num_block_addresses(self):
             if hasattr(self, '_m_num_block_addresses'):
-                return self._m_num_block_addresses if hasattr(self, '_m_num_block_addresses') else None
+                return self._m_num_block_addresses
 
             self._m_num_block_addresses = 256
-            return self._m_num_block_addresses if hasattr(self, '_m_num_block_addresses') else None
+            return getattr(self, '_m_num_block_addresses', None)
 
         @property
         def num_free_lists(self):
             if hasattr(self, '_m_num_free_lists'):
-                return self._m_num_free_lists if hasattr(self, '_m_num_free_lists') else None
+                return self._m_num_free_lists
 
             self._m_num_free_lists = 32
-            return self._m_num_free_lists if hasattr(self, '_m_num_free_lists') else None
+            return getattr(self, '_m_num_free_lists', None)
 
         @property
         def directories(self):
             """Master blocks of the different B-trees."""
             if hasattr(self, '_m_directories'):
-                return self._m_directories if hasattr(self, '_m_directories') else None
+                return self._m_directories
 
             io = self._root._io
-            self._m_directories = [None] * (self.num_directories)
+            self._m_directories = []
             for i in range(self.num_directories):
-                self._m_directories[i] = DsStore.MasterBlockRef(i, io, self, self._root)
+                self._m_directories.append(DsStore.MasterBlockRef(i, io, self, self._root))
 
-            return self._m_directories if hasattr(self, '_m_directories') else None
+            return getattr(self, '_m_directories', None)
 
 
     class MasterBlockRef(KaitaiStruct):
@@ -182,20 +181,20 @@ class DsStore(KaitaiStruct):
             @property
             def root_block(self):
                 if hasattr(self, '_m_root_block'):
-                    return self._m_root_block if hasattr(self, '_m_root_block') else None
+                    return self._m_root_block
 
                 io = self._root._io
                 _pos = io.pos()
                 io.seek(self._root.buddy_allocator_body.block_addresses[self.block_id].offset)
                 self._m_root_block = DsStore.Block(io, self, self._root)
                 io.seek(_pos)
-                return self._m_root_block if hasattr(self, '_m_root_block') else None
+                return getattr(self, '_m_root_block', None)
 
 
         @property
         def master_block(self):
             if hasattr(self, '_m_master_block'):
-                return self._m_master_block if hasattr(self, '_m_master_block') else None
+                return self._m_master_block
 
             _pos = self._io.pos()
             self._io.seek(self._parent.block_addresses[self._parent.directory_entries[self.idx].block_id].offset)
@@ -203,7 +202,7 @@ class DsStore(KaitaiStruct):
             _io__raw__m_master_block = KaitaiStream(BytesIO(self._raw__m_master_block))
             self._m_master_block = DsStore.MasterBlockRef.MasterBlock(_io__raw__m_master_block, self, self._root)
             self._io.seek(_pos)
-            return self._m_master_block if hasattr(self, '_m_master_block') else None
+            return getattr(self, '_m_master_block', None)
 
 
     class Block(KaitaiStruct):
@@ -216,9 +215,9 @@ class DsStore(KaitaiStruct):
         def _read(self):
             self.mode = self._io.read_u4be()
             self.counter = self._io.read_u4be()
-            self.data = [None] * (self.counter)
+            self.data = []
             for i in range(self.counter):
-                self.data[i] = DsStore.Block.BlockData(self.mode, self._io, self, self._root)
+                self.data.append(DsStore.Block.BlockData(self.mode, self._io, self, self._root))
 
 
         class BlockData(KaitaiStruct):
@@ -303,7 +302,7 @@ class DsStore(KaitaiStruct):
             @property
             def block(self):
                 if hasattr(self, '_m_block'):
-                    return self._m_block if hasattr(self, '_m_block') else None
+                    return self._m_block
 
                 if self.mode > 0:
                     io = self._root._io
@@ -312,14 +311,14 @@ class DsStore(KaitaiStruct):
                     self._m_block = DsStore.Block(io, self, self._root)
                     io.seek(_pos)
 
-                return self._m_block if hasattr(self, '_m_block') else None
+                return getattr(self, '_m_block', None)
 
 
         @property
         def rightmost_block(self):
             """Rightmost child block pointer."""
             if hasattr(self, '_m_rightmost_block'):
-                return self._m_rightmost_block if hasattr(self, '_m_rightmost_block') else None
+                return self._m_rightmost_block
 
             if self.mode > 0:
                 io = self._root._io
@@ -328,13 +327,13 @@ class DsStore(KaitaiStruct):
                 self._m_rightmost_block = DsStore.Block(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_rightmost_block if hasattr(self, '_m_rightmost_block') else None
+            return getattr(self, '_m_rightmost_block', None)
 
 
     @property
     def buddy_allocator_body(self):
         if hasattr(self, '_m_buddy_allocator_body'):
-            return self._m_buddy_allocator_body if hasattr(self, '_m_buddy_allocator_body') else None
+            return self._m_buddy_allocator_body
 
         _pos = self._io.pos()
         self._io.seek((self.buddy_allocator_header.ofs_bookkeeping_info_block + 4))
@@ -342,7 +341,7 @@ class DsStore(KaitaiStruct):
         _io__raw__m_buddy_allocator_body = KaitaiStream(BytesIO(self._raw__m_buddy_allocator_body))
         self._m_buddy_allocator_body = DsStore.BuddyAllocatorBody(_io__raw__m_buddy_allocator_body, self, self._root)
         self._io.seek(_pos)
-        return self._m_buddy_allocator_body if hasattr(self, '_m_buddy_allocator_body') else None
+        return getattr(self, '_m_buddy_allocator_body', None)
 
     @property
     def block_address_mask(self):
@@ -350,9 +349,9 @@ class DsStore(KaitaiStruct):
         of the B-tree from the block addresses.
         """
         if hasattr(self, '_m_block_address_mask'):
-            return self._m_block_address_mask if hasattr(self, '_m_block_address_mask') else None
+            return self._m_block_address_mask
 
         self._m_block_address_mask = 31
-        return self._m_block_address_mask if hasattr(self, '_m_block_address_mask') else None
+        return getattr(self, '_m_block_address_mask', None)
 
 

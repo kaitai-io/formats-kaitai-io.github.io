@@ -47,11 +47,11 @@ public class FasttrackerXmModule extends KaitaiStruct {
         this._raw_header = this._io.readBytes((preheader().headerSize() - 4));
         KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
         this.header = new Header(_io__raw_header, this, _root);
-        patterns = new ArrayList<Pattern>(((Number) (header().numPatterns())).intValue());
+        this.patterns = new ArrayList<Pattern>();
         for (int i = 0; i < header().numPatterns(); i++) {
             this.patterns.add(new Pattern(this._io, this, _root));
         }
-        instruments = new ArrayList<Instrument>(((Number) (header().numInstruments())).intValue());
+        this.instruments = new ArrayList<Instrument>();
         for (int i = 0; i < header().numInstruments(); i++) {
             this.instruments.add(new Instrument(this._io, this, _root));
         }
@@ -239,7 +239,7 @@ public class FasttrackerXmModule extends KaitaiStruct {
                 }
                 private void _read() {
                     this.packingType = this._io.readU1();
-                    switch (_root.preheader().versionNumber().value()) {
+                    switch (_root().preheader().versionNumber().value()) {
                     case 258: {
                         this.numRowsRaw = (int) (this._io.readU1());
                         break;
@@ -255,7 +255,7 @@ public class FasttrackerXmModule extends KaitaiStruct {
                 public Integer numRows() {
                     if (this.numRows != null)
                         return this.numRows;
-                    int _tmp = (int) ((numRowsRaw() + (_root.preheader().versionNumber().value() == 258 ? 1 : 0)));
+                    int _tmp = (int) ((numRowsRaw() + (_root().preheader().versionNumber().value() == 258 ? 1 : 0)));
                     this.numRows = _tmp;
                     return this.numRows;
                 }
@@ -370,7 +370,7 @@ public class FasttrackerXmModule extends KaitaiStruct {
             this.flags = new Flags(this._io, this, _root);
             this.defaultTempo = this._io.readU2le();
             this.defaultBpm = this._io.readU2le();
-            patternOrderTable = new ArrayList<Integer>(((Number) (256)).intValue());
+            this.patternOrderTable = new ArrayList<Integer>();
             for (int i = 0; i < 256; i++) {
                 this.patternOrderTable.add(this._io.readU1());
             }
@@ -453,11 +453,11 @@ public class FasttrackerXmModule extends KaitaiStruct {
             this._raw_header = this._io.readBytes((headerSize() - 4));
             KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
             this.header = new Header(_io__raw_header, this, _root);
-            samplesHeaders = new ArrayList<SampleHeader>(((Number) (header().numSamples())).intValue());
+            this.samplesHeaders = new ArrayList<SampleHeader>();
             for (int i = 0; i < header().numSamples(); i++) {
                 this.samplesHeaders.add(new SampleHeader(this._io, this, _root));
             }
-            samples = new ArrayList<SamplesData>(((Number) (header().numSamples())).intValue());
+            this.samples = new ArrayList<SamplesData>();
             for (int i = 0; i < header().numSamples(); i++) {
                 this.samples.add(new SamplesData(this._io, this, _root, samplesHeaders().get((int) i)));
             }
@@ -543,15 +543,15 @@ public class FasttrackerXmModule extends KaitaiStruct {
             }
             private void _read() {
                 this.lenSampleHeader = this._io.readU4le();
-                idxSamplePerNote = new ArrayList<Integer>(((Number) (96)).intValue());
+                this.idxSamplePerNote = new ArrayList<Integer>();
                 for (int i = 0; i < 96; i++) {
                     this.idxSamplePerNote.add(this._io.readU1());
                 }
-                volumePoints = new ArrayList<EnvelopePoint>(((Number) (12)).intValue());
+                this.volumePoints = new ArrayList<EnvelopePoint>();
                 for (int i = 0; i < 12; i++) {
                     this.volumePoints.add(new EnvelopePoint(this._io, this, _root));
                 }
-                panningPoints = new ArrayList<EnvelopePoint>(((Number) (12)).intValue());
+                this.panningPoints = new ArrayList<EnvelopePoint>();
                 for (int i = 0; i < 12; i++) {
                     this.panningPoints.add(new EnvelopePoint(this._io, this, _root));
                 }

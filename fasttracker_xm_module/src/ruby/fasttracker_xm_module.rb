@@ -29,13 +29,13 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
     @_raw_header = @_io.read_bytes((preheader.header_size - 4))
     _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
     @header = Header.new(_io__raw_header, self, @_root)
-    @patterns = Array.new(header.num_patterns)
+    @patterns = []
     (header.num_patterns).times { |i|
-      @patterns[i] = Pattern.new(@_io, self, @_root)
+      @patterns << Pattern.new(@_io, self, @_root)
     }
-    @instruments = Array.new(header.num_instruments)
+    @instruments = []
     (header.num_instruments).times { |i|
-      @instruments[i] = Instrument.new(@_io, self, @_root)
+      @instruments << Instrument.new(@_io, self, @_root)
     }
     self
   end
@@ -201,9 +201,9 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
       @flags = Flags.new(@_io, self, @_root)
       @default_tempo = @_io.read_u2le
       @default_bpm = @_io.read_u2le
-      @pattern_order_table = Array.new(256)
+      @pattern_order_table = []
       (256).times { |i|
-        @pattern_order_table[i] = @_io.read_u1
+        @pattern_order_table << @_io.read_u1
       }
       self
     end
@@ -253,13 +253,13 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
       @_raw_header = @_io.read_bytes((header_size - 4))
       _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
       @header = Header.new(_io__raw_header, self, @_root)
-      @samples_headers = Array.new(header.num_samples)
+      @samples_headers = []
       (header.num_samples).times { |i|
-        @samples_headers[i] = SampleHeader.new(@_io, self, @_root)
+        @samples_headers << SampleHeader.new(@_io, self, @_root)
       }
-      @samples = Array.new(header.num_samples)
+      @samples = []
       (header.num_samples).times { |i|
-        @samples[i] = SamplesData.new(@_io, self, @_root, samples_headers[i])
+        @samples << SamplesData.new(@_io, self, @_root, samples_headers[i])
       }
       self
     end
@@ -301,17 +301,17 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
 
       def _read
         @len_sample_header = @_io.read_u4le
-        @idx_sample_per_note = Array.new(96)
+        @idx_sample_per_note = []
         (96).times { |i|
-          @idx_sample_per_note[i] = @_io.read_u1
+          @idx_sample_per_note << @_io.read_u1
         }
-        @volume_points = Array.new(12)
+        @volume_points = []
         (12).times { |i|
-          @volume_points[i] = EnvelopePoint.new(@_io, self, @_root)
+          @volume_points << EnvelopePoint.new(@_io, self, @_root)
         }
-        @panning_points = Array.new(12)
+        @panning_points = []
         (12).times { |i|
-          @panning_points[i] = EnvelopePoint.new(@_io, self, @_root)
+          @panning_points << EnvelopePoint.new(@_io, self, @_root)
         }
         @num_volume_points = @_io.read_u1
         @num_panning_points = @_io.read_u1

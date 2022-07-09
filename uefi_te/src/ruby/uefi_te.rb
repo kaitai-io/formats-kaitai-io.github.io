@@ -37,9 +37,9 @@ class UefiTe < Kaitai::Struct::Struct
     @_raw_te_hdr = @_io.read_bytes(40)
     _io__raw_te_hdr = Kaitai::Struct::Stream.new(@_raw_te_hdr)
     @te_hdr = TeHeader.new(_io__raw_te_hdr, self, @_root)
-    @sections = Array.new(te_hdr.num_sections)
+    @sections = []
     (te_hdr.num_sections).times { |i|
-      @sections[i] = Section.new(@_io, self, @_root)
+      @sections << Section.new(@_io, self, @_root)
     }
     self
   end

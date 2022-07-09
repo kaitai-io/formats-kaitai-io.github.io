@@ -381,9 +381,9 @@ section#format-index .row {
       <span class="vi">@journal_inum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@journal_dev</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@last_orphan</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@hash_seed</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@hash_seed</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@hash_seed</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@hash_seed</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="p">}</span>
       <span class="vi">@def_hash_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="nb">self</span>
@@ -501,9 +501,9 @@ section#format-index .row {
       <span class="vi">@blocks</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@osd1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@block</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+      <span class="vi">@block</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@block</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">BlockPtr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@block</span> <span class="o">&lt;&lt;</span> <span class="no">BlockPtr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="vi">@generation</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@file_acl</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -590,9 +590,9 @@ section#format-index .row {
       <span class="vi">@_raw_super_block</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
       <span class="n">_io__raw_super_block</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_super_block</span><span class="p">)</span>
       <span class="vi">@super_block</span> <span class="o">=</span> <span class="no">SuperBlockStruct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_super_block</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@block_groups</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">super_block</span><span class="o">.</span><span class="n">block_group_count</span><span class="p">)</span>
+      <span class="vi">@block_groups</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">super_block</span><span class="o">.</span><span class="n">block_group_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@block_groups</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Bgd</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@block_groups</span> <span class="o">&lt;&lt;</span> <span class="no">Bgd</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -636,9 +636,9 @@ section#format-index .row {
       <span class="k">return</span> <span class="vi">@inodes</span> <span class="k">unless</span> <span class="vi">@inodes</span><span class="o">.</span><span class="n">nil?</span>
       <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
       <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">inode_table_block</span> <span class="o">*</span> <span class="n">_root</span><span class="o">.</span><span class="n">bg1</span><span class="o">.</span><span class="n">super_block</span><span class="o">.</span><span class="n">block_size</span><span class="p">))</span>
-      <span class="vi">@inodes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">bg1</span><span class="o">.</span><span class="n">super_block</span><span class="o">.</span><span class="n">inodes_per_group</span><span class="p">)</span>
+      <span class="vi">@inodes</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">bg1</span><span class="o">.</span><span class="n">super_block</span><span class="o">.</span><span class="n">inodes_per_group</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@inodes</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Inode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@inodes</span> <span class="o">&lt;&lt;</span> <span class="no">Inode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
       <span class="vi">@inodes</span>

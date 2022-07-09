@@ -7,8 +7,10 @@ type
     `buddyAllocatorHeader`*: DsStore_BuddyAllocatorHeader
     `parent`*: KaitaiStruct
     `rawBuddyAllocatorBodyInst`*: seq[byte]
-    `buddyAllocatorBodyInst`*: DsStore_BuddyAllocatorBody
-    `blockAddressMaskInst`*: int8
+    `buddyAllocatorBodyInst`: DsStore_BuddyAllocatorBody
+    `buddyAllocatorBodyInstFlag`: bool
+    `blockAddressMaskInst`: int8
+    `blockAddressMaskInstFlag`: bool
   DsStore_BuddyAllocatorHeader* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `ofsBookkeepingInfoBlock`*: uint32
@@ -24,14 +26,19 @@ type
     `directoryEntries`*: seq[DsStore_BuddyAllocatorBody_DirectoryEntry]
     `freeLists`*: seq[DsStore_BuddyAllocatorBody_FreeList]
     `parent`*: DsStore
-    `numBlockAddressesInst`*: int
-    `numFreeListsInst`*: int8
-    `directoriesInst`*: seq[DsStore_MasterBlockRef]
+    `numBlockAddressesInst`: int
+    `numBlockAddressesInstFlag`: bool
+    `numFreeListsInst`: int8
+    `numFreeListsInstFlag`: bool
+    `directoriesInst`: seq[DsStore_MasterBlockRef]
+    `directoriesInstFlag`: bool
   DsStore_BuddyAllocatorBody_BlockDescriptor* = ref object of KaitaiStruct
     `addressRaw`*: uint32
     `parent`*: DsStore_BuddyAllocatorBody
-    `offsetInst`*: int
-    `sizeInst`*: int
+    `offsetInst`: int
+    `offsetInstFlag`: bool
+    `sizeInst`: int
+    `sizeInstFlag`: bool
   DsStore_BuddyAllocatorBody_DirectoryEntry* = ref object of KaitaiStruct
     `lenName`*: uint8
     `name`*: string
@@ -45,7 +52,8 @@ type
     `idx`*: uint64
     `parent`*: DsStore_BuddyAllocatorBody
     `rawMasterBlockInst`*: seq[byte]
-    `masterBlockInst`*: DsStore_MasterBlockRef_MasterBlock
+    `masterBlockInst`: DsStore_MasterBlockRef_MasterBlock
+    `masterBlockInstFlag`: bool
   DsStore_MasterBlockRef_MasterBlock* = ref object of KaitaiStruct
     `blockId`*: uint32
     `numInternalNodes`*: uint32
@@ -53,19 +61,22 @@ type
     `numNodes`*: uint32
     `unnamed4`*: uint32
     `parent`*: DsStore_MasterBlockRef
-    `rootBlockInst`*: DsStore_Block
+    `rootBlockInst`: DsStore_Block
+    `rootBlockInstFlag`: bool
   DsStore_Block* = ref object of KaitaiStruct
     `mode`*: uint32
     `counter`*: uint32
     `data`*: seq[DsStore_Block_BlockData]
     `parent`*: KaitaiStruct
-    `rightmostBlockInst`*: DsStore_Block
+    `rightmostBlockInst`: DsStore_Block
+    `rightmostBlockInstFlag`: bool
   DsStore_Block_BlockData* = ref object of KaitaiStruct
     `blockId`*: uint32
     `record`*: DsStore_Block_BlockData_Record
     `mode`*: uint32
     `parent`*: DsStore_Block
-    `blockInst`*: DsStore_Block
+    `blockInst`: DsStore_Block
+    `blockInstFlag`: bool
   DsStore_Block_BlockData_Record* = ref object of KaitaiStruct
     `filename`*: DsStore_Block_BlockData_Record_Ustr
     `structureType`*: DsStore_Block_BlockData_Record_FourCharCode
@@ -134,7 +145,7 @@ proc read*(_: typedesc[DsStore], io: KaitaiStream, root: KaitaiStruct, parent: K
   this.buddyAllocatorHeader = buddyAllocatorHeaderExpr
 
 proc buddyAllocatorBody(this: DsStore): DsStore_BuddyAllocatorBody = 
-  if this.buddyAllocatorBodyInst != nil:
+  if this.buddyAllocatorBodyInstFlag:
     return this.buddyAllocatorBodyInst
   let pos = this.io.pos()
   this.io.seek(int((this.buddyAllocatorHeader.ofsBookkeepingInfoBlock + 4)))
@@ -144,8 +155,8 @@ proc buddyAllocatorBody(this: DsStore): DsStore_BuddyAllocatorBody =
   let buddyAllocatorBodyInstExpr = DsStore_BuddyAllocatorBody.read(rawBuddyAllocatorBodyInstIo, this.root, this)
   this.buddyAllocatorBodyInst = buddyAllocatorBodyInstExpr
   this.io.seek(pos)
-  if this.buddyAllocatorBodyInst != nil:
-    return this.buddyAllocatorBodyInst
+  this.buddyAllocatorBodyInstFlag = true
+  return this.buddyAllocatorBodyInst
 
 proc blockAddressMask(this: DsStore): int8 = 
 
@@ -154,12 +165,12 @@ proc blockAddressMask(this: DsStore): int8 =
 of the B-tree from the block addresses.
 
   ]##
-  if this.blockAddressMaskInst != nil:
+  if this.blockAddressMaskInstFlag:
     return this.blockAddressMaskInst
   let blockAddressMaskInstExpr = int8(31)
   this.blockAddressMaskInst = blockAddressMaskInstExpr
-  if this.blockAddressMaskInst != nil:
-    return this.blockAddressMaskInst
+  this.blockAddressMaskInstFlag = true
+  return this.blockAddressMaskInst
 
 proc fromFile*(_: typedesc[DsStore], filename: string): DsStore =
   DsStore.read(newKaitaiFileStream(filename), nil, nil)
@@ -245,34 +256,34 @@ proc read*(_: typedesc[DsStore_BuddyAllocatorBody], io: KaitaiStream, root: Kait
     this.freeLists.add(it)
 
 proc numBlockAddresses(this: DsStore_BuddyAllocatorBody): int = 
-  if this.numBlockAddressesInst != nil:
+  if this.numBlockAddressesInstFlag:
     return this.numBlockAddressesInst
   let numBlockAddressesInstExpr = int(256)
   this.numBlockAddressesInst = numBlockAddressesInstExpr
-  if this.numBlockAddressesInst != nil:
-    return this.numBlockAddressesInst
+  this.numBlockAddressesInstFlag = true
+  return this.numBlockAddressesInst
 
 proc numFreeLists(this: DsStore_BuddyAllocatorBody): int8 = 
-  if this.numFreeListsInst != nil:
+  if this.numFreeListsInstFlag:
     return this.numFreeListsInst
   let numFreeListsInstExpr = int8(32)
   this.numFreeListsInst = numFreeListsInstExpr
-  if this.numFreeListsInst != nil:
-    return this.numFreeListsInst
+  this.numFreeListsInstFlag = true
+  return this.numFreeListsInst
 
 proc directories(this: DsStore_BuddyAllocatorBody): seq[DsStore_MasterBlockRef] = 
 
   ##[
   Master blocks of the different B-trees.
   ]##
-  if this.directoriesInst.len != 0:
+  if this.directoriesInstFlag:
     return this.directoriesInst
   let io = DsStore(this.root).io
   for i in 0 ..< int(this.numDirectories):
     let it = DsStore_MasterBlockRef.read(io, this.root, this, i)
     this.directoriesInst.add(it)
-  if this.directoriesInst.len != 0:
-    return this.directoriesInst
+  this.directoriesInstFlag = true
+  return this.directoriesInst
 
 proc fromFile*(_: typedesc[DsStore_BuddyAllocatorBody], filename: string): DsStore_BuddyAllocatorBody =
   DsStore_BuddyAllocatorBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -289,20 +300,20 @@ proc read*(_: typedesc[DsStore_BuddyAllocatorBody_BlockDescriptor], io: KaitaiSt
   this.addressRaw = addressRawExpr
 
 proc offset(this: DsStore_BuddyAllocatorBody_BlockDescriptor): int = 
-  if this.offsetInst != nil:
+  if this.offsetInstFlag:
     return this.offsetInst
   let offsetInstExpr = int(((this.addressRaw and not(DsStore(this.root).blockAddressMask)) + 4))
   this.offsetInst = offsetInstExpr
-  if this.offsetInst != nil:
-    return this.offsetInst
+  this.offsetInstFlag = true
+  return this.offsetInst
 
 proc size(this: DsStore_BuddyAllocatorBody_BlockDescriptor): int = 
-  if this.sizeInst != nil:
+  if this.sizeInstFlag:
     return this.sizeInst
   let sizeInstExpr = int(((1 shl this.addressRaw) and DsStore(this.root).blockAddressMask))
   this.sizeInst = sizeInstExpr
-  if this.sizeInst != nil:
-    return this.sizeInst
+  this.sizeInstFlag = true
+  return this.sizeInst
 
 proc fromFile*(_: typedesc[DsStore_BuddyAllocatorBody_BlockDescriptor], filename: string): DsStore_BuddyAllocatorBody_BlockDescriptor =
   DsStore_BuddyAllocatorBody_BlockDescriptor.read(newKaitaiFileStream(filename), nil, nil)
@@ -354,7 +365,7 @@ proc read*(_: typedesc[DsStore_MasterBlockRef], io: KaitaiStream, root: KaitaiSt
 
 
 proc masterBlock(this: DsStore_MasterBlockRef): DsStore_MasterBlockRef_MasterBlock = 
-  if this.masterBlockInst != nil:
+  if this.masterBlockInstFlag:
     return this.masterBlockInst
   let pos = this.io.pos()
   this.io.seek(int(this.parent.blockAddresses[this.parent.directoryEntries[this.idx].blockId].offset))
@@ -364,8 +375,8 @@ proc masterBlock(this: DsStore_MasterBlockRef): DsStore_MasterBlockRef_MasterBlo
   let masterBlockInstExpr = DsStore_MasterBlockRef_MasterBlock.read(rawMasterBlockInstIo, this.root, this)
   this.masterBlockInst = masterBlockInstExpr
   this.io.seek(pos)
-  if this.masterBlockInst != nil:
-    return this.masterBlockInst
+  this.masterBlockInstFlag = true
+  return this.masterBlockInst
 
 proc fromFile*(_: typedesc[DsStore_MasterBlockRef], filename: string): DsStore_MasterBlockRef =
   DsStore_MasterBlockRef.read(newKaitaiFileStream(filename), nil, nil)
@@ -410,7 +421,7 @@ proc read*(_: typedesc[DsStore_MasterBlockRef_MasterBlock], io: KaitaiStream, ro
   this.unnamed4 = unnamed4Expr
 
 proc rootBlock(this: DsStore_MasterBlockRef_MasterBlock): DsStore_Block = 
-  if this.rootBlockInst != nil:
+  if this.rootBlockInstFlag:
     return this.rootBlockInst
   let io = DsStore(this.root).io
   let pos = io.pos()
@@ -418,8 +429,8 @@ proc rootBlock(this: DsStore_MasterBlockRef_MasterBlock): DsStore_Block =
   let rootBlockInstExpr = DsStore_Block.read(io, this.root, this)
   this.rootBlockInst = rootBlockInstExpr
   io.seek(pos)
-  if this.rootBlockInst != nil:
-    return this.rootBlockInst
+  this.rootBlockInstFlag = true
+  return this.rootBlockInst
 
 proc fromFile*(_: typedesc[DsStore_MasterBlockRef_MasterBlock], filename: string): DsStore_MasterBlockRef_MasterBlock =
   DsStore_MasterBlockRef_MasterBlock.read(newKaitaiFileStream(filename), nil, nil)
@@ -453,7 +464,7 @@ proc rightmostBlock(this: DsStore_Block): DsStore_Block =
   ##[
   Rightmost child block pointer.
   ]##
-  if this.rightmostBlockInst != nil:
+  if this.rightmostBlockInstFlag:
     return this.rightmostBlockInst
   if this.mode > 0:
     let io = DsStore(this.root).io
@@ -462,8 +473,8 @@ proc rightmostBlock(this: DsStore_Block): DsStore_Block =
     let rightmostBlockInstExpr = DsStore_Block.read(io, this.root, this)
     this.rightmostBlockInst = rightmostBlockInstExpr
     io.seek(pos)
-  if this.rightmostBlockInst != nil:
-    return this.rightmostBlockInst
+  this.rightmostBlockInstFlag = true
+  return this.rightmostBlockInst
 
 proc fromFile*(_: typedesc[DsStore_Block], filename: string): DsStore_Block =
   DsStore_Block.read(newKaitaiFileStream(filename), nil, nil)
@@ -485,7 +496,7 @@ proc read*(_: typedesc[DsStore_Block_BlockData], io: KaitaiStream, root: KaitaiS
   this.record = recordExpr
 
 proc block(this: DsStore_Block_BlockData): DsStore_Block = 
-  if this.blockInst != nil:
+  if this.blockInstFlag:
     return this.blockInst
   if this.mode > 0:
     let io = DsStore(this.root).io
@@ -494,8 +505,8 @@ proc block(this: DsStore_Block_BlockData): DsStore_Block =
     let blockInstExpr = DsStore_Block.read(io, this.root, this)
     this.blockInst = blockInstExpr
     io.seek(pos)
-  if this.blockInst != nil:
-    return this.blockInst
+  this.blockInstFlag = true
+  return this.blockInst
 
 proc fromFile*(_: typedesc[DsStore_Block_BlockData], filename: string): DsStore_Block_BlockData =
   DsStore_Block_BlockData.read(newKaitaiFileStream(filename), nil, nil)

@@ -8,7 +8,7 @@
   } else {
     root.PythonPyc27 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Python interpreter runs .py files in 2 step process: first, it
  * produces bytecode, which it then executes. Translation of .py source
@@ -540,9 +540,9 @@ var PythonPyc27 = (function() {
       }
       Tuple.prototype._read = function() {
         this.count = this._io.readU4le();
-        this.items = new Array(this.count);
+        this.items = [];
         for (var i = 0; i < this.count; i++) {
-          this.items[i] = new PyObject(this._io, this, this._root);
+          this.items.push(new PyObject(this._io, this, this._root));
         }
       }
 

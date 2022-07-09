@@ -8,7 +8,7 @@
   } else {
     root.SystemdJournal = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * systemd, a popular user-space system/service management suite on Linux,
  * offers logging functionality, storing incoming logs in a binary journal
@@ -43,9 +43,9 @@ var SystemdJournal = (function() {
     this._raw_header = this._io.readBytes(this.lenHeader);
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new Header(_io__raw_header, this, this._root);
-    this.objects = new Array(this.header.numObjects);
+    this.objects = [];
     for (var i = 0; i < this.header.numObjects; i++) {
-      this.objects[i] = new JournalObject(this._io, this, this._root);
+      this.objects.push(new JournalObject(this._io, this, this._root));
     }
   }
 

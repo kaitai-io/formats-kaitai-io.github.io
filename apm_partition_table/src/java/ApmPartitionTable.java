@@ -80,10 +80,10 @@ public class ApmPartitionTable extends KaitaiStruct {
             if (this.partition != null)
                 return this.partition;
             if ((partitionStatus() & 1) != 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((partitionStart() * _root.sectorSize()));
-                this.partition = io.readBytes((partitionSize() * _root.sectorSize()));
+                io.seek((partitionStart() * _root().sectorSize()));
+                this.partition = io.readBytes((partitionSize() * _root().sectorSize()));
                 io.seek(_pos);
             }
             return this.partition;
@@ -92,10 +92,10 @@ public class ApmPartitionTable extends KaitaiStruct {
         public byte[] data() {
             if (this.data != null)
                 return this.data;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
-            io.seek((dataStart() * _root.sectorSize()));
-            this.data = io.readBytes((dataSize() * _root.sectorSize()));
+            io.seek((dataStart() * _root().sectorSize()));
+            this.data = io.readBytes((dataSize() * _root().sectorSize()));
             io.seek(_pos);
             return this.data;
         }
@@ -103,9 +103,9 @@ public class ApmPartitionTable extends KaitaiStruct {
         public byte[] bootCode() {
             if (this.bootCode != null)
                 return this.bootCode;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
-            io.seek((bootCodeStart() * _root.sectorSize()));
+            io.seek((bootCodeStart() * _root().sectorSize()));
             this.bootCode = io.readBytes(bootCodeSize());
             io.seek(_pos);
             return this.bootCode;
@@ -210,9 +210,9 @@ public class ApmPartitionTable extends KaitaiStruct {
     public PartitionEntry partitionLookup() {
         if (this.partitionLookup != null)
             return this.partitionLookup;
-        KaitaiStream io = _root._io();
+        KaitaiStream io = _root()._io();
         long _pos = io.pos();
-        io.seek(_root.sectorSize());
+        io.seek(_root().sectorSize());
         this._raw_partitionLookup = io.readBytes(sectorSize());
         KaitaiStream _io__raw_partitionLookup = new ByteBufferKaitaiStream(_raw_partitionLookup);
         this.partitionLookup = new PartitionEntry(_io__raw_partitionLookup, this, _root);
@@ -223,12 +223,12 @@ public class ApmPartitionTable extends KaitaiStruct {
     public ArrayList<PartitionEntry> partitionEntries() {
         if (this.partitionEntries != null)
             return this.partitionEntries;
-        KaitaiStream io = _root._io();
+        KaitaiStream io = _root()._io();
         long _pos = io.pos();
-        io.seek(_root.sectorSize());
-        this._raw_partitionEntries = new ArrayList<byte[]>(((Number) (_root.partitionLookup().numberOfPartitions())).intValue());
-        partitionEntries = new ArrayList<PartitionEntry>(((Number) (_root.partitionLookup().numberOfPartitions())).intValue());
-        for (int i = 0; i < _root.partitionLookup().numberOfPartitions(); i++) {
+        io.seek(_root().sectorSize());
+        this._raw_partitionEntries = new ArrayList<byte[]>();
+        this.partitionEntries = new ArrayList<PartitionEntry>();
+        for (int i = 0; i < _root().partitionLookup().numberOfPartitions(); i++) {
             this._raw_partitionEntries.add(io.readBytes(sectorSize()));
             KaitaiStream _io__raw_partitionEntries = new ByteBufferKaitaiStream(_raw_partitionEntries.get(_raw_partitionEntries.size() - 1));
             this.partitionEntries.add(new PartitionEntry(_io__raw_partitionEntries, this, _root));

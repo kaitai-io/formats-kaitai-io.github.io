@@ -56,7 +56,7 @@ namespace Kaitai
                 throw new ValidationNotEqualError(new byte[] { 1, 102, 99, 112 }, Magic, M_Io, "/seq/0");
             }
             _numTables = m_io.ReadU4le();
-            _tables = new List<Table>((int) (NumTables));
+            _tables = new List<Table>();
             for (var i = 0; i < NumTables; i++)
             {
                 _tables.Add(new Table(m_io, this, m_root));
@@ -113,7 +113,7 @@ namespace Kaitai
                 {
                     _format = new Format(m_io, this, m_root);
                     _numGlyphs = m_io.ReadU4le();
-                    _swidths = new List<uint>((int) (NumGlyphs));
+                    _swidths = new List<uint>();
                     for (var i = 0; i < NumGlyphs; i++)
                     {
                         _swidths.Add(m_io.ReadU4le());
@@ -160,7 +160,7 @@ namespace Kaitai
                 {
                     _format = new Format(m_io, this, m_root);
                     _numProps = m_io.ReadU4le();
-                    _props = new List<Prop>((int) (NumProps));
+                    _props = new List<Prop>();
                     for (var i = 0; i < NumProps; i++)
                     {
                         _props.Add(new Prop(m_io, this, m_root));
@@ -352,7 +352,7 @@ namespace Kaitai
                     _minByte1 = m_io.ReadU2le();
                     _maxByte1 = m_io.ReadU2le();
                     _defaultChar = m_io.ReadU2le();
-                    _glyphIndexes = new List<ushort>((int) ((((MaxCharOrByte2 - MinCharOrByte2) + 1) * ((MaxByte1 - MinByte1) + 1))));
+                    _glyphIndexes = new List<ushort>();
                     for (var i = 0; i < (((MaxCharOrByte2 - MinCharOrByte2) + 1) * ((MaxByte1 - MinByte1) + 1)); i++)
                     {
                         _glyphIndexes.Add(m_io.ReadU2le());
@@ -401,7 +401,7 @@ namespace Kaitai
                 {
                     _format = new Format(m_io, this, m_root);
                     _numGlyphs = m_io.ReadU4le();
-                    _names = new List<StringRef>((int) (NumGlyphs));
+                    _names = new List<StringRef>();
                     for (var i = 0; i < NumGlyphs; i++)
                     {
                         _names.Add(new StringRef(m_io, this, m_root));
@@ -502,12 +502,12 @@ namespace Kaitai
                 {
                     _format = new Format(m_io, this, m_root);
                     _numGlyphs = m_io.ReadU4le();
-                    _offsets = new List<uint>((int) (NumGlyphs));
+                    _offsets = new List<uint>();
                     for (var i = 0; i < NumGlyphs; i++)
                     {
                         _offsets.Add(m_io.ReadU4le());
                     }
-                    _bitmapSizes = new List<uint>((int) (4));
+                    _bitmapSizes = new List<uint>();
                     for (var i = 0; i < 4; i++)
                     {
                         _bitmapSizes.Add(m_io.ReadU4le());

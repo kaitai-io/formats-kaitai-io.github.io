@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class BitcoinTransaction(KaitaiStruct):
@@ -24,14 +23,14 @@ class BitcoinTransaction(KaitaiStruct):
     def _read(self):
         self.version = self._io.read_u4le()
         self.num_vins = self._io.read_u1()
-        self.vins = [None] * (self.num_vins)
+        self.vins = []
         for i in range(self.num_vins):
-            self.vins[i] = BitcoinTransaction.Vin(self._io, self, self._root)
+            self.vins.append(BitcoinTransaction.Vin(self._io, self, self._root))
 
         self.num_vouts = self._io.read_u1()
-        self.vouts = [None] * (self.num_vouts)
+        self.vouts = []
         for i in range(self.num_vouts):
-            self.vouts[i] = BitcoinTransaction.Vout(self._io, self, self._root)
+            self.vouts.append(BitcoinTransaction.Vout(self._io, self, self._root))
 
         self.locktime = self._io.read_u4le()
 

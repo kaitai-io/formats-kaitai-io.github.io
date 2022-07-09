@@ -410,18 +410,18 @@ They are mostly found in resource forks, but can occasionally appear standalone 
       <span class="vi">@num_data_formats</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="k">end</span>
     <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="mi">1</span>
-      <span class="vi">@data_formats</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_data_formats</span><span class="p">)</span>
+      <span class="vi">@data_formats</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_data_formats</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@data_formats</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">DataFormat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@data_formats</span> <span class="o">&lt;&lt;</span> <span class="no">DataFormat</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
     <span class="k">end</span>
     <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="mi">2</span>
       <span class="vi">@reference_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="k">end</span>
     <span class="vi">@num_sound_commands</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-    <span class="vi">@sound_commands</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_sound_commands</span><span class="p">)</span>
+    <span class="vi">@sound_commands</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">num_sound_commands</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@sound_commands</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">SoundCommand</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@sound_commands</span> <span class="o">&lt;&lt;</span> <span class="no">SoundCommand</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>

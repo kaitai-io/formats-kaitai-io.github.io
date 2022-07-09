@@ -285,9 +285,12 @@ section#format-index .row {
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawOptions</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">versionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">ihlInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">ihlBytesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">versionInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">versionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">ihlInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">ihlInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">ihlBytesInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">ihlBytesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Ipv4Packet_Ipv4Options</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Ipv4Packet_Ipv4Option</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ipv4Packet</span>
@@ -296,9 +299,12 @@ section#format-index .row {
     <span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ipv4Packet_Ipv4Options</span>
-    <span class="p">`</span><span class="n">copyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">optClassInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">numberInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">copyInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">copyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">optClassInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">optClassInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">numberInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numberInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ipv4Packet], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ipv4Packet</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ipv4Packet_Ipv4Options], io: KaitaiStream, root: KaitaiStruct, parent: Ipv4Packet): Ipv4Packet_Ipv4Options</span>
@@ -351,28 +357,28 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">version</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ipv4Packet</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
   <span class="k">let</span> <span class="n">versionInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="ow">and</span> <span class="mi">240</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span> <span class="o">=</span> <span class="n">versionInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">versionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
 
 <span class="k">proc </span><span class="nf">ihl</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ipv4Packet</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlInst</span>
   <span class="k">let</span> <span class="n">ihlInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="ow">and</span> <span class="mi">15</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">ihlInst</span> <span class="o">=</span> <span class="n">ihlInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ihlInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlInst</span>
 
 <span class="k">proc </span><span class="nf">ihlBytes</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ipv4Packet</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInst</span>
   <span class="k">let</span> <span class="n">ihlBytesInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ihl</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInst</span> <span class="o">=</span> <span class="n">ihlBytesInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">ihlBytesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ipv4Packet], filename: string): Ipv4Packet =</span>
   <span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -411,28 +417,28 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">copy</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ipv4Packet_Ipv4Option</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">copyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">copyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">copyInst</span>
   <span class="k">let</span> <span class="n">copyInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="ow">and</span> <span class="mi">128</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">7</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">copyInst</span> <span class="o">=</span> <span class="n">copyInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">copyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">copyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">copyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">copyInst</span>
 
 <span class="k">proc </span><span class="nf">optClass</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ipv4Packet_Ipv4Option</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">optClassInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">optClassInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">optClassInst</span>
   <span class="k">let</span> <span class="n">optClassInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="ow">and</span> <span class="mi">96</span><span class="p">)</span> <span class="ow">shr</span> <span class="mi">5</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">optClassInst</span> <span class="o">=</span> <span class="n">optClassInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">optClassInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">optClassInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">optClassInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">optClassInst</span>
 
 <span class="k">proc </span><span class="nf">number</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ipv4Packet_Ipv4Option</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numberInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numberInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numberInst</span>
   <span class="k">let</span> <span class="n">numberInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">b1</span> <span class="ow">and</span> <span class="mi">31</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numberInst</span> <span class="o">=</span> <span class="n">numberInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numberInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numberInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numberInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numberInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ipv4Packet_Ipv4Option], filename: string): Ipv4Packet_Ipv4Option =</span>
   <span class="n">Ipv4Packet_Ipv4Option</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

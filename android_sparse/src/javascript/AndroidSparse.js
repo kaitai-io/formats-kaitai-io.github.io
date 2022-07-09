@@ -8,7 +8,7 @@
   } else {
     root.AndroidSparse = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The Android sparse format is a format to more efficiently store files
  * for for example firmware updates to save on bandwidth. Files in sparse
@@ -48,9 +48,9 @@ var AndroidSparse = (function() {
     this._raw_header = this._io.readBytes((this.headerPrefix.lenHeader - 10));
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new FileHeader(_io__raw_header, this, this._root);
-    this.chunks = new Array(this.header.numChunks);
+    this.chunks = [];
     for (var i = 0; i < this.header.numChunks; i++) {
-      this.chunks[i] = new Chunk(this._io, this, this._root);
+      this.chunks.push(new Chunk(this._io, this, this._root));
     }
   }
 

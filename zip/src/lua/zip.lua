@@ -261,9 +261,9 @@ function Zip.ExtraField.ExtendedTimestamp.InfoFlags:_init(io, parent, root)
 end
 
 function Zip.ExtraField.ExtendedTimestamp.InfoFlags:_read()
-  self.has_mod_time = self._io:read_bits_int_le(1)
-  self.has_access_time = self._io:read_bits_int_le(1)
-  self.has_create_time = self._io:read_bits_int_le(1)
+  self.has_mod_time = self._io:read_bits_int_le(1) ~= 0
+  self.has_access_time = self._io:read_bits_int_le(1) ~= 0
+  self.has_create_time = self._io:read_bits_int_le(1) ~= 0
   self.reserved = self._io:read_bits_int_le(5)
 end
 
@@ -445,16 +445,16 @@ function Zip.LocalFileHeader.GpFlags:_init(io, parent, root)
 end
 
 function Zip.LocalFileHeader.GpFlags:_read()
-  self.file_encrypted = self._io:read_bits_int_le(1)
+  self.file_encrypted = self._io:read_bits_int_le(1) ~= 0
   self.comp_options_raw = self._io:read_bits_int_le(2)
-  self.has_data_descriptor = self._io:read_bits_int_le(1)
-  self.reserved_1 = self._io:read_bits_int_le(1)
-  self.comp_patched_data = self._io:read_bits_int_le(1)
-  self.strong_encrypt = self._io:read_bits_int_le(1)
+  self.has_data_descriptor = self._io:read_bits_int_le(1) ~= 0
+  self.reserved_1 = self._io:read_bits_int_le(1) ~= 0
+  self.comp_patched_data = self._io:read_bits_int_le(1) ~= 0
+  self.strong_encrypt = self._io:read_bits_int_le(1) ~= 0
   self.reserved_2 = self._io:read_bits_int_le(4)
-  self.lang_encoding = self._io:read_bits_int_le(1)
-  self.reserved_3 = self._io:read_bits_int_le(1)
-  self.mask_header_values = self._io:read_bits_int_le(1)
+  self.lang_encoding = self._io:read_bits_int_le(1) ~= 0
+  self.reserved_3 = self._io:read_bits_int_le(1) ~= 0
+  self.mask_header_values = self._io:read_bits_int_le(1) ~= 0
   self.reserved_4 = self._io:read_bits_int_le(2)
 end
 

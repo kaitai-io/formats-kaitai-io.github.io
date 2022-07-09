@@ -243,7 +243,7 @@ public class WindowsLnkFile extends KaitaiStruct {
                 if (!(isUnicode())) {
                     long _pos = this._io.pos();
                     this._io.seek((ofsVolumeLabel() - 4));
-                    this.volumeLabelAnsi = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("cp437"));
+                    this.volumeLabelAnsi = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("cp437"));
                     this._io.seek(_pos);
                 }
                 return this.volumeLabelAnsi;
@@ -309,7 +309,7 @@ public class WindowsLnkFile extends KaitaiStruct {
                 if (header().flags().hasVolumeIdAndLocalBasePath()) {
                     long _pos = this._io.pos();
                     this._io.seek((header().ofsLocalBasePath() - 4));
-                    this.localBasePath = this._io.readBytesTerm(0, false, true, true);
+                    this.localBasePath = this._io.readBytesTerm((byte) 0, false, true, true);
                     this._io.seek(_pos);
                 }
                 return this.localBasePath;

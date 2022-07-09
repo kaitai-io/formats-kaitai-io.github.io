@@ -73,9 +73,9 @@ class BroadcomTrx < Kaitai::Struct::Struct
     def _read
       @version = Version.new(@_io, self, @_root)
       @product_id = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)).force_encoding("utf-8")
-      @comp_hw = Array.new(4)
+      @comp_hw = []
       (4).times { |i|
-        @comp_hw[i] = HwCompInfo.new(@_io, self, @_root)
+        @comp_hw << HwCompInfo.new(@_io, self, @_root)
       }
       @reserved = @_io.read_bytes(32)
       self
@@ -178,9 +178,9 @@ class BroadcomTrx < Kaitai::Struct::Struct
       end
 
       def _read
-        @flags = Array.new(16)
+        @flags = []
         (16).times { |i|
-          @flags[i] = @_io.read_bits_int_le(1) != 0
+          @flags << @_io.read_bits_int_le(1) != 0
         }
         self
       end

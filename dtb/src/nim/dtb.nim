@@ -17,9 +17,12 @@ type
     `rawMemoryReservationBlockInst`*: seq[byte]
     `rawStructureBlockInst`*: seq[byte]
     `rawStringsBlockInst`*: seq[byte]
-    `memoryReservationBlockInst`*: Dtb_MemoryBlock
-    `structureBlockInst`*: Dtb_FdtBlock
-    `stringsBlockInst`*: Dtb_Strings
+    `memoryReservationBlockInst`: Dtb_MemoryBlock
+    `memoryReservationBlockInstFlag`: bool
+    `structureBlockInst`: Dtb_FdtBlock
+    `structureBlockInstFlag`: bool
+    `stringsBlockInst`: Dtb_Strings
+    `stringsBlockInstFlag`: bool
   Dtb_Fdt* = enum
     begin_node = 1
     end_node = 2
@@ -45,7 +48,8 @@ type
     `property`*: seq[byte]
     `padding`*: seq[byte]
     `parent`*: Dtb_FdtNode
-    `nameInst`*: string
+    `nameInst`: string
+    `nameInstFlag`: bool
   Dtb_FdtNode* = ref object of KaitaiStruct
     `type`*: Dtb_Fdt
     `body`*: KaitaiStruct
@@ -126,7 +130,7 @@ proc read*(_: typedesc[Dtb], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
   this.lenStructureBlock = lenStructureBlockExpr
 
 proc memoryReservationBlock(this: Dtb): Dtb_MemoryBlock = 
-  if this.memoryReservationBlockInst != nil:
+  if this.memoryReservationBlockInstFlag:
     return this.memoryReservationBlockInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsMemoryReservationBlock))
@@ -136,11 +140,11 @@ proc memoryReservationBlock(this: Dtb): Dtb_MemoryBlock =
   let memoryReservationBlockInstExpr = Dtb_MemoryBlock.read(rawMemoryReservationBlockInstIo, this.root, this)
   this.memoryReservationBlockInst = memoryReservationBlockInstExpr
   this.io.seek(pos)
-  if this.memoryReservationBlockInst != nil:
-    return this.memoryReservationBlockInst
+  this.memoryReservationBlockInstFlag = true
+  return this.memoryReservationBlockInst
 
 proc structureBlock(this: Dtb): Dtb_FdtBlock = 
-  if this.structureBlockInst != nil:
+  if this.structureBlockInstFlag:
     return this.structureBlockInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsStructureBlock))
@@ -150,11 +154,11 @@ proc structureBlock(this: Dtb): Dtb_FdtBlock =
   let structureBlockInstExpr = Dtb_FdtBlock.read(rawStructureBlockInstIo, this.root, this)
   this.structureBlockInst = structureBlockInstExpr
   this.io.seek(pos)
-  if this.structureBlockInst != nil:
-    return this.structureBlockInst
+  this.structureBlockInstFlag = true
+  return this.structureBlockInst
 
 proc stringsBlock(this: Dtb): Dtb_Strings = 
-  if this.stringsBlockInst != nil:
+  if this.stringsBlockInstFlag:
     return this.stringsBlockInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsStringsBlock))
@@ -164,8 +168,8 @@ proc stringsBlock(this: Dtb): Dtb_Strings =
   let stringsBlockInstExpr = Dtb_Strings.read(rawStringsBlockInstIo, this.root, this)
   this.stringsBlockInst = stringsBlockInstExpr
   this.io.seek(pos)
-  if this.stringsBlockInst != nil:
-    return this.stringsBlockInst
+  this.stringsBlockInstFlag = true
+  return this.stringsBlockInst
 
 proc fromFile*(_: typedesc[Dtb], filename: string): Dtb =
   Dtb.read(newKaitaiFileStream(filename), nil, nil)
@@ -268,7 +272,7 @@ proc read*(_: typedesc[Dtb_FdtProp], io: KaitaiStream, root: KaitaiStruct, paren
   this.padding = paddingExpr
 
 proc name(this: Dtb_FdtProp): string = 
-  if this.nameInst.len != 0:
+  if this.nameInstFlag:
     return this.nameInst
   let io = Dtb(this.root).stringsBlock.io
   let pos = io.pos()
@@ -276,8 +280,8 @@ proc name(this: Dtb_FdtProp): string =
   let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
   this.nameInst = nameInstExpr
   io.seek(pos)
-  if this.nameInst.len != 0:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc fromFile*(_: typedesc[Dtb_FdtProp], filename: string): Dtb_FdtProp =
   Dtb_FdtProp.read(newKaitaiFileStream(filename), nil, nil)

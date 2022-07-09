@@ -8,7 +8,7 @@
   } else {
     root.AndesFirmware = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Firmware image found with MediaTek MT76xx wifi chipsets.
  */

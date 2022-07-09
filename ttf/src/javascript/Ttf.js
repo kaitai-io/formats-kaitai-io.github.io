@@ -8,7 +8,7 @@
   } else {
     root.Ttf = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A TrueType font file contains data, in table format, that comprises
  * an outline font.
@@ -25,9 +25,9 @@ var Ttf = (function() {
   }
   Ttf.prototype._read = function() {
     this.offsetTable = new OffsetTable(this._io, this, this._root);
-    this.directoryTable = new Array(this.offsetTable.numTables);
+    this.directoryTable = [];
     for (var i = 0; i < this.offsetTable.numTables; i++) {
-      this.directoryTable[i] = new DirTableEntry(this._io, this, this._root);
+      this.directoryTable.push(new DirTableEntry(this._io, this, this._root));
     }
   }
 
@@ -64,11 +64,11 @@ var Ttf = (function() {
       }
       Format20.prototype._read = function() {
         this.numberOfGlyphs = this._io.readU2be();
-        this.glyphNameIndex = new Array(this.numberOfGlyphs);
+        this.glyphNameIndex = [];
         for (var i = 0; i < this.numberOfGlyphs; i++) {
-          this.glyphNameIndex[i] = this._io.readU2be();
+          this.glyphNameIndex.push(this._io.readU2be());
         }
-        this.glyphNames = []
+        this.glyphNames = [];
         var i = 0;
         do {
           var _ = new PascalString(this._io, this, this._root);
@@ -179,9 +179,9 @@ var Ttf = (function() {
       this.formatSelector = this._io.readU2be();
       this.numNameRecords = this._io.readU2be();
       this.ofsStrings = this._io.readU2be();
-      this.nameRecords = new Array(this.numNameRecords);
+      this.nameRecords = [];
       for (var i = 0; i < this.numNameRecords; i++) {
-        this.nameRecords[i] = new NameRecord(this._io, this, this._root);
+        this.nameRecords.push(new NameRecord(this._io, this, this._root));
       }
     }
 
@@ -389,9 +389,9 @@ var Ttf = (function() {
     Kern.prototype._read = function() {
       this.version = this._io.readU2be();
       this.subtableCount = this._io.readU2be();
-      this.subtables = new Array(this.subtableCount);
+      this.subtables = [];
       for (var i = 0; i < this.subtableCount; i++) {
-        this.subtables[i] = new Subtable(this._io, this, this._root);
+        this.subtables.push(new Subtable(this._io, this, this._root));
       }
     }
 
@@ -431,9 +431,9 @@ var Ttf = (function() {
           this.searchRange = this._io.readU2be();
           this.entrySelector = this._io.readU2be();
           this.rangeShift = this._io.readU2be();
-          this.kerningPairs = new Array(this.pairCount);
+          this.kerningPairs = [];
           for (var i = 0; i < this.pairCount; i++) {
-            this.kerningPairs[i] = new KerningPair(this._io, this, this._root);
+            this.kerningPairs.push(new KerningPair(this._io, this, this._root));
           }
         }
 
@@ -1249,15 +1249,15 @@ var Ttf = (function() {
         this._read();
       }
       SimpleGlyph.prototype._read = function() {
-        this.endPtsOfContours = new Array(this._parent.numberOfContours);
+        this.endPtsOfContours = [];
         for (var i = 0; i < this._parent.numberOfContours; i++) {
-          this.endPtsOfContours[i] = this._io.readU2be();
+          this.endPtsOfContours.push(this._io.readU2be());
         }
         this.instructionLength = this._io.readU2be();
         this.instructions = this._io.readBytes(this.instructionLength);
-        this.flags = new Array(this.pointCount);
+        this.flags = [];
         for (var i = 0; i < this.pointCount; i++) {
-          this.flags[i] = new Flag(this._io, this, this._root);
+          this.flags.push(new Flag(this._io, this, this._root));
         }
       }
 
@@ -1472,9 +1472,9 @@ var Ttf = (function() {
     Cmap.prototype._read = function() {
       this.versionNumber = this._io.readU2be();
       this.numberOfEncodingTables = this._io.readU2be();
-      this.tables = new Array(this.numberOfEncodingTables);
+      this.tables = [];
       for (var i = 0; i < this.numberOfEncodingTables; i++) {
-        this.tables[i] = new SubtableHeader(this._io, this, this._root);
+        this.tables.push(new SubtableHeader(this._io, this, this._root));
       }
     }
 
@@ -1582,9 +1582,9 @@ var Ttf = (function() {
           this._read();
         }
         HighByteMappingThroughTable.prototype._read = function() {
-          this.subHeaderKeys = new Array(256);
+          this.subHeaderKeys = [];
           for (var i = 0; i < 256; i++) {
-            this.subHeaderKeys[i] = this._io.readU2be();
+            this.subHeaderKeys.push(this._io.readU2be());
           }
         }
 
@@ -1604,22 +1604,22 @@ var Ttf = (function() {
           this.searchRange = this._io.readU2be();
           this.entrySelector = this._io.readU2be();
           this.rangeShift = this._io.readU2be();
-          this.endCount = new Array(this.segCount);
+          this.endCount = [];
           for (var i = 0; i < this.segCount; i++) {
-            this.endCount[i] = this._io.readU2be();
+            this.endCount.push(this._io.readU2be());
           }
           this.reservedPad = this._io.readU2be();
-          this.startCount = new Array(this.segCount);
+          this.startCount = [];
           for (var i = 0; i < this.segCount; i++) {
-            this.startCount[i] = this._io.readU2be();
+            this.startCount.push(this._io.readU2be());
           }
-          this.idDelta = new Array(this.segCount);
+          this.idDelta = [];
           for (var i = 0; i < this.segCount; i++) {
-            this.idDelta[i] = this._io.readU2be();
+            this.idDelta.push(this._io.readU2be());
           }
-          this.idRangeOffset = new Array(this.segCount);
+          this.idRangeOffset = [];
           for (var i = 0; i < this.segCount; i++) {
-            this.idRangeOffset[i] = this._io.readU2be();
+            this.idRangeOffset.push(this._io.readU2be());
           }
           this.glyphIdArray = [];
           var i = 0;
@@ -1651,9 +1651,9 @@ var Ttf = (function() {
         TrimmedTableMapping.prototype._read = function() {
           this.firstCode = this._io.readU2be();
           this.entryCount = this._io.readU2be();
-          this.glyphIdArray = new Array(this.entryCount);
+          this.glyphIdArray = [];
           for (var i = 0; i < this.entryCount; i++) {
-            this.glyphIdArray[i] = this._io.readU2be();
+            this.glyphIdArray.push(this._io.readU2be());
           }
         }
 

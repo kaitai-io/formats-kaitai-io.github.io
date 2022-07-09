@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Pcx(KaitaiStruct):
@@ -95,9 +94,9 @@ class Pcx(KaitaiStruct):
             self.magic = self._io.read_bytes(1)
             if not self.magic == b"\x0C":
                 raise kaitaistruct.ValidationNotEqualError(b"\x0C", self.magic, self._io, u"/types/t_palette_256/seq/0")
-            self.colors = [None] * (256)
+            self.colors = []
             for i in range(256):
-                self.colors[i] = Pcx.Rgb(self._io, self, self._root)
+                self.colors.append(Pcx.Rgb(self._io, self, self._root))
 
 
 
@@ -121,7 +120,7 @@ class Pcx(KaitaiStruct):
            - "VGA 256 Color Palette Information" - https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
         """
         if hasattr(self, '_m_palette_256'):
-            return self._m_palette_256 if hasattr(self, '_m_palette_256') else None
+            return self._m_palette_256
 
         if  ((self.hdr.version == Pcx.Versions.v3_0) and (self.hdr.bits_per_pixel == 8) and (self.hdr.num_planes == 1)) :
             _pos = self._io.pos()
@@ -129,6 +128,6 @@ class Pcx(KaitaiStruct):
             self._m_palette_256 = Pcx.TPalette256(self._io, self, self._root)
             self._io.seek(_pos)
 
-        return self._m_palette_256 if hasattr(self, '_m_palette_256') else None
+        return getattr(self, '_m_palette_256', None)
 
 

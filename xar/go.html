@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>XAR (eXtensible ARchive): Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">XAR (eXtensible ARchive)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>XAR (eXtensible ARchive):
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>From <a href="https://en.wikipedia.org/wiki/Xar_(archiver)">Wikipedia</a>:</p>
+<p>&quot;XAR (short for eXtensible ARchive format) is an open source file archiver
+and the archiver's file format. It was created within the OpenDarwin project
+and is used in macOS X 10.5 and up for software installation routines, as
+well as browser extensions in Safari 5.0 and up.&quot;</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["xar", "pkg", "xip"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/600">PRONOM fmt/600</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q1093556">Wikidata Q1093556</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Xar_(Extensible_Archive)">Xar (Extensible Archive) in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of XAR (eXtensible ARchive)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="XAR (eXtensible ARchive) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="XAR (eXtensible ARchive) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="XAR (eXtensible ARchive) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="XAR (eXtensible ARchive) parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="XAR (eXtensible ARchive) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="XAR (eXtensible ARchive) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="XAR (eXtensible ARchive) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="XAR (eXtensible ARchive) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="XAR (eXtensible ARchive) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="XAR (eXtensible ARchive) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="XAR (eXtensible ARchive) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse XAR (eXtensible ARchive)
+            
+        </h2>
+
+        
+
+        <h3>xar.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/xar.go" download="xar.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// Code generated by kaitai-struct-compiler from a .ksy source file. DO NOT EDIT.</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * From [Wikipedia](https://en.wikipedia.org/wiki/Xar_(archiver)):</span>
+<span class="cm"> * </span>
+<span class="cm"> * &quot;XAR (short for eXtensible ARchive format) is an open source file archiver</span>
+<span class="cm"> * and the archiver&#39;s file format. It was created within the OpenDarwin project</span>
+<span class="cm"> * and is used in macOS X 10.5 and up for software installation routines, as</span>
+<span class="cm"> * well as browser extensions in Safari 5.0 and up.&quot;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/mackyle/xar/wiki/xarformat&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">Xar_ChecksumAlgorithmsApple</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">Xar_ChecksumAlgorithmsApple__None</span> <span class="nx">Xar_ChecksumAlgorithmsApple</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">Xar_ChecksumAlgorithmsApple__Sha1</span> <span class="nx">Xar_ChecksumAlgorithmsApple</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">Xar_ChecksumAlgorithmsApple__Md5</span> <span class="nx">Xar_ChecksumAlgorithmsApple</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">Xar_ChecksumAlgorithmsApple__Sha256</span> <span class="nx">Xar_ChecksumAlgorithmsApple</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">Xar_ChecksumAlgorithmsApple__Sha512</span> <span class="nx">Xar_ChecksumAlgorithmsApple</span> <span class="p">=</span> <span class="mi">4</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">Xar</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">HeaderPrefix</span> <span class="o">*</span><span class="nx">Xar_FileHeaderPrefix</span>
+	<span class="nx">Header</span> <span class="o">*</span><span class="nx">Xar_FileHeader</span>
+	<span class="nx">Toc</span> <span class="o">*</span><span class="nx">Xar_TocType</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Xar</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_raw_Header</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_raw_Toc</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_raw__raw_Toc</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_f_checksumAlgorithmOther</span> <span class="kt">bool</span>
+	<span class="nx">checksumAlgorithmOther</span> <span class="kt">int8</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewXar</span><span class="p">()</span> <span class="o">*</span><span class="nx">Xar</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Xar</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp1</span> <span class="o">:=</span> <span class="nx">NewXar_FileHeaderPrefix</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp1</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderPrefix</span> <span class="p">=</span> <span class="nx">tmp1</span>
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderPrefix</span><span class="p">.</span><span class="nx">LenHeader</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp2</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Header</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="nx">_io__raw_Header</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Header</span><span class="p">))</span>
+	<span class="nx">tmp3</span> <span class="o">:=</span> <span class="nx">NewXar_FileHeader</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp3</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Header</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Header</span> <span class="p">=</span> <span class="nx">tmp3</span>
+	<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">LenTocCompressed</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp4</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw__raw_Toc</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">ProcessZlib</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw__raw_Toc</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Toc</span> <span class="p">=</span> <span class="nx">tmp5</span>
+	<span class="nx">_io__raw_Toc</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Toc</span><span class="p">))</span>
+	<span class="nx">tmp6</span> <span class="o">:=</span> <span class="nx">NewXar_TocType</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp6</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Toc</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Toc</span> <span class="p">=</span> <span class="nx">tmp6</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/mackyle/xar/blob/66d451d/xar/include/xar.h.in#L85&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">)</span> <span class="nx">ChecksumAlgorithmOther</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int8</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_checksumAlgorithmOther</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">checksumAlgorithmOther</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">checksumAlgorithmOther</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_checksumAlgorithmOther</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">checksumAlgorithmOther</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * internal; access `_root.header` instead</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * zlib compressed XML further describing the content of the archive</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Xar_FileHeaderPrefix</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">LenHeader</span> <span class="kt">uint16</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Xar</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Xar</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewXar_FileHeaderPrefix</span><span class="p">()</span> <span class="o">*</span><span class="nx">Xar_FileHeaderPrefix</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Xar_FileHeaderPrefix</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar_FileHeaderPrefix</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp7</span> <span class="p">=</span> <span class="nx">tmp7</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp7</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">120</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">120</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/file_header_prefix/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenHeader</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * internal; access `_root.header.len_header` instead</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Xar_FileHeader</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Version</span> <span class="kt">uint16</span>
+	<span class="nx">LenTocCompressed</span> <span class="kt">uint64</span>
+	<span class="nx">TocLengthUncompressed</span> <span class="kt">uint64</span>
+	<span class="nx">ChecksumAlgorithmInt</span> <span class="kt">uint32</span>
+	<span class="nx">ChecksumAlgName</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Xar</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Xar</span>
+	<span class="nx">_f_checksumAlgorithmName</span> <span class="kt">bool</span>
+	<span class="nx">checksumAlgorithmName</span> <span class="kt">string</span>
+	<span class="nx">_f_hasChecksumAlgName</span> <span class="kt">bool</span>
+	<span class="nx">hasChecksumAlgName</span> <span class="kt">bool</span>
+	<span class="nx">_f_lenHeader</span> <span class="kt">bool</span>
+	<span class="nx">lenHeader</span> <span class="kt">uint16</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewXar_FileHeader</span><span class="p">()</span> <span class="o">*</span><span class="nx">Xar_FileHeader</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Xar_FileHeader</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar_FileHeader</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Version</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/file_header/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenTocCompressed</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TocLengthUncompressed</span> <span class="p">=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgorithmInt</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
+	<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasChecksumAlgName</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp14</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesFull</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp14</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgName</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="nx">_it</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgName</span>
+			<span class="k">if</span> <span class="p">!(</span> <span class="p">((</span><span class="nx">_it</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">_it</span> <span class="o">!=</span> <span class="s">&quot;none&quot;</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationExprError</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgName</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/file_header/seq/4&quot;</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * If it is not</span>
+<span class="cm"> * </span>
+<span class="cm"> * * `&quot;&quot;` (empty string), indicating an unknown integer value (access</span>
+<span class="cm"> *   `checksum_algorithm_int` for debugging purposes to find out</span>
+<span class="cm"> *   what that value is), or</span>
+<span class="cm"> * * `&quot;none&quot;`, indicating that the TOC checksum is not provided (in that</span>
+<span class="cm"> *   case, the `&lt;checksum&gt;` property or its `style` attribute should be</span>
+<span class="cm"> *   missing, or the `style` attribute must be set to `&quot;none&quot;`),</span>
+<span class="cm"> * </span>
+<span class="cm"> * it must exactly match the `style` attribute value of the</span>
+<span class="cm"> * `&lt;checksum&gt;` property in the root node `&lt;toc&gt;`. See</span>
+<span class="cm"> * &lt;https://github.com/mackyle/xar/blob/66d451d/xar/lib/archive.c#L345-L371&gt;</span>
+<span class="cm"> * for reference.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The `xar` (eXtensible ARchiver) program [uses OpenSSL&#39;s function</span>
+<span class="cm"> * `EVP_get_digestbyname`](</span>
+<span class="cm"> *   https://github.com/mackyle/xar/blob/66d451d/xar/lib/archive.c#L328</span>
+<span class="cm"> * ) to verify this value (if it&#39;s not `&quot;&quot;` or `&quot;none&quot;`, of course).</span>
+<span class="cm"> * So it&#39;s reasonable to assume that this can only have one of the values</span>
+<span class="cm"> * that OpenSSL recognizes.</span>
+<span class="cm"> */</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar_FileHeader</span><span class="p">)</span> <span class="nx">ChecksumAlgorithmName</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_checksumAlgorithmName</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">checksumAlgorithmName</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="kd">var</span> <span class="nx">tmp15</span> <span class="kt">string</span><span class="p">;</span>
+	<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HasChecksumAlgName</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp15</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgName</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tmp17</span> <span class="kt">string</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgorithmInt</span> <span class="o">==</span> <span class="nx">Xar_ChecksumAlgorithmsApple__None</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">tmp17</span> <span class="p">=</span> <span class="s">&quot;none&quot;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">tmp18</span> <span class="kt">string</span><span class="p">;</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgorithmInt</span> <span class="o">==</span> <span class="nx">Xar_ChecksumAlgorithmsApple__Sha1</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">tmp18</span> <span class="p">=</span> <span class="s">&quot;sha1&quot;</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="kd">var</span> <span class="nx">tmp19</span> <span class="kt">string</span><span class="p">;</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgorithmInt</span> <span class="o">==</span> <span class="nx">Xar_ChecksumAlgorithmsApple__Md5</span><span class="p">)</span> <span class="p">{</span>
+					<span class="nx">tmp19</span> <span class="p">=</span> <span class="s">&quot;md5&quot;</span>
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="kd">var</span> <span class="nx">tmp20</span> <span class="kt">string</span><span class="p">;</span>
+					<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgorithmInt</span> <span class="o">==</span> <span class="nx">Xar_ChecksumAlgorithmsApple__Sha256</span><span class="p">)</span> <span class="p">{</span>
+						<span class="nx">tmp20</span> <span class="p">=</span> <span class="s">&quot;sha256&quot;</span>
+					<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+						<span class="kd">var</span> <span class="nx">tmp21</span> <span class="kt">string</span><span class="p">;</span>
+						<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgorithmInt</span> <span class="o">==</span> <span class="nx">Xar_ChecksumAlgorithmsApple__Sha512</span><span class="p">)</span> <span class="p">{</span>
+							<span class="nx">tmp21</span> <span class="p">=</span> <span class="s">&quot;sha512&quot;</span>
+						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+							<span class="nx">tmp21</span> <span class="p">=</span> <span class="s">&quot;&quot;</span>
+						<span class="p">}</span>
+						<span class="nx">tmp20</span> <span class="p">=</span> <span class="nx">tmp21</span>
+					<span class="p">}</span>
+					<span class="nx">tmp19</span> <span class="p">=</span> <span class="nx">tmp20</span>
+				<span class="p">}</span>
+				<span class="nx">tmp18</span> <span class="p">=</span> <span class="nx">tmp19</span>
+			<span class="p">}</span>
+			<span class="nx">tmp17</span> <span class="p">=</span> <span class="nx">tmp18</span>
+		<span class="p">}</span>
+		<span class="nx">tmp15</span> <span class="p">=</span> <span class="nx">tmp17</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">checksumAlgorithmName</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_checksumAlgorithmName</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">checksumAlgorithmName</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar_FileHeader</span><span class="p">)</span> <span class="nx">HasChecksumAlgName</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">bool</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasChecksumAlgName</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">hasChecksumAlgName</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">ChecksumAlgorithmOther</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenHeader</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenHeader</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp24</span> <span class="o">:=</span> <span class="nx">tmp25</span> <span class="o">%</span> <span class="mi">4</span>
+	<span class="k">if</span> <span class="nx">tmp24</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">tmp24</span> <span class="o">+=</span> <span class="mi">4</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">hasChecksumAlgName</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">(</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">ChecksumAlgorithmInt</span> <span class="o">==</span> <span class="nx">tmp22</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">tmp23</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">tmp24</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasChecksumAlgName</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">hasChecksumAlgName</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar_FileHeader</span><span class="p">)</span> <span class="nx">LenHeader</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">uint16</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenHeader</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenHeader</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">HeaderPrefix</span><span class="p">.</span><span class="nx">LenHeader</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenHeader</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenHeader</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * internal; access `checksum_algorithm_name` instead</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * internal; access `checksum_algorithm_name` instead</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Xar_TocType</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">XmlString</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Xar</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Xar</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewXar_TocType</span><span class="p">()</span> <span class="o">*</span><span class="nx">Xar_TocType</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Xar_TocType</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Xar_TocType</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Xar</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesFull</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp26</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">XmlString</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

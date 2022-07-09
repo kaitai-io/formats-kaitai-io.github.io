@@ -45,9 +45,8 @@ void dns_packet_t::_read() {
     n_queries = true;
     if (flags()->is_opcode_valid()) {
         n_queries = false;
-        int l_queries = qdcount();
         m_queries = new std::vector<query_t*>();
-        m_queries->reserve(l_queries);
+        const int l_queries = qdcount();
         for (int i = 0; i < l_queries; i++) {
             m_queries->push_back(new query_t(m__io, this, m__root));
         }
@@ -55,9 +54,8 @@ void dns_packet_t::_read() {
     n_answers = true;
     if (flags()->is_opcode_valid()) {
         n_answers = false;
-        int l_answers = ancount();
         m_answers = new std::vector<answer_t*>();
-        m_answers->reserve(l_answers);
+        const int l_answers = ancount();
         for (int i = 0; i < l_answers; i++) {
             m_answers->push_back(new answer_t(m__io, this, m__root));
         }
@@ -65,9 +63,8 @@ void dns_packet_t::_read() {
     n_authorities = true;
     if (flags()->is_opcode_valid()) {
         n_authorities = false;
-        int l_authorities = nscount();
         m_authorities = new std::vector<answer_t*>();
-        m_authorities->reserve(l_authorities);
+        const int l_authorities = nscount();
         for (int i = 0; i < l_authorities; i++) {
             m_authorities->push_back(new answer_t(m__io, this, m__root));
         }
@@ -75,9 +72,8 @@ void dns_packet_t::_read() {
     n_additionals = true;
     if (flags()->is_opcode_valid()) {
         n_additionals = false;
-        int l_additionals = arcount();
         m_additionals = new std::vector<answer_t*>();
-        m_additionals->reserve(l_additionals);
+        const int l_additionals = arcount();
         for (int i = 0; i < l_additionals; i++) {
             m_additionals->push_back(new answer_t(m__io, this, m__root));
         }

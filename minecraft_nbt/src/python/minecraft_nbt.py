@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class MinecraftNbt(KaitaiStruct):
@@ -126,18 +125,18 @@ class MinecraftNbt(KaitaiStruct):
 
         def _read(self):
             self.num_tags = self._io.read_s4be()
-            self.tags = [None] * (self.num_tags)
+            self.tags = []
             for i in range(self.num_tags):
-                self.tags[i] = self._io.read_s8be()
+                self.tags.append(self._io.read_s8be())
 
 
         @property
         def tags_type(self):
             if hasattr(self, '_m_tags_type'):
-                return self._m_tags_type if hasattr(self, '_m_tags_type') else None
+                return self._m_tags_type
 
             self._m_tags_type = MinecraftNbt.Tag.long
-            return self._m_tags_type if hasattr(self, '_m_tags_type') else None
+            return getattr(self, '_m_tags_type', None)
 
 
     class TagByteArray(KaitaiStruct):
@@ -161,18 +160,18 @@ class MinecraftNbt(KaitaiStruct):
 
         def _read(self):
             self.num_tags = self._io.read_s4be()
-            self.tags = [None] * (self.num_tags)
+            self.tags = []
             for i in range(self.num_tags):
-                self.tags[i] = self._io.read_s4be()
+                self.tags.append(self._io.read_s4be())
 
 
         @property
         def tags_type(self):
             if hasattr(self, '_m_tags_type'):
-                return self._m_tags_type if hasattr(self, '_m_tags_type') else None
+                return self._m_tags_type
 
             self._m_tags_type = MinecraftNbt.Tag.int
-            return self._m_tags_type if hasattr(self, '_m_tags_type') else None
+            return getattr(self, '_m_tags_type', None)
 
 
     class TagList(KaitaiStruct):
@@ -185,33 +184,33 @@ class MinecraftNbt(KaitaiStruct):
         def _read(self):
             self.tags_type = KaitaiStream.resolve_enum(MinecraftNbt.Tag, self._io.read_u1())
             self.num_tags = self._io.read_s4be()
-            self.tags = [None] * (self.num_tags)
+            self.tags = []
             for i in range(self.num_tags):
                 _on = self.tags_type
                 if _on == MinecraftNbt.Tag.long_array:
-                    self.tags[i] = MinecraftNbt.TagLongArray(self._io, self, self._root)
+                    self.tags.append(MinecraftNbt.TagLongArray(self._io, self, self._root))
                 elif _on == MinecraftNbt.Tag.compound:
-                    self.tags[i] = MinecraftNbt.TagCompound(self._io, self, self._root)
+                    self.tags.append(MinecraftNbt.TagCompound(self._io, self, self._root))
                 elif _on == MinecraftNbt.Tag.double:
-                    self.tags[i] = self._io.read_f8be()
+                    self.tags.append(self._io.read_f8be())
                 elif _on == MinecraftNbt.Tag.list:
-                    self.tags[i] = MinecraftNbt.TagList(self._io, self, self._root)
+                    self.tags.append(MinecraftNbt.TagList(self._io, self, self._root))
                 elif _on == MinecraftNbt.Tag.float:
-                    self.tags[i] = self._io.read_f4be()
+                    self.tags.append(self._io.read_f4be())
                 elif _on == MinecraftNbt.Tag.short:
-                    self.tags[i] = self._io.read_s2be()
+                    self.tags.append(self._io.read_s2be())
                 elif _on == MinecraftNbt.Tag.int:
-                    self.tags[i] = self._io.read_s4be()
+                    self.tags.append(self._io.read_s4be())
                 elif _on == MinecraftNbt.Tag.byte_array:
-                    self.tags[i] = MinecraftNbt.TagByteArray(self._io, self, self._root)
+                    self.tags.append(MinecraftNbt.TagByteArray(self._io, self, self._root))
                 elif _on == MinecraftNbt.Tag.byte:
-                    self.tags[i] = self._io.read_s1()
+                    self.tags.append(self._io.read_s1())
                 elif _on == MinecraftNbt.Tag.int_array:
-                    self.tags[i] = MinecraftNbt.TagIntArray(self._io, self, self._root)
+                    self.tags.append(MinecraftNbt.TagIntArray(self._io, self, self._root))
                 elif _on == MinecraftNbt.Tag.string:
-                    self.tags[i] = MinecraftNbt.TagString(self._io, self, self._root)
+                    self.tags.append(MinecraftNbt.TagString(self._io, self, self._root))
                 elif _on == MinecraftNbt.Tag.long:
-                    self.tags[i] = self._io.read_s8be()
+                    self.tags.append(self._io.read_s8be())
 
 
 
@@ -247,10 +246,10 @@ class MinecraftNbt(KaitaiStruct):
         @property
         def dump_num_tags(self):
             if hasattr(self, '_m_dump_num_tags'):
-                return self._m_dump_num_tags if hasattr(self, '_m_dump_num_tags') else None
+                return self._m_dump_num_tags
 
             self._m_dump_num_tags = (len(self.tags) - (1 if  ((len(self.tags) >= 1) and (self.tags[-1].is_tag_end))  else 0))
-            return self._m_dump_num_tags if hasattr(self, '_m_dump_num_tags') else None
+            return getattr(self, '_m_dump_num_tags', None)
 
 
     class NamedTag(KaitaiStruct):
@@ -296,16 +295,16 @@ class MinecraftNbt(KaitaiStruct):
         @property
         def is_tag_end(self):
             if hasattr(self, '_m_is_tag_end'):
-                return self._m_is_tag_end if hasattr(self, '_m_is_tag_end') else None
+                return self._m_is_tag_end
 
             self._m_is_tag_end = self.type == MinecraftNbt.Tag.end
-            return self._m_is_tag_end if hasattr(self, '_m_is_tag_end') else None
+            return getattr(self, '_m_is_tag_end', None)
 
 
     @property
     def root_type(self):
         if hasattr(self, '_m_root_type'):
-            return self._m_root_type if hasattr(self, '_m_root_type') else None
+            return self._m_root_type
 
         _pos = self._io.pos()
         self._io.seek(0)
@@ -313,6 +312,6 @@ class MinecraftNbt(KaitaiStruct):
         self._io.seek(_pos)
         if not self.root_type == MinecraftNbt.Tag.compound:
             raise kaitaistruct.ValidationNotEqualError(MinecraftNbt.Tag.compound, self.root_type, self._io, u"/instances/root_type")
-        return self._m_root_type if hasattr(self, '_m_root_type') else None
+        return getattr(self, '_m_root_type', None)
 
 

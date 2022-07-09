@@ -241,7 +241,8 @@ type
     `mesurands`*: seq[NtMdt_Frame_FdMetaData_Calibration]
     `parent`*: NtMdt_Frame_FrameMain
     `rawImageInst`*: seq[byte]
-    `imageInst`*: NtMdt_Frame_FdMetaData_Image
+    `imageInst`: NtMdt_Frame_FdMetaData_Image
+    `imageInstFlag`: bool
   NtMdt_Frame_FdMetaData_Image* = ref object of KaitaiStruct
     `image`*: seq[NtMdt_Frame_FdMetaData_Image_Vec]
     `parent`*: NtMdt_Frame_FdMetaData
@@ -268,7 +269,8 @@ type
     `unit`*: string
     `author`*: string
     `parent`*: NtMdt_Frame_FdMetaData
-    `countInst`*: int
+    `countInst`: int
+    `countInstFlag`: bool
   NtMdt_Frame_FdSpectroscopy* = ref object of KaitaiStruct
     `vars`*: NtMdt_Frame_FdSpectroscopy_Vars
     `fmMode`*: uint16
@@ -801,7 +803,7 @@ proc read*(_: typedesc[NtMdt_Frame_FdMetaData], io: KaitaiStream, root: KaitaiSt
     this.mesurands.add(it)
 
 proc image(this: NtMdt_Frame_FdMetaData): NtMdt_Frame_FdMetaData_Image = 
-  if this.imageInst != nil:
+  if this.imageInstFlag:
     return this.imageInst
   let pos = this.io.pos()
   this.io.seek(int(this.dataOffset))
@@ -811,8 +813,8 @@ proc image(this: NtMdt_Frame_FdMetaData): NtMdt_Frame_FdMetaData_Image =
   let imageInstExpr = NtMdt_Frame_FdMetaData_Image.read(rawImageInstIo, this.root, this)
   this.imageInst = imageInstExpr
   this.io.seek(pos)
-  if this.imageInst != nil:
-    return this.imageInst
+  this.imageInstFlag = true
+  return this.imageInst
 
 proc fromFile*(_: typedesc[NtMdt_Frame_FdMetaData], filename: string): NtMdt_Frame_FdMetaData =
   NtMdt_Frame_FdMetaData.read(newKaitaiFileStream(filename), nil, nil)
@@ -926,12 +928,12 @@ proc read*(_: typedesc[NtMdt_Frame_FdMetaData_Calibration], io: KaitaiStream, ro
   this.author = authorExpr
 
 proc count(this: NtMdt_Frame_FdMetaData_Calibration): int = 
-  if this.countInst != nil:
+  if this.countInstFlag:
     return this.countInst
   let countInstExpr = int(((this.maxIndex - this.minIndex) + 1))
   this.countInst = countInstExpr
-  if this.countInst != nil:
-    return this.countInst
+  this.countInstFlag = true
+  return this.countInst
 
 proc fromFile*(_: typedesc[NtMdt_Frame_FdMetaData_Calibration], filename: string): NtMdt_Frame_FdMetaData_Calibration =
   NtMdt_Frame_FdMetaData_Calibration.read(newKaitaiFileStream(filename), nil, nil)

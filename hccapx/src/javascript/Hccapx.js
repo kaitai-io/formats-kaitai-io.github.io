@@ -8,7 +8,7 @@
   } else {
     root.Hccapx = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Native format of Hashcat password "recovery" utility
  * @see {@link https://hashcat.net/wiki/doku.php?id=hccapx|Source}

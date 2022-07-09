@@ -42,7 +42,7 @@ sub _read {
     $self->{offsets} = ();
     my $n_offsets = $self->num_files();
     for (my $i = 0; $i < $n_offsets; $i++) {
-        $self->{offsets}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{offsets}}, $self->{_io}->read_u4le();
     }
 }
 
@@ -61,7 +61,7 @@ sub files {
     $self->{files} = ();
     my $n_files = $self->_root()->num_entries();
     for (my $i = 0; $i < $n_files; $i++) {
-        $self->{files}[$i] = GranTurismoVol::FileInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{files}}, GranTurismoVol::FileInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{files};

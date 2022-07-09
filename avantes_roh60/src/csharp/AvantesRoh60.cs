@@ -54,19 +54,19 @@ namespace Kaitai
             _wlx2 = m_io.ReadF4le();
             _wlx3 = m_io.ReadF4le();
             _wlx4 = m_io.ReadF4le();
-            _unknown2 = new List<float>((int) (9));
+            _unknown2 = new List<float>();
             for (var i = 0; i < 9; i++)
             {
                 _unknown2.Add(m_io.ReadF4le());
             }
             _ipixfirst = m_io.ReadF4le();
             _ipixlast = m_io.ReadF4le();
-            _unknown3 = new List<float>((int) (4));
+            _unknown3 = new List<float>();
             for (var i = 0; i < 4; i++)
             {
                 _unknown3.Add(m_io.ReadF4le());
             }
-            _spectrum = new List<float>((int) ((((long) (Ipixlast) - (long) (Ipixfirst)) - 1)));
+            _spectrum = new List<float>();
             for (var i = 0; i < (((long) (Ipixlast) - (long) (Ipixfirst)) - 1); i++)
             {
                 _spectrum.Add(m_io.ReadF4le());

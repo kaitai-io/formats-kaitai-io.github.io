@@ -23,16 +23,14 @@ void nt_mdt_pal_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21", 26), signature(), _io(), std::string("/seq/0"));
     }
     m_count = m__io->read_u4be();
-    int l_meta = count();
     m_meta = new std::vector<meta_t*>();
-    m_meta->reserve(l_meta);
+    const int l_meta = count();
     for (int i = 0; i < l_meta; i++) {
         m_meta->push_back(new meta_t(m__io, this, m__root));
     }
     m_something2 = m__io->read_bytes(1);
-    int l_tables = count();
     m_tables = new std::vector<col_table_t*>();
-    m_tables->reserve(l_tables);
+    const int l_tables = count();
     for (int i = 0; i < l_tables; i++) {
         m_tables->push_back(new col_table_t(i, m__io, this, m__root));
     }
@@ -133,9 +131,8 @@ void nt_mdt_pal_t::col_table_t::_read() {
     m_unkn = m__io->read_u1();
     m_title = kaitai::kstream::bytes_to_str(m__io->read_bytes(_root()->meta()->at(index())->name_size()), std::string("UTF-16LE"));
     m_unkn1 = m__io->read_u2be();
-    int l_colors = (_root()->meta()->at(index())->colors_count() - 1);
     m_colors = new std::vector<color_t*>();
-    m_colors->reserve(l_colors);
+    const int l_colors = (_root()->meta()->at(index())->colors_count() - 1);
     for (int i = 0; i < l_colors; i++) {
         m_colors->push_back(new color_t(m__io, this, m__root));
     }

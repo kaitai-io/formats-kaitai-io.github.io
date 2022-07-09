@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Regf(KaitaiStruct):
@@ -181,9 +180,9 @@ class Regf(KaitaiStruct):
 
             def _read(self):
                 self.count = self._io.read_u2le()
-                self.items = [None] * (self.count)
+                self.items = []
                 for i in range(self.count):
-                    self.items[i] = Regf.HiveBinCell.SubKeyListLhLf.Item(self._io, self, self._root)
+                    self.items.append(Regf.HiveBinCell.SubKeyListLhLf.Item(self._io, self, self._root))
 
 
             class Item(KaitaiStruct):
@@ -222,9 +221,9 @@ class Regf(KaitaiStruct):
 
             def _read(self):
                 self.count = self._io.read_u2le()
-                self.items = [None] * (self.count)
+                self.items = []
                 for i in range(self.count):
-                    self.items[i] = Regf.HiveBinCell.SubKeyListLi.Item(self._io, self, self._root)
+                    self.items.append(Regf.HiveBinCell.SubKeyListLi.Item(self._io, self, self._root))
 
 
             class Item(KaitaiStruct):
@@ -292,9 +291,9 @@ class Regf(KaitaiStruct):
 
             def _read(self):
                 self.count = self._io.read_u2le()
-                self.items = [None] * (self.count)
+                self.items = []
                 for i in range(self.count):
-                    self.items[i] = Regf.HiveBinCell.SubKeyListRi.Item(self._io, self, self._root)
+                    self.items.append(Regf.HiveBinCell.SubKeyListRi.Item(self._io, self, self._root))
 
 
             class Item(KaitaiStruct):
@@ -312,18 +311,18 @@ class Regf(KaitaiStruct):
         @property
         def cell_size(self):
             if hasattr(self, '_m_cell_size'):
-                return self._m_cell_size if hasattr(self, '_m_cell_size') else None
+                return self._m_cell_size
 
             self._m_cell_size = ((-1 if self.cell_size_raw < 0 else 1) * self.cell_size_raw)
-            return self._m_cell_size if hasattr(self, '_m_cell_size') else None
+            return getattr(self, '_m_cell_size', None)
 
         @property
         def is_allocated(self):
             if hasattr(self, '_m_is_allocated'):
-                return self._m_is_allocated if hasattr(self, '_m_is_allocated') else None
+                return self._m_is_allocated
 
             self._m_is_allocated = self.cell_size_raw < 0
-            return self._m_is_allocated if hasattr(self, '_m_is_allocated') else None
+            return getattr(self, '_m_is_allocated', None)
 
 
     class FileHeader(KaitaiStruct):

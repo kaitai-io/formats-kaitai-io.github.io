@@ -127,9 +127,8 @@ void msgpack_t::_read() {
     n_array_elements = true;
     if (is_array()) {
         n_array_elements = false;
-        int l_array_elements = num_array_elements();
         m_array_elements = std::unique_ptr<std::vector<std::unique_ptr<msgpack_t>>>(new std::vector<std::unique_ptr<msgpack_t>>());
-        m_array_elements->reserve(l_array_elements);
+        const int l_array_elements = num_array_elements();
         for (int i = 0; i < l_array_elements; i++) {
             m_array_elements->push_back(std::move(std::unique_ptr<msgpack_t>(new msgpack_t(m__io))));
         }
@@ -147,9 +146,8 @@ void msgpack_t::_read() {
     n_map_elements = true;
     if (is_map()) {
         n_map_elements = false;
-        int l_map_elements = num_map_elements();
         m_map_elements = std::unique_ptr<std::vector<std::unique_ptr<map_tuple_t>>>(new std::vector<std::unique_ptr<map_tuple_t>>());
-        m_map_elements->reserve(l_map_elements);
+        const int l_map_elements = num_map_elements();
         for (int i = 0; i < l_map_elements; i++) {
             m_map_elements->push_back(std::move(std::unique_ptr<map_tuple_t>(new map_tuple_t(m__io, this, m__root))));
         }

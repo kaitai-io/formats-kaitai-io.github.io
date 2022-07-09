@@ -4,8 +4,10 @@ import options
 type
   BroadcomTrx* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `headerInst`*: BroadcomTrx_Header
-    `tailInst`*: BroadcomTrx_Tail
+    `headerInst`: BroadcomTrx_Header
+    `headerInstFlag`: bool
+    `tailInst`: BroadcomTrx_Tail
+    `tailInstFlag`: bool
   BroadcomTrx_Revision* = ref object of KaitaiStruct
     `major`*: uint8
     `minor`*: uint8
@@ -38,10 +40,14 @@ type
     `ofsBody`*: uint32
     `idx`*: uint8
     `parent`*: BroadcomTrx_Header
-    `isPresentInst`*: bool
-    `isLastInst`*: bool
-    `lenBodyInst`*: int
-    `bodyInst`*: seq[byte]
+    `isPresentInst`: bool
+    `isPresentInstFlag`: bool
+    `isLastInst`: bool
+    `isLastInstFlag`: bool
+    `lenBodyInst`: int
+    `lenBodyInstFlag`: bool
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   BroadcomTrx_Header_Flags* = ref object of KaitaiStruct
     `flags`*: seq[bool]
     `parent`*: BroadcomTrx_Header
@@ -88,26 +94,26 @@ proc read*(_: typedesc[BroadcomTrx], io: KaitaiStream, root: KaitaiStruct, paren
 
 
 proc header(this: BroadcomTrx): BroadcomTrx_Header = 
-  if this.headerInst != nil:
+  if this.headerInstFlag:
     return this.headerInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let headerInstExpr = BroadcomTrx_Header.read(this.io, this.root, this)
   this.headerInst = headerInstExpr
   this.io.seek(pos)
-  if this.headerInst != nil:
-    return this.headerInst
+  this.headerInstFlag = true
+  return this.headerInst
 
 proc tail(this: BroadcomTrx): BroadcomTrx_Tail = 
-  if this.tailInst != nil:
+  if this.tailInstFlag:
     return this.tailInst
   let pos = this.io.pos()
   this.io.seek(int((this.io.size - 64)))
   let tailInstExpr = BroadcomTrx_Tail.read(this.io, this.root, this)
   this.tailInst = tailInstExpr
   this.io.seek(pos)
-  if this.tailInst != nil:
-    return this.tailInst
+  this.tailInstFlag = true
+  return this.tailInst
 
 proc fromFile*(_: typedesc[BroadcomTrx], filename: string): BroadcomTrx =
   BroadcomTrx.read(newKaitaiFileStream(filename), nil, nil)
@@ -253,33 +259,33 @@ proc read*(_: typedesc[BroadcomTrx_Header_Partition], io: KaitaiStream, root: Ka
   this.ofsBody = ofsBodyExpr
 
 proc isPresent(this: BroadcomTrx_Header_Partition): bool = 
-  if this.isPresentInst != nil:
+  if this.isPresentInstFlag:
     return this.isPresentInst
   let isPresentInstExpr = bool(this.ofsBody != 0)
   this.isPresentInst = isPresentInstExpr
-  if this.isPresentInst != nil:
-    return this.isPresentInst
+  this.isPresentInstFlag = true
+  return this.isPresentInst
 
 proc isLast(this: BroadcomTrx_Header_Partition): bool = 
-  if this.isLastInst != nil:
+  if this.isLastInstFlag:
     return this.isLastInst
   if this.isPresent:
     let isLastInstExpr = bool( ((this.idx == (len(this.parent.partitions) - 1)) or (not(this.parent.partitions[(this.idx + 1)].isPresent))) )
     this.isLastInst = isLastInstExpr
-  if this.isLastInst != nil:
-    return this.isLastInst
+  this.isLastInstFlag = true
+  return this.isLastInst
 
 proc lenBody(this: BroadcomTrx_Header_Partition): int = 
-  if this.lenBodyInst != nil:
+  if this.lenBodyInstFlag:
     return this.lenBodyInst
   if this.isPresent:
     let lenBodyInstExpr = int((if this.isLast: (BroadcomTrx(this.root).io.size - this.ofsBody) else: this.parent.partitions[(this.idx + 1)].ofsBody))
     this.lenBodyInst = lenBodyInstExpr
-  if this.lenBodyInst != nil:
-    return this.lenBodyInst
+  this.lenBodyInstFlag = true
+  return this.lenBodyInst
 
 proc body(this: BroadcomTrx_Header_Partition): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   if this.isPresent:
     let io = BroadcomTrx(this.root).io
@@ -288,8 +294,8 @@ proc body(this: BroadcomTrx_Header_Partition): seq[byte] =
     let bodyInstExpr = io.readBytes(int(this.lenBody))
     this.bodyInst = bodyInstExpr
     io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[BroadcomTrx_Header_Partition], filename: string): BroadcomTrx_Header_Partition =
   BroadcomTrx_Header_Partition.read(newKaitaiFileStream(filename), nil, nil)

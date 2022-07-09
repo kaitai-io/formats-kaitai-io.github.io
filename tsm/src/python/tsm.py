@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Tsm(KaitaiStruct):
@@ -63,9 +62,9 @@ class Tsm(KaitaiStruct):
                 self.key = (self._io.read_bytes(self.key_len)).decode(u"UTF-8")
                 self.type = self._io.read_u1()
                 self.entry_count = self._io.read_u2be()
-                self.index_entries = [None] * (self.entry_count)
+                self.index_entries = []
                 for i in range(self.entry_count):
-                    self.index_entries[i] = Tsm.Index.IndexHeader.IndexEntry(self._io, self, self._root)
+                    self.index_entries.append(Tsm.Index.IndexHeader.IndexEntry(self._io, self, self._root))
 
 
             class IndexEntry(KaitaiStruct):
@@ -96,21 +95,21 @@ class Tsm(KaitaiStruct):
                 @property
                 def block(self):
                     if hasattr(self, '_m_block'):
-                        return self._m_block if hasattr(self, '_m_block') else None
+                        return self._m_block
 
                     io = self._root._io
                     _pos = io.pos()
                     io.seek(self.block_offset)
                     self._m_block = Tsm.Index.IndexHeader.IndexEntry.BlockEntry(io, self, self._root)
                     io.seek(_pos)
-                    return self._m_block if hasattr(self, '_m_block') else None
+                    return getattr(self, '_m_block', None)
 
 
 
         @property
         def entries(self):
             if hasattr(self, '_m_entries'):
-                return self._m_entries if hasattr(self, '_m_entries') else None
+                return self._m_entries
 
             _pos = self._io.pos()
             self._io.seek(self.offset)
@@ -123,18 +122,18 @@ class Tsm(KaitaiStruct):
                     break
                 i += 1
             self._io.seek(_pos)
-            return self._m_entries if hasattr(self, '_m_entries') else None
+            return getattr(self, '_m_entries', None)
 
 
     @property
     def index(self):
         if hasattr(self, '_m_index'):
-            return self._m_index if hasattr(self, '_m_index') else None
+            return self._m_index
 
         _pos = self._io.pos()
         self._io.seek((self._io.size() - 8))
         self._m_index = Tsm.Index(self._io, self, self._root)
         self._io.seek(_pos)
-        return self._m_index if hasattr(self, '_m_index') else None
+        return getattr(self, '_m_index', None)
 
 

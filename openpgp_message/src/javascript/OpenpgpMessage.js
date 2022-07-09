@@ -8,7 +8,7 @@
   } else {
     root.OpenpgpMessage = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The OpenPGP Message Format is a format to store encryption and signature keys for emails.
  * @see {@link https://tools.ietf.org/html/rfc4880|Source}

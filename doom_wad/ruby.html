@@ -382,9 +382,9 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_textures</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
-      <span class="vi">@textures</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_textures</span><span class="p">)</span>
+      <span class="vi">@textures</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_textures</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@textures</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TextureIndex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@textures</span> <span class="o">&lt;&lt;</span> <span class="no">TextureIndex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -421,9 +421,9 @@ section#format-index .row {
         <span class="vi">@height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@column_directory</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@num_patches</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-        <span class="vi">@patches</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_patches</span><span class="p">)</span>
+        <span class="vi">@patches</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">num_patches</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@patches</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Patch</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@patches</span> <span class="o">&lt;&lt;</span> <span class="no">Patch</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -514,9 +514,9 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_patches</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@names</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_patches</span><span class="p">)</span>
+      <span class="vi">@names</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_patches</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@names</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+        <span class="vi">@names</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -773,9 +773,9 @@ section#format-index .row {
       <span class="vi">@origin_y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
       <span class="vi">@num_cols</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
       <span class="vi">@num_rows</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
-      <span class="vi">@linedefs_in_block</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">num_cols</span> <span class="o">*</span> <span class="n">num_rows</span><span class="p">))</span>
+      <span class="vi">@linedefs_in_block</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">((</span><span class="n">num_cols</span> <span class="o">*</span> <span class="n">num_rows</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@linedefs_in_block</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Blocklist</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@linedefs_in_block</span> <span class="o">&lt;&lt;</span> <span class="no">Blocklist</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -836,9 +836,9 @@ section#format-index .row {
     <span class="k">return</span> <span class="vi">@index</span> <span class="k">unless</span> <span class="vi">@index</span><span class="o">.</span><span class="n">nil?</span>
     <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">index_offset</span><span class="p">)</span>
-    <span class="vi">@index</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_index_entries</span><span class="p">)</span>
+    <span class="vi">@index</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">num_index_entries</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@index</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">IndexEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@index</span> <span class="o">&lt;&lt;</span> <span class="no">IndexEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
     <span class="vi">@index</span>

@@ -76,9 +76,9 @@ class Cramfs < Kaitai::Struct::Struct
     end
 
     def _read
-      @block_end_index = Array.new((((_parent.size + _root.page_size) - 1) / _root.page_size))
+      @block_end_index = []
       ((((_parent.size + _root.page_size) - 1) / _root.page_size)).times { |i|
-        @block_end_index[i] = @_io.read_u4le
+        @block_end_index << @_io.read_u4le
       }
       @raw_blocks = @_io.read_bytes_full
       self

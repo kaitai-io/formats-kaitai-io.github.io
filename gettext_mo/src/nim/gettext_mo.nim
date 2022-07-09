@@ -10,24 +10,34 @@ type
     `idx`*: uint32
     `collisionStep`*: uint32
     `parent`*: KaitaiStruct
-    `originalInst`*: string
-    `translationInst`*: string
-    `nextIdxInst`*: int
-    `nextInst`*: GettextMo_HashLookupIteration
+    `originalInst`: string
+    `originalInstFlag`: bool
+    `translationInst`: string
+    `translationInstFlag`: bool
+    `nextIdxInst`: int
+    `nextIdxInstFlag`: bool
+    `nextInst`: GettextMo_HashLookupIteration
+    `nextInstFlag`: bool
   GettextMo_LookupIteration* = ref object of KaitaiStruct
     `current`*: GettextMo_HashLookupIteration
     `query`*: string
     `parent`*: KaitaiStruct
-    `foundInst`*: bool
-    `nextInst`*: GettextMo_LookupIteration
+    `foundInst`: bool
+    `foundInstFlag`: bool
+    `nextInst`: GettextMo_LookupIteration
+    `nextInstFlag`: bool
   GettextMo_HashtableLookup* = ref object of KaitaiStruct
     `query`*: string
     `hash`*: uint32
     `parent`*: KaitaiStruct
-    `collisionStepInst`*: int
-    `idxInst`*: int
-    `hashLookupIterationInst`*: GettextMo_HashLookupIteration
-    `entryInst`*: GettextMo_LookupIteration
+    `collisionStepInst`: int
+    `collisionStepInstFlag`: bool
+    `idxInst`: int
+    `idxInstFlag`: bool
+    `hashLookupIterationInst`: GettextMo_HashLookupIteration
+    `hashLookupIterationInstFlag`: bool
+    `entryInst`: GettextMo_LookupIteration
+    `entryInstFlag`: bool
   GettextMo_Mo* = ref object of KaitaiStruct
     `version`*: GettextMo_Mo_Version
     `numTranslations`*: uint32
@@ -36,29 +46,39 @@ type
     `numHashtableItems`*: uint32
     `ofsHashtableItems`*: uint32
     `parent`*: GettextMo
-    `originalsInst`*: seq[GettextMo_Mo_Descriptor]
-    `translationsInst`*: seq[GettextMo_Mo_Descriptor]
-    `hashtableItemsInst`*: seq[GettextMo_Mo_HashtableItem]
+    `originalsInst`: seq[GettextMo_Mo_Descriptor]
+    `originalsInstFlag`: bool
+    `translationsInst`: seq[GettextMo_Mo_Descriptor]
+    `translationsInstFlag`: bool
+    `hashtableItemsInst`: seq[GettextMo_Mo_HashtableItem]
+    `hashtableItemsInstFlag`: bool
     isLe: bool
   GettextMo_Mo_Version* = ref object of KaitaiStruct
     `versionRaw`*: uint32
     `parent`*: GettextMo_Mo
-    `majorInst`*: int
-    `minorInst`*: int
+    `majorInst`: int
+    `majorInstFlag`: bool
+    `minorInst`: int
+    `minorInstFlag`: bool
     isLe: bool
   GettextMo_Mo_HashtableItem* = ref object of KaitaiStruct
     `rawVal`*: uint32
     `parent`*: GettextMo_Mo
-    `maskInst`*: int
-    `val1Inst`*: int
-    `isSystemDependentInst`*: bool
-    `valInst`*: int
+    `maskInst`: int
+    `maskInstFlag`: bool
+    `val1Inst`: int
+    `val1InstFlag`: bool
+    `isSystemDependentInst`: bool
+    `isSystemDependentInstFlag`: bool
+    `valInst`: int
+    `valInstFlag`: bool
     isLe: bool
   GettextMo_Mo_Descriptor* = ref object of KaitaiStruct
     `lenStr`*: uint32
     `ofsStr`*: uint32
     `parent`*: GettextMo_Mo
-    `strInst`*: string
+    `strInst`: string
+    `strInstFlag`: bool
     isLe: bool
 
 proc read*(_: typedesc[GettextMo], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GettextMo
@@ -139,39 +159,39 @@ proc read*(_: typedesc[GettextMo_HashLookupIteration], io: KaitaiStream, root: K
 
 
 proc original(this: GettextMo_HashLookupIteration): string = 
-  if this.originalInst.len != 0:
+  if this.originalInstFlag:
     return this.originalInst
   let originalInstExpr = string(GettextMo(this.root).mo.originals[this.idx].str)
   this.originalInst = originalInstExpr
-  if this.originalInst.len != 0:
-    return this.originalInst
+  this.originalInstFlag = true
+  return this.originalInst
 
 proc translation(this: GettextMo_HashLookupIteration): string = 
-  if this.translationInst.len != 0:
+  if this.translationInstFlag:
     return this.translationInst
   let translationInstExpr = string(GettextMo(this.root).mo.translations[this.idx].str)
   this.translationInst = translationInstExpr
-  if this.translationInst.len != 0:
-    return this.translationInst
+  this.translationInstFlag = true
+  return this.translationInst
 
 proc nextIdx(this: GettextMo_HashLookupIteration): int = 
-  if this.nextIdxInst != nil:
+  if this.nextIdxInstFlag:
     return this.nextIdxInst
   let nextIdxInstExpr = int(((this.idx + this.collisionStep) - (if this.idx >= (GettextMo(this.root).mo.numHashtableItems - this.collisionStep): GettextMo(this.root).mo.numHashtableItems else: 0)))
   this.nextIdxInst = nextIdxInstExpr
-  if this.nextIdxInst != nil:
-    return this.nextIdxInst
+  this.nextIdxInstFlag = true
+  return this.nextIdxInst
 
 proc next(this: GettextMo_HashLookupIteration): GettextMo_HashLookupIteration = 
-  if this.nextInst != nil:
+  if this.nextInstFlag:
     return this.nextInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let nextInstExpr = GettextMo_HashLookupIteration.read(this.io, this.root, this, GettextMo(this.root).mo.hashtableItems[this.nextIdx].val, this.collisionStep)
   this.nextInst = nextInstExpr
   this.io.seek(pos)
-  if this.nextInst != nil:
-    return this.nextInst
+  this.nextInstFlag = true
+  return this.nextInst
 
 proc fromFile*(_: typedesc[GettextMo_HashLookupIteration], filename: string): GettextMo_HashLookupIteration =
   GettextMo_HashLookupIteration.read(newKaitaiFileStream(filename), nil, nil)
@@ -190,15 +210,15 @@ proc read*(_: typedesc[GettextMo_LookupIteration], io: KaitaiStream, root: Kaita
 
 
 proc found(this: GettextMo_LookupIteration): bool = 
-  if this.foundInst != nil:
+  if this.foundInstFlag:
     return this.foundInst
   let foundInstExpr = bool(this.query == this.current.original)
   this.foundInst = foundInstExpr
-  if this.foundInst != nil:
-    return this.foundInst
+  this.foundInstFlag = true
+  return this.foundInst
 
 proc next(this: GettextMo_LookupIteration): GettextMo_LookupIteration = 
-  if this.nextInst != nil:
+  if this.nextInstFlag:
     return this.nextInst
   if not(this.found):
     let pos = this.io.pos()
@@ -206,8 +226,8 @@ proc next(this: GettextMo_LookupIteration): GettextMo_LookupIteration =
     let nextInstExpr = GettextMo_LookupIteration.read(this.io, this.root, this, this.current.next, this.query)
     this.nextInst = nextInstExpr
     this.io.seek(pos)
-  if this.nextInst != nil:
-    return this.nextInst
+  this.nextInstFlag = true
+  return this.nextInst
 
 proc fromFile*(_: typedesc[GettextMo_LookupIteration], filename: string): GettextMo_LookupIteration =
   GettextMo_LookupIteration.read(newKaitaiFileStream(filename), nil, nil)
@@ -242,42 +262,42 @@ proc read*(_: typedesc[GettextMo_HashtableLookup], io: KaitaiStream, root: Kaita
 
 
 proc collisionStep(this: GettextMo_HashtableLookup): int = 
-  if this.collisionStepInst != nil:
+  if this.collisionStepInstFlag:
     return this.collisionStepInst
   let collisionStepInstExpr = int(((this.hash %%% (GettextMo(this.root).mo.numHashtableItems - 2)) + 1))
   this.collisionStepInst = collisionStepInstExpr
-  if this.collisionStepInst != nil:
-    return this.collisionStepInst
+  this.collisionStepInstFlag = true
+  return this.collisionStepInst
 
 proc idx(this: GettextMo_HashtableLookup): int = 
-  if this.idxInst != nil:
+  if this.idxInstFlag:
     return this.idxInst
   let idxInstExpr = int((this.hash %%% GettextMo(this.root).mo.numHashtableItems))
   this.idxInst = idxInstExpr
-  if this.idxInst != nil:
-    return this.idxInst
+  this.idxInstFlag = true
+  return this.idxInst
 
 proc hashLookupIteration(this: GettextMo_HashtableLookup): GettextMo_HashLookupIteration = 
-  if this.hashLookupIterationInst != nil:
+  if this.hashLookupIterationInstFlag:
     return this.hashLookupIterationInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let hashLookupIterationInstExpr = GettextMo_HashLookupIteration.read(this.io, this.root, this, GettextMo(this.root).mo.hashtableItems[this.idx].val, this.collisionStep)
   this.hashLookupIterationInst = hashLookupIterationInstExpr
   this.io.seek(pos)
-  if this.hashLookupIterationInst != nil:
-    return this.hashLookupIterationInst
+  this.hashLookupIterationInstFlag = true
+  return this.hashLookupIterationInst
 
 proc entry(this: GettextMo_HashtableLookup): GettextMo_LookupIteration = 
-  if this.entryInst != nil:
+  if this.entryInstFlag:
     return this.entryInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let entryInstExpr = GettextMo_LookupIteration.read(this.io, this.root, this, this.hashLookupIteration, this.query)
   this.entryInst = entryInstExpr
   this.io.seek(pos)
-  if this.entryInst != nil:
-    return this.entryInst
+  this.entryInstFlag = true
+  return this.entryInst
 
 proc fromFile*(_: typedesc[GettextMo_HashtableLookup], filename: string): GettextMo_HashtableLookup =
   GettextMo_HashtableLookup.read(newKaitaiFileStream(filename), nil, nil)
@@ -323,10 +343,10 @@ proc read*(_: typedesc[GettextMo_Mo], io: KaitaiStream, root: KaitaiStruct, pare
 
   block:
     let on = GettextMo(this.root).signature
-    if on == @[-34'u8, 18'u8, 4'u8, -107'u8]:
+    if on == @[222'u8, 18'u8, 4'u8, 149'u8]:
       let isLeExpr = bool(true)
       this.isLe = isLeExpr
-    elif on == @[-107'u8, 4'u8, 18'u8, -34'u8]:
+    elif on == @[149'u8, 4'u8, 18'u8, 222'u8]:
       let isLeExpr = bool(false)
       this.isLe = isLeExpr
 
@@ -336,7 +356,7 @@ proc read*(_: typedesc[GettextMo_Mo], io: KaitaiStream, root: KaitaiStruct, pare
     readBe(this)
 
 proc originals(this: GettextMo_Mo): seq[GettextMo_Mo_Descriptor] = 
-  if this.originalsInst.len != 0:
+  if this.originalsInstFlag:
     return this.originalsInst
   let io = GettextMo(this.root).io
   let pos = io.pos()
@@ -350,11 +370,11 @@ proc originals(this: GettextMo_Mo): seq[GettextMo_Mo_Descriptor] =
       let it = GettextMo_Mo_Descriptor.read(io, this.root, this)
       this.originalsInst.add(it)
   io.seek(pos)
-  if this.originalsInst.len != 0:
-    return this.originalsInst
+  this.originalsInstFlag = true
+  return this.originalsInst
 
 proc translations(this: GettextMo_Mo): seq[GettextMo_Mo_Descriptor] = 
-  if this.translationsInst.len != 0:
+  if this.translationsInstFlag:
     return this.translationsInst
   let io = GettextMo(this.root).io
   let pos = io.pos()
@@ -368,11 +388,11 @@ proc translations(this: GettextMo_Mo): seq[GettextMo_Mo_Descriptor] =
       let it = GettextMo_Mo_Descriptor.read(io, this.root, this)
       this.translationsInst.add(it)
   io.seek(pos)
-  if this.translationsInst.len != 0:
-    return this.translationsInst
+  this.translationsInstFlag = true
+  return this.translationsInst
 
 proc hashtableItems(this: GettextMo_Mo): seq[GettextMo_Mo_HashtableItem] = 
-  if this.hashtableItemsInst.len != 0:
+  if this.hashtableItemsInstFlag:
     return this.hashtableItemsInst
   if this.ofsHashtableItems != 0:
     let io = GettextMo(this.root).io
@@ -387,8 +407,8 @@ proc hashtableItems(this: GettextMo_Mo): seq[GettextMo_Mo_HashtableItem] =
         let it = GettextMo_Mo_HashtableItem.read(io, this.root, this)
         this.hashtableItemsInst.add(it)
     io.seek(pos)
-  if this.hashtableItemsInst.len != 0:
-    return this.hashtableItemsInst
+  this.hashtableItemsInstFlag = true
+  return this.hashtableItemsInst
 
 proc fromFile*(_: typedesc[GettextMo_Mo], filename: string): GettextMo_Mo =
   GettextMo_Mo.read(newKaitaiFileStream(filename), nil, nil)
@@ -419,20 +439,20 @@ proc read*(_: typedesc[GettextMo_Mo_Version], io: KaitaiStream, root: KaitaiStru
     readBe(this)
 
 proc major(this: GettextMo_Mo_Version): int = 
-  if this.majorInst != nil:
+  if this.majorInstFlag:
     return this.majorInst
   let majorInstExpr = int((this.versionRaw shr 16))
   this.majorInst = majorInstExpr
-  if this.majorInst != nil:
-    return this.majorInst
+  this.majorInstFlag = true
+  return this.majorInst
 
 proc minor(this: GettextMo_Mo_Version): int = 
-  if this.minorInst != nil:
+  if this.minorInstFlag:
     return this.minorInst
   let minorInstExpr = int((this.versionRaw and 65535))
   this.minorInst = minorInstExpr
-  if this.minorInst != nil:
-    return this.minorInst
+  this.minorInstFlag = true
+  return this.minorInst
 
 proc fromFile*(_: typedesc[GettextMo_Mo_Version], filename: string): GettextMo_Mo_Version =
   GettextMo_Mo_Version.read(newKaitaiFileStream(filename), nil, nil)
@@ -463,39 +483,39 @@ proc read*(_: typedesc[GettextMo_Mo_HashtableItem], io: KaitaiStream, root: Kait
     readBe(this)
 
 proc mask(this: GettextMo_Mo_HashtableItem): int = 
-  if this.maskInst != nil:
+  if this.maskInstFlag:
     return this.maskInst
   let maskInstExpr = int(2147483648'i64)
   this.maskInst = maskInstExpr
-  if this.maskInst != nil:
-    return this.maskInst
+  this.maskInstFlag = true
+  return this.maskInst
 
 proc val1(this: GettextMo_Mo_HashtableItem): int = 
-  if this.val1Inst != nil:
+  if this.val1InstFlag:
     return this.val1Inst
   if this.rawVal != 0:
     let val1InstExpr = int((this.rawVal - 1))
     this.val1Inst = val1InstExpr
-  if this.val1Inst != nil:
-    return this.val1Inst
+  this.val1InstFlag = true
+  return this.val1Inst
 
 proc isSystemDependent(this: GettextMo_Mo_HashtableItem): bool = 
-  if this.isSystemDependentInst != nil:
+  if this.isSystemDependentInstFlag:
     return this.isSystemDependentInst
   if this.rawVal != 0:
     let isSystemDependentInstExpr = bool((this.val1 and this.mask) == 1)
     this.isSystemDependentInst = isSystemDependentInstExpr
-  if this.isSystemDependentInst != nil:
-    return this.isSystemDependentInst
+  this.isSystemDependentInstFlag = true
+  return this.isSystemDependentInst
 
 proc val(this: GettextMo_Mo_HashtableItem): int = 
-  if this.valInst != nil:
+  if this.valInstFlag:
     return this.valInst
   if this.rawVal != 0:
     let valInstExpr = int((this.val1 and not(this.mask)))
     this.valInst = valInstExpr
-  if this.valInst != nil:
-    return this.valInst
+  this.valInstFlag = true
+  return this.valInst
 
 proc fromFile*(_: typedesc[GettextMo_Mo_HashtableItem], filename: string): GettextMo_Mo_HashtableItem =
   GettextMo_Mo_HashtableItem.read(newKaitaiFileStream(filename), nil, nil)
@@ -530,7 +550,7 @@ proc read*(_: typedesc[GettextMo_Mo_Descriptor], io: KaitaiStream, root: KaitaiS
     readBe(this)
 
 proc str(this: GettextMo_Mo_Descriptor): string = 
-  if this.strInst.len != 0:
+  if this.strInstFlag:
     return this.strInst
   let io = GettextMo(this.root).io
   let pos = io.pos()
@@ -542,8 +562,8 @@ proc str(this: GettextMo_Mo_Descriptor): string =
     let strInstExpr = encode(io.readBytes(int(this.lenStr)).bytesTerminate(0, false), "UTF-8")
     this.strInst = strInstExpr
   io.seek(pos)
-  if this.strInst.len != 0:
-    return this.strInst
+  this.strInstFlag = true
+  return this.strInst
 
 proc fromFile*(_: typedesc[GettextMo_Mo_Descriptor], filename: string): GettextMo_Mo_Descriptor =
   GettextMo_Mo_Descriptor.read(newKaitaiFileStream(filename), nil, nil)

@@ -40,7 +40,7 @@ sub _read {
     $self->{block_pointers} = ();
     my $n_block_pointers = ($self->header()->num_blocks() + 1);
     for (my $i = 0; $i < $n_block_pointers; $i++) {
-        $self->{block_pointers}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{block_pointers}}, $self->{_io}->read_u4le();
     }
 }
 
@@ -50,7 +50,7 @@ sub blocks {
     $self->{blocks} = ();
     my $n_blocks = $self->header()->num_blocks();
     for (my $i = 0; $i < $n_blocks; $i++) {
-        $self->{blocks}[$i] = Zisofs::Block->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{blocks}}, Zisofs::Block->new($self->{_io}, $self, $self->{_root});
     }
     return $self->{blocks};
 }

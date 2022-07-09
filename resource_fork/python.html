@@ -358,12 +358,11 @@ such as custom file icons.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
 <span class="kn">import</span> <span class="nn">kaitaistruct</span>
 <span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 
 
-<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">):</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="kn">import</span> <span class="nn">bytes_with_io</span>
@@ -512,13 +511,13 @@ such as custom file icons.</p>
 <span class="sd">                as they are stored in the file.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span>
 
                 <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
         <span class="k">class</span> <span class="nc">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -549,9 +548,9 @@ such as custom file icons.</p>
 
                 <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">num_types_m1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_types</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_types</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">TypeListAndReferenceLists</span><span class="o">.</span><span class="n">TypeList</span><span class="o">.</span><span class="n">TypeListEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">TypeListAndReferenceLists</span><span class="o">.</span><span class="n">TypeList</span><span class="o">.</span><span class="n">TypeListEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
                 <span class="k">class</span> <span class="nc">TypeListEntry</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -574,34 +573,34 @@ such as custom file icons.</p>
                     <span class="k">def</span> <span class="nf">num_references</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="sd">&quot;&quot;&quot;The number of resources in the reference list for this type.&quot;&quot;&quot;</span>
                         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_references&#39;</span><span class="p">):</span>
-                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_references</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_references&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_references</span>
 
                         <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_references</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">num_references_m1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">65536</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_references</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_references&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_references&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
                     <span class="nd">@property</span>
                     <span class="k">def</span> <span class="nf">reference_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="sd">&quot;&quot;&quot;The resource reference list for this resource type.</span>
 <span class="sd">                        &quot;&quot;&quot;</span>
                         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_reference_list&#39;</span><span class="p">):</span>
-                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_reference_list</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_reference_list&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_reference_list</span>
 
                         <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_io</span>
                         <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                         <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_reference_list</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_m_reference_list</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">TypeListAndReferenceLists</span><span class="o">.</span><span class="n">ReferenceList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_references</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                         <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_reference_list</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_reference_list&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_reference_list&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">num_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                     <span class="sd">&quot;&quot;&quot;The number of resource types in this list.&quot;&quot;&quot;</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_types&#39;</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_types</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_types&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_types</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_types</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">num_types_m1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">65536</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_types</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_types&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_types&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
             <span class="k">class</span> <span class="nc">ReferenceList</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -619,9 +618,9 @@ such as custom file icons.</p>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
                 <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">references</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_references</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">references</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_references</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">TypeListAndReferenceLists</span><span class="o">.</span><span class="n">ReferenceList</span><span class="o">.</span><span class="n">Reference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">TypeListAndReferenceLists</span><span class="o">.</span><span class="n">ReferenceList</span><span class="o">.</span><span class="n">Reference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
                 <span class="k">class</span> <span class="nc">Reference</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -668,13 +667,13 @@ such as custom file icons.</p>
 <span class="sd">                            as they are stored in the file.</span>
 <span class="sd">                            &quot;&quot;&quot;</span>
                             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">):</span>
-                                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span>
 
                             <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
                     <span class="nd">@property</span>
@@ -682,7 +681,7 @@ such as custom file icons.</p>
                         <span class="sd">&quot;&quot;&quot;The name (if any) of the resource described by this reference.</span>
 <span class="sd">                        &quot;&quot;&quot;</span>
                         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">):</span>
-                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span>
 
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ofs_name</span> <span class="o">!=</span> <span class="mi">65535</span><span class="p">:</span>
                             <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">resource_map</span><span class="o">.</span><span class="n">names_with_io</span><span class="o">.</span><span class="n">_io</span>
@@ -691,21 +690,21 @@ such as custom file icons.</p>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                             <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
                     <span class="nd">@property</span>
                     <span class="k">def</span> <span class="nf">data_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="sd">&quot;&quot;&quot;The data block containing the data for the resource described by this reference.</span>
 <span class="sd">                        &quot;&quot;&quot;</span>
                         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_block&#39;</span><span class="p">):</span>
-                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_block</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_block&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_block</span>
 
                         <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">data_blocks_with_io</span><span class="o">.</span><span class="n">_io</span>
                         <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                         <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_data_block</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_block</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="o">.</span><span class="n">DataBlock</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                         <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_block</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_block&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_block&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
 
@@ -733,7 +732,7 @@ such as custom file icons.</p>
         <span class="k">def</span> <span class="nf">type_list_and_reference_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;The resource map&#39;s resource type list, followed by the resource reference list area.&quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_type_list_and_reference_lists&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_type_list_and_reference_lists</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_type_list_and_reference_lists&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_type_list_and_reference_lists</span>
 
             <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_type_list</span><span class="p">)</span>
@@ -741,7 +740,7 @@ such as custom file icons.</p>
             <span class="n">_io__raw__m_type_list_and_reference_lists</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_type_list_and_reference_lists</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_m_type_list_and_reference_lists</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="o">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">_io__raw__m_type_list_and_reference_lists</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_type_list_and_reference_lists</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_type_list_and_reference_lists&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_type_list_and_reference_lists&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">names_with_io</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -749,7 +748,7 @@ such as custom file icons.</p>
 <span class="sd">            unless you need access to this instance&#39;s `_io`.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names_with_io&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_names_with_io</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names_with_io&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_names_with_io</span>
 
             <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_names</span><span class="p">)</span>
@@ -757,16 +756,16 @@ such as custom file icons.</p>
             <span class="n">_io__raw__m_names_with_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_names_with_io</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_m_names_with_io</span> <span class="o">=</span> <span class="n">bytes_with_io</span><span class="o">.</span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">_io__raw__m_names_with_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_names_with_io</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names_with_io&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names_with_io&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Storage area for the names of all resources.&quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_names</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_names</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_m_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_with_io</span><span class="o">.</span><span class="n">data</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_names</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_names&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
     <span class="nd">@property</span>
@@ -775,7 +774,7 @@ such as custom file icons.</p>
 <span class="sd">        unless you need access to this instance&#39;s `_io`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks_with_io&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks_with_io</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks_with_io&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks_with_io</span>
 
         <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_data_blocks</span><span class="p">)</span>
@@ -783,7 +782,7 @@ such as custom file icons.</p>
         <span class="n">_io__raw__m_data_blocks_with_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_data_blocks_with_io</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks_with_io</span> <span class="o">=</span> <span class="n">bytes_with_io</span><span class="o">.</span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">_io__raw__m_data_blocks_with_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks_with_io</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks_with_io&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks_with_io&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">data_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -802,16 +801,16 @@ such as custom file icons.</p>
 <span class="sd">        or when resources are added or grown so that more space is needed in the data area.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_blocks_with_io</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_data_blocks</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_data_blocks&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">resource_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The resource file&#39;s resource map.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_resource_map&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_resource_map</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_resource_map&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_resource_map</span>
 
         <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_resource_map</span><span class="p">)</span>
@@ -819,7 +818,7 @@ such as custom file icons.</p>
         <span class="n">_io__raw__m_resource_map</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_resource_map</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_m_resource_map</span> <span class="o">=</span> <span class="n">ResourceFork</span><span class="o">.</span><span class="n">ResourceMap</span><span class="p">(</span><span class="n">_io__raw__m_resource_map</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_resource_map</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_resource_map&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_resource_map&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 
         </div>

@@ -234,29 +234,25 @@ void packet_ppi_t::radio_802_11n_mac_phy_ext_body_t::_read() {
     m_mcs = m__io->read_u1();
     m_num_streams = m__io->read_u1();
     m_rssi_combined = m__io->read_u1();
-    int l_rssi_ant_ctl = 4;
     m_rssi_ant_ctl = std::unique_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>());
-    m_rssi_ant_ctl->reserve(l_rssi_ant_ctl);
+    const int l_rssi_ant_ctl = 4;
     for (int i = 0; i < l_rssi_ant_ctl; i++) {
         m_rssi_ant_ctl->push_back(std::move(m__io->read_u1()));
     }
-    int l_rssi_ant_ext = 4;
     m_rssi_ant_ext = std::unique_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>());
-    m_rssi_ant_ext->reserve(l_rssi_ant_ext);
+    const int l_rssi_ant_ext = 4;
     for (int i = 0; i < l_rssi_ant_ext; i++) {
         m_rssi_ant_ext->push_back(std::move(m__io->read_u1()));
     }
     m_ext_channel_freq = m__io->read_u2le();
     m_ext_channel_flags = std::unique_ptr<channel_flags_t>(new channel_flags_t(m__io, this, m__root));
-    int l_rf_signal_noise = 4;
     m_rf_signal_noise = std::unique_ptr<std::vector<std::unique_ptr<signal_noise_t>>>(new std::vector<std::unique_ptr<signal_noise_t>>());
-    m_rf_signal_noise->reserve(l_rf_signal_noise);
+    const int l_rf_signal_noise = 4;
     for (int i = 0; i < l_rf_signal_noise; i++) {
         m_rf_signal_noise->push_back(std::move(std::unique_ptr<signal_noise_t>(new signal_noise_t(m__io, this, m__root))));
     }
-    int l_evm = 4;
     m_evm = std::unique_ptr<std::vector<uint32_t>>(new std::vector<uint32_t>());
-    m_evm->reserve(l_evm);
+    const int l_evm = 4;
     for (int i = 0; i < l_evm; i++) {
         m_evm->push_back(std::move(m__io->read_u4le()));
     }

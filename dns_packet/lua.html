@@ -469,7 +469,7 @@ section#format-index .row {
   <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
   <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Label</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Label</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="n">self</span><span class="p">.</span><span class="n">name</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
     <span class="kr">if</span>  <span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;=</span> <span class="mi">192</span><span class="p">))</span>  <span class="kr">then</span>
       <span class="kr">break</span>
@@ -484,137 +484,137 @@ section#format-index .row {
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">AddressV6</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">AddressV6</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">AddressV6</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">ip_v6</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ip_v6</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
 <span class="kr">end</span>
 
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Service</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Service</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Service</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
 <span class="kr">end</span>
 
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Txt</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Txt</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Txt</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">length</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">length</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TxtBody</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">TxtBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">TxtBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Txt</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Txt</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Address</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Address</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Address</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="kr">end</span>
 
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Answer</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Answer</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">Answer</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">())</span>
-<span class="n">self</span><span class="p">.</span><span class="n">answer_class</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">ClassType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">())</span>
-<span class="n">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">rdlength</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-<span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type</span>
-<span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">srv</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Service</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">a</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Address</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">cname</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">ns</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">soa</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">AuthorityInfo</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">mx</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">MxInfo</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">txt</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TxtBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">ptr</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">aaaa</span> <span class="kr">then</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">AddressV6</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">else</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
-<span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">answer_class</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">ClassType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">ttl</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">rdlength</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">srv</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Service</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">a</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">Address</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">cname</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">ns</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">soa</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">AuthorityInfo</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">mx</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">MxInfo</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">txt</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TxtBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">ptr</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">TypeType</span><span class="p">.</span><span class="n">aaaa</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_payload</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">AddressV6</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rdlength</span><span class="p">)</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -625,144 +625,144 @@ section#format-index .row {
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">qr</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">qr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">15</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">15</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_qr</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ra</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ra</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">7</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">7</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ra</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">tc</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">tc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tc</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_opcode_valid</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_opcode_valid</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">))</span> 
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">))</span> 
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_opcode_valid</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">rcode</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">rcode</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">0</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rcode</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">opcode</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">30720</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">30720</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_opcode</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">aa</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">aa</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_aa</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">z</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_z</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_z</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_z</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_z</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_z</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_z</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_z</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_z</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">rd</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">rd</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rd</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">cd</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">cd</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_cd</span>
 <span class="kr">end</span>
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">PacketFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ad</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">PacketFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ad</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span>
+  <span class="kr">end</span>
 
-<span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">flag</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ad</span>
 <span class="kr">end</span>
 
 
 <span class="n">DnsPacket</span><span class="p">.</span><span class="n">AuthorityInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">AuthorityInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">DnsPacket</span><span class="p">.</span><span class="nc">AuthorityInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">primary_ns</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">resoponsible_mailbox</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">serial</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">refresh_interval</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">retry_interval</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">expire_limit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">min_ttl</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">primary_ns</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">resoponsible_mailbox</span> <span class="o">=</span> <span class="n">DnsPacket</span><span class="p">.</span><span class="n">DomainName</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">serial</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">refresh_interval</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">retry_interval</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">expire_limit</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">min_ttl</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 

@@ -8,7 +8,7 @@
   } else {
     root.Tsm = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * InfluxDB is a scalable database optimized for storage of time
  * series, real-time application metrics, operations monitoring events,
@@ -76,9 +76,9 @@ var Tsm = (function() {
         this.key = KaitaiStream.bytesToStr(this._io.readBytes(this.keyLen), "UTF-8");
         this.type = this._io.readU1();
         this.entryCount = this._io.readU2be();
-        this.indexEntries = new Array(this.entryCount);
+        this.indexEntries = [];
         for (var i = 0; i < this.entryCount; i++) {
-          this.indexEntries[i] = new IndexEntry(this._io, this, this._root);
+          this.indexEntries.push(new IndexEntry(this._io, this, this._root));
         }
       }
 
@@ -136,7 +136,7 @@ var Tsm = (function() {
           return this._m_entries;
         var _pos = this._io.pos;
         this._io.seek(this.offset);
-        this._m_entries = []
+        this._m_entries = [];
         var i = 0;
         do {
           var _ = new IndexHeader(this._io, this, this._root);

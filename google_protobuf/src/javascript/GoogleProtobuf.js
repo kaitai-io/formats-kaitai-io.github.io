@@ -8,7 +8,7 @@
   } else {
     root.GoogleProtobuf = factory(root.KaitaiStream, root.VlqBase128Le);
   }
-}(this, function (KaitaiStream, VlqBase128Le) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Le) {
 /**
  * Google Protocol Buffers (AKA protobuf) is a popular data
  * serialization scheme used for communication protocols, data storage,

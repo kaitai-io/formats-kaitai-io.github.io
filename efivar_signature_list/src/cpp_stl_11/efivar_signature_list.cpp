@@ -60,13 +60,10 @@ void efivar_signature_list_t::signature_list_t::_read() {
     n_signatures = true;
     if (len_signature() > 0) {
         n_signatures = false;
-        int l_signatures = (((len_signature_list() - len_signature_header()) - 28) / len_signature());
         m__raw_signatures = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-        m__raw_signatures->reserve(l_signatures);
         m__io__raw_signatures = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
-        m__io__raw_signatures->reserve(l_signatures);
         m_signatures = std::unique_ptr<std::vector<std::unique_ptr<signature_data_t>>>(new std::vector<std::unique_ptr<signature_data_t>>());
-        m_signatures->reserve(l_signatures);
+        const int l_signatures = (((len_signature_list() - len_signature_header()) - 28) / len_signature());
         for (int i = 0; i < l_signatures; i++) {
             m__raw_signatures->push_back(std::move(m__io->read_bytes(len_signature())));
             kaitai::kstream* io__raw_signatures = new kaitai::kstream(m__raw_signatures->at(m__raw_signatures->size() - 1));

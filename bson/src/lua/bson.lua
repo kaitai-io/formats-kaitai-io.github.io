@@ -308,7 +308,7 @@ function Bson.F16:_init(io, parent, root)
 end
 
 function Bson.F16:_read()
-  self.str = self._io:read_bits_int_be(1)
+  self.str = self._io:read_bits_int_be(1) ~= 0
   self.exponent = self._io:read_bits_int_be(15)
   self.significand_hi = self._io:read_bits_int_be(49)
   self._io:align_to_byte()

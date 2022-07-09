@@ -122,7 +122,7 @@ public class Tsm extends KaitaiStruct {
                 this.key = new String(this._io.readBytes(keyLen()), Charset.forName("UTF-8"));
                 this.type = this._io.readU1();
                 this.entryCount = this._io.readU2be();
-                indexEntries = new ArrayList<IndexEntry>(((Number) (entryCount())).intValue());
+                this.indexEntries = new ArrayList<IndexEntry>();
                 for (int i = 0; i < entryCount(); i++) {
                     this.indexEntries.add(new IndexEntry(this._io, this, _root));
                 }
@@ -188,7 +188,7 @@ public class Tsm extends KaitaiStruct {
                 public BlockEntry block() {
                     if (this.block != null)
                         return this.block;
-                    KaitaiStream io = _root._io();
+                    KaitaiStream io = _root()._io();
                     long _pos = io.pos();
                     io.seek(blockOffset());
                     this.block = new BlockEntry(io, this, _root);

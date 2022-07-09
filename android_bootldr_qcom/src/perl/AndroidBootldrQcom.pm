@@ -42,7 +42,7 @@ sub _read {
     $self->{img_headers} = ();
     my $n_img_headers = $self->num_images();
     for (my $i = 0; $i < $n_img_headers; $i++) {
-        $self->{img_headers}[$i] = AndroidBootldrQcom::ImgHeader->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{img_headers}}, AndroidBootldrQcom::ImgHeader->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -54,7 +54,7 @@ sub img_bodies {
     $self->{img_bodies} = ();
     my $n_img_bodies = $self->num_images();
     for (my $i = 0; $i < $n_img_bodies; $i++) {
-        $self->{img_bodies}[$i] = AndroidBootldrQcom::ImgBody->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{img_bodies}}, AndroidBootldrQcom::ImgBody->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{img_bodies};

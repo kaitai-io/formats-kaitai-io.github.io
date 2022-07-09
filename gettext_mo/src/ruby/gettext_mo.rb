@@ -358,14 +358,14 @@ class GettextMo < Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(ofs_originals)
       if @_is_le
-        @originals = Array.new(num_translations)
+        @originals = []
         (num_translations).times { |i|
-          @originals[i] = Descriptor.new(io, self, @_root, @_is_le)
+          @originals << Descriptor.new(io, self, @_root, @_is_le)
         }
       else
-        @originals = Array.new(num_translations)
+        @originals = []
         (num_translations).times { |i|
-          @originals[i] = Descriptor.new(io, self, @_root, @_is_le)
+          @originals << Descriptor.new(io, self, @_root, @_is_le)
         }
       end
       io.seek(_pos)
@@ -377,14 +377,14 @@ class GettextMo < Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(ofs_translations)
       if @_is_le
-        @translations = Array.new(num_translations)
+        @translations = []
         (num_translations).times { |i|
-          @translations[i] = Descriptor.new(io, self, @_root, @_is_le)
+          @translations << Descriptor.new(io, self, @_root, @_is_le)
         }
       else
-        @translations = Array.new(num_translations)
+        @translations = []
         (num_translations).times { |i|
-          @translations[i] = Descriptor.new(io, self, @_root, @_is_le)
+          @translations << Descriptor.new(io, self, @_root, @_is_le)
         }
       end
       io.seek(_pos)
@@ -397,14 +397,14 @@ class GettextMo < Kaitai::Struct::Struct
         _pos = io.pos
         io.seek(ofs_hashtable_items)
         if @_is_le
-          @hashtable_items = Array.new(num_hashtable_items)
+          @hashtable_items = []
           (num_hashtable_items).times { |i|
-            @hashtable_items[i] = HashtableItem.new(io, self, @_root, @_is_le)
+            @hashtable_items << HashtableItem.new(io, self, @_root, @_is_le)
           }
         else
-          @hashtable_items = Array.new(num_hashtable_items)
+          @hashtable_items = []
           (num_hashtable_items).times { |i|
-            @hashtable_items[i] = HashtableItem.new(io, self, @_root, @_is_le)
+            @hashtable_items << HashtableItem.new(io, self, @_root, @_is_le)
           }
         end
         io.seek(_pos)

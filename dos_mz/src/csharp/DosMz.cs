@@ -198,7 +198,7 @@ namespace Kaitai
                     KaitaiStream io = Header.M_Io;
                     long _pos = io.Pos;
                     io.Seek(Header.Mz.OfsRelocations);
-                    _relocations = new List<Relocation>((int) (Header.Mz.NumRelocations));
+                    _relocations = new List<Relocation>();
                     for (var i = 0; i < Header.Mz.NumRelocations; i++)
                     {
                         _relocations.Add(new Relocation(io, this, m_root));

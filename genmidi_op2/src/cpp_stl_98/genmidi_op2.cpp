@@ -22,15 +22,13 @@ void genmidi_op2_t::_read() {
     if (!(magic() == std::string("\x23\x4F\x50\x4C\x5F\x49\x49\x23", 8))) {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x23\x4F\x50\x4C\x5F\x49\x49\x23", 8), magic(), _io(), std::string("/seq/0"));
     }
-    int l_instruments = 175;
     m_instruments = new std::vector<instrument_entry_t*>();
-    m_instruments->reserve(l_instruments);
+    const int l_instruments = 175;
     for (int i = 0; i < l_instruments; i++) {
         m_instruments->push_back(new instrument_entry_t(m__io, this, m__root));
     }
-    int l_instrument_names = 175;
     m_instrument_names = new std::vector<std::string>();
-    m_instrument_names->reserve(l_instrument_names);
+    const int l_instrument_names = 175;
     for (int i = 0; i < l_instrument_names; i++) {
         m_instrument_names->push_back(kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(kaitai::kstream::bytes_strip_right(m__io->read_bytes(32), 0), 0, false), std::string("ASCII")));
     }
@@ -69,9 +67,8 @@ void genmidi_op2_t::instrument_entry_t::_read() {
     m_flags = m__io->read_u2le();
     m_finetune = m__io->read_u1();
     m_note = m__io->read_u1();
-    int l_instruments = 2;
     m_instruments = new std::vector<instrument_t*>();
-    m_instruments->reserve(l_instruments);
+    const int l_instruments = 2;
     for (int i = 0; i < l_instruments; i++) {
         m_instruments->push_back(new instrument_t(m__io, this, m__root));
     }

@@ -119,9 +119,9 @@ class MachO < Kaitai::Struct::Struct
   def _read
     @magic = Kaitai::Struct::Stream::resolve_enum(MAGIC_TYPE, @_io.read_u4be)
     @header = MachHeader.new(@_io, self, @_root)
-    @load_commands = Array.new(header.ncmds)
+    @load_commands = []
     (header.ncmds).times { |i|
-      @load_commands[i] = LoadCommand.new(@_io, self, @_root)
+      @load_commands << LoadCommand.new(@_io, self, @_root)
     }
     self
   end
@@ -310,9 +310,9 @@ class MachO < Kaitai::Struct::Struct
         return @hashes unless @hashes.nil?
         _pos = @_io.pos
         @_io.seek(((hash_offset - 8) - (hash_size * n_special_slots)))
-        @hashes = Array.new((n_special_slots + n_code_slots))
+        @hashes = []
         ((n_special_slots + n_code_slots)).times { |i|
-          @hashes[i] = @_io.read_bytes(hash_size)
+          @hashes << @_io.read_bytes(hash_size)
         }
         @_io.seek(_pos)
         @hashes
@@ -356,9 +356,9 @@ class MachO < Kaitai::Struct::Struct
 
       def _read
         @count = @_io.read_u4be
-        @blobs = Array.new(count)
+        @blobs = []
         (count).times { |i|
-          @blobs[i] = BlobIndex.new(@_io, self, @_root)
+          @blobs << BlobIndex.new(@_io, self, @_root)
         }
         self
       end
@@ -664,9 +664,9 @@ class MachO < Kaitai::Struct::Struct
 
       def _read
         @count = @_io.read_u4be
-        @items = Array.new(count)
+        @items = []
         (count).times { |i|
-          @items[i] = RequirementsBlobIndex.new(@_io, self, @_root)
+          @items << RequirementsBlobIndex.new(@_io, self, @_root)
         }
         self
       end
@@ -743,9 +743,9 @@ class MachO < Kaitai::Struct::Struct
       @minos = @_io.read_u4le
       @sdk = @_io.read_u4le
       @ntools = @_io.read_u4le
-      @tools = Array.new(ntools)
+      @tools = []
       (ntools).times { |i|
-        @tools[i] = BuildToolVersion.new(@_io, self, @_root)
+        @tools << BuildToolVersion.new(@_io, self, @_root)
       }
       self
     end
@@ -1017,9 +1017,9 @@ class MachO < Kaitai::Struct::Struct
 
     def _read
       @num_strings = @_io.read_u4le
-      @strings = Array.new(num_strings)
+      @strings = []
       (num_strings).times { |i|
-        @strings[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("utf-8")
+        @strings << (@_io.read_bytes_term(0, false, true, true)).force_encoding("utf-8")
       }
       self
     end
@@ -1042,9 +1042,9 @@ class MachO < Kaitai::Struct::Struct
       @initprot = VmProt.new(@_io, self, @_root)
       @nsects = @_io.read_u4le
       @flags = @_io.read_u4le
-      @sections = Array.new(nsects)
+      @sections = []
       (nsects).times { |i|
-        @sections[i] = Section64.new(@_io, self, @_root)
+        @sections << Section64.new(@_io, self, @_root)
       }
       self
     end
@@ -1433,9 +1433,9 @@ class MachO < Kaitai::Struct::Struct
       io = _root._io
       _pos = io.pos
       io.seek(indirect_sym_off)
-      @indirect_symbols = Array.new(n_indirect_syms)
+      @indirect_symbols = []
       (n_indirect_syms).times { |i|
-        @indirect_symbols[i] = io.read_u4le
+        @indirect_symbols << io.read_u4le
       }
       io.seek(_pos)
       @indirect_symbols
@@ -1734,9 +1734,9 @@ class MachO < Kaitai::Struct::Struct
       def _read
         @terminal_size = Uleb128.new(@_io, self, @_root)
         @children_count = @_io.read_u1
-        @children = Array.new(children_count)
+        @children = []
         (children_count).times { |i|
-          @children[i] = Child.new(@_io, self, @_root)
+          @children << Child.new(@_io, self, @_root)
         }
         @terminal = @_io.read_bytes(terminal_size.value)
         self
@@ -1910,9 +1910,9 @@ class MachO < Kaitai::Struct::Struct
       @initprot = VmProt.new(@_io, self, @_root)
       @nsects = @_io.read_u4le
       @flags = @_io.read_u4le
-      @sections = Array.new(nsects)
+      @sections = []
       (nsects).times { |i|
-        @sections[i] = Section.new(@_io, self, @_root)
+        @sections << Section.new(@_io, self, @_root)
       }
       self
     end
@@ -2272,17 +2272,17 @@ class MachO < Kaitai::Struct::Struct
       io = _root._io
       _pos = io.pos
       io.seek(sym_off)
-      @symbols = Array.new(n_syms)
+      @symbols = []
       (n_syms).times { |i|
         case _root.magic
         when :magic_type_macho_le_x64
-          @symbols[i] = Nlist64.new(io, self, @_root)
+          @symbols << Nlist64.new(io, self, @_root)
         when :magic_type_macho_be_x64
-          @symbols[i] = Nlist64.new(io, self, @_root)
+          @symbols << Nlist64.new(io, self, @_root)
         when :magic_type_macho_le_x86
-          @symbols[i] = Nlist.new(io, self, @_root)
+          @symbols << Nlist.new(io, self, @_root)
         when :magic_type_macho_be_x86
-          @symbols[i] = Nlist.new(io, self, @_root)
+          @symbols << Nlist.new(io, self, @_root)
         end
       }
       io.seek(_pos)

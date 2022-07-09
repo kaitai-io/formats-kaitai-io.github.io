@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndroidBootldrQcom(KaitaiStruct):
@@ -129,9 +128,9 @@ class AndroidBootldrQcom(KaitaiStruct):
         self.num_images = self._io.read_u4le()
         self.ofs_img_bodies = self._io.read_u4le()
         self.bootloader_size = self._io.read_u4le()
-        self.img_headers = [None] * (self.num_images)
+        self.img_headers = []
         for i in range(self.num_images):
-            self.img_headers[i] = AndroidBootldrQcom.ImgHeader(self._io, self, self._root)
+            self.img_headers.append(AndroidBootldrQcom.ImgHeader(self._io, self, self._root))
 
 
     class ImgHeader(KaitaiStruct):
@@ -160,24 +159,24 @@ class AndroidBootldrQcom(KaitaiStruct):
         @property
         def img_header(self):
             if hasattr(self, '_m_img_header'):
-                return self._m_img_header if hasattr(self, '_m_img_header') else None
+                return self._m_img_header
 
             self._m_img_header = self._root.img_headers[self.idx]
-            return self._m_img_header if hasattr(self, '_m_img_header') else None
+            return getattr(self, '_m_img_header', None)
 
 
     @property
     def img_bodies(self):
         if hasattr(self, '_m_img_bodies'):
-            return self._m_img_bodies if hasattr(self, '_m_img_bodies') else None
+            return self._m_img_bodies
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_img_bodies)
-        self._m_img_bodies = [None] * (self.num_images)
+        self._m_img_bodies = []
         for i in range(self.num_images):
-            self._m_img_bodies[i] = AndroidBootldrQcom.ImgBody(i, self._io, self, self._root)
+            self._m_img_bodies.append(AndroidBootldrQcom.ImgBody(i, self._io, self, self._root))
 
         self._io.seek(_pos)
-        return self._m_img_bodies if hasattr(self, '_m_img_bodies') else None
+        return getattr(self, '_m_img_bodies', None)
 
 

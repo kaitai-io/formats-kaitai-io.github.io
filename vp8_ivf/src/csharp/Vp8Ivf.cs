@@ -48,7 +48,7 @@ namespace Kaitai
             _timescale = m_io.ReadU4le();
             _numFrames = m_io.ReadU4le();
             _unused = m_io.ReadU4le();
-            _imageData = new List<Blocks>((int) (NumFrames));
+            _imageData = new List<Blocks>();
             for (var i = 0; i < NumFrames; i++)
             {
                 _imageData.Add(new Blocks(m_io, this, m_root));

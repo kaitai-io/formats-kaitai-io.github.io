@@ -56,16 +56,16 @@ namespace Kaitai
                 __raw_backupGeometry = m_io.ReadBytes(4096);
                 var io___raw_backupGeometry = new KaitaiStream(__raw_backupGeometry);
                 _backupGeometry = new Geometry(io___raw_backupGeometry, this, m_root);
-                __raw_primaryMetadata = new List<byte[]>((int) (PrimaryGeometry.MetadataSlotCount));
-                _primaryMetadata = new List<Metadata>((int) (PrimaryGeometry.MetadataSlotCount));
+                __raw_primaryMetadata = new List<byte[]>();
+                _primaryMetadata = new List<Metadata>();
                 for (var i = 0; i < PrimaryGeometry.MetadataSlotCount; i++)
                 {
                     __raw_primaryMetadata.Add(m_io.ReadBytes(PrimaryGeometry.MetadataMaxSize));
                     var io___raw_primaryMetadata = new KaitaiStream(__raw_primaryMetadata[__raw_primaryMetadata.Count - 1]);
                     _primaryMetadata.Add(new Metadata(io___raw_primaryMetadata, this, m_root));
                 }
-                __raw_backupMetadata = new List<byte[]>((int) (PrimaryGeometry.MetadataSlotCount));
-                _backupMetadata = new List<Metadata>((int) (PrimaryGeometry.MetadataSlotCount));
+                __raw_backupMetadata = new List<byte[]>();
+                _backupMetadata = new List<Metadata>();
                 for (var i = 0; i < PrimaryGeometry.MetadataSlotCount; i++)
                 {
                     __raw_backupMetadata.Add(m_io.ReadBytes(PrimaryGeometry.MetadataMaxSize));
@@ -288,8 +288,8 @@ namespace Kaitai
                             return _table;
                         long _pos = m_io.Pos;
                         m_io.Seek((M_Parent.HeaderSize + Offset));
-                        __raw_table = new List<byte[]>((int) (NumEntries));
-                        _table = new List<object>((int) (NumEntries));
+                        __raw_table = new List<byte[]>();
+                        _table = new List<object>();
                         for (var i = 0; i < NumEntries; i++)
                         {
                             switch (Kind) {

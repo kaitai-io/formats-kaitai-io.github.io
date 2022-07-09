@@ -11,9 +11,12 @@ type
     `parent`*: KaitaiStruct
     `rawDataBlocksWithIoInst`*: seq[byte]
     `rawResourceMapInst`*: seq[byte]
-    `dataBlocksWithIoInst`*: BytesWithIo
-    `dataBlocksInst`*: seq[byte]
-    `resourceMapInst`*: ResourceFork_ResourceMap
+    `dataBlocksWithIoInst`: BytesWithIo
+    `dataBlocksWithIoInstFlag`: bool
+    `dataBlocksInst`: seq[byte]
+    `dataBlocksInstFlag`: bool
+    `resourceMapInst`: ResourceFork_ResourceMap
+    `resourceMapInstFlag`: bool
   ResourceFork_FileHeader* = ref object of KaitaiStruct
     `ofsDataBlocks`*: uint32
     `ofsResourceMap`*: uint32
@@ -35,9 +38,12 @@ type
     `rawFileAttributes`*: seq[byte]
     `rawTypeListAndReferenceListsInst`*: seq[byte]
     `rawNamesWithIoInst`*: seq[byte]
-    `typeListAndReferenceListsInst`*: ResourceFork_ResourceMap_TypeListAndReferenceLists
-    `namesWithIoInst`*: BytesWithIo
-    `namesInst`*: seq[byte]
+    `typeListAndReferenceListsInst`: ResourceFork_ResourceMap_TypeListAndReferenceLists
+    `typeListAndReferenceListsInstFlag`: bool
+    `namesWithIoInst`: BytesWithIo
+    `namesWithIoInstFlag`: bool
+    `namesInst`: seq[byte]
+    `namesInstFlag`: bool
   ResourceFork_ResourceMap_FileAttributes* = ref object of KaitaiStruct
     `resourcesLocked`*: bool
     `reserved0`*: uint64
@@ -47,7 +53,8 @@ type
     `mapNeedsWrite`*: bool
     `reserved1`*: uint64
     `parent`*: ResourceFork_ResourceMap
-    `asIntInst`*: uint16
+    `asIntInst`: uint16
+    `asIntInstFlag`: bool
   ResourceFork_ResourceMap_TypeListAndReferenceLists* = ref object of KaitaiStruct
     `typeList`*: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList
     `referenceLists`*: seq[byte]
@@ -56,14 +63,17 @@ type
     `numTypesM1`*: uint16
     `entries`*: seq[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry]
     `parent`*: ResourceFork_ResourceMap_TypeListAndReferenceLists
-    `numTypesInst`*: int
+    `numTypesInst`: int
+    `numTypesInstFlag`: bool
   ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry* = ref object of KaitaiStruct
     `type`*: seq[byte]
     `numReferencesM1`*: uint16
     `ofsReferenceList`*: uint16
     `parent`*: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList
-    `numReferencesInst`*: int
-    `referenceListInst`*: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
+    `numReferencesInst`: int
+    `numReferencesInstFlag`: bool
+    `referenceListInst`: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
+    `referenceListInstFlag`: bool
   ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList* = ref object of KaitaiStruct
     `references`*: seq[ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference]
     `numReferences`*: uint16
@@ -76,8 +86,10 @@ type
     `reservedHandle`*: uint32
     `parent`*: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
     `rawAttributes`*: seq[byte]
-    `nameInst`*: ResourceFork_ResourceMap_Name
-    `dataBlockInst`*: ResourceFork_DataBlock
+    `nameInst`: ResourceFork_ResourceMap_Name
+    `nameInstFlag`: bool
+    `dataBlockInst`: ResourceFork_DataBlock
+    `dataBlockInstFlag`: bool
   ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes* = ref object of KaitaiStruct
     `systemReference`*: bool
     `loadIntoSystemHeap`*: bool
@@ -88,7 +100,8 @@ type
     `needsWrite`*: bool
     `compressed`*: bool
     `parent`*: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference
-    `asIntInst`*: uint8
+    `asIntInst`: uint8
+    `asIntInstFlag`: bool
   ResourceFork_ResourceMap_Name* = ref object of KaitaiStruct
     `lenValue`*: uint8
     `value`*: seq[byte]
@@ -216,7 +229,7 @@ proc dataBlocksWithIo(this: ResourceFork): BytesWithIo =
 unless you need access to this instance's `_io`.
 
   ]##
-  if this.dataBlocksWithIoInst != nil:
+  if this.dataBlocksWithIoInstFlag:
     return this.dataBlocksWithIoInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.ofsDataBlocks))
@@ -226,8 +239,8 @@ unless you need access to this instance's `_io`.
   let dataBlocksWithIoInstExpr = BytesWithIo.read(rawDataBlocksWithIoInstIo, this.root, this)
   this.dataBlocksWithIoInst = dataBlocksWithIoInstExpr
   this.io.seek(pos)
-  if this.dataBlocksWithIoInst != nil:
-    return this.dataBlocksWithIoInst
+  this.dataBlocksWithIoInstFlag = true
+  return this.dataBlocksWithIoInst
 
 proc dataBlocks(this: ResourceFork): seq[byte] = 
 
@@ -247,19 +260,19 @@ which happens when resources are removed entirely,
 or when resources are added or grown so that more space is needed in the data area.
 
   ]##
-  if this.dataBlocksInst.len != 0:
+  if this.dataBlocksInstFlag:
     return this.dataBlocksInst
   let dataBlocksInstExpr = seq[byte](this.dataBlocksWithIo.data)
   this.dataBlocksInst = dataBlocksInstExpr
-  if this.dataBlocksInst.len != 0:
-    return this.dataBlocksInst
+  this.dataBlocksInstFlag = true
+  return this.dataBlocksInst
 
 proc resourceMap(this: ResourceFork): ResourceFork_ResourceMap = 
 
   ##[
   The resource file's resource map.
   ]##
-  if this.resourceMapInst != nil:
+  if this.resourceMapInstFlag:
     return this.resourceMapInst
   let pos = this.io.pos()
   this.io.seek(int(this.header.ofsResourceMap))
@@ -269,8 +282,8 @@ proc resourceMap(this: ResourceFork): ResourceFork_ResourceMap =
   let resourceMapInstExpr = ResourceFork_ResourceMap.read(rawResourceMapInstIo, this.root, this)
   this.resourceMapInst = resourceMapInstExpr
   this.io.seek(pos)
-  if this.resourceMapInst != nil:
-    return this.resourceMapInst
+  this.resourceMapInstFlag = true
+  return this.resourceMapInst
 
 proc fromFile*(_: typedesc[ResourceFork], filename: string): ResourceFork =
   ResourceFork.read(newKaitaiFileStream(filename), nil, nil)
@@ -437,7 +450,7 @@ proc typeListAndReferenceLists(this: ResourceFork_ResourceMap): ResourceFork_Res
   ##[
   The resource map's resource type list, followed by the resource reference list area.
   ]##
-  if this.typeListAndReferenceListsInst != nil:
+  if this.typeListAndReferenceListsInstFlag:
     return this.typeListAndReferenceListsInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsTypeList))
@@ -447,8 +460,8 @@ proc typeListAndReferenceLists(this: ResourceFork_ResourceMap): ResourceFork_Res
   let typeListAndReferenceListsInstExpr = ResourceFork_ResourceMap_TypeListAndReferenceLists.read(rawTypeListAndReferenceListsInstIo, this.root, this)
   this.typeListAndReferenceListsInst = typeListAndReferenceListsInstExpr
   this.io.seek(pos)
-  if this.typeListAndReferenceListsInst != nil:
-    return this.typeListAndReferenceListsInst
+  this.typeListAndReferenceListsInstFlag = true
+  return this.typeListAndReferenceListsInst
 
 proc namesWithIo(this: ResourceFork_ResourceMap): BytesWithIo = 
 
@@ -457,7 +470,7 @@ proc namesWithIo(this: ResourceFork_ResourceMap): BytesWithIo =
 unless you need access to this instance's `_io`.
 
   ]##
-  if this.namesWithIoInst != nil:
+  if this.namesWithIoInstFlag:
     return this.namesWithIoInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsNames))
@@ -467,20 +480,20 @@ unless you need access to this instance's `_io`.
   let namesWithIoInstExpr = BytesWithIo.read(rawNamesWithIoInstIo, this.root, this)
   this.namesWithIoInst = namesWithIoInstExpr
   this.io.seek(pos)
-  if this.namesWithIoInst != nil:
-    return this.namesWithIoInst
+  this.namesWithIoInstFlag = true
+  return this.namesWithIoInst
 
 proc names(this: ResourceFork_ResourceMap): seq[byte] = 
 
   ##[
   Storage area for the names of all resources.
   ]##
-  if this.namesInst.len != 0:
+  if this.namesInstFlag:
     return this.namesInst
   let namesInstExpr = seq[byte](this.namesWithIo.data)
   this.namesInst = namesInstExpr
-  if this.namesInst.len != 0:
-    return this.namesInst
+  this.namesInstFlag = true
+  return this.namesInst
 
 proc fromFile*(_: typedesc[ResourceFork_ResourceMap], filename: string): ResourceFork_ResourceMap =
   ResourceFork_ResourceMap.read(newKaitaiFileStream(filename), nil, nil)
@@ -584,15 +597,15 @@ proc asInt(this: ResourceFork_ResourceMap_FileAttributes): uint16 =
 as they are stored in the file.
 
   ]##
-  if this.asIntInst != nil:
+  if this.asIntInstFlag:
     return this.asIntInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let asIntInstExpr = this.io.readU2be()
   this.asIntInst = asIntInstExpr
   this.io.seek(pos)
-  if this.asIntInst != nil:
-    return this.asIntInst
+  this.asIntInstFlag = true
+  return this.asIntInst
 
 proc fromFile*(_: typedesc[ResourceFork_ResourceMap_FileAttributes], filename: string): ResourceFork_ResourceMap_FileAttributes =
   ResourceFork_ResourceMap_FileAttributes.read(newKaitaiFileStream(filename), nil, nil)
@@ -673,12 +686,12 @@ proc numTypes(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList)
   ##[
   The number of resource types in this list.
   ]##
-  if this.numTypesInst != nil:
+  if this.numTypesInstFlag:
     return this.numTypesInst
   let numTypesInstExpr = int(((this.numTypesM1 + 1) %%% 65536))
   this.numTypesInst = numTypesInstExpr
-  if this.numTypesInst != nil:
-    return this.numTypesInst
+  this.numTypesInstFlag = true
+  return this.numTypesInst
 
 proc fromFile*(_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList =
   ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList.read(newKaitaiFileStream(filename), nil, nil)
@@ -734,12 +747,12 @@ proc numReferences(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_Type
   ##[
   The number of resources in the reference list for this type.
   ]##
-  if this.numReferencesInst != nil:
+  if this.numReferencesInstFlag:
     return this.numReferencesInst
   let numReferencesInstExpr = int(((this.numReferencesM1 + 1) %%% 65536))
   this.numReferencesInst = numReferencesInstExpr
-  if this.numReferencesInst != nil:
-    return this.numReferencesInst
+  this.numReferencesInstFlag = true
+  return this.numReferencesInst
 
 proc referenceList(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry): ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList = 
 
@@ -747,7 +760,7 @@ proc referenceList(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_Type
   The resource reference list for this resource type.
 
   ]##
-  if this.referenceListInst != nil:
+  if this.referenceListInstFlag:
     return this.referenceListInst
   let io = this.parent.parent.io
   let pos = io.pos()
@@ -755,8 +768,8 @@ proc referenceList(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_Type
   let referenceListInstExpr = ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList.read(io, this.root, this, this.numReferences)
   this.referenceListInst = referenceListInstExpr
   io.seek(pos)
-  if this.referenceListInst != nil:
-    return this.referenceListInst
+  this.referenceListInstFlag = true
+  return this.referenceListInst
 
 proc fromFile*(_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry =
   ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -852,7 +865,7 @@ proc name(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
   The name (if any) of the resource described by this reference.
 
   ]##
-  if this.nameInst != nil:
+  if this.nameInstFlag:
     return this.nameInst
   if this.ofsName != 65535:
     let io = ResourceFork(this.root).resourceMap.namesWithIo.io
@@ -861,8 +874,8 @@ proc name(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
     let nameInstExpr = ResourceFork_ResourceMap_Name.read(io, this.root, this)
     this.nameInst = nameInstExpr
     io.seek(pos)
-  if this.nameInst != nil:
-    return this.nameInst
+  this.nameInstFlag = true
+  return this.nameInst
 
 proc dataBlock(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_DataBlock = 
 
@@ -870,7 +883,7 @@ proc dataBlock(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_Referenc
   The data block containing the data for the resource described by this reference.
 
   ]##
-  if this.dataBlockInst != nil:
+  if this.dataBlockInstFlag:
     return this.dataBlockInst
   let io = ResourceFork(this.root).dataBlocksWithIo.io
   let pos = io.pos()
@@ -878,8 +891,8 @@ proc dataBlock(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_Referenc
   let dataBlockInstExpr = ResourceFork_DataBlock.read(io, this.root, this)
   this.dataBlockInst = dataBlockInstExpr
   io.seek(pos)
-  if this.dataBlockInst != nil:
-    return this.dataBlockInst
+  this.dataBlockInstFlag = true
+  return this.dataBlockInst
 
 proc fromFile*(_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference =
   ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference.read(newKaitaiFileStream(filename), nil, nil)
@@ -1028,15 +1041,15 @@ proc asInt(this: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceLis
 as they are stored in the file.
 
   ]##
-  if this.asIntInst != nil:
+  if this.asIntInstFlag:
     return this.asIntInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let asIntInstExpr = this.io.readU1()
   this.asIntInst = asIntInstExpr
   this.io.seek(pos)
-  if this.asIntInst != nil:
-    return this.asIntInst
+  this.asIntInstFlag = true
+  return this.asIntInst
 
 proc fromFile*(_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes =
   ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes.read(newKaitaiFileStream(filename), nil, nil)

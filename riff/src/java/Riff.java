@@ -325,7 +325,7 @@ public class Riff extends KaitaiStruct {
             {
                 boolean on = isUnregisteredTag();
                 if (on == false) {
-                    this.chunkData = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+                    this.chunkData = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
                 }
             }
             io.seek(_pos);

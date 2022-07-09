@@ -223,6 +223,11 @@ section#format-index .row {
                 <a href="javascript.html" title="PNG (Portable Network Graphics) file parsing JavaScript library">JavaScript</a></li>
                 
                 
+                <li>
+                
+                <a href="lua.html" title="PNG (Portable Network Graphics) file parsing Lua library">Lua</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="nim.html" title="PNG (Portable Network Graphics) file parsing Nim library">Nim</a></li>
@@ -324,8 +329,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">xInt</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">yInt</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_ChrmChunk</span>
-    <span class="p">`</span><span class="n">xInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
-    <span class="p">`</span><span class="n">yInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">xInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">xInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">yInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">yInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Png_BkgdGreyscale</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_BkgdChunk</span>
@@ -373,7 +380,8 @@ section#format-index .row {
   <span class="n">Png_GamaChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">gammaInt</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
-    <span class="p">`</span><span class="n">gammaRatioInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">gammaRatioInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">gammaRatioInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Png_BkgdChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">bkgd</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
@@ -393,7 +401,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">disposeOp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_DisposeOpValues</span>
     <span class="p">`</span><span class="n">blendOp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_BlendOpValues</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
-    <span class="p">`</span><span class="n">delayInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">delayInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">delayInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Png_InternationalTextChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">keyword</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">compressionFlag</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -635,20 +644,20 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">yInt</span> <span class="o">=</span> <span class="n">yIntExpr</span>
 
 <span class="k">proc </span><span class="nf">x</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_Point</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">xInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">xInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">xInst</span>
   <span class="k">let</span> <span class="n">xInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">xInt</span> <span class="ow">div</span> <span class="mf">100000.0</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">xInst</span> <span class="o">=</span> <span class="n">xInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">xInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">xInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">xInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">xInst</span>
 
 <span class="k">proc </span><span class="nf">y</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_Point</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yInst</span>
   <span class="k">let</span> <span class="n">yInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">yInt</span> <span class="ow">div</span> <span class="mf">100000.0</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">yInst</span> <span class="o">=</span> <span class="n">yInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">yInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">yInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">yInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_Point], filename: string): Png_Point =</span>
   <span class="n">Png_Point</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -871,12 +880,12 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">gammaInt</span> <span class="o">=</span> <span class="n">gammaIntExpr</span>
 
 <span class="k">proc </span><span class="nf">gammaRatio</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_GamaChunk</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInst</span>
   <span class="k">let</span> <span class="n">gammaRatioInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="mf">100000.0</span> <span class="ow">div</span> <span class="n">this</span><span class="p">.</span><span class="n">gammaInt</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInst</span> <span class="o">=</span> <span class="n">gammaRatioInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">gammaRatioInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_GamaChunk], filename: string): Png_GamaChunk =</span>
   <span class="n">Png_GamaChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -1026,12 +1035,12 @@ section#format-index .row {
   <span class="sd">##[</span>
   <span class="n">Time</span> <span class="n">to</span> <span class="n">display</span> <span class="n">this</span> <span class="n">frame</span><span class="p">,</span> <span class="ow">in</span> <span class="n">seconds</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span>
   <span class="k">let</span> <span class="n">delayInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">delayNum</span> <span class="ow">div</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">delayDen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="mf">100.0</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">delayDen</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span> <span class="o">=</span> <span class="n">delayInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">delayInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_FrameControlChunk], filename: string): Png_FrameControlChunk =</span>
   <span class="n">Png_FrameControlChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

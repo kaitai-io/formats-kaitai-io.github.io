@@ -8,7 +8,7 @@
   } else {
     root.GlibcUtmp = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var GlibcUtmp = (function() {
   GlibcUtmp.EntryType = Object.freeze({
     EMPTY: 0,

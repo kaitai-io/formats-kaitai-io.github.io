@@ -39,7 +39,7 @@ namespace Kaitai
             __raw_header = m_io.ReadBytes(16);
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new Header(io___raw_header, this, m_root);
-            _blockPointers = new List<uint>((int) ((Header.NumBlocks + 1)));
+            _blockPointers = new List<uint>();
             for (var i = 0; i < (Header.NumBlocks + 1); i++)
             {
                 _blockPointers.Add(m_io.ReadU4le());
@@ -199,7 +199,7 @@ namespace Kaitai
             {
                 if (f_blocks)
                     return _blocks;
-                _blocks = new List<Block>((int) (Header.NumBlocks));
+                _blocks = new List<Block>();
                 for (var i = 0; i < Header.NumBlocks; i++)
                 {
                     _blocks.Add(new Block(BlockPointers[i], BlockPointers[(i + 1)], m_io, this, m_root));

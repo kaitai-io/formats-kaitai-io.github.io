@@ -268,7 +268,8 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
   <span class="n">Luks</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">partitionHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Luks_PartitionHeader</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">payloadInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">payloadInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">payloadInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Luks_PartitionHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -290,7 +291,8 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
     <span class="p">`</span><span class="n">startSectorOfKeyMaterial</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">numberOfAntiForensicStripes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Luks_PartitionHeader</span>
-    <span class="p">`</span><span class="n">keyMaterialInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">keyMaterialInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">keyMaterialInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Luks_PartitionHeader_KeySlot_KeySlotStates</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">disabled_key_slot</span> <span class="o">=</span> <span class="mi">57005</span>
     <span class="n">enabled_key_slot</span> <span class="o">=</span> <span class="mi">11301363</span>
@@ -321,15 +323,15 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
   <span class="n">this</span><span class="p">.</span><span class="n">partitionHeader</span> <span class="o">=</span> <span class="n">partitionHeaderExpr</span>
 
 <span class="k">proc </span><span class="nf">payload</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Luks</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">payloadInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">payloadInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">payloadInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">partitionHeader</span><span class="p">.</span><span class="n">payloadOffset</span> <span class="o">*</span> <span class="mi">512</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">payloadInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">payloadInst</span> <span class="o">=</span> <span class="n">payloadInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">payloadInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">payloadInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">payloadInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">payloadInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Luks], filename: string): Luks =</span>
   <span class="n">Luks</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -391,15 +393,15 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
   <span class="n">this</span><span class="p">.</span><span class="n">numberOfAntiForensicStripes</span> <span class="o">=</span> <span class="n">numberOfAntiForensicStripesExpr</span>
 
 <span class="k">proc </span><span class="nf">keyMaterial</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Luks_PartitionHeader_KeySlot</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">startSectorOfKeyMaterial</span> <span class="o">*</span> <span class="mi">512</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">keyMaterialInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">numberOfKeyBytes</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">numberOfAntiForensicStripes</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInst</span> <span class="o">=</span> <span class="n">keyMaterialInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">keyMaterialInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Luks_PartitionHeader_KeySlot], filename: string): Luks_PartitionHeader_KeySlot =</span>
   <span class="n">Luks_PartitionHeader_KeySlot</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

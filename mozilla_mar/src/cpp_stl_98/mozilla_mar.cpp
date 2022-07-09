@@ -27,16 +27,14 @@ void mozilla_mar_t::_read() {
     m_ofs_index = m__io->read_u4be();
     m_file_size = m__io->read_u8be();
     m_len_signatures = m__io->read_u4be();
-    int l_signatures = len_signatures();
     m_signatures = new std::vector<signature_t*>();
-    m_signatures->reserve(l_signatures);
+    const int l_signatures = len_signatures();
     for (int i = 0; i < l_signatures; i++) {
         m_signatures->push_back(new signature_t(m__io, this, m__root));
     }
     m_len_additional_sections = m__io->read_u4be();
-    int l_additional_sections = len_additional_sections();
     m_additional_sections = new std::vector<additional_section_t*>();
-    m_additional_sections->reserve(l_additional_sections);
+    const int l_additional_sections = len_additional_sections();
     for (int i = 0; i < l_additional_sections; i++) {
         m_additional_sections->push_back(new additional_section_t(m__io, this, m__root));
     }

@@ -10,14 +10,16 @@ type
     `version`*: uint16
     `ifd0Ofs`*: uint32
     `parent`*: Exif
-    `ifd0Inst`*: Exif_ExifBody_Ifd
+    `ifd0Inst`: Exif_ExifBody_Ifd
+    `ifd0InstFlag`: bool
     isLe: bool
   Exif_ExifBody_Ifd* = ref object of KaitaiStruct
     `numFields`*: uint16
     `fields`*: seq[Exif_ExifBody_IfdField]
     `nextIfdOfs`*: uint32
     `parent`*: KaitaiStruct
-    `nextIfdInst`*: Exif_ExifBody_Ifd
+    `nextIfdInst`: Exif_ExifBody_Ifd
+    `nextIfdInstFlag`: bool
     isLe: bool
   Exif_ExifBody_IfdField* = ref object of KaitaiStruct
     `tag`*: Exif_ExifBody_IfdField_TagEnum
@@ -25,10 +27,14 @@ type
     `length`*: uint32
     `ofsOrData`*: uint32
     `parent`*: Exif_ExifBody_Ifd
-    `typeByteLengthInst`*: int8
-    `byteLengthInst`*: int
-    `isImmediateDataInst`*: bool
-    `dataInst`*: seq[byte]
+    `typeByteLengthInst`: int8
+    `typeByteLengthInstFlag`: bool
+    `byteLengthInst`: int
+    `byteLengthInstFlag`: bool
+    `isImmediateDataInst`: bool
+    `isImmediateDataInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
     isLe: bool
   Exif_ExifBody_IfdField_FieldTypeEnum* = enum
     byte = 1
@@ -565,7 +571,7 @@ proc read*(_: typedesc[Exif_ExifBody], io: KaitaiStream, root: KaitaiStruct, par
     readBe(this)
 
 proc ifd0(this: Exif_ExifBody): Exif_ExifBody_Ifd = 
-  if this.ifd0Inst != nil:
+  if this.ifd0InstFlag:
     return this.ifd0Inst
   let pos = this.io.pos()
   this.io.seek(int(this.ifd0Ofs))
@@ -576,8 +582,8 @@ proc ifd0(this: Exif_ExifBody): Exif_ExifBody_Ifd =
     let ifd0InstExpr = Exif_ExifBody_Ifd.read(this.io, this.root, this)
     this.ifd0Inst = ifd0InstExpr
   this.io.seek(pos)
-  if this.ifd0Inst != nil:
-    return this.ifd0Inst
+  this.ifd0InstFlag = true
+  return this.ifd0Inst
 
 proc fromFile*(_: typedesc[Exif_ExifBody], filename: string): Exif_ExifBody =
   Exif_ExifBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -618,7 +624,7 @@ proc read*(_: typedesc[Exif_ExifBody_Ifd], io: KaitaiStream, root: KaitaiStruct,
     readBe(this)
 
 proc nextIfd(this: Exif_ExifBody_Ifd): Exif_ExifBody_Ifd = 
-  if this.nextIfdInst != nil:
+  if this.nextIfdInstFlag:
     return this.nextIfdInst
   if this.nextIfdOfs != 0:
     let pos = this.io.pos()
@@ -630,8 +636,8 @@ proc nextIfd(this: Exif_ExifBody_Ifd): Exif_ExifBody_Ifd =
       let nextIfdInstExpr = Exif_ExifBody_Ifd.read(this.io, this.root, this)
       this.nextIfdInst = nextIfdInstExpr
     this.io.seek(pos)
-  if this.nextIfdInst != nil:
-    return this.nextIfdInst
+  this.nextIfdInstFlag = true
+  return this.nextIfdInst
 
 proc fromFile*(_: typedesc[Exif_ExifBody_Ifd], filename: string): Exif_ExifBody_Ifd =
   Exif_ExifBody_Ifd.read(newKaitaiFileStream(filename), nil, nil)
@@ -674,31 +680,31 @@ proc read*(_: typedesc[Exif_ExifBody_IfdField], io: KaitaiStream, root: KaitaiSt
     readBe(this)
 
 proc typeByteLength(this: Exif_ExifBody_IfdField): int8 = 
-  if this.typeByteLengthInst != nil:
+  if this.typeByteLengthInstFlag:
     return this.typeByteLengthInst
   let typeByteLengthInstExpr = int8((if this.fieldType == exif.word: 2 else: (if this.fieldType == exif.dword: 4 else: 1)))
   this.typeByteLengthInst = typeByteLengthInstExpr
-  if this.typeByteLengthInst != nil:
-    return this.typeByteLengthInst
+  this.typeByteLengthInstFlag = true
+  return this.typeByteLengthInst
 
 proc byteLength(this: Exif_ExifBody_IfdField): int = 
-  if this.byteLengthInst != nil:
+  if this.byteLengthInstFlag:
     return this.byteLengthInst
   let byteLengthInstExpr = int((this.length * this.typeByteLength))
   this.byteLengthInst = byteLengthInstExpr
-  if this.byteLengthInst != nil:
-    return this.byteLengthInst
+  this.byteLengthInstFlag = true
+  return this.byteLengthInst
 
 proc isImmediateData(this: Exif_ExifBody_IfdField): bool = 
-  if this.isImmediateDataInst != nil:
+  if this.isImmediateDataInstFlag:
     return this.isImmediateDataInst
   let isImmediateDataInstExpr = bool(this.byteLength <= 4)
   this.isImmediateDataInst = isImmediateDataInstExpr
-  if this.isImmediateDataInst != nil:
-    return this.isImmediateDataInst
+  this.isImmediateDataInstFlag = true
+  return this.isImmediateDataInst
 
 proc data(this: Exif_ExifBody_IfdField): seq[byte] = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   if not(this.isImmediateData):
     let io = Exif(this.root).io
@@ -711,8 +717,8 @@ proc data(this: Exif_ExifBody_IfdField): seq[byte] =
       let dataInstExpr = io.readBytes(int(this.byteLength))
       this.dataInst = dataInstExpr
     io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[Exif_ExifBody_IfdField], filename: string): Exif_ExifBody_IfdField =
   Exif_ExifBody_IfdField.read(newKaitaiFileStream(filename), nil, nil)

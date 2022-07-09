@@ -4,8 +4,10 @@ import options
 type
   Ext2* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `bg1Inst`*: Ext2_BlockGroup
-    `rootDirInst`*: Ext2_Dir
+    `bg1Inst`: Ext2_BlockGroup
+    `bg1InstFlag`: bool
+    `rootDirInst`: Ext2_Dir
+    `rootDirInstFlag`: bool
   Ext2_SuperBlockStruct* = ref object of KaitaiStruct
     `inodesCount`*: uint32
     `blocksCount`*: uint32
@@ -52,8 +54,10 @@ type
     `hashSeed`*: seq[uint32]
     `defHashVersion`*: uint8
     `parent`*: Ext2_BlockGroup
-    `blockSizeInst`*: int
-    `blockGroupCountInst`*: int
+    `blockSizeInst`: int
+    `blockSizeInstFlag`: bool
+    `blockGroupCountInst`: int
+    `blockGroupCountInstFlag`: bool
   Ext2_SuperBlockStruct_StateEnum* = enum
     valid_fs = 1
     error_fs = 2
@@ -69,7 +73,8 @@ type
     `name`*: string
     `padding`*: seq[byte]
     `parent`*: Ext2_Dir
-    `inodeInst`*: Ext2_Inode
+    `inodeInst`: Ext2_Inode
+    `inodeInstFlag`: bool
   Ext2_DirEntry_FileTypeEnum* = enum
     unknown = 0
     reg_file = 1
@@ -99,12 +104,14 @@ type
     `faddr`*: uint32
     `osd2`*: seq[byte]
     `parent`*: Ext2_Bgd
-    `asDirInst`*: Ext2_Dir
+    `asDirInst`: Ext2_Dir
+    `asDirInstFlag`: bool
   Ext2_BlockPtr* = ref object of KaitaiStruct
     `ptr`*: uint32
     `parent`*: Ext2_Inode
     `rawBodyInst`*: seq[byte]
-    `bodyInst`*: Ext2_RawBlock
+    `bodyInst`: Ext2_RawBlock
+    `bodyInstFlag`: bool
   Ext2_Dir* = ref object of KaitaiStruct
     `entries`*: seq[Ext2_DirEntry]
     `parent`*: Ext2_Inode
@@ -122,9 +129,12 @@ type
     `usedDirsCount`*: uint16
     `padReserved`*: seq[byte]
     `parent`*: Ext2_BlockGroup
-    `blockBitmapInst`*: seq[byte]
-    `inodeBitmapInst`*: seq[byte]
-    `inodesInst`*: seq[Ext2_Inode]
+    `blockBitmapInst`: seq[byte]
+    `blockBitmapInstFlag`: bool
+    `inodeBitmapInst`: seq[byte]
+    `inodeBitmapInstFlag`: bool
+    `inodesInst`: seq[Ext2_Inode]
+    `inodesInstFlag`: bool
   Ext2_RawBlock* = ref object of KaitaiStruct
     `body`*: seq[byte]
     `parent`*: Ext2_BlockPtr
@@ -160,23 +170,23 @@ proc read*(_: typedesc[Ext2], io: KaitaiStream, root: KaitaiStruct, parent: Kait
 
 
 proc bg1(this: Ext2): Ext2_BlockGroup = 
-  if this.bg1Inst != nil:
+  if this.bg1InstFlag:
     return this.bg1Inst
   let pos = this.io.pos()
   this.io.seek(int(1024))
   let bg1InstExpr = Ext2_BlockGroup.read(this.io, this.root, this)
   this.bg1Inst = bg1InstExpr
   this.io.seek(pos)
-  if this.bg1Inst != nil:
-    return this.bg1Inst
+  this.bg1InstFlag = true
+  return this.bg1Inst
 
 proc rootDir(this: Ext2): Ext2_Dir = 
-  if this.rootDirInst != nil:
+  if this.rootDirInstFlag:
     return this.rootDirInst
   let rootDirInstExpr = Ext2_Dir(this.bg1.blockGroups[0].inodes[1].asDir)
   this.rootDirInst = rootDirInstExpr
-  if this.rootDirInst != nil:
-    return this.rootDirInst
+  this.rootDirInstFlag = true
+  return this.rootDirInst
 
 proc fromFile*(_: typedesc[Ext2], filename: string): Ext2 =
   Ext2.read(newKaitaiFileStream(filename), nil, nil)
@@ -280,20 +290,20 @@ proc read*(_: typedesc[Ext2_SuperBlockStruct], io: KaitaiStream, root: KaitaiStr
   this.defHashVersion = defHashVersionExpr
 
 proc blockSize(this: Ext2_SuperBlockStruct): int = 
-  if this.blockSizeInst != nil:
+  if this.blockSizeInstFlag:
     return this.blockSizeInst
   let blockSizeInstExpr = int((1024 shl this.logBlockSize))
   this.blockSizeInst = blockSizeInstExpr
-  if this.blockSizeInst != nil:
-    return this.blockSizeInst
+  this.blockSizeInstFlag = true
+  return this.blockSizeInst
 
 proc blockGroupCount(this: Ext2_SuperBlockStruct): int = 
-  if this.blockGroupCountInst != nil:
+  if this.blockGroupCountInstFlag:
     return this.blockGroupCountInst
   let blockGroupCountInstExpr = int((this.blocksCount div this.blocksPerGroup))
   this.blockGroupCountInst = blockGroupCountInstExpr
-  if this.blockGroupCountInst != nil:
-    return this.blockGroupCountInst
+  this.blockGroupCountInstFlag = true
+  return this.blockGroupCountInst
 
 proc fromFile*(_: typedesc[Ext2_SuperBlockStruct], filename: string): Ext2_SuperBlockStruct =
   Ext2_SuperBlockStruct.read(newKaitaiFileStream(filename), nil, nil)
@@ -320,12 +330,12 @@ proc read*(_: typedesc[Ext2_DirEntry], io: KaitaiStream, root: KaitaiStruct, par
   this.padding = paddingExpr
 
 proc inode(this: Ext2_DirEntry): Ext2_Inode = 
-  if this.inodeInst != nil:
+  if this.inodeInstFlag:
     return this.inodeInst
   let inodeInstExpr = Ext2_Inode(Ext2(this.root).bg1.blockGroups[((this.inodePtr - 1) div Ext2(this.root).bg1.superBlock.inodesPerGroup)].inodes[((this.inodePtr - 1) %%% Ext2(this.root).bg1.superBlock.inodesPerGroup)])
   this.inodeInst = inodeInstExpr
-  if this.inodeInst != nil:
-    return this.inodeInst
+  this.inodeInstFlag = true
+  return this.inodeInst
 
 proc fromFile*(_: typedesc[Ext2_DirEntry], filename: string): Ext2_DirEntry =
   Ext2_DirEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -377,7 +387,7 @@ proc read*(_: typedesc[Ext2_Inode], io: KaitaiStream, root: KaitaiStruct, parent
   this.osd2 = osd2Expr
 
 proc asDir(this: Ext2_Inode): Ext2_Dir = 
-  if this.asDirInst != nil:
+  if this.asDirInstFlag:
     return this.asDirInst
   let io = this.block[0].body.io
   let pos = io.pos()
@@ -385,8 +395,8 @@ proc asDir(this: Ext2_Inode): Ext2_Dir =
   let asDirInstExpr = Ext2_Dir.read(io, this.root, this)
   this.asDirInst = asDirInstExpr
   io.seek(pos)
-  if this.asDirInst != nil:
-    return this.asDirInst
+  this.asDirInstFlag = true
+  return this.asDirInst
 
 proc fromFile*(_: typedesc[Ext2_Inode], filename: string): Ext2_Inode =
   Ext2_Inode.read(newKaitaiFileStream(filename), nil, nil)
@@ -403,7 +413,7 @@ proc read*(_: typedesc[Ext2_BlockPtr], io: KaitaiStream, root: KaitaiStruct, par
   this.ptr = ptrExpr
 
 proc body(this: Ext2_BlockPtr): Ext2_RawBlock = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int((this.ptr * Ext2(this.root).bg1.superBlock.blockSize)))
@@ -413,8 +423,8 @@ proc body(this: Ext2_BlockPtr): Ext2_RawBlock =
   let bodyInstExpr = Ext2_RawBlock.read(rawBodyInstIo, this.root, this)
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[Ext2_BlockPtr], filename: string): Ext2_BlockPtr =
   Ext2_BlockPtr.read(newKaitaiFileStream(filename), nil, nil)
@@ -481,29 +491,29 @@ proc read*(_: typedesc[Ext2_Bgd], io: KaitaiStream, root: KaitaiStruct, parent: 
   this.padReserved = padReservedExpr
 
 proc blockBitmap(this: Ext2_Bgd): seq[byte] = 
-  if this.blockBitmapInst.len != 0:
+  if this.blockBitmapInstFlag:
     return this.blockBitmapInst
   let pos = this.io.pos()
   this.io.seek(int((this.blockBitmapBlock * Ext2(this.root).bg1.superBlock.blockSize)))
   let blockBitmapInstExpr = this.io.readBytes(int(1024))
   this.blockBitmapInst = blockBitmapInstExpr
   this.io.seek(pos)
-  if this.blockBitmapInst.len != 0:
-    return this.blockBitmapInst
+  this.blockBitmapInstFlag = true
+  return this.blockBitmapInst
 
 proc inodeBitmap(this: Ext2_Bgd): seq[byte] = 
-  if this.inodeBitmapInst.len != 0:
+  if this.inodeBitmapInstFlag:
     return this.inodeBitmapInst
   let pos = this.io.pos()
   this.io.seek(int((this.inodeBitmapBlock * Ext2(this.root).bg1.superBlock.blockSize)))
   let inodeBitmapInstExpr = this.io.readBytes(int(1024))
   this.inodeBitmapInst = inodeBitmapInstExpr
   this.io.seek(pos)
-  if this.inodeBitmapInst.len != 0:
-    return this.inodeBitmapInst
+  this.inodeBitmapInstFlag = true
+  return this.inodeBitmapInst
 
 proc inodes(this: Ext2_Bgd): seq[Ext2_Inode] = 
-  if this.inodesInst.len != 0:
+  if this.inodesInstFlag:
     return this.inodesInst
   let pos = this.io.pos()
   this.io.seek(int((this.inodeTableBlock * Ext2(this.root).bg1.superBlock.blockSize)))
@@ -511,8 +521,8 @@ proc inodes(this: Ext2_Bgd): seq[Ext2_Inode] =
     let it = Ext2_Inode.read(this.io, this.root, this)
     this.inodesInst.add(it)
   this.io.seek(pos)
-  if this.inodesInst.len != 0:
-    return this.inodesInst
+  this.inodesInstFlag = true
+  return this.inodesInst
 
 proc fromFile*(_: typedesc[Ext2_Bgd], filename: string): Ext2_Bgd =
   Ext2_Bgd.read(newKaitaiFileStream(filename), nil, nil)

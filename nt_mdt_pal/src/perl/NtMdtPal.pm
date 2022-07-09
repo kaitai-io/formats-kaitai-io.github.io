@@ -40,13 +40,13 @@ sub _read {
     $self->{meta} = ();
     my $n_meta = $self->count();
     for (my $i = 0; $i < $n_meta; $i++) {
-        $self->{meta}[$i] = NtMdtPal::Meta->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{meta}}, NtMdtPal::Meta->new($self->{_io}, $self, $self->{_root});
     }
     $self->{something2} = $self->{_io}->read_bytes(1);
     $self->{tables} = ();
     my $n_tables = $self->count();
     for (my $i = 0; $i < $n_tables; $i++) {
-        $self->{tables}[$i] = NtMdtPal::ColTable->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{tables}}, NtMdtPal::ColTable->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -254,7 +254,7 @@ sub _read {
     $self->{colors} = ();
     my $n_colors = (@{$self->_root()->meta()}[$self->index()]->colors_count() - 1);
     for (my $i = 0; $i < $n_colors; $i++) {
-        $self->{colors}[$i] = NtMdtPal::Color->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{colors}}, NtMdtPal::Color->new($self->{_io}, $self, $self->{_root});
     }
 }
 

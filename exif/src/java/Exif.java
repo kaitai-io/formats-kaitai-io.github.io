@@ -52,7 +52,7 @@ public class Exif extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            switch (_root.endianness()) {
+            switch (_root().endianness()) {
             case 18761: {
                 boolean _tmp = (boolean) (true);
                 this._is_le = _tmp;
@@ -103,7 +103,7 @@ public class Exif extends KaitaiStruct {
             }
             private void _readLE() {
                 this.numFields = this._io.readU2le();
-                fields = new ArrayList<IfdField>(((Number) (numFields())).intValue());
+                this.fields = new ArrayList<IfdField>();
                 for (int i = 0; i < numFields(); i++) {
                     this.fields.add(new IfdField(this._io, this, _root, _is_le));
                 }
@@ -111,7 +111,7 @@ public class Exif extends KaitaiStruct {
             }
             private void _readBE() {
                 this.numFields = this._io.readU2be();
-                fields = new ArrayList<IfdField>(((Number) (numFields())).intValue());
+                this.fields = new ArrayList<IfdField>();
                 for (int i = 0; i < numFields(); i++) {
                     this.fields.add(new IfdField(this._io, this, _root, _is_le));
                 }
@@ -697,7 +697,7 @@ public class Exif extends KaitaiStruct {
                 if (this.data != null)
                     return this.data;
                 if (!(isImmediateData())) {
-                    KaitaiStream io = _root._io();
+                    KaitaiStream io = _root()._io();
                     long _pos = io.pos();
                     io.seek(ofsOrData());
                     if (_is_le) {

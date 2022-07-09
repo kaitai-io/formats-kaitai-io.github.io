@@ -8,7 +8,7 @@
   } else {
     root.DosMz = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * DOS MZ file format is a traditional format for executables in MS-DOS
  * environment. Many modern formats (i.e. Windows PE) still maintain
@@ -120,9 +120,9 @@ var DosMz = (function() {
         var io = this.header._io;
         var _pos = io.pos;
         io.seek(this.header.mz.ofsRelocations);
-        this._m_relocations = new Array(this.header.mz.numRelocations);
+        this._m_relocations = [];
         for (var i = 0; i < this.header.mz.numRelocations; i++) {
-          this._m_relocations[i] = new Relocation(io, this, this._root);
+          this._m_relocations.push(new Relocation(io, this, this._root));
         }
         io.seek(_pos);
       }

@@ -338,9 +338,8 @@ vfat_t::root_directory_t::root_directory_t(kaitai::kstream* p__io, vfat_t* p__pa
 }
 
 void vfat_t::root_directory_t::_read() {
-    int l_records = _root()->boot_sector()->bpb()->max_root_dir_rec();
     m_records = new std::vector<root_directory_rec_t*>();
-    m_records->reserve(l_records);
+    const int l_records = _root()->boot_sector()->bpb()->max_root_dir_rec();
     for (int i = 0; i < l_records; i++) {
         m_records->push_back(new root_directory_rec_t(m__io, this, m__root));
     }
@@ -392,9 +391,8 @@ std::vector<std::string>* vfat_t::fats() {
         return m_fats;
     std::streampos _pos = m__io->pos();
     m__io->seek(boot_sector()->pos_fats());
-    int l_fats = boot_sector()->bpb()->num_fats();
     m_fats = new std::vector<std::string>();
-    m_fats->reserve(l_fats);
+    const int l_fats = boot_sector()->bpb()->num_fats();
     for (int i = 0; i < l_fats; i++) {
         m_fats->push_back(m__io->read_bytes(boot_sector()->size_fat()));
     }

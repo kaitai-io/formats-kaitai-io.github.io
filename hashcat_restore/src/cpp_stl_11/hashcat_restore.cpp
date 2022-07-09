@@ -18,9 +18,8 @@ void hashcat_restore_t::_read() {
     m_current_restore_point = m__io->read_u8le();
     m_argc = m__io->read_u4le();
     m_padding2 = m__io->read_bytes(12);
-    int l_argv = argc();
     m_argv = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
-    m_argv->reserve(l_argv);
+    const int l_argv = argc();
     for (int i = 0; i < l_argv; i++) {
         m_argv->push_back(std::move(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(10, false, true, true), std::string("UTF-8"))));
     }

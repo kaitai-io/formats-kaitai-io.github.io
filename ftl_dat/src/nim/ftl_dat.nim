@@ -9,7 +9,8 @@ type
   FtlDat_File* = ref object of KaitaiStruct
     `ofsMeta`*: uint32
     `parent`*: FtlDat
-    `metaInst`*: FtlDat_Meta
+    `metaInst`: FtlDat_Meta
+    `metaInstFlag`: bool
   FtlDat_Meta* = ref object of KaitaiStruct
     `lenFile`*: uint32
     `lenFilename`*: uint32
@@ -56,7 +57,7 @@ proc read*(_: typedesc[FtlDat_File], io: KaitaiStream, root: KaitaiStruct, paren
   this.ofsMeta = ofsMetaExpr
 
 proc meta(this: FtlDat_File): FtlDat_Meta = 
-  if this.metaInst != nil:
+  if this.metaInstFlag:
     return this.metaInst
   if this.ofsMeta != 0:
     let pos = this.io.pos()
@@ -64,8 +65,8 @@ proc meta(this: FtlDat_File): FtlDat_Meta =
     let metaInstExpr = FtlDat_Meta.read(this.io, this.root, this)
     this.metaInst = metaInstExpr
     this.io.seek(pos)
-  if this.metaInst != nil:
-    return this.metaInst
+  this.metaInstFlag = true
+  return this.metaInst
 
 proc fromFile*(_: typedesc[FtlDat_File], filename: string): FtlDat_File =
   FtlDat_File.read(newKaitaiFileStream(filename), nil, nil)

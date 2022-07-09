@@ -316,12 +316,12 @@ function ResourceFork.ResourceMap.FileAttributes:_init(io, parent, root)
 end
 
 function ResourceFork.ResourceMap.FileAttributes:_read()
-  self.resources_locked = self._io:read_bits_int_be(1)
+  self.resources_locked = self._io:read_bits_int_be(1) ~= 0
   self.reserved0 = self._io:read_bits_int_be(6)
-  self.printer_driver_multifinder_compatible = self._io:read_bits_int_be(1)
-  self.no_write_changes = self._io:read_bits_int_be(1)
-  self.needs_compact = self._io:read_bits_int_be(1)
-  self.map_needs_write = self._io:read_bits_int_be(1)
+  self.printer_driver_multifinder_compatible = self._io:read_bits_int_be(1) ~= 0
+  self.no_write_changes = self._io:read_bits_int_be(1) ~= 0
+  self.needs_compact = self._io:read_bits_int_be(1) ~= 0
+  self.map_needs_write = self._io:read_bits_int_be(1) ~= 0
   self.reserved1 = self._io:read_bits_int_be(5)
 end
 
@@ -634,14 +634,14 @@ function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Refere
 end
 
 function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference.Attributes:_read()
-  self.system_reference = self._io:read_bits_int_be(1)
-  self.load_into_system_heap = self._io:read_bits_int_be(1)
-  self.purgeable = self._io:read_bits_int_be(1)
-  self.locked = self._io:read_bits_int_be(1)
-  self.protected = self._io:read_bits_int_be(1)
-  self.preload = self._io:read_bits_int_be(1)
-  self.needs_write = self._io:read_bits_int_be(1)
-  self.compressed = self._io:read_bits_int_be(1)
+  self.system_reference = self._io:read_bits_int_be(1) ~= 0
+  self.load_into_system_heap = self._io:read_bits_int_be(1) ~= 0
+  self.purgeable = self._io:read_bits_int_be(1) ~= 0
+  self.locked = self._io:read_bits_int_be(1) ~= 0
+  self.protected = self._io:read_bits_int_be(1) ~= 0
+  self.preload = self._io:read_bits_int_be(1) ~= 0
+  self.needs_write = self._io:read_bits_int_be(1) ~= 0
+  self.compressed = self._io:read_bits_int_be(1) ~= 0
 end
 
 -- 

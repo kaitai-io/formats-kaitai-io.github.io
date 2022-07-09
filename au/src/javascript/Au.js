@@ -8,7 +8,7 @@
   } else {
     root.Au = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The NeXT/Sun audio file format.
  * 

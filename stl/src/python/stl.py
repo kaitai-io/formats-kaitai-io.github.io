@@ -1,11 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Stl(KaitaiStruct):
@@ -35,9 +34,9 @@ class Stl(KaitaiStruct):
     def _read(self):
         self.header = self._io.read_bytes(80)
         self.num_triangles = self._io.read_u4le()
-        self.triangles = [None] * (self.num_triangles)
+        self.triangles = []
         for i in range(self.num_triangles):
-            self.triangles[i] = Stl.Triangle(self._io, self, self._root)
+            self.triangles.append(Stl.Triangle(self._io, self, self._root))
 
 
     class Triangle(KaitaiStruct):
@@ -53,9 +52,9 @@ class Stl(KaitaiStruct):
 
         def _read(self):
             self.normal = Stl.Vec3d(self._io, self, self._root)
-            self.vertices = [None] * (3)
+            self.vertices = []
             for i in range(3):
-                self.vertices[i] = Stl.Vec3d(self._io, self, self._root)
+                self.vertices.append(Stl.Vec3d(self._io, self, self._root))
 
             self.abr = self._io.read_u2le()
 

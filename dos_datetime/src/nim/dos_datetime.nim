@@ -12,19 +12,27 @@ type
     `minute`*: uint64
     `hour`*: uint64
     `parent`*: DosDatetime
-    `secondInst`*: int
-    `paddedSecondInst`*: string
-    `paddedMinuteInst`*: string
-    `paddedHourInst`*: string
+    `secondInst`: int
+    `secondInstFlag`: bool
+    `paddedSecondInst`: string
+    `paddedSecondInstFlag`: bool
+    `paddedMinuteInst`: string
+    `paddedMinuteInstFlag`: bool
+    `paddedHourInst`: string
+    `paddedHourInstFlag`: bool
   DosDatetime_Date* = ref object of KaitaiStruct
     `day`*: uint64
     `month`*: uint64
     `yearMinus1980`*: uint64
     `parent`*: DosDatetime
-    `yearInst`*: int
-    `paddedDayInst`*: string
-    `paddedMonthInst`*: string
-    `paddedYearInst`*: string
+    `yearInst`: int
+    `yearInstFlag`: bool
+    `paddedDayInst`: string
+    `paddedDayInstFlag`: bool
+    `paddedMonthInst`: string
+    `paddedMonthInstFlag`: bool
+    `paddedYearInst`: string
+    `paddedYearInstFlag`: bool
 
 proc read*(_: typedesc[DosDatetime], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DosDatetime
 proc read*(_: typedesc[DosDatetime_Time], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Time
@@ -107,36 +115,36 @@ proc read*(_: typedesc[DosDatetime_Time], io: KaitaiStream, root: KaitaiStruct, 
   this.hour = hourExpr
 
 proc second(this: DosDatetime_Time): int = 
-  if this.secondInst != nil:
+  if this.secondInstFlag:
     return this.secondInst
   let secondInstExpr = int((2 * this.secondDiv2))
   this.secondInst = secondInstExpr
-  if this.secondInst != nil:
-    return this.secondInst
+  this.secondInstFlag = true
+  return this.secondInst
 
 proc paddedSecond(this: DosDatetime_Time): string = 
-  if this.paddedSecondInst.len != 0:
+  if this.paddedSecondInstFlag:
     return this.paddedSecondInst
   let paddedSecondInstExpr = string(($(if this.second <= 9: "0" else: "") & $intToStr(int(this.second))))
   this.paddedSecondInst = paddedSecondInstExpr
-  if this.paddedSecondInst.len != 0:
-    return this.paddedSecondInst
+  this.paddedSecondInstFlag = true
+  return this.paddedSecondInst
 
 proc paddedMinute(this: DosDatetime_Time): string = 
-  if this.paddedMinuteInst.len != 0:
+  if this.paddedMinuteInstFlag:
     return this.paddedMinuteInst
   let paddedMinuteInstExpr = string(($(if this.minute <= 9: "0" else: "") & $intToStr(int(this.minute))))
   this.paddedMinuteInst = paddedMinuteInstExpr
-  if this.paddedMinuteInst.len != 0:
-    return this.paddedMinuteInst
+  this.paddedMinuteInstFlag = true
+  return this.paddedMinuteInst
 
 proc paddedHour(this: DosDatetime_Time): string = 
-  if this.paddedHourInst.len != 0:
+  if this.paddedHourInstFlag:
     return this.paddedHourInst
   let paddedHourInstExpr = string(($(if this.hour <= 9: "0" else: "") & $intToStr(int(this.hour))))
   this.paddedHourInst = paddedHourInstExpr
-  if this.paddedHourInst.len != 0:
-    return this.paddedHourInst
+  this.paddedHourInstFlag = true
+  return this.paddedHourInst
 
 proc fromFile*(_: typedesc[DosDatetime_Time], filename: string): DosDatetime_Time =
   DosDatetime_Time.read(newKaitaiFileStream(filename), nil, nil)
@@ -161,36 +169,36 @@ proc year(this: DosDatetime_Date): int =
   ##[
   only years from 1980 to 2107 (1980 + 127) can be represented
   ]##
-  if this.yearInst != nil:
+  if this.yearInstFlag:
     return this.yearInst
   let yearInstExpr = int((1980 + this.yearMinus1980))
   this.yearInst = yearInstExpr
-  if this.yearInst != nil:
-    return this.yearInst
+  this.yearInstFlag = true
+  return this.yearInst
 
 proc paddedDay(this: DosDatetime_Date): string = 
-  if this.paddedDayInst.len != 0:
+  if this.paddedDayInstFlag:
     return this.paddedDayInst
   let paddedDayInstExpr = string(($(if this.day <= 9: "0" else: "") & $intToStr(int(this.day))))
   this.paddedDayInst = paddedDayInstExpr
-  if this.paddedDayInst.len != 0:
-    return this.paddedDayInst
+  this.paddedDayInstFlag = true
+  return this.paddedDayInst
 
 proc paddedMonth(this: DosDatetime_Date): string = 
-  if this.paddedMonthInst.len != 0:
+  if this.paddedMonthInstFlag:
     return this.paddedMonthInst
   let paddedMonthInstExpr = string(($(if this.month <= 9: "0" else: "") & $intToStr(int(this.month))))
   this.paddedMonthInst = paddedMonthInstExpr
-  if this.paddedMonthInst.len != 0:
-    return this.paddedMonthInst
+  this.paddedMonthInstFlag = true
+  return this.paddedMonthInst
 
 proc paddedYear(this: DosDatetime_Date): string = 
-  if this.paddedYearInst.len != 0:
+  if this.paddedYearInstFlag:
     return this.paddedYearInst
   let paddedYearInstExpr = string(($(if this.year <= 999: ($"0" & $(if this.year <= 99: ($"0" & $(if this.year <= 9: "0" else: "")) else: "")) else: "") & $intToStr(int(this.year))))
   this.paddedYearInst = paddedYearInstExpr
-  if this.paddedYearInst.len != 0:
-    return this.paddedYearInst
+  this.paddedYearInstFlag = true
+  return this.paddedYearInst
 
 proc fromFile*(_: typedesc[DosDatetime_Date], filename: string): DosDatetime_Date =
   DosDatetime_Date.read(newKaitaiFileStream(filename), nil, nil)

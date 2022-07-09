@@ -8,7 +8,7 @@
   } else {
     root.Ext2 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var Ext2 = (function() {
   function Ext2(_io, _parent, _root) {
     this._io = _io;
@@ -92,9 +92,9 @@ var Ext2 = (function() {
       this.journalInum = this._io.readU4le();
       this.journalDev = this._io.readU4le();
       this.lastOrphan = this._io.readU4le();
-      this.hashSeed = new Array(4);
+      this.hashSeed = [];
       for (var i = 0; i < 4; i++) {
-        this.hashSeed[i] = this._io.readU4le();
+        this.hashSeed.push(this._io.readU4le());
       }
       this.defHashVersion = this._io.readU1();
     }
@@ -187,9 +187,9 @@ var Ext2 = (function() {
       this.blocks = this._io.readU4le();
       this.flags = this._io.readU4le();
       this.osd1 = this._io.readU4le();
-      this.block = new Array(15);
+      this.block = [];
       for (var i = 0; i < 15; i++) {
-        this.block[i] = new BlockPtr(this._io, this, this._root);
+        this.block.push(new BlockPtr(this._io, this, this._root));
       }
       this.generation = this._io.readU4le();
       this.fileAcl = this._io.readU4le();
@@ -273,9 +273,9 @@ var Ext2 = (function() {
       this._raw_superBlock = this._io.readBytes(1024);
       var _io__raw_superBlock = new KaitaiStream(this._raw_superBlock);
       this.superBlock = new SuperBlockStruct(_io__raw_superBlock, this, this._root);
-      this.blockGroups = new Array(this.superBlock.blockGroupCount);
+      this.blockGroups = [];
       for (var i = 0; i < this.superBlock.blockGroupCount; i++) {
-        this.blockGroups[i] = new Bgd(this._io, this, this._root);
+        this.blockGroups.push(new Bgd(this._io, this, this._root));
       }
     }
 
@@ -327,9 +327,9 @@ var Ext2 = (function() {
           return this._m_inodes;
         var _pos = this._io.pos;
         this._io.seek((this.inodeTableBlock * this._root.bg1.superBlock.blockSize));
-        this._m_inodes = new Array(this._root.bg1.superBlock.inodesPerGroup);
+        this._m_inodes = [];
         for (var i = 0; i < this._root.bg1.superBlock.inodesPerGroup; i++) {
-          this._m_inodes[i] = new Inode(this._io, this, this._root);
+          this._m_inodes.push(new Inode(this._io, this, this._root));
         }
         this._io.seek(_pos);
         return this._m_inodes;

@@ -67,15 +67,15 @@ public class AndroidSuper extends KaitaiStruct {
             this._raw_backupGeometry = this._io.readBytes(4096);
             KaitaiStream _io__raw_backupGeometry = new ByteBufferKaitaiStream(_raw_backupGeometry);
             this.backupGeometry = new Geometry(_io__raw_backupGeometry, this, _root);
-            this._raw_primaryMetadata = new ArrayList<byte[]>(((Number) (primaryGeometry().metadataSlotCount())).intValue());
-            primaryMetadata = new ArrayList<Metadata>(((Number) (primaryGeometry().metadataSlotCount())).intValue());
+            this._raw_primaryMetadata = new ArrayList<byte[]>();
+            this.primaryMetadata = new ArrayList<Metadata>();
             for (int i = 0; i < primaryGeometry().metadataSlotCount(); i++) {
                 this._raw_primaryMetadata.add(this._io.readBytes(primaryGeometry().metadataMaxSize()));
                 KaitaiStream _io__raw_primaryMetadata = new ByteBufferKaitaiStream(_raw_primaryMetadata.get(_raw_primaryMetadata.size() - 1));
                 this.primaryMetadata.add(new Metadata(_io__raw_primaryMetadata, this, _root));
             }
-            this._raw_backupMetadata = new ArrayList<byte[]>(((Number) (primaryGeometry().metadataSlotCount())).intValue());
-            backupMetadata = new ArrayList<Metadata>(((Number) (primaryGeometry().metadataSlotCount())).intValue());
+            this._raw_backupMetadata = new ArrayList<byte[]>();
+            this.backupMetadata = new ArrayList<Metadata>();
             for (int i = 0; i < primaryGeometry().metadataSlotCount(); i++) {
                 this._raw_backupMetadata.add(this._io.readBytes(primaryGeometry().metadataMaxSize()));
                 KaitaiStream _io__raw_backupMetadata = new ByteBufferKaitaiStream(_raw_backupMetadata.get(_raw_backupMetadata.size() - 1));
@@ -335,8 +335,8 @@ public class AndroidSuper extends KaitaiStruct {
                     return this.table;
                 long _pos = this._io.pos();
                 this._io.seek((_parent().headerSize() + offset()));
-                this._raw_table = new ArrayList<byte[]>(((Number) (numEntries())).intValue());
-                table = new ArrayList<Object>(((Number) (numEntries())).intValue());
+                this._raw_table = new ArrayList<byte[]>();
+                this.table = new ArrayList<Object>();
                 for (int i = 0; i < numEntries(); i++) {
                     {
                         TableKind on = kind();

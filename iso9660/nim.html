@@ -280,8 +280,10 @@ speed).</p>
 <span class="k">type</span>
   <span class="n">Iso9660</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">primaryVolDescInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Iso9660_VolDesc</span>
+    <span class="p">`</span><span class="n">sectorSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sectorSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">primaryVolDescInst</span><span class="p">`:</span> <span class="n">Iso9660_VolDesc</span>
+    <span class="p">`</span><span class="n">primaryVolDescInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Iso9660_VolDescPrimary</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">unused1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">systemId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
@@ -315,7 +317,8 @@ speed).</p>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Iso9660_VolDesc</span>
     <span class="p">`</span><span class="n">rawRootDir</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawPathTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">pathTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Iso9660_PathTableLe</span>
+    <span class="p">`</span><span class="n">pathTableInst</span><span class="p">`:</span> <span class="n">Iso9660_PathTableLe</span>
+    <span class="p">`</span><span class="n">pathTableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Iso9660_VolDescBootRecord</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">bootSystemId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">bootId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
@@ -388,8 +391,10 @@ speed).</p>
     <span class="p">`</span><span class="n">rest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Iso9660_DirEntry</span>
     <span class="p">`</span><span class="n">rawExtentAsDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">extentAsDirInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Iso9660_DirEntries</span>
-    <span class="p">`</span><span class="n">extentAsFileInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">extentAsDirInst</span><span class="p">`:</span> <span class="n">Iso9660_DirEntries</span>
+    <span class="p">`</span><span class="n">extentAsDirInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">extentAsFileInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">extentAsFileInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Iso9660], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Iso9660</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Iso9660_VolDescPrimary], io: KaitaiStream, root: KaitaiStruct, parent: Iso9660_VolDesc): Iso9660_VolDescPrimary</span>
@@ -434,23 +439,23 @@ speed).</p>
 
 
 <span class="k">proc </span><span class="nf">sectorSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Iso9660</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
   <span class="k">let</span> <span class="n">sectorSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">=</span> <span class="n">sectorSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSizeInst</span>
 
 <span class="k">proc </span><span class="nf">primaryVolDesc</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Iso9660</span><span class="p">):</span> <span class="n">Iso9660_VolDesc</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="mi">16</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">sectorSize</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">primaryVolDescInstExpr</span> <span class="o">=</span> <span class="n">Iso9660_VolDesc</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInst</span> <span class="o">=</span> <span class="n">primaryVolDescInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">primaryVolDescInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Iso9660], filename: string): Iso9660 =</span>
   <span class="n">Iso9660</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -530,7 +535,7 @@ speed).</p>
   <span class="n">this</span><span class="p">.</span><span class="n">applicationArea</span> <span class="o">=</span> <span class="n">applicationAreaExpr</span>
 
 <span class="k">proc </span><span class="nf">pathTable</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Iso9660_VolDescPrimary</span><span class="p">):</span> <span class="n">Iso9660_PathTableLe</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pathTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pathTableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pathTableInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lbaPathTableLe</span> <span class="o">*</span> <span class="n">Iso9660</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">sectorSize</span><span class="p">)))</span>
@@ -540,8 +545,8 @@ speed).</p>
   <span class="k">let</span> <span class="n">pathTableInstExpr</span> <span class="o">=</span> <span class="n">Iso9660_PathTableLe</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawPathTableInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">pathTableInst</span> <span class="o">=</span> <span class="n">pathTableInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pathTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pathTableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">pathTableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pathTableInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Iso9660_VolDescPrimary], filename: string): Iso9660_VolDescPrimary =</span>
   <span class="n">Iso9660_VolDescPrimary</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -798,7 +803,7 @@ speed).</p>
   <span class="n">this</span><span class="p">.</span><span class="n">rest</span> <span class="o">=</span> <span class="n">restExpr</span>
 
 <span class="k">proc </span><span class="nf">extentAsDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Iso9660_DirEntryBody</span><span class="p">):</span> <span class="n">Iso9660_DirEntries</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInst</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">fileFlags</span> <span class="ow">and</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Iso9660</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -810,11 +815,11 @@ speed).</p>
     <span class="k">let</span> <span class="n">extentAsDirInstExpr</span> <span class="o">=</span> <span class="n">Iso9660_DirEntries</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawExtentAsDirInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInst</span> <span class="o">=</span> <span class="n">extentAsDirInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsDirInst</span>
 
 <span class="k">proc </span><span class="nf">extentAsFile</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Iso9660_DirEntryBody</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInst</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">fileFlags</span> <span class="ow">and</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Iso9660</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -823,8 +828,8 @@ speed).</p>
     <span class="k">let</span> <span class="n">extentAsFileInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">sizeExtent</span><span class="p">.</span><span class="n">le</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInst</span> <span class="o">=</span> <span class="n">extentAsFileInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extentAsFileInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Iso9660_DirEntryBody], filename: string): Iso9660_DirEntryBody =</span>
   <span class="n">Iso9660_DirEntryBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

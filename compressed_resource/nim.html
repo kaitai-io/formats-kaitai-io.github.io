@@ -272,8 +272,10 @@ along with some parameters for the decompressor.</p>
     <span class="p">`</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BytesWithIo</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource</span>
     <span class="p">`</span><span class="n">rawTypeSpecificPartRawWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">typeSpecificPartRawInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">typeSpecificPartInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">typeSpecificPartRawInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">typeSpecificPartRawInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">typeSpecificPartInst</span><span class="p">`:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">typeSpecificPartInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">CompressedResource_Header_CommonPart</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -292,7 +294,8 @@ along with some parameters for the decompressor.</p>
     <span class="p">`</span><span class="n">decompressorSpecificParametersWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BytesWithIo</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource_Header</span>
     <span class="p">`</span><span class="n">rawDecompressorSpecificParametersWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">decompressorSpecificParametersInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">decompressorSpecificParametersInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">decompressorSpecificParametersInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CompressedResource</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource): CompressedResource_Header</span>
@@ -403,12 +406,12 @@ along with some parameters for the decompressor.</p>
 <span class="k">as</span> <span class="n">a</span> <span class="n">raw</span> <span class="n">byte</span> <span class="kt">array</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span>
   <span class="k">let</span> <span class="n">typeSpecificPartRawInstExpr</span> <span class="o">=</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span> <span class="o">=</span> <span class="n">typeSpecificPartRawInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span>
 
 <span class="k">proc </span><span class="nf">typeSpecificPart</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CompressedResource_Header</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
 
@@ -417,7 +420,7 @@ along with some parameters for the decompressor.</p>
 <span class="n">parsed</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="k">type</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">common</span> <span class="n">part</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">.</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -431,8 +434,8 @@ along with some parameters for the decompressor.</p>
       <span class="k">let</span> <span class="n">typeSpecificPartInstExpr</span> <span class="o">=</span> <span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span> <span class="o">=</span> <span class="n">typeSpecificPartInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], filename: string): CompressedResource_Header =</span>
   <span class="n">CompressedResource_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -605,12 +608,12 @@ along with some parameters for the decompressor.</p>
 <span class="n">so</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">the</span> <span class="n">decompressor</span> <span class="n">some</span> <span class="n">parts</span> <span class="k">of</span> <span class="n">this</span> <span class="n">field</span> <span class="n">may</span> <span class="n">be</span> <span class="n">meaningless</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span>
   <span class="k">let</span> <span class="n">decompressorSpecificParametersInstExpr</span> <span class="o">=</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span> <span class="o">=</span> <span class="n">decompressorSpecificParametersInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType9], filename: string): CompressedResource_Header_TypeSpecificPartType9 =</span>
   <span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

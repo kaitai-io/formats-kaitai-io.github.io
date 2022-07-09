@@ -15,7 +15,8 @@ type
     `body`*: KaitaiStruct
     `parent`*: KaitaiStruct
     `rawBody`*: seq[byte]
-    `etherTypeInst`*: EthernetFrame_EtherTypeEnum
+    `etherTypeInst`: EthernetFrame_EtherTypeEnum
+    `etherTypeInstFlag`: bool
   EthernetFrame_EtherTypeEnum* = enum
     ipv4 = 2048
     x_75_internet = 2049
@@ -104,12 +105,12 @@ real ether frame yet, an additional payload (`tci`) is expected
 and real ether type is upcoming next.
 
   ]##
-  if this.etherTypeInst != nil:
+  if this.etherTypeInstFlag:
     return this.etherTypeInst
   let etherTypeInstExpr = EthernetFrame_EtherTypeEnum((if this.etherType1 == ethernet_frame.ieee_802_1q_tpid: this.etherType2 else: this.etherType1))
   this.etherTypeInst = etherTypeInstExpr
-  if this.etherTypeInst != nil:
-    return this.etherTypeInst
+  this.etherTypeInstFlag = true
+  return this.etherTypeInst
 
 proc fromFile*(_: typedesc[EthernetFrame], filename: string): EthernetFrame =
   EthernetFrame.read(newKaitaiFileStream(filename), nil, nil)

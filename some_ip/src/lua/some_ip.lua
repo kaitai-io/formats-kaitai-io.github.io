@@ -141,11 +141,11 @@ end
 
 function SomeIp.Header.MessageId:_read()
   self.service_id = self._io:read_u2be()
-  self.sub_id = self._io:read_bits_int_be(1)
-  if self.sub_id == 0 then
+  self.sub_id = self._io:read_bits_int_be(1) ~= 0
+  if self.sub_id == false then
     self.method_id = self._io:read_bits_int_be(15)
   end
-  if self.sub_id == 1 then
+  if self.sub_id == true then
     self.event_id = self._io:read_bits_int_be(15)
   end
 end

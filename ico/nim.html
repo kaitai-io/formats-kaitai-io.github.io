@@ -289,9 +289,12 @@ contained inside).</p>
     <span class="p">`</span><span class="n">lenImg</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">ofsImg</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ico</span>
-    <span class="p">`</span><span class="n">imgInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">pngHeaderInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">isPngInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">imgInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">imgInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">pngHeaderInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">pngHeaderInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isPngInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isPngInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ico], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ico</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ico_IconDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Ico): Ico_IconDirEntry</span>
@@ -395,15 +398,15 @@ contained inside).</p>
 <span class="n">relevant</span> <span class="n">parser</span><span class="p">,</span> <span class="k">if</span> <span class="n">needed</span> <span class="n">to</span> <span class="n">parse</span> <span class="n">image</span> <span class="n">data</span> <span class="n">further</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsImg</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">imgInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenImg</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">imgInst</span> <span class="o">=</span> <span class="n">imgInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">imgInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgInst</span>
 
 <span class="k">proc </span><span class="nf">pngHeader</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ico_IconDirEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
 
@@ -412,27 +415,27 @@ contained inside).</p>
 <span class="n">embedded</span> <span class="n">PNG</span> <span class="n">file</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsImg</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">pngHeaderInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInst</span> <span class="o">=</span> <span class="n">pngHeaderInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">pngHeaderInst</span>
 
 <span class="k">proc </span><span class="nf">isPng</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ico_IconDirEntry</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="kp">True</span> <span class="k">if</span> <span class="n">this</span> <span class="n">image</span> <span class="ow">is</span> <span class="ow">in</span> <span class="n">PNG</span> <span class="n">format</span><span class="p">.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPngInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPngInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPngInst</span>
-  <span class="k">let</span> <span class="n">isPngInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">pngHeader</span> <span class="o">==</span> <span class="o">@[-</span><span class="mi">119</span><span class="sc">&#39;u8, 80&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">78</span><span class="sc">&#39;u8, 71&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">13</span><span class="sc">&#39;u8, 10&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">26</span><span class="sc">&#39;u8, 10&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">isPngInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">pngHeader</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">137</span><span class="sc">&#39;u8, 80&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">78</span><span class="sc">&#39;u8, 71&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">13</span><span class="sc">&#39;u8, 10&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">26</span><span class="sc">&#39;u8, 10&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isPngInst</span> <span class="o">=</span> <span class="n">isPngInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isPngInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPngInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isPngInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isPngInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ico_IconDirEntry], filename: string): Ico_IconDirEntry =</span>
   <span class="n">Ico_IconDirEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

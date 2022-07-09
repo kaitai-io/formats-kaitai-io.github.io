@@ -5,10 +5,14 @@ type
   Riff* = ref object of KaitaiStruct
     `chunk`*: Riff_Chunk
     `parent`*: KaitaiStruct
-    `chunkIdInst`*: Riff_Fourcc
-    `isRiffChunkInst`*: bool
-    `parentChunkDataInst`*: Riff_ParentChunkData
-    `subchunksInst`*: seq[Riff_ChunkType]
+    `chunkIdInst`: Riff_Fourcc
+    `chunkIdInstFlag`: bool
+    `isRiffChunkInst`: bool
+    `isRiffChunkInstFlag`: bool
+    `parentChunkDataInst`: Riff_ParentChunkData
+    `parentChunkDataInstFlag`: bool
+    `subchunksInst`: seq[Riff_ChunkType]
+    `subchunksInstFlag`: bool
   Riff_Fourcc* = enum
     riff = 1179011410
     info = 1330007625
@@ -17,10 +21,14 @@ type
     `saveParentChunkDataOfs`*: seq[byte]
     `parentChunkData`*: Riff_ParentChunkData
     `parent`*: Riff_ChunkType
-    `parentChunkDataOfsInst`*: int
-    `formTypeInst`*: Riff_Fourcc
-    `formTypeReadableInst`*: string
-    `subchunksInst`*: seq[KaitaiStruct]
+    `parentChunkDataOfsInst`: int
+    `parentChunkDataOfsInstFlag`: bool
+    `formTypeInst`: Riff_Fourcc
+    `formTypeInstFlag`: bool
+    `formTypeReadableInst`: string
+    `formTypeReadableInstFlag`: bool
+    `subchunksInst`: seq[KaitaiStruct]
+    `subchunksInstFlag`: bool
   Riff_Chunk* = ref object of KaitaiStruct
     `id`*: uint32
     `len`*: uint32
@@ -41,19 +49,28 @@ type
     `saveChunkOfs`*: seq[byte]
     `chunk`*: Riff_Chunk
     `parent`*: Riff_ListChunkData
-    `chunkDataInst`*: string
-    `isUnregisteredTagInst`*: bool
-    `idCharsInst`*: seq[byte]
-    `chunkIdReadableInst`*: string
-    `chunkOfsInst`*: int
+    `chunkDataInst`: string
+    `chunkDataInstFlag`: bool
+    `isUnregisteredTagInst`: bool
+    `isUnregisteredTagInstFlag`: bool
+    `idCharsInst`: seq[byte]
+    `idCharsInstFlag`: bool
+    `chunkIdReadableInst`: string
+    `chunkIdReadableInstFlag`: bool
+    `chunkOfsInst`: int
+    `chunkOfsInstFlag`: bool
   Riff_ChunkType* = ref object of KaitaiStruct
     `saveChunkOfs`*: seq[byte]
     `chunk`*: Riff_Chunk
     `parent`*: KaitaiStruct
-    `chunkOfsInst`*: int
-    `chunkIdInst`*: Riff_Fourcc
-    `chunkIdReadableInst`*: string
-    `chunkDataInst`*: Riff_ListChunkData
+    `chunkOfsInst`: int
+    `chunkOfsInstFlag`: bool
+    `chunkIdInst`: Riff_Fourcc
+    `chunkIdInstFlag`: bool
+    `chunkIdReadableInst`: string
+    `chunkIdReadableInstFlag`: bool
+    `chunkDataInst`: Riff_ListChunkData
+    `chunkDataInstFlag`: bool
 
 proc read*(_: typedesc[Riff], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Riff
 proc read*(_: typedesc[Riff_ListChunkData], io: KaitaiStream, root: KaitaiStruct, parent: Riff_ChunkType): Riff_ListChunkData
@@ -105,23 +122,23 @@ proc read*(_: typedesc[Riff], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.chunk = chunkExpr
 
 proc chunkId(this: Riff): Riff_Fourcc = 
-  if this.chunkIdInst != nil:
+  if this.chunkIdInstFlag:
     return this.chunkIdInst
   let chunkIdInstExpr = Riff_Fourcc(Riff_Fourcc(this.chunk.id))
   this.chunkIdInst = chunkIdInstExpr
-  if this.chunkIdInst != nil:
-    return this.chunkIdInst
+  this.chunkIdInstFlag = true
+  return this.chunkIdInst
 
 proc isRiffChunk(this: Riff): bool = 
-  if this.isRiffChunkInst != nil:
+  if this.isRiffChunkInstFlag:
     return this.isRiffChunkInst
   let isRiffChunkInstExpr = bool(this.chunkId == riff.riff)
   this.isRiffChunkInst = isRiffChunkInstExpr
-  if this.isRiffChunkInst != nil:
-    return this.isRiffChunkInst
+  this.isRiffChunkInstFlag = true
+  return this.isRiffChunkInst
 
 proc parentChunkData(this: Riff): Riff_ParentChunkData = 
-  if this.parentChunkDataInst != nil:
+  if this.parentChunkDataInstFlag:
     return this.parentChunkDataInst
   if this.isRiffChunk:
     let io = this.chunk.dataSlot.io
@@ -130,11 +147,11 @@ proc parentChunkData(this: Riff): Riff_ParentChunkData =
     let parentChunkDataInstExpr = Riff_ParentChunkData.read(io, this.root, this)
     this.parentChunkDataInst = parentChunkDataInstExpr
     io.seek(pos)
-  if this.parentChunkDataInst != nil:
-    return this.parentChunkDataInst
+  this.parentChunkDataInstFlag = true
+  return this.parentChunkDataInst
 
 proc subchunks(this: Riff): seq[Riff_ChunkType] = 
-  if this.subchunksInst.len != 0:
+  if this.subchunksInstFlag:
     return this.subchunksInst
   if this.isRiffChunk:
     let io = this.parentChunkData.subchunksSlot.io
@@ -147,8 +164,8 @@ proc subchunks(this: Riff): seq[Riff_ChunkType] =
         this.subchunksInst.add(it)
         inc i
     io.seek(pos)
-  if this.subchunksInst.len != 0:
-    return this.subchunksInst
+  this.subchunksInstFlag = true
+  return this.subchunksInst
 
 proc fromFile*(_: typedesc[Riff], filename: string): Riff =
   Riff.read(newKaitaiFileStream(filename), nil, nil)
@@ -168,34 +185,34 @@ proc read*(_: typedesc[Riff_ListChunkData], io: KaitaiStream, root: KaitaiStruct
   this.parentChunkData = parentChunkDataExpr
 
 proc parentChunkDataOfs(this: Riff_ListChunkData): int = 
-  if this.parentChunkDataOfsInst != nil:
+  if this.parentChunkDataOfsInstFlag:
     return this.parentChunkDataOfsInst
   let parentChunkDataOfsInstExpr = int(this.io.pos)
   this.parentChunkDataOfsInst = parentChunkDataOfsInstExpr
-  if this.parentChunkDataOfsInst != nil:
-    return this.parentChunkDataOfsInst
+  this.parentChunkDataOfsInstFlag = true
+  return this.parentChunkDataOfsInst
 
 proc formType(this: Riff_ListChunkData): Riff_Fourcc = 
-  if this.formTypeInst != nil:
+  if this.formTypeInstFlag:
     return this.formTypeInst
   let formTypeInstExpr = Riff_Fourcc(Riff_Fourcc(this.parentChunkData.formType))
   this.formTypeInst = formTypeInstExpr
-  if this.formTypeInst != nil:
-    return this.formTypeInst
+  this.formTypeInstFlag = true
+  return this.formTypeInst
 
 proc formTypeReadable(this: Riff_ListChunkData): string = 
-  if this.formTypeReadableInst.len != 0:
+  if this.formTypeReadableInstFlag:
     return this.formTypeReadableInst
   let pos = this.io.pos()
   this.io.seek(int(this.parentChunkDataOfs))
   let formTypeReadableInstExpr = encode(this.io.readBytes(int(4)), "ASCII")
   this.formTypeReadableInst = formTypeReadableInstExpr
   this.io.seek(pos)
-  if this.formTypeReadableInst.len != 0:
-    return this.formTypeReadableInst
+  this.formTypeReadableInstFlag = true
+  return this.formTypeReadableInst
 
 proc subchunks(this: Riff_ListChunkData): seq[KaitaiStruct] = 
-  if this.subchunksInst.len != 0:
+  if this.subchunksInstFlag:
     return this.subchunksInst
   let io = this.parentChunkData.subchunksSlot.io
   let pos = io.pos()
@@ -213,8 +230,8 @@ proc subchunks(this: Riff_ListChunkData): seq[KaitaiStruct] =
           this.subchunksInst.add(it)
       inc i
   io.seek(pos)
-  if this.subchunksInst.len != 0:
-    return this.subchunksInst
+  this.subchunksInstFlag = true
+  return this.subchunksInst
 
 proc fromFile*(_: typedesc[Riff_ListChunkData], filename: string): Riff_ListChunkData =
   Riff_ListChunkData.read(newKaitaiFileStream(filename), nil, nil)
@@ -311,7 +328,7 @@ proc read*(_: typedesc[Riff_InfoSubchunk], io: KaitaiStream, root: KaitaiStruct,
   this.chunk = chunkExpr
 
 proc chunkData(this: Riff_InfoSubchunk): string = 
-  if this.chunkDataInst != nil:
+  if this.chunkDataInstFlag:
     return this.chunkDataInst
   let io = this.chunk.dataSlot.io
   let pos = io.pos()
@@ -322,8 +339,8 @@ proc chunkData(this: Riff_InfoSubchunk): string =
       let chunkDataInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
       this.chunkDataInst = chunkDataInstExpr
   io.seek(pos)
-  if this.chunkDataInst != nil:
-    return this.chunkDataInst
+  this.chunkDataInstFlag = true
+  return this.chunkDataInst
 
 proc isUnregisteredTag(this: Riff_InfoSubchunk): bool = 
 
@@ -331,39 +348,39 @@ proc isUnregisteredTag(this: Riff_InfoSubchunk): bool =
   Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).
 
   ]##
-  if this.isUnregisteredTagInst != nil:
+  if this.isUnregisteredTagInstFlag:
     return this.isUnregisteredTagInst
   let isUnregisteredTagInstExpr = bool( (( ((this.idChars[0] >= 97) and (this.idChars[0] <= 122)) ) or ( ((this.idChars[1] >= 97) and (this.idChars[1] <= 122)) ) or ( ((this.idChars[2] >= 97) and (this.idChars[2] <= 122)) ) or ( ((this.idChars[3] >= 97) and (this.idChars[3] <= 122)) )) )
   this.isUnregisteredTagInst = isUnregisteredTagInstExpr
-  if this.isUnregisteredTagInst != nil:
-    return this.isUnregisteredTagInst
+  this.isUnregisteredTagInstFlag = true
+  return this.isUnregisteredTagInst
 
 proc idChars(this: Riff_InfoSubchunk): seq[byte] = 
-  if this.idCharsInst.len != 0:
+  if this.idCharsInstFlag:
     return this.idCharsInst
   let pos = this.io.pos()
   this.io.seek(int(this.chunkOfs))
   let idCharsInstExpr = this.io.readBytes(int(4))
   this.idCharsInst = idCharsInstExpr
   this.io.seek(pos)
-  if this.idCharsInst.len != 0:
-    return this.idCharsInst
+  this.idCharsInstFlag = true
+  return this.idCharsInst
 
 proc chunkIdReadable(this: Riff_InfoSubchunk): string = 
-  if this.chunkIdReadableInst.len != 0:
+  if this.chunkIdReadableInstFlag:
     return this.chunkIdReadableInst
   let chunkIdReadableInstExpr = string(encode(this.idChars, "ASCII"))
   this.chunkIdReadableInst = chunkIdReadableInstExpr
-  if this.chunkIdReadableInst.len != 0:
-    return this.chunkIdReadableInst
+  this.chunkIdReadableInstFlag = true
+  return this.chunkIdReadableInst
 
 proc chunkOfs(this: Riff_InfoSubchunk): int = 
-  if this.chunkOfsInst != nil:
+  if this.chunkOfsInstFlag:
     return this.chunkOfsInst
   let chunkOfsInstExpr = int(this.io.pos)
   this.chunkOfsInst = chunkOfsInstExpr
-  if this.chunkOfsInst != nil:
-    return this.chunkOfsInst
+  this.chunkOfsInstFlag = true
+  return this.chunkOfsInst
 
 proc fromFile*(_: typedesc[Riff_InfoSubchunk], filename: string): Riff_InfoSubchunk =
   Riff_InfoSubchunk.read(newKaitaiFileStream(filename), nil, nil)
@@ -383,34 +400,34 @@ proc read*(_: typedesc[Riff_ChunkType], io: KaitaiStream, root: KaitaiStruct, pa
   this.chunk = chunkExpr
 
 proc chunkOfs(this: Riff_ChunkType): int = 
-  if this.chunkOfsInst != nil:
+  if this.chunkOfsInstFlag:
     return this.chunkOfsInst
   let chunkOfsInstExpr = int(this.io.pos)
   this.chunkOfsInst = chunkOfsInstExpr
-  if this.chunkOfsInst != nil:
-    return this.chunkOfsInst
+  this.chunkOfsInstFlag = true
+  return this.chunkOfsInst
 
 proc chunkId(this: Riff_ChunkType): Riff_Fourcc = 
-  if this.chunkIdInst != nil:
+  if this.chunkIdInstFlag:
     return this.chunkIdInst
   let chunkIdInstExpr = Riff_Fourcc(Riff_Fourcc(this.chunk.id))
   this.chunkIdInst = chunkIdInstExpr
-  if this.chunkIdInst != nil:
-    return this.chunkIdInst
+  this.chunkIdInstFlag = true
+  return this.chunkIdInst
 
 proc chunkIdReadable(this: Riff_ChunkType): string = 
-  if this.chunkIdReadableInst.len != 0:
+  if this.chunkIdReadableInstFlag:
     return this.chunkIdReadableInst
   let pos = this.io.pos()
   this.io.seek(int(this.chunkOfs))
   let chunkIdReadableInstExpr = encode(this.io.readBytes(int(4)), "ASCII")
   this.chunkIdReadableInst = chunkIdReadableInstExpr
   this.io.seek(pos)
-  if this.chunkIdReadableInst.len != 0:
-    return this.chunkIdReadableInst
+  this.chunkIdReadableInstFlag = true
+  return this.chunkIdReadableInst
 
 proc chunkData(this: Riff_ChunkType): Riff_ListChunkData = 
-  if this.chunkDataInst != nil:
+  if this.chunkDataInstFlag:
     return this.chunkDataInst
   let io = this.chunk.dataSlot.io
   let pos = io.pos()
@@ -421,8 +438,8 @@ proc chunkData(this: Riff_ChunkType): Riff_ListChunkData =
       let chunkDataInstExpr = Riff_ListChunkData.read(io, this.root, this)
       this.chunkDataInst = chunkDataInstExpr
   io.seek(pos)
-  if this.chunkDataInst != nil:
-    return this.chunkDataInst
+  this.chunkDataInstFlag = true
+  return this.chunkDataInst
 
 proc fromFile*(_: typedesc[Riff_ChunkType], filename: string): Riff_ChunkType =
   Riff_ChunkType.read(newKaitaiFileStream(filename), nil, nil)

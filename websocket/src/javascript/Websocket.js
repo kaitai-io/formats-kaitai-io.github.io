@@ -8,7 +8,7 @@
   } else {
     root.Websocket = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The WebSocket protocol establishes a two-way communication channel via TCP.
  * Messages are made up of one or more dataframes, and are delineated by
@@ -62,7 +62,7 @@ var Websocket = (function() {
   Websocket.prototype._read = function() {
     this.initialFrame = new InitialFrame(this._io, this, this._root);
     if (this.initialFrame.header.finished != true) {
-      this.trailingFrames = []
+      this.trailingFrames = [];
       var i = 0;
       do {
         var _ = new Dataframe(this._io, this, this._root);

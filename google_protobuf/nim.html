@@ -293,8 +293,10 @@ are the fields' default values, etc, etc.</li>
     <span class="p">`</span><span class="n">key</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">VlqBase128Le</span>
     <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GoogleProtobuf</span>
-    <span class="p">`</span><span class="n">wireTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair_WireTypes</span>
-    <span class="p">`</span><span class="n">fieldTagInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">wireTypeInst</span><span class="p">`:</span> <span class="n">GoogleProtobuf_Pair_WireTypes</span>
+    <span class="p">`</span><span class="n">wireTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">fieldTagInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">fieldTagInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">varint</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">bit_64</span> <span class="o">=</span> <span class="mi">1</span>
@@ -425,12 +427,12 @@ are the fields' default values, etc, etc.</li>
 <span class="n">arbitrary</span> <span class="n">bytes</span> <span class="kn">from</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">encoded</span> <span class="n">strings</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span>
   <span class="k">let</span> <span class="n">wireTypeInstExpr</span> <span class="o">=</span> <span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">(</span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span> <span class="ow">and</span> <span class="mi">7</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span> <span class="o">=</span> <span class="n">wireTypeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span>
 
 <span class="k">proc </span><span class="nf">fieldTag</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">GoogleProtobuf_Pair</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
@@ -439,12 +441,12 @@ are the fields' default values, etc, etc.</li>
 <span class="n">field</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">a</span> <span class="p">`.</span><span class="n">proto</span><span class="p">`</span> <span class="n">file</span> <span class="n">by</span> <span class="n">this</span> <span class="n">field</span> <span class="n">tag</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
   <span class="k">let</span> <span class="n">fieldTagInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span> <span class="ow">shr</span> <span class="mi">3</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span> <span class="o">=</span> <span class="n">fieldTagInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_Pair], filename: string): GoogleProtobuf_Pair =</span>
   <span class="n">GoogleProtobuf_Pair</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

@@ -37,19 +37,19 @@ class AndroidSuper < Kaitai::Struct::Struct
       @_raw_backup_geometry = @_io.read_bytes(4096)
       _io__raw_backup_geometry = Kaitai::Struct::Stream.new(@_raw_backup_geometry)
       @backup_geometry = Geometry.new(_io__raw_backup_geometry, self, @_root)
-      @_raw_primary_metadata = Array.new(primary_geometry.metadata_slot_count)
-      @primary_metadata = Array.new(primary_geometry.metadata_slot_count)
+      @_raw_primary_metadata = []
+      @primary_metadata = []
       (primary_geometry.metadata_slot_count).times { |i|
-        @_raw_primary_metadata[i] = @_io.read_bytes(primary_geometry.metadata_max_size)
+        @_raw_primary_metadata << @_io.read_bytes(primary_geometry.metadata_max_size)
         _io__raw_primary_metadata = Kaitai::Struct::Stream.new(@_raw_primary_metadata[i])
-        @primary_metadata[i] = Metadata.new(_io__raw_primary_metadata, self, @_root)
+        @primary_metadata << Metadata.new(_io__raw_primary_metadata, self, @_root)
       }
-      @_raw_backup_metadata = Array.new(primary_geometry.metadata_slot_count)
-      @backup_metadata = Array.new(primary_geometry.metadata_slot_count)
+      @_raw_backup_metadata = []
+      @backup_metadata = []
       (primary_geometry.metadata_slot_count).times { |i|
-        @_raw_backup_metadata[i] = @_io.read_bytes(primary_geometry.metadata_max_size)
+        @_raw_backup_metadata << @_io.read_bytes(primary_geometry.metadata_max_size)
         _io__raw_backup_metadata = Kaitai::Struct::Stream.new(@_raw_backup_metadata[i])
-        @backup_metadata[i] = Metadata.new(_io__raw_backup_metadata, self, @_root)
+        @backup_metadata << Metadata.new(_io__raw_backup_metadata, self, @_root)
       }
       self
     end
@@ -183,28 +183,28 @@ class AndroidSuper < Kaitai::Struct::Struct
         return @table unless @table.nil?
         _pos = @_io.pos
         @_io.seek((_parent.header_size + offset))
-        @_raw_table = Array.new(num_entries)
-        @table = Array.new(num_entries)
+        @_raw_table = []
+        @table = []
         (num_entries).times { |i|
           case kind
           when :table_kind_partitions
-            @_raw_table[i] = @_io.read_bytes(entry_size)
+            @_raw_table << @_io.read_bytes(entry_size)
             _io__raw_table = Kaitai::Struct::Stream.new(@_raw_table[i])
-            @table[i] = Partition.new(_io__raw_table, self, @_root)
+            @table << Partition.new(_io__raw_table, self, @_root)
           when :table_kind_extents
-            @_raw_table[i] = @_io.read_bytes(entry_size)
+            @_raw_table << @_io.read_bytes(entry_size)
             _io__raw_table = Kaitai::Struct::Stream.new(@_raw_table[i])
-            @table[i] = Extent.new(_io__raw_table, self, @_root)
+            @table << Extent.new(_io__raw_table, self, @_root)
           when :table_kind_groups
-            @_raw_table[i] = @_io.read_bytes(entry_size)
+            @_raw_table << @_io.read_bytes(entry_size)
             _io__raw_table = Kaitai::Struct::Stream.new(@_raw_table[i])
-            @table[i] = Group.new(_io__raw_table, self, @_root)
+            @table << Group.new(_io__raw_table, self, @_root)
           when :table_kind_block_devices
-            @_raw_table[i] = @_io.read_bytes(entry_size)
+            @_raw_table << @_io.read_bytes(entry_size)
             _io__raw_table = Kaitai::Struct::Stream.new(@_raw_table[i])
-            @table[i] = BlockDevice.new(_io__raw_table, self, @_root)
+            @table << BlockDevice.new(_io__raw_table, self, @_root)
           else
-            @table[i] = @_io.read_bytes(entry_size)
+            @table << @_io.read_bytes(entry_size)
           end
         }
         @_io.seek(_pos)

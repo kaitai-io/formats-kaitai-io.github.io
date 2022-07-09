@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class RenderwareBinaryStream(KaitaiStruct):
@@ -264,42 +263,42 @@ class RenderwareBinaryStream(KaitaiStruct):
             if not (self.is_native):
                 self.geometry = RenderwareBinaryStream.GeometryNonNative(self._io, self, self._root)
 
-            self.morph_targets = [None] * (self.num_morph_targets)
+            self.morph_targets = []
             for i in range(self.num_morph_targets):
-                self.morph_targets[i] = RenderwareBinaryStream.MorphTarget(self._io, self, self._root)
+                self.morph_targets.append(RenderwareBinaryStream.MorphTarget(self._io, self, self._root))
 
 
         @property
         def is_textured(self):
             if hasattr(self, '_m_is_textured'):
-                return self._m_is_textured if hasattr(self, '_m_is_textured') else None
+                return self._m_is_textured
 
             self._m_is_textured = (self.format & 4) != 0
-            return self._m_is_textured if hasattr(self, '_m_is_textured') else None
+            return getattr(self, '_m_is_textured', None)
 
         @property
         def is_prelit(self):
             if hasattr(self, '_m_is_prelit'):
-                return self._m_is_prelit if hasattr(self, '_m_is_prelit') else None
+                return self._m_is_prelit
 
             self._m_is_prelit = (self.format & 8) != 0
-            return self._m_is_prelit if hasattr(self, '_m_is_prelit') else None
+            return getattr(self, '_m_is_prelit', None)
 
         @property
         def is_textured2(self):
             if hasattr(self, '_m_is_textured2'):
-                return self._m_is_textured2 if hasattr(self, '_m_is_textured2') else None
+                return self._m_is_textured2
 
             self._m_is_textured2 = (self.format & 128) != 0
-            return self._m_is_textured2 if hasattr(self, '_m_is_textured2') else None
+            return getattr(self, '_m_is_textured2', None)
 
         @property
         def is_native(self):
             if hasattr(self, '_m_is_native'):
-                return self._m_is_native if hasattr(self, '_m_is_native') else None
+                return self._m_is_native
 
             self._m_is_native = (self.format & 16777216) != 0
-            return self._m_is_native if hasattr(self, '_m_is_native') else None
+            return getattr(self, '_m_is_native', None)
 
 
     class GeometryNonNative(KaitaiStruct):
@@ -311,20 +310,20 @@ class RenderwareBinaryStream(KaitaiStruct):
 
         def _read(self):
             if self._parent.is_prelit:
-                self.prelit_colors = [None] * (self._parent.num_vertices)
+                self.prelit_colors = []
                 for i in range(self._parent.num_vertices):
-                    self.prelit_colors[i] = RenderwareBinaryStream.Rgba(self._io, self, self._root)
+                    self.prelit_colors.append(RenderwareBinaryStream.Rgba(self._io, self, self._root))
 
 
             if  ((self._parent.is_textured) or (self._parent.is_textured2)) :
-                self.tex_coords = [None] * (self._parent.num_vertices)
+                self.tex_coords = []
                 for i in range(self._parent.num_vertices):
-                    self.tex_coords[i] = RenderwareBinaryStream.TexCoord(self._io, self, self._root)
+                    self.tex_coords.append(RenderwareBinaryStream.TexCoord(self._io, self, self._root))
 
 
-            self.triangles = [None] * (self._parent.num_triangles)
+            self.triangles = []
             for i in range(self._parent.num_triangles):
-                self.triangles[i] = RenderwareBinaryStream.Triangle(self._io, self, self._root)
+                self.triangles.append(RenderwareBinaryStream.Triangle(self._io, self, self._root))
 
 
 
@@ -383,15 +382,15 @@ class RenderwareBinaryStream(KaitaiStruct):
             self.has_vertices = self._io.read_u4le()
             self.has_normals = self._io.read_u4le()
             if self.has_vertices != 0:
-                self.vertices = [None] * (self._parent.num_vertices)
+                self.vertices = []
                 for i in range(self._parent.num_vertices):
-                    self.vertices[i] = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
+                    self.vertices.append(RenderwareBinaryStream.Vector3d(self._io, self, self._root))
 
 
             if self.has_normals != 0:
-                self.normals = [None] * (self._parent.num_vertices)
+                self.normals = []
                 for i in range(self._parent.num_vertices):
-                    self.normals[i] = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
+                    self.normals.append(RenderwareBinaryStream.Vector3d(self._io, self, self._root))
 
 
 
@@ -426,9 +425,9 @@ class RenderwareBinaryStream(KaitaiStruct):
 
         def _read(self):
             self.num_frames = self._io.read_u4le()
-            self.frames = [None] * (self.num_frames)
+            self.frames = []
             for i in range(self.num_frames):
-                self.frames[i] = RenderwareBinaryStream.Frame(self._io, self, self._root)
+                self.frames.append(RenderwareBinaryStream.Frame(self._io, self, self._root))
 
 
 
@@ -444,9 +443,9 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.entries = [None] * (3)
+            self.entries = []
             for i in range(3):
-                self.entries[i] = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
+                self.entries.append(RenderwareBinaryStream.Vector3d(self._io, self, self._root))
 
 
 
@@ -520,10 +519,10 @@ class RenderwareBinaryStream(KaitaiStruct):
         @property
         def version(self):
             if hasattr(self, '_m_version'):
-                return self._m_version if hasattr(self, '_m_version') else None
+                return self._m_version
 
             self._m_version = (((((self.library_id_stamp >> 14) & 261888) + 196608) | ((self.library_id_stamp >> 16) & 63)) if (self.library_id_stamp & 4294901760) != 0 else (self.library_id_stamp << 8))
-            return self._m_version if hasattr(self, '_m_version') else None
+            return getattr(self, '_m_version', None)
 
 
     class Triangle(KaitaiStruct):
@@ -584,9 +583,9 @@ class RenderwareBinaryStream(KaitaiStruct):
     @property
     def version(self):
         if hasattr(self, '_m_version'):
-            return self._m_version if hasattr(self, '_m_version') else None
+            return self._m_version
 
         self._m_version = (((((self.library_id_stamp >> 14) & 261888) + 196608) | ((self.library_id_stamp >> 16) & 63)) if (self.library_id_stamp & 4294901760) != 0 else (self.library_id_stamp << 8))
-        return self._m_version if hasattr(self, '_m_version') else None
+        return getattr(self, '_m_version', None)
 
 

@@ -239,9 +239,9 @@ function GettextMo.Mo:_read()
     self._is_le = false
   end
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -353,9 +353,9 @@ end
 
 function GettextMo.Mo.Version:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -403,9 +403,9 @@ end
 
 function GettextMo.Mo.HashtableItem:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")
@@ -479,9 +479,9 @@ end
 
 function GettextMo.Mo.Descriptor:_read()
 
-  if self._is_le then
+  if self._is_le == true then
     self:_read_le()
-  elseif not self._is_le then
+  elseif self._is_le == false then
     self:_read_be()
   else
     error("unable to decide endianness")

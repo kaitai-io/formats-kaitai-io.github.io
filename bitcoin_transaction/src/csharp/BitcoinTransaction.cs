@@ -27,13 +27,13 @@ namespace Kaitai
         {
             _version = m_io.ReadU4le();
             _numVins = m_io.ReadU1();
-            _vins = new List<Vin>((int) (NumVins));
+            _vins = new List<Vin>();
             for (var i = 0; i < NumVins; i++)
             {
                 _vins.Add(new Vin(m_io, this, m_root));
             }
             _numVouts = m_io.ReadU1();
-            _vouts = new List<Vout>((int) (NumVouts));
+            _vouts = new List<Vout>();
             for (var i = 0; i < NumVouts; i++)
             {
                 _vouts.Add(new Vout(m_io, this, m_root));

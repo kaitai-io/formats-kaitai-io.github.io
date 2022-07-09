@@ -22,9 +22,8 @@ void pcf_font_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x01\x66\x63\x70", 4), magic(), _io(), std::string("/seq/0"));
     }
     m_num_tables = m__io->read_u4le();
-    int l_tables = num_tables();
     m_tables = new std::vector<table_t*>();
-    m_tables->reserve(l_tables);
+    const int l_tables = num_tables();
     for (int i = 0; i < l_tables; i++) {
         m_tables->push_back(new table_t(m__io, this, m__root));
     }
@@ -100,9 +99,8 @@ pcf_font_t::table_t::swidths_t::swidths_t(kaitai::kstream* p__io, pcf_font_t::ta
 void pcf_font_t::table_t::swidths_t::_read() {
     m_format = new format_t(m__io, this, m__root);
     m_num_glyphs = m__io->read_u4le();
-    int l_swidths = num_glyphs();
     m_swidths = new std::vector<uint32_t>();
-    m_swidths->reserve(l_swidths);
+    const int l_swidths = num_glyphs();
     for (int i = 0; i < l_swidths; i++) {
         m_swidths->push_back(m__io->read_u4le());
     }
@@ -140,9 +138,8 @@ pcf_font_t::table_t::properties_t::properties_t(kaitai::kstream* p__io, pcf_font
 void pcf_font_t::table_t::properties_t::_read() {
     m_format = new format_t(m__io, this, m__root);
     m_num_props = m__io->read_u4le();
-    int l_props = num_props();
     m_props = new std::vector<prop_t*>();
-    m_props->reserve(l_props);
+    const int l_props = num_props();
     for (int i = 0; i < l_props; i++) {
         m_props->push_back(new prop_t(m__io, this, m__root));
     }
@@ -268,9 +265,8 @@ void pcf_font_t::table_t::bdf_encodings_t::_read() {
     m_min_byte1 = m__io->read_u2le();
     m_max_byte1 = m__io->read_u2le();
     m_default_char = m__io->read_u2le();
-    int l_glyph_indexes = (((max_char_or_byte2() - min_char_or_byte2()) + 1) * ((max_byte1() - min_byte1()) + 1));
     m_glyph_indexes = new std::vector<uint16_t>();
-    m_glyph_indexes->reserve(l_glyph_indexes);
+    const int l_glyph_indexes = (((max_char_or_byte2() - min_char_or_byte2()) + 1) * ((max_byte1() - min_byte1()) + 1));
     for (int i = 0; i < l_glyph_indexes; i++) {
         m_glyph_indexes->push_back(m__io->read_u2le());
     }
@@ -308,9 +304,8 @@ pcf_font_t::table_t::glyph_names_t::glyph_names_t(kaitai::kstream* p__io, pcf_fo
 void pcf_font_t::table_t::glyph_names_t::_read() {
     m_format = new format_t(m__io, this, m__root);
     m_num_glyphs = m__io->read_u4le();
-    int l_names = num_glyphs();
     m_names = new std::vector<string_ref_t*>();
-    m_names->reserve(l_names);
+    const int l_names = num_glyphs();
     for (int i = 0; i < l_names; i++) {
         m_names->push_back(new string_ref_t(m__io, this, m__root));
     }
@@ -398,15 +393,13 @@ pcf_font_t::table_t::bitmaps_t::bitmaps_t(kaitai::kstream* p__io, pcf_font_t::ta
 void pcf_font_t::table_t::bitmaps_t::_read() {
     m_format = new format_t(m__io, this, m__root);
     m_num_glyphs = m__io->read_u4le();
-    int l_offsets = num_glyphs();
     m_offsets = new std::vector<uint32_t>();
-    m_offsets->reserve(l_offsets);
+    const int l_offsets = num_glyphs();
     for (int i = 0; i < l_offsets; i++) {
         m_offsets->push_back(m__io->read_u4le());
     }
-    int l_bitmap_sizes = 4;
     m_bitmap_sizes = new std::vector<uint32_t>();
-    m_bitmap_sizes->reserve(l_bitmap_sizes);
+    const int l_bitmap_sizes = 4;
     for (int i = 0; i < l_bitmap_sizes; i++) {
         m_bitmap_sizes->push_back(m__io->read_u4le());
     }

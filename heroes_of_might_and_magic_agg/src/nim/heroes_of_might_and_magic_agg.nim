@@ -7,14 +7,16 @@ type
     `entries`*: seq[HeroesOfMightAndMagicAgg_Entry]
     `parent`*: KaitaiStruct
     `rawFilenamesInst`*: seq[seq[byte]]
-    `filenamesInst`*: seq[HeroesOfMightAndMagicAgg_Filename]
+    `filenamesInst`: seq[HeroesOfMightAndMagicAgg_Filename]
+    `filenamesInstFlag`: bool
   HeroesOfMightAndMagicAgg_Entry* = ref object of KaitaiStruct
     `hash`*: uint16
     `offset`*: uint32
     `size`*: uint32
     `size2`*: uint32
     `parent`*: HeroesOfMightAndMagicAgg
-    `bodyInst`*: seq[byte]
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   HeroesOfMightAndMagicAgg_Filename* = ref object of KaitaiStruct
     `str`*: string
     `parent`*: HeroesOfMightAndMagicAgg
@@ -45,7 +47,7 @@ proc read*(_: typedesc[HeroesOfMightAndMagicAgg], io: KaitaiStream, root: Kaitai
     this.entries.add(it)
 
 proc filenames(this: HeroesOfMightAndMagicAgg): seq[HeroesOfMightAndMagicAgg_Filename] = 
-  if this.filenamesInst.len != 0:
+  if this.filenamesInstFlag:
     return this.filenamesInst
   let pos = this.io.pos()
   this.io.seek(int((this.entries[^1].offset + this.entries[^1].size)))
@@ -56,8 +58,8 @@ proc filenames(this: HeroesOfMightAndMagicAgg): seq[HeroesOfMightAndMagicAgg_Fil
     let it = HeroesOfMightAndMagicAgg_Filename.read(rawFilenamesInstIo, this.root, this)
     this.filenamesInst.add(it)
   this.io.seek(pos)
-  if this.filenamesInst.len != 0:
-    return this.filenamesInst
+  this.filenamesInstFlag = true
+  return this.filenamesInst
 
 proc fromFile*(_: typedesc[HeroesOfMightAndMagicAgg], filename: string): HeroesOfMightAndMagicAgg =
   HeroesOfMightAndMagicAgg.read(newKaitaiFileStream(filename), nil, nil)
@@ -80,15 +82,15 @@ proc read*(_: typedesc[HeroesOfMightAndMagicAgg_Entry], io: KaitaiStream, root: 
   this.size2 = size2Expr
 
 proc body(this: HeroesOfMightAndMagicAgg_Entry): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(this.offset))
   let bodyInstExpr = this.io.readBytes(int(this.size))
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[HeroesOfMightAndMagicAgg_Entry], filename: string): HeroesOfMightAndMagicAgg_Entry =
   HeroesOfMightAndMagicAgg_Entry.read(newKaitaiFileStream(filename), nil, nil)

@@ -18,10 +18,14 @@ type
     `stuff`*: seq[byte]
     `compressionMethod`*: VmwareVmdk_CompressionMethods
     `parent`*: KaitaiStruct
-    `lenSectorInst`*: int
-    `descriptorInst`*: seq[byte]
-    `grainPrimaryInst`*: seq[byte]
-    `grainSecondaryInst`*: seq[byte]
+    `lenSectorInst`: int
+    `lenSectorInstFlag`: bool
+    `descriptorInst`: seq[byte]
+    `descriptorInstFlag`: bool
+    `grainPrimaryInst`: seq[byte]
+    `grainPrimaryInstFlag`: bool
+    `grainSecondaryInst`: seq[byte]
+    `grainSecondaryInstFlag`: bool
   VmwareVmdk_CompressionMethods* = enum
     none = 0
     deflate = 1
@@ -111,45 +115,45 @@ proc read*(_: typedesc[VmwareVmdk], io: KaitaiStream, root: KaitaiStruct, parent
   this.compressionMethod = compressionMethodExpr
 
 proc lenSector(this: VmwareVmdk): int = 
-  if this.lenSectorInst != nil:
+  if this.lenSectorInstFlag:
     return this.lenSectorInst
   let lenSectorInstExpr = int(512)
   this.lenSectorInst = lenSectorInstExpr
-  if this.lenSectorInst != nil:
-    return this.lenSectorInst
+  this.lenSectorInstFlag = true
+  return this.lenSectorInst
 
 proc descriptor(this: VmwareVmdk): seq[byte] = 
-  if this.descriptorInst.len != 0:
+  if this.descriptorInstFlag:
     return this.descriptorInst
   let pos = this.io.pos()
   this.io.seek(int((this.startDescriptor * VmwareVmdk(this.root).lenSector)))
   let descriptorInstExpr = this.io.readBytes(int((this.sizeDescriptor * VmwareVmdk(this.root).lenSector)))
   this.descriptorInst = descriptorInstExpr
   this.io.seek(pos)
-  if this.descriptorInst.len != 0:
-    return this.descriptorInst
+  this.descriptorInstFlag = true
+  return this.descriptorInst
 
 proc grainPrimary(this: VmwareVmdk): seq[byte] = 
-  if this.grainPrimaryInst.len != 0:
+  if this.grainPrimaryInstFlag:
     return this.grainPrimaryInst
   let pos = this.io.pos()
   this.io.seek(int((this.startPrimaryGrain * VmwareVmdk(this.root).lenSector)))
   let grainPrimaryInstExpr = this.io.readBytes(int((this.sizeGrain * VmwareVmdk(this.root).lenSector)))
   this.grainPrimaryInst = grainPrimaryInstExpr
   this.io.seek(pos)
-  if this.grainPrimaryInst.len != 0:
-    return this.grainPrimaryInst
+  this.grainPrimaryInstFlag = true
+  return this.grainPrimaryInst
 
 proc grainSecondary(this: VmwareVmdk): seq[byte] = 
-  if this.grainSecondaryInst.len != 0:
+  if this.grainSecondaryInstFlag:
     return this.grainSecondaryInst
   let pos = this.io.pos()
   this.io.seek(int((this.startSecondaryGrain * VmwareVmdk(this.root).lenSector)))
   let grainSecondaryInstExpr = this.io.readBytes(int((this.sizeGrain * VmwareVmdk(this.root).lenSector)))
   this.grainSecondaryInst = grainSecondaryInstExpr
   this.io.seek(pos)
-  if this.grainSecondaryInst.len != 0:
-    return this.grainSecondaryInst
+  this.grainSecondaryInstFlag = true
+  return this.grainSecondaryInst
 
 proc fromFile*(_: typedesc[VmwareVmdk], filename: string): VmwareVmdk =
   VmwareVmdk.read(newKaitaiFileStream(filename), nil, nil)

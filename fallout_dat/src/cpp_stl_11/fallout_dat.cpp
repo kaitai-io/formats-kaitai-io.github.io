@@ -15,15 +15,13 @@ void fallout_dat_t::_read() {
     m_unknown1 = m__io->read_u4be();
     m_unknown2 = m__io->read_u4be();
     m_timestamp = m__io->read_u4be();
-    int l_folder_names = folder_count();
     m_folder_names = std::unique_ptr<std::vector<std::unique_ptr<pstr_t>>>(new std::vector<std::unique_ptr<pstr_t>>());
-    m_folder_names->reserve(l_folder_names);
+    const int l_folder_names = folder_count();
     for (int i = 0; i < l_folder_names; i++) {
         m_folder_names->push_back(std::move(std::unique_ptr<pstr_t>(new pstr_t(m__io, this, m__root))));
     }
-    int l_folders = folder_count();
     m_folders = std::unique_ptr<std::vector<std::unique_ptr<folder_t>>>(new std::vector<std::unique_ptr<folder_t>>());
-    m_folders->reserve(l_folders);
+    const int l_folders = folder_count();
     for (int i = 0; i < l_folders; i++) {
         m_folders->push_back(std::move(std::unique_ptr<folder_t>(new folder_t(m__io, this, m__root))));
     }
@@ -66,9 +64,8 @@ void fallout_dat_t::folder_t::_read() {
     m_unknown = m__io->read_u4be();
     m_flags = m__io->read_u4be();
     m_timestamp = m__io->read_u4be();
-    int l_files = file_count();
     m_files = std::unique_ptr<std::vector<std::unique_ptr<file_t>>>(new std::vector<std::unique_ptr<file_t>>());
-    m_files->reserve(l_files);
+    const int l_files = file_count();
     for (int i = 0; i < l_files; i++) {
         m_files->push_back(std::move(std::unique_ptr<file_t>(new file_t(m__io, this, m__root))));
     }

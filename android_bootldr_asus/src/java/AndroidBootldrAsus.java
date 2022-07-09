@@ -48,7 +48,7 @@ public class AndroidBootldrAsus extends KaitaiStruct {
         }
         this.reserved1 = this._io.readU2le();
         this.reserved2 = this._io.readU4le();
-        images = new ArrayList<Image>(((Number) (3)).intValue());
+        this.images = new ArrayList<Image>();
         for (int i = 0; i < 3; i++) {
             this.images.add(new Image(this._io, this, _root));
         }

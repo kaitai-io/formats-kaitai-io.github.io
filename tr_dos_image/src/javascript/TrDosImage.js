@@ -8,7 +8,7 @@
   } else {
     root.TrDosImage = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
  * headerless and contain consequent "logical tracks", each logical track
@@ -51,7 +51,7 @@ var TrDosImage = (function() {
     this._read();
   }
   TrDosImage.prototype._read = function() {
-    this.files = []
+    this.files = [];
     var i = 0;
     do {
       var _ = new File(this._io, this, this._root);

@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 import ethernet_frame
@@ -302,23 +301,23 @@ class PacketPpi(KaitaiStruct):
             self.mcs = self._io.read_u1()
             self.num_streams = self._io.read_u1()
             self.rssi_combined = self._io.read_u1()
-            self.rssi_ant_ctl = [None] * (4)
+            self.rssi_ant_ctl = []
             for i in range(4):
-                self.rssi_ant_ctl[i] = self._io.read_u1()
+                self.rssi_ant_ctl.append(self._io.read_u1())
 
-            self.rssi_ant_ext = [None] * (4)
+            self.rssi_ant_ext = []
             for i in range(4):
-                self.rssi_ant_ext[i] = self._io.read_u1()
+                self.rssi_ant_ext.append(self._io.read_u1())
 
             self.ext_channel_freq = self._io.read_u2le()
             self.ext_channel_flags = PacketPpi.Radio80211nMacPhyExtBody.ChannelFlags(self._io, self, self._root)
-            self.rf_signal_noise = [None] * (4)
+            self.rf_signal_noise = []
             for i in range(4):
-                self.rf_signal_noise[i] = PacketPpi.Radio80211nMacPhyExtBody.SignalNoise(self._io, self, self._root)
+                self.rf_signal_noise.append(PacketPpi.Radio80211nMacPhyExtBody.SignalNoise(self._io, self, self._root))
 
-            self.evm = [None] * (4)
+            self.evm = []
             for i in range(4):
-                self.evm[i] = self._io.read_u4le()
+                self.evm.append(self._io.read_u4le())
 
 
         class ChannelFlags(KaitaiStruct):

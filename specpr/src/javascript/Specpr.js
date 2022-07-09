@@ -8,7 +8,7 @@
   } else {
     root.Specpr = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Specpr records are fixed format, 1536 bytes/record. Record number
  * counting starts at 0. Binary data are in IEEE format real numbers
@@ -70,18 +70,18 @@ var Specpr = (function() {
       this.itchan = this._io.readS4be();
       this.irmas = this._io.readS4be();
       this.revs = this._io.readS4be();
-      this.iband = new Array(2);
+      this.iband = [];
       for (var i = 0; i < 2; i++) {
-        this.iband[i] = this._io.readS4be();
+        this.iband.push(this._io.readS4be());
       }
       this.irwav = this._io.readS4be();
       this.irespt = this._io.readS4be();
       this.irecno = this._io.readS4be();
       this.itpntr = this._io.readS4be();
       this.ihist = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(60), 32), "ascii");
-      this.mhist = new Array(4);
+      this.mhist = [];
       for (var i = 0; i < 4; i++) {
-        this.mhist[i] = KaitaiStream.bytesToStr(this._io.readBytes(74), "ascii");
+        this.mhist.push(KaitaiStream.bytesToStr(this._io.readBytes(74), "ascii"));
       }
       this.nruns = this._io.readS4be();
       this.siangl = new IllumAngle(this._io, this, this._root);
@@ -93,9 +93,9 @@ var Specpr = (function() {
       this.scatim = this._io.readF4be();
       this.timint = this._io.readF4be();
       this.tempd = this._io.readF4be();
-      this.data = new Array(256);
+      this.data = [];
       for (var i = 0; i < 256; i++) {
-        this.data[i] = this._io.readF4be();
+        this.data.push(this._io.readF4be());
       }
     }
 
@@ -333,9 +333,9 @@ var Specpr = (function() {
       this._read();
     }
     DataContinuation.prototype._read = function() {
-      this.cdata = new Array(383);
+      this.cdata = [];
       for (var i = 0; i < 383; i++) {
-        this.cdata[i] = this._io.readF4be();
+        this.cdata.push(this._io.readF4be());
       }
     }
 

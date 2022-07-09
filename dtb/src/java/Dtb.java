@@ -229,7 +229,7 @@ public class Dtb extends KaitaiStruct {
             {
                 int i = 0;
                 while (!this._io.isEof()) {
-                    this.strings.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                    this.strings.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII")));
                     i++;
                 }
             }
@@ -270,10 +270,10 @@ public class Dtb extends KaitaiStruct {
         public String name() {
             if (this.name != null)
                 return this.name;
-            KaitaiStream io = _root.stringsBlock()._io();
+            KaitaiStream io = _root().stringsBlock()._io();
             long _pos = io.pos();
             io.seek(ofsName());
-            this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
             io.seek(_pos);
             return this.name;
         }
@@ -356,7 +356,7 @@ public class Dtb extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.name = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.name = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
             this.padding = this._io.readBytes(KaitaiStream.mod(-(_io().pos()), 4));
         }
         private String name;

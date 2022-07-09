@@ -563,9 +563,9 @@ section#format-index .row {
       <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">is_native</span><span class="p">)</span>
         <span class="vi">@geometry</span> <span class="o">=</span> <span class="no">GeometryNonNative</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">end</span>
-      <span class="vi">@morph_targets</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_morph_targets</span><span class="p">)</span>
+      <span class="vi">@morph_targets</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_morph_targets</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@morph_targets</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MorphTarget</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@morph_targets</span> <span class="o">&lt;&lt;</span> <span class="no">MorphTarget</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -605,20 +605,20 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">is_prelit</span>
-        <span class="vi">@prelit_colors</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+        <span class="vi">@prelit_colors</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@prelit_colors</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Rgba</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@prelit_colors</span> <span class="o">&lt;&lt;</span> <span class="no">Rgba</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
       <span class="k">end</span>
       <span class="k">if</span>  <span class="p">((</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_textured</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_textured2</span><span class="p">))</span> 
-        <span class="vi">@tex_coords</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+        <span class="vi">@tex_coords</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@tex_coords</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TexCoord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@tex_coords</span> <span class="o">&lt;&lt;</span> <span class="no">TexCoord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
       <span class="k">end</span>
-      <span class="vi">@triangles</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_triangles</span><span class="p">)</span>
+      <span class="vi">@triangles</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_triangles</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@triangles</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Triangle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@triangles</span> <span class="o">&lt;&lt;</span> <span class="no">Triangle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -688,15 +688,15 @@ section#format-index .row {
       <span class="vi">@has_vertices</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@has_normals</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="k">if</span> <span class="n">has_vertices</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="vi">@vertices</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+        <span class="vi">@vertices</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@vertices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Vector3d</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@vertices</span> <span class="o">&lt;&lt;</span> <span class="no">Vector3d</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
       <span class="k">end</span>
       <span class="k">if</span> <span class="n">has_normals</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="vi">@normals</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+        <span class="vi">@normals</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@normals</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Vector3d</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="vi">@normals</span> <span class="o">&lt;&lt;</span> <span class="no">Vector3d</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="p">}</span>
       <span class="k">end</span>
       <span class="nb">self</span>
@@ -737,9 +737,9 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@frames</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_frames</span><span class="p">)</span>
+      <span class="vi">@frames</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@frames</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Frame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@frames</span> <span class="o">&lt;&lt;</span> <span class="no">Frame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -756,9 +756,9 @@ section#format-index .row {
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@entries</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@entries</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Vector3d</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="no">Vector3d</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>

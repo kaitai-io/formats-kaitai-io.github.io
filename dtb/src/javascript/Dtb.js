@@ -8,7 +8,7 @@
   } else {
     root.Dtb = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Also referred to as Devicetree Blob (DTB). It is a flat binary encoding
  * of data (primarily devicetree data, although other data is possible as well).
@@ -105,7 +105,7 @@ var Dtb = (function() {
       this._read();
     }
     FdtBlock.prototype._read = function() {
-      this.nodes = []
+      this.nodes = [];
       var i = 0;
       do {
         var _ = new FdtNode(this._io, this, this._root);

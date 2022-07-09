@@ -410,9 +410,9 @@ class Rpm < Kaitai::Struct::Struct
     if ofs_payload < 0
       @_unnamed5 = @_io.read_bytes(0)
     end
-    @signature_tags_steps = Array.new(signature.header_record.num_index_records)
+    @signature_tags_steps = []
     (signature.header_record.num_index_records).times { |i|
-      @signature_tags_steps[i] = SignatureTagsStep.new(@_io, self, @_root, i, (i < 1 ? -1 : signature_tags_steps[(i - 1)].size_tag_idx))
+      @signature_tags_steps << SignatureTagsStep.new(@_io, self, @_root, i, (i < 1 ? -1 : signature_tags_steps[(i - 1)].size_tag_idx))
     }
     self
   end
@@ -424,9 +424,9 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(num_values)
+      @values = []
       (num_values).times { |i|
-        @values[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+        @values << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       }
       self
     end
@@ -483,9 +483,9 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(1)
+      @values = []
       (1).times { |i|
-        @values[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+        @values << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       }
       self
     end
@@ -518,9 +518,9 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(num_values)
+      @values = []
       (num_values).times { |i|
-        @values[i] = @_io.read_u4be
+        @values << @_io.read_u4be
       }
       self
     end
@@ -535,9 +535,9 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(num_values)
+      @values = []
       (num_values).times { |i|
-        @values[i] = @_io.read_u2be
+        @values << @_io.read_u2be
       }
       self
     end
@@ -661,9 +661,9 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(num_values)
+      @values = []
       (num_values).times { |i|
-        @values[i] = @_io.read_u1
+        @values << @_io.read_u1
       }
       self
     end
@@ -678,9 +678,9 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(num_values)
+      @values = []
       (num_values).times { |i|
-        @values[i] = @_io.read_u8be
+        @values << @_io.read_u8be
       }
       self
     end
@@ -695,9 +695,9 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     def _read
-      @values = Array.new(1)
+      @values = []
       (1).times { |i|
-        @values[i] = @_io.read_bytes(len_value)
+        @values << @_io.read_bytes(len_value)
       }
       self
     end
@@ -743,9 +743,9 @@ class Rpm < Kaitai::Struct::Struct
 
     def _read
       @header_record = HeaderRecord.new(@_io, self, @_root)
-      @index_records = Array.new(header_record.num_index_records)
+      @index_records = []
       (header_record.num_index_records).times { |i|
-        @index_records[i] = HeaderIndexRecord.new(@_io, self, @_root)
+        @index_records << HeaderIndexRecord.new(@_io, self, @_root)
       }
       @_raw_storage_section = @_io.read_bytes(header_record.len_storage_section)
       _io__raw_storage_section = Kaitai::Struct::Stream.new(@_raw_storage_section)

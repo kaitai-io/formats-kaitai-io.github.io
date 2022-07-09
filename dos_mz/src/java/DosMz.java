@@ -201,7 +201,7 @@ public class DosMz extends KaitaiStruct {
             KaitaiStream io = header()._io();
             long _pos = io.pos();
             io.seek(header().mz().ofsRelocations());
-            relocations = new ArrayList<Relocation>(((Number) (header().mz().numRelocations())).intValue());
+            this.relocations = new ArrayList<Relocation>();
             for (int i = 0; i < header().mz().numRelocations(); i++) {
                 this.relocations.add(new Relocation(io, this, _root));
             }

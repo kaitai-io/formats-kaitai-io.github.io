@@ -58,9 +58,9 @@ class Fallout2Dat < Kaitai::Struct::Struct
 
     def _read
       @file_count = @_io.read_u4le
-      @files = Array.new(file_count)
+      @files = []
       (file_count).times { |i|
-        @files[i] = File.new(@_io, self, @_root)
+        @files << File.new(@_io, self, @_root)
       }
       self
     end

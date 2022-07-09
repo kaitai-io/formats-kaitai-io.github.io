@@ -8,7 +8,7 @@
   } else {
     root.DimeMessage = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Direct Internet Message Encapsulation (DIME)
  * is an old Microsoft specification for sending and receiving

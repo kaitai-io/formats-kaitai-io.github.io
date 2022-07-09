@@ -189,7 +189,7 @@ public class Sqlite3 extends KaitaiStruct {
             if ( ((pageType() == 2) || (pageType() == 5)) ) {
                 this.rightPtr = this._io.readU4be();
             }
-            cells = new ArrayList<RefCell>(((Number) (numCells())).intValue());
+            this.cells = new ArrayList<RefCell>();
             for (int i = 0; i < numCells(); i++) {
                 this.cells.add(new RefCell(this._io, this, _root));
             }
@@ -360,7 +360,7 @@ public class Sqlite3 extends KaitaiStruct {
             this._raw_columnSerials = this._io.readBytes((lenHeaderAndLen().value() - 1));
             KaitaiStream _io__raw_columnSerials = new ByteBufferKaitaiStream(_raw_columnSerials);
             this.columnSerials = new Serials(_io__raw_columnSerials, this, _root);
-            columnContents = new ArrayList<ColumnContent>(((Number) (columnSerials().entries().size())).intValue());
+            this.columnContents = new ArrayList<ColumnContent>();
             for (int i = 0; i < columnSerials().entries().size(); i++) {
                 this.columnContents.add(new ColumnContent(this._io, this, _root, columnSerials().entries().get((int) i)));
             }

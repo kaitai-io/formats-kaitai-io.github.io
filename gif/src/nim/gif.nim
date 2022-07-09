@@ -33,8 +33,10 @@ type
     `bgColorIndex`*: uint8
     `pixelAspectRatio`*: uint8
     `parent`*: Gif
-    `hasColorTableInst`*: bool
-    `colorTableSizeInst`*: int
+    `hasColorTableInst`: bool
+    `hasColorTableInstFlag`: bool
+    `colorTableSizeInst`: int
+    `colorTableSizeInstFlag`: bool
   Gif_LocalImageDescriptor* = ref object of KaitaiStruct
     `left`*: uint16
     `top`*: uint16
@@ -45,10 +47,14 @@ type
     `imageData`*: Gif_ImageData
     `parent`*: Gif_Block
     `rawLocalColorTable`*: seq[byte]
-    `hasColorTableInst`*: bool
-    `hasInterlaceInst`*: bool
-    `hasSortedColorTableInst`*: bool
-    `colorTableSizeInst`*: int
+    `hasColorTableInst`: bool
+    `hasColorTableInstFlag`: bool
+    `hasInterlaceInst`: bool
+    `hasInterlaceInstFlag`: bool
+    `hasSortedColorTableInst`: bool
+    `hasSortedColorTableInstFlag`: bool
+    `colorTableSizeInst`: int
+    `colorTableSizeInstFlag`: bool
   Gif_Block* = ref object of KaitaiStruct
     `blockType`*: Gif_BlockType
     `body`*: KaitaiStruct
@@ -67,8 +73,10 @@ type
     `transparentIdx`*: uint8
     `terminator`*: seq[byte]
     `parent`*: Gif_Extension
-    `transparentColorFlagInst`*: bool
-    `userInputFlagInst`*: bool
+    `transparentColorFlagInst`: bool
+    `transparentColorFlagInstFlag`: bool
+    `userInputFlagInst`: bool
+    `userInputFlagInstFlag`: bool
   Gif_Subblock* = ref object of KaitaiStruct
     `lenBytes`*: uint8
     `bytes`*: seq[byte]
@@ -231,20 +239,20 @@ proc read*(_: typedesc[Gif_LogicalScreenDescriptorStruct], io: KaitaiStream, roo
   this.pixelAspectRatio = pixelAspectRatioExpr
 
 proc hasColorTable(this: Gif_LogicalScreenDescriptorStruct): bool = 
-  if this.hasColorTableInst != nil:
+  if this.hasColorTableInstFlag:
     return this.hasColorTableInst
   let hasColorTableInstExpr = bool((this.flags and 128) != 0)
   this.hasColorTableInst = hasColorTableInstExpr
-  if this.hasColorTableInst != nil:
-    return this.hasColorTableInst
+  this.hasColorTableInstFlag = true
+  return this.hasColorTableInst
 
 proc colorTableSize(this: Gif_LogicalScreenDescriptorStruct): int = 
-  if this.colorTableSizeInst != nil:
+  if this.colorTableSizeInstFlag:
     return this.colorTableSizeInst
   let colorTableSizeInstExpr = int((2 shl (this.flags and 7)))
   this.colorTableSizeInst = colorTableSizeInstExpr
-  if this.colorTableSizeInst != nil:
-    return this.colorTableSizeInst
+  this.colorTableSizeInstFlag = true
+  return this.colorTableSizeInst
 
 proc fromFile*(_: typedesc[Gif_LogicalScreenDescriptorStruct], filename: string): Gif_LogicalScreenDescriptorStruct =
   Gif_LogicalScreenDescriptorStruct.read(newKaitaiFileStream(filename), nil, nil)
@@ -277,36 +285,36 @@ proc read*(_: typedesc[Gif_LocalImageDescriptor], io: KaitaiStream, root: Kaitai
   this.imageData = imageDataExpr
 
 proc hasColorTable(this: Gif_LocalImageDescriptor): bool = 
-  if this.hasColorTableInst != nil:
+  if this.hasColorTableInstFlag:
     return this.hasColorTableInst
   let hasColorTableInstExpr = bool((this.flags and 128) != 0)
   this.hasColorTableInst = hasColorTableInstExpr
-  if this.hasColorTableInst != nil:
-    return this.hasColorTableInst
+  this.hasColorTableInstFlag = true
+  return this.hasColorTableInst
 
 proc hasInterlace(this: Gif_LocalImageDescriptor): bool = 
-  if this.hasInterlaceInst != nil:
+  if this.hasInterlaceInstFlag:
     return this.hasInterlaceInst
   let hasInterlaceInstExpr = bool((this.flags and 64) != 0)
   this.hasInterlaceInst = hasInterlaceInstExpr
-  if this.hasInterlaceInst != nil:
-    return this.hasInterlaceInst
+  this.hasInterlaceInstFlag = true
+  return this.hasInterlaceInst
 
 proc hasSortedColorTable(this: Gif_LocalImageDescriptor): bool = 
-  if this.hasSortedColorTableInst != nil:
+  if this.hasSortedColorTableInstFlag:
     return this.hasSortedColorTableInst
   let hasSortedColorTableInstExpr = bool((this.flags and 32) != 0)
   this.hasSortedColorTableInst = hasSortedColorTableInstExpr
-  if this.hasSortedColorTableInst != nil:
-    return this.hasSortedColorTableInst
+  this.hasSortedColorTableInstFlag = true
+  return this.hasSortedColorTableInst
 
 proc colorTableSize(this: Gif_LocalImageDescriptor): int = 
-  if this.colorTableSizeInst != nil:
+  if this.colorTableSizeInstFlag:
     return this.colorTableSizeInst
   let colorTableSizeInstExpr = int((2 shl (this.flags and 7)))
   this.colorTableSizeInst = colorTableSizeInstExpr
-  if this.colorTableSizeInst != nil:
-    return this.colorTableSizeInst
+  this.colorTableSizeInstFlag = true
+  return this.colorTableSizeInst
 
 proc fromFile*(_: typedesc[Gif_LocalImageDescriptor], filename: string): Gif_LocalImageDescriptor =
   Gif_LocalImageDescriptor.read(newKaitaiFileStream(filename), nil, nil)
@@ -399,20 +407,20 @@ proc read*(_: typedesc[Gif_ExtGraphicControl], io: KaitaiStream, root: KaitaiStr
   this.terminator = terminatorExpr
 
 proc transparentColorFlag(this: Gif_ExtGraphicControl): bool = 
-  if this.transparentColorFlagInst != nil:
+  if this.transparentColorFlagInstFlag:
     return this.transparentColorFlagInst
   let transparentColorFlagInstExpr = bool((this.flags and 1) != 0)
   this.transparentColorFlagInst = transparentColorFlagInstExpr
-  if this.transparentColorFlagInst != nil:
-    return this.transparentColorFlagInst
+  this.transparentColorFlagInstFlag = true
+  return this.transparentColorFlagInst
 
 proc userInputFlag(this: Gif_ExtGraphicControl): bool = 
-  if this.userInputFlagInst != nil:
+  if this.userInputFlagInstFlag:
     return this.userInputFlagInst
   let userInputFlagInstExpr = bool((this.flags and 2) != 0)
   this.userInputFlagInst = userInputFlagInstExpr
-  if this.userInputFlagInst != nil:
-    return this.userInputFlagInst
+  this.userInputFlagInstFlag = true
+  return this.userInputFlagInst
 
 proc fromFile*(_: typedesc[Gif_ExtGraphicControl], filename: string): Gif_ExtGraphicControl =
   Gif_ExtGraphicControl.read(newKaitaiFileStream(filename), nil, nil)

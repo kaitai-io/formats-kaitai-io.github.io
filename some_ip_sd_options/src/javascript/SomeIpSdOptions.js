@@ -8,7 +8,7 @@
   } else {
     root.SomeIpSdOptions = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * FormatOptions are used to transport additional information to the entries.
  * This includes forinstance the information how a service instance is

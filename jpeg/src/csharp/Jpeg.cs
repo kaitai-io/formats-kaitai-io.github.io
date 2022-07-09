@@ -186,7 +186,7 @@ namespace Kaitai
             private void _read()
             {
                 _numComponents = m_io.ReadU1();
-                _components = new List<Component>((int) (NumComponents));
+                _components = new List<Component>();
                 for (var i = 0; i < NumComponents; i++)
                 {
                     _components.Add(new Component(m_io, this, m_root));
@@ -312,7 +312,7 @@ namespace Kaitai
                 _imageHeight = m_io.ReadU2be();
                 _imageWidth = m_io.ReadU2be();
                 _numComponents = m_io.ReadU1();
-                _components = new List<Component>((int) (NumComponents));
+                _components = new List<Component>();
                 for (var i = 0; i < NumComponents; i++)
                 {
                     _components.Add(new Component(m_io, this, m_root));

@@ -74,13 +74,13 @@ namespace Kaitai
             {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfPoints = m_io.ReadS4le();
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
-                _mValues = new List<double>((int) (NumberOfPoints));
+                _mValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _mValues.Add(m_io.ReadF8le());
@@ -179,12 +179,12 @@ namespace Kaitai
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
-                _parts = new List<int>((int) (NumberOfParts));
+                _parts = new List<int>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _parts.Add(m_io.ReadS4le());
                 }
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
@@ -250,12 +250,12 @@ namespace Kaitai
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
-                _parts = new List<int>((int) (NumberOfParts));
+                _parts = new List<int>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _parts.Add(m_io.ReadS4le());
                 }
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
@@ -293,19 +293,19 @@ namespace Kaitai
             {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfPoints = m_io.ReadS4le();
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
-                _zValues = new List<double>((int) (NumberOfPoints));
+                _zValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
-                _mValues = new List<double>((int) (NumberOfPoints));
+                _mValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _mValues.Add(m_io.ReadF8le());
@@ -348,24 +348,24 @@ namespace Kaitai
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
-                _parts = new List<int>((int) (NumberOfParts));
+                _parts = new List<int>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _parts.Add(m_io.ReadS4le());
                 }
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
-                _zValues = new List<double>((int) (NumberOfPoints));
+                _zValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
-                _mValues = new List<double>((int) (NumberOfPoints));
+                _mValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _mValues.Add(m_io.ReadF8le());
@@ -412,24 +412,24 @@ namespace Kaitai
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
-                _parts = new List<int>((int) (NumberOfParts));
+                _parts = new List<int>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _parts.Add(m_io.ReadS4le());
                 }
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
-                _zValues = new List<double>((int) (NumberOfPoints));
+                _zValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
-                _mValues = new List<double>((int) (NumberOfPoints));
+                _mValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _mValues.Add(m_io.ReadF8le());
@@ -533,18 +533,18 @@ namespace Kaitai
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
-                _parts = new List<int>((int) (NumberOfParts));
+                _parts = new List<int>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _parts.Add(m_io.ReadS4le());
                 }
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
-                _mValues = new List<double>((int) (NumberOfPoints));
+                _mValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _mValues.Add(m_io.ReadF8le());
@@ -613,7 +613,7 @@ namespace Kaitai
             {
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfPoints = m_io.ReadS4le();
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
@@ -881,29 +881,29 @@ namespace Kaitai
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
-                _parts = new List<int>((int) (NumberOfParts));
+                _parts = new List<int>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _parts.Add(m_io.ReadS4le());
                 }
-                _partTypes = new List<PartType>((int) (NumberOfParts));
+                _partTypes = new List<PartType>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _partTypes.Add(((ShapefileMain.PartType) m_io.ReadS4le()));
                 }
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _zRange = new BoundsMinMax(m_io, this, m_root);
-                _zValues = new List<double>((int) (NumberOfPoints));
+                _zValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _zValues.Add(m_io.ReadF8le());
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
-                _mValues = new List<double>((int) (NumberOfPoints));
+                _mValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _mValues.Add(m_io.ReadF8le());
@@ -952,18 +952,18 @@ namespace Kaitai
                 _boundingBox = new BoundingBoxXY(m_io, this, m_root);
                 _numberOfParts = m_io.ReadS4le();
                 _numberOfPoints = m_io.ReadS4le();
-                _parts = new List<int>((int) (NumberOfParts));
+                _parts = new List<int>();
                 for (var i = 0; i < NumberOfParts; i++)
                 {
                     _parts.Add(m_io.ReadS4le());
                 }
-                _points = new List<Point>((int) (NumberOfPoints));
+                _points = new List<Point>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _points.Add(new Point(m_io, this, m_root));
                 }
                 _mRange = new BoundsMinMax(m_io, this, m_root);
-                _mValues = new List<double>((int) (NumberOfPoints));
+                _mValues = new List<double>();
                 for (var i = 0; i < NumberOfPoints; i++)
                 {
                     _mValues.Add(m_io.ReadF8le());

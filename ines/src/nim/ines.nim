@@ -26,7 +26,8 @@ type
     `rawF7`*: seq[byte]
     `rawF9`*: seq[byte]
     `rawF10`*: seq[byte]
-    `mapperInst`*: int
+    `mapperInst`: int
+    `mapperInstFlag`: bool
   Ines_Header_F6* = ref object of KaitaiStruct
     `lowerMapper`*: uint64
     `fourScreen`*: bool
@@ -176,12 +177,12 @@ proc mapper(this: Ines_Header): int =
   ##[
   @see <a href="https://wiki.nesdev.com/w/index.php/Mapper">Source</a>
   ]##
-  if this.mapperInst != nil:
+  if this.mapperInstFlag:
     return this.mapperInst
   let mapperInstExpr = int((this.f6.lowerMapper or (this.f7.upperMapper shl 4)))
   this.mapperInst = mapperInstExpr
-  if this.mapperInst != nil:
-    return this.mapperInst
+  this.mapperInstFlag = true
+  return this.mapperInst
 
 proc fromFile*(_: typedesc[Ines_Header], filename: string): Ines_Header =
   Ines_Header.read(newKaitaiFileStream(filename), nil, nil)

@@ -271,7 +271,8 @@ type
     `secondOctet`*: uint8
     `scalar`*: uint32
     `parent`*: OpenpgpMessage_Subpacket
-    `lenInst`*: int
+    `lenInst`: int
+    `lenInstFlag`: bool
   OpenpgpMessage_NotationData* = ref object of KaitaiStruct
     `flags`*: seq[byte]
     `lenName`*: uint16
@@ -982,12 +983,12 @@ proc read*(_: typedesc[OpenpgpMessage_LenSubpacket], io: KaitaiStream, root: Kai
     this.scalar = scalarExpr
 
 proc len(this: OpenpgpMessage_LenSubpacket): int = 
-  if this.lenInst != nil:
+  if this.lenInstFlag:
     return this.lenInst
   let lenInstExpr = int((if this.firstOctet < 192: this.firstOctet else: (if  ((this.firstOctet >= 192) and (this.firstOctet < 255)) : ((((this.firstOctet - 192) shl 8) + this.secondOctet) + 192) else: this.scalar)))
   this.lenInst = lenInstExpr
-  if this.lenInst != nil:
-    return this.lenInst
+  this.lenInstFlag = true
+  return this.lenInst
 
 proc fromFile*(_: typedesc[OpenpgpMessage_LenSubpacket], filename: string): OpenpgpMessage_LenSubpacket =
   OpenpgpMessage_LenSubpacket.read(newKaitaiFileStream(filename), nil, nil)

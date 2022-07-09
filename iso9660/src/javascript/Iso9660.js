@@ -8,7 +8,7 @@
   } else {
     root.Iso9660 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * ISO9660 is standard filesystem used on read-only optical discs
  * (mostly CD-ROM). The standard was based on earlier High Sierra
@@ -217,7 +217,7 @@ var Iso9660 = (function() {
       this._read();
     }
     DirEntries.prototype._read = function() {
-      this.entries = []
+      this.entries = [];
       var i = 0;
       do {
         var _ = new DirEntry(this._io, this, this._root);

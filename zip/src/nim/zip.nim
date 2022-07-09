@@ -128,7 +128,8 @@ type
     `parent`*: Zip_PkSection
     `rawFileModTime`*: seq[byte]
     `rawExtra`*: seq[byte]
-    `localHeaderInst`*: Zip_PkSection
+    `localHeaderInst`: Zip_PkSection
+    `localHeaderInstFlag`: bool
   Zip_PkSection* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `sectionType`*: uint16
@@ -166,10 +167,14 @@ type
     `maskHeaderValues`*: bool
     `reserved4`*: uint64
     `parent`*: Zip_LocalFileHeader
-    `deflatedModeInst`*: Zip_LocalFileHeader_GpFlags_DeflateMode
-    `implodedDictByteSizeInst`*: int
-    `implodedNumSfTreesInst`*: int8
-    `lzmaHasEosMarkerInst`*: bool
+    `deflatedModeInst`: Zip_LocalFileHeader_GpFlags_DeflateMode
+    `deflatedModeInstFlag`: bool
+    `implodedDictByteSizeInst`: int
+    `implodedDictByteSizeInstFlag`: bool
+    `implodedNumSfTreesInst`: int8
+    `implodedNumSfTreesInstFlag`: bool
+    `lzmaHasEosMarkerInst`: bool
+    `lzmaHasEosMarkerInstFlag`: bool
   Zip_LocalFileHeader_GpFlags_DeflateMode* = enum
     normal = 0
     maximum = 1
@@ -549,15 +554,15 @@ proc read*(_: typedesc[Zip_CentralDirEntry], io: KaitaiStream, root: KaitaiStruc
   this.comment = commentExpr
 
 proc localHeader(this: Zip_CentralDirEntry): Zip_PkSection = 
-  if this.localHeaderInst != nil:
+  if this.localHeaderInstFlag:
     return this.localHeaderInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsLocalHeader))
   let localHeaderInstExpr = Zip_PkSection.read(this.io, this.root, this)
   this.localHeaderInst = localHeaderInstExpr
   this.io.seek(pos)
-  if this.localHeaderInst != nil:
-    return this.localHeaderInst
+  this.localHeaderInstFlag = true
+  return this.localHeaderInst
 
 proc fromFile*(_: typedesc[Zip_CentralDirEntry], filename: string): Zip_CentralDirEntry =
   Zip_CentralDirEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -694,44 +699,44 @@ proc read*(_: typedesc[Zip_LocalFileHeader_GpFlags], io: KaitaiStream, root: Kai
   this.reserved4 = reserved4Expr
 
 proc deflatedMode(this: Zip_LocalFileHeader_GpFlags): Zip_LocalFileHeader_GpFlags_DeflateMode = 
-  if this.deflatedModeInst != nil:
+  if this.deflatedModeInstFlag:
     return this.deflatedModeInst
   if  ((this.parent.compressionMethod == zip.deflated) or (this.parent.compressionMethod == zip.enhanced_deflated)) :
     let deflatedModeInstExpr = Zip_LocalFileHeader_GpFlags_DeflateMode(Zip_LocalFileHeader_GpFlags_DeflateMode(this.compOptionsRaw))
     this.deflatedModeInst = deflatedModeInstExpr
-  if this.deflatedModeInst != nil:
-    return this.deflatedModeInst
+  this.deflatedModeInstFlag = true
+  return this.deflatedModeInst
 
 proc implodedDictByteSize(this: Zip_LocalFileHeader_GpFlags): int = 
 
   ##[
   8KiB or 4KiB in bytes
   ]##
-  if this.implodedDictByteSizeInst != nil:
+  if this.implodedDictByteSizeInstFlag:
     return this.implodedDictByteSizeInst
   if this.parent.compressionMethod == zip.imploded:
     let implodedDictByteSizeInstExpr = int(((if (this.compOptionsRaw and 1) != 0: 8 else: 4) * 1024))
     this.implodedDictByteSizeInst = implodedDictByteSizeInstExpr
-  if this.implodedDictByteSizeInst != nil:
-    return this.implodedDictByteSizeInst
+  this.implodedDictByteSizeInstFlag = true
+  return this.implodedDictByteSizeInst
 
 proc implodedNumSfTrees(this: Zip_LocalFileHeader_GpFlags): int8 = 
-  if this.implodedNumSfTreesInst != nil:
+  if this.implodedNumSfTreesInstFlag:
     return this.implodedNumSfTreesInst
   if this.parent.compressionMethod == zip.imploded:
     let implodedNumSfTreesInstExpr = int8((if (this.compOptionsRaw and 2) != 0: 3 else: 2))
     this.implodedNumSfTreesInst = implodedNumSfTreesInstExpr
-  if this.implodedNumSfTreesInst != nil:
-    return this.implodedNumSfTreesInst
+  this.implodedNumSfTreesInstFlag = true
+  return this.implodedNumSfTreesInst
 
 proc lzmaHasEosMarker(this: Zip_LocalFileHeader_GpFlags): bool = 
-  if this.lzmaHasEosMarkerInst != nil:
+  if this.lzmaHasEosMarkerInstFlag:
     return this.lzmaHasEosMarkerInst
   if this.parent.compressionMethod == zip.lzma:
     let lzmaHasEosMarkerInstExpr = bool((this.compOptionsRaw and 1) != 0)
     this.lzmaHasEosMarkerInst = lzmaHasEosMarkerInstExpr
-  if this.lzmaHasEosMarkerInst != nil:
-    return this.lzmaHasEosMarkerInst
+  this.lzmaHasEosMarkerInstFlag = true
+  return this.lzmaHasEosMarkerInst
 
 proc fromFile*(_: typedesc[Zip_LocalFileHeader_GpFlags], filename: string): Zip_LocalFileHeader_GpFlags =
   Zip_LocalFileHeader_GpFlags.read(newKaitaiFileStream(filename), nil, nil)

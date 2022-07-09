@@ -61,26 +61,20 @@ void android_super_t::root_t::_read() {
     m__raw_backup_geometry = m__io->read_bytes(4096);
     m__io__raw_backup_geometry = new kaitai::kstream(m__raw_backup_geometry);
     m_backup_geometry = new geometry_t(m__io__raw_backup_geometry, this, m__root);
-    int l_primary_metadata = primary_geometry()->metadata_slot_count();
     m__raw_primary_metadata = new std::vector<std::string>();
-    m__raw_primary_metadata->reserve(l_primary_metadata);
     m__io__raw_primary_metadata = new std::vector<kaitai::kstream*>();
-    m__io__raw_primary_metadata->reserve(l_primary_metadata);
     m_primary_metadata = new std::vector<metadata_t*>();
-    m_primary_metadata->reserve(l_primary_metadata);
+    const int l_primary_metadata = primary_geometry()->metadata_slot_count();
     for (int i = 0; i < l_primary_metadata; i++) {
         m__raw_primary_metadata->push_back(m__io->read_bytes(primary_geometry()->metadata_max_size()));
         kaitai::kstream* io__raw_primary_metadata = new kaitai::kstream(m__raw_primary_metadata->at(m__raw_primary_metadata->size() - 1));
         m__io__raw_primary_metadata->push_back(io__raw_primary_metadata);
         m_primary_metadata->push_back(new metadata_t(io__raw_primary_metadata, this, m__root));
     }
-    int l_backup_metadata = primary_geometry()->metadata_slot_count();
     m__raw_backup_metadata = new std::vector<std::string>();
-    m__raw_backup_metadata->reserve(l_backup_metadata);
     m__io__raw_backup_metadata = new std::vector<kaitai::kstream*>();
-    m__io__raw_backup_metadata->reserve(l_backup_metadata);
     m_backup_metadata = new std::vector<metadata_t*>();
-    m_backup_metadata->reserve(l_backup_metadata);
+    const int l_backup_metadata = primary_geometry()->metadata_slot_count();
     for (int i = 0; i < l_backup_metadata; i++) {
         m__raw_backup_metadata->push_back(m__io->read_bytes(primary_geometry()->metadata_max_size()));
         kaitai::kstream* io__raw_backup_metadata = new kaitai::kstream(m__raw_backup_metadata->at(m__raw_backup_metadata->size() - 1));
@@ -328,13 +322,10 @@ std::vector<kaitai::kstruct*>* android_super_t::metadata_t::table_descriptor_t::
         return m_table;
     std::streampos _pos = m__io->pos();
     m__io->seek((_parent()->header_size() + offset()));
-    int l_table = num_entries();
     m__raw_table = new std::vector<std::string>();
-    m__raw_table->reserve(l_table);
     m__io__raw_table = new std::vector<kaitai::kstream*>();
-    m__io__raw_table->reserve(l_table);
     m_table = new std::vector<kaitai::kstruct*>();
-    m_table->reserve(l_table);
+    const int l_table = num_entries();
     for (int i = 0; i < l_table; i++) {
         switch (kind()) {
         case android_super_t::metadata_t::TABLE_KIND_PARTITIONS: {

@@ -58,8 +58,8 @@ namespace Kaitai
             __raw_hdr = m_io.ReadBytes((LenHeader - 4));
             var io___raw_hdr = new KaitaiStream(__raw_hdr);
             _hdr = new Header(io___raw_hdr, this, m_root);
-            __raw_colorMap = new List<byte[]>((int) (Hdr.ColorMapEntries));
-            _colorMap = new List<ColorMapEntry>((int) (Hdr.ColorMapEntries));
+            __raw_colorMap = new List<byte[]>();
+            _colorMap = new List<ColorMapEntry>();
             for (var i = 0; i < Hdr.ColorMapEntries; i++)
             {
                 __raw_colorMap.Add(m_io.ReadBytes(12));

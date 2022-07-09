@@ -91,9 +91,9 @@ sub _read {
         $self->{signatures} = ();
         my $n_signatures = int((($self->len_signature_list() - $self->len_signature_header()) - 28) / $self->len_signature());
         for (my $i = 0; $i < $n_signatures; $i++) {
-            $self->{_raw_signatures}[$i] = $self->{_io}->read_bytes($self->len_signature());
+            push @{$self->{_raw_signatures}}, $self->{_io}->read_bytes($self->len_signature());
             my $io__raw_signatures = IO::KaitaiStruct::Stream->new($self->{_raw_signatures}[$i]);
-            $self->{signatures}[$i] = EfivarSignatureList::SignatureData->new($io__raw_signatures, $self, $self->{_root});
+            push @{$self->{signatures}}, EfivarSignatureList::SignatureData->new($io__raw_signatures, $self, $self->{_root});
         }
     }
 }

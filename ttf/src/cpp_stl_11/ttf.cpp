@@ -14,9 +14,8 @@ ttf_t::ttf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ttf_t* p__root)
 
 void ttf_t::_read() {
     m_offset_table = std::unique_ptr<offset_table_t>(new offset_table_t(m__io, this, m__root));
-    int l_directory_table = offset_table()->num_tables();
     m_directory_table = std::unique_ptr<std::vector<std::unique_ptr<dir_table_entry_t>>>(new std::vector<std::unique_ptr<dir_table_entry_t>>());
-    m_directory_table->reserve(l_directory_table);
+    const int l_directory_table = offset_table()->num_tables();
     for (int i = 0; i < l_directory_table; i++) {
         m_directory_table->push_back(std::move(std::unique_ptr<dir_table_entry_t>(new dir_table_entry_t(m__io, this, m__root))));
     }
@@ -74,9 +73,8 @@ ttf_t::post_t::format20_t::format20_t(kaitai::kstream* p__io, ttf_t::post_t* p__
 
 void ttf_t::post_t::format20_t::_read() {
     m_number_of_glyphs = m__io->read_u2be();
-    int l_glyph_name_index = number_of_glyphs();
     m_glyph_name_index = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_glyph_name_index->reserve(l_glyph_name_index);
+    const int l_glyph_name_index = number_of_glyphs();
     for (int i = 0; i < l_glyph_name_index; i++) {
         m_glyph_name_index->push_back(std::move(m__io->read_u2be()));
     }
@@ -134,9 +132,8 @@ void ttf_t::name_t::_read() {
     m_format_selector = m__io->read_u2be();
     m_num_name_records = m__io->read_u2be();
     m_ofs_strings = m__io->read_u2be();
-    int l_name_records = num_name_records();
     m_name_records = std::unique_ptr<std::vector<std::unique_ptr<name_record_t>>>(new std::vector<std::unique_ptr<name_record_t>>());
-    m_name_records->reserve(l_name_records);
+    const int l_name_records = num_name_records();
     for (int i = 0; i < l_name_records; i++) {
         m_name_records->push_back(std::move(std::unique_ptr<name_record_t>(new name_record_t(m__io, this, m__root))));
     }
@@ -316,9 +313,8 @@ ttf_t::kern_t::kern_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__paren
 void ttf_t::kern_t::_read() {
     m_version = m__io->read_u2be();
     m_subtable_count = m__io->read_u2be();
-    int l_subtables = subtable_count();
     m_subtables = std::unique_ptr<std::vector<std::unique_ptr<subtable_t>>>(new std::vector<std::unique_ptr<subtable_t>>());
-    m_subtables->reserve(l_subtables);
+    const int l_subtables = subtable_count();
     for (int i = 0; i < l_subtables; i++) {
         m_subtables->push_back(std::move(std::unique_ptr<subtable_t>(new subtable_t(m__io, this, m__root))));
     }
@@ -376,9 +372,8 @@ void ttf_t::kern_t::subtable_t::format0_t::_read() {
     m_search_range = m__io->read_u2be();
     m_entry_selector = m__io->read_u2be();
     m_range_shift = m__io->read_u2be();
-    int l_kerning_pairs = pair_count();
     m_kerning_pairs = std::unique_ptr<std::vector<std::unique_ptr<kerning_pair_t>>>(new std::vector<std::unique_ptr<kerning_pair_t>>());
-    m_kerning_pairs->reserve(l_kerning_pairs);
+    const int l_kerning_pairs = pair_count();
     for (int i = 0; i < l_kerning_pairs; i++) {
         m_kerning_pairs->push_back(std::move(std::unique_ptr<kerning_pair_t>(new kerning_pair_t(m__io, this, m__root))));
     }
@@ -794,17 +789,15 @@ ttf_t::glyf_t::simple_glyph_t::simple_glyph_t(kaitai::kstream* p__io, ttf_t::gly
 }
 
 void ttf_t::glyf_t::simple_glyph_t::_read() {
-    int l_end_pts_of_contours = _parent()->number_of_contours();
     m_end_pts_of_contours = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_end_pts_of_contours->reserve(l_end_pts_of_contours);
+    const int l_end_pts_of_contours = _parent()->number_of_contours();
     for (int i = 0; i < l_end_pts_of_contours; i++) {
         m_end_pts_of_contours->push_back(std::move(m__io->read_u2be()));
     }
     m_instruction_length = m__io->read_u2be();
     m_instructions = m__io->read_bytes(instruction_length());
-    int l_flags = point_count();
     m_flags = std::unique_ptr<std::vector<std::unique_ptr<flag_t>>>(new std::vector<std::unique_ptr<flag_t>>());
-    m_flags->reserve(l_flags);
+    const int l_flags = point_count();
     for (int i = 0; i < l_flags; i++) {
         m_flags->push_back(std::move(std::unique_ptr<flag_t>(new flag_t(m__io, this, m__root))));
     }
@@ -978,9 +971,8 @@ ttf_t::cmap_t::cmap_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__paren
 void ttf_t::cmap_t::_read() {
     m_version_number = m__io->read_u2be();
     m_number_of_encoding_tables = m__io->read_u2be();
-    int l_tables = number_of_encoding_tables();
     m_tables = std::unique_ptr<std::vector<std::unique_ptr<subtable_header_t>>>(new std::vector<std::unique_ptr<subtable_header_t>>());
-    m_tables->reserve(l_tables);
+    const int l_tables = number_of_encoding_tables();
     for (int i = 0; i < l_tables; i++) {
         m_tables->push_back(std::move(std::unique_ptr<subtable_header_t>(new subtable_header_t(m__io, this, m__root))));
     }
@@ -1110,9 +1102,8 @@ ttf_t::cmap_t::subtable_t::high_byte_mapping_through_table_t::high_byte_mapping_
 }
 
 void ttf_t::cmap_t::subtable_t::high_byte_mapping_through_table_t::_read() {
-    int l_sub_header_keys = 256;
     m_sub_header_keys = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_sub_header_keys->reserve(l_sub_header_keys);
+    const int l_sub_header_keys = 256;
     for (int i = 0; i < l_sub_header_keys; i++) {
         m_sub_header_keys->push_back(std::move(m__io->read_u2be()));
     }
@@ -1142,28 +1133,24 @@ void ttf_t::cmap_t::subtable_t::segment_mapping_to_delta_values_t::_read() {
     m_search_range = m__io->read_u2be();
     m_entry_selector = m__io->read_u2be();
     m_range_shift = m__io->read_u2be();
-    int l_end_count = seg_count();
     m_end_count = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_end_count->reserve(l_end_count);
+    const int l_end_count = seg_count();
     for (int i = 0; i < l_end_count; i++) {
         m_end_count->push_back(std::move(m__io->read_u2be()));
     }
     m_reserved_pad = m__io->read_u2be();
-    int l_start_count = seg_count();
     m_start_count = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_start_count->reserve(l_start_count);
+    const int l_start_count = seg_count();
     for (int i = 0; i < l_start_count; i++) {
         m_start_count->push_back(std::move(m__io->read_u2be()));
     }
-    int l_id_delta = seg_count();
     m_id_delta = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_id_delta->reserve(l_id_delta);
+    const int l_id_delta = seg_count();
     for (int i = 0; i < l_id_delta; i++) {
         m_id_delta->push_back(std::move(m__io->read_u2be()));
     }
-    int l_id_range_offset = seg_count();
     m_id_range_offset = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_id_range_offset->reserve(l_id_range_offset);
+    const int l_id_range_offset = seg_count();
     for (int i = 0; i < l_id_range_offset; i++) {
         m_id_range_offset->push_back(std::move(m__io->read_u2be()));
     }
@@ -1202,9 +1189,8 @@ ttf_t::cmap_t::subtable_t::trimmed_table_mapping_t::trimmed_table_mapping_t(kait
 void ttf_t::cmap_t::subtable_t::trimmed_table_mapping_t::_read() {
     m_first_code = m__io->read_u2be();
     m_entry_count = m__io->read_u2be();
-    int l_glyph_id_array = entry_count();
     m_glyph_id_array = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_glyph_id_array->reserve(l_glyph_id_array);
+    const int l_glyph_id_array = entry_count();
     for (int i = 0; i < l_glyph_id_array; i++) {
         m_glyph_id_array->push_back(std::move(m__io->read_u2be()));
     }

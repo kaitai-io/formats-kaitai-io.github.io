@@ -25,9 +25,8 @@ void java_class_t::_read() {
         throw kaitai::validation_less_than_error<uint16_t>(43, version_major(), _io(), std::string("/seq/2"));
     }
     m_constant_pool_count = m__io->read_u2be();
-    int l_constant_pool = (constant_pool_count() - 1);
     m_constant_pool = std::unique_ptr<std::vector<std::unique_ptr<constant_pool_entry_t>>>(new std::vector<std::unique_ptr<constant_pool_entry_t>>());
-    m_constant_pool->reserve(l_constant_pool);
+    const int l_constant_pool = (constant_pool_count() - 1);
     for (int i = 0; i < l_constant_pool; i++) {
         m_constant_pool->push_back(std::move(std::unique_ptr<constant_pool_entry_t>(new constant_pool_entry_t(((i != 0) ? (constant_pool()->at((i - 1))->is_two_entries()) : (false)), m__io, this, m__root))));
     }
@@ -35,30 +34,26 @@ void java_class_t::_read() {
     m_this_class = m__io->read_u2be();
     m_super_class = m__io->read_u2be();
     m_interfaces_count = m__io->read_u2be();
-    int l_interfaces = interfaces_count();
     m_interfaces = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
-    m_interfaces->reserve(l_interfaces);
+    const int l_interfaces = interfaces_count();
     for (int i = 0; i < l_interfaces; i++) {
         m_interfaces->push_back(std::move(m__io->read_u2be()));
     }
     m_fields_count = m__io->read_u2be();
-    int l_fields = fields_count();
     m_fields = std::unique_ptr<std::vector<std::unique_ptr<field_info_t>>>(new std::vector<std::unique_ptr<field_info_t>>());
-    m_fields->reserve(l_fields);
+    const int l_fields = fields_count();
     for (int i = 0; i < l_fields; i++) {
         m_fields->push_back(std::move(std::unique_ptr<field_info_t>(new field_info_t(m__io, this, m__root))));
     }
     m_methods_count = m__io->read_u2be();
-    int l_methods = methods_count();
     m_methods = std::unique_ptr<std::vector<std::unique_ptr<method_info_t>>>(new std::vector<std::unique_ptr<method_info_t>>());
-    m_methods->reserve(l_methods);
+    const int l_methods = methods_count();
     for (int i = 0; i < l_methods; i++) {
         m_methods->push_back(std::move(std::unique_ptr<method_info_t>(new method_info_t(m__io, this, m__root))));
     }
     m_attributes_count = m__io->read_u2be();
-    int l_attributes = attributes_count();
     m_attributes = std::unique_ptr<std::vector<std::unique_ptr<attribute_info_t>>>(new std::vector<std::unique_ptr<attribute_info_t>>());
-    m_attributes->reserve(l_attributes);
+    const int l_attributes = attributes_count();
     for (int i = 0; i < l_attributes; i++) {
         m_attributes->push_back(std::move(std::unique_ptr<attribute_info_t>(new attribute_info_t(m__io, this, m__root))));
     }
@@ -155,16 +150,14 @@ void java_class_t::attribute_info_t::attr_body_code_t::_read() {
     m_code_length = m__io->read_u4be();
     m_code = m__io->read_bytes(code_length());
     m_exception_table_length = m__io->read_u2be();
-    int l_exception_table = exception_table_length();
     m_exception_table = std::unique_ptr<std::vector<std::unique_ptr<exception_entry_t>>>(new std::vector<std::unique_ptr<exception_entry_t>>());
-    m_exception_table->reserve(l_exception_table);
+    const int l_exception_table = exception_table_length();
     for (int i = 0; i < l_exception_table; i++) {
         m_exception_table->push_back(std::move(std::unique_ptr<exception_entry_t>(new exception_entry_t(m__io, this, m__root))));
     }
     m_attributes_count = m__io->read_u2be();
-    int l_attributes = attributes_count();
     m_attributes = std::unique_ptr<std::vector<std::unique_ptr<attribute_info_t>>>(new std::vector<std::unique_ptr<attribute_info_t>>());
-    m_attributes->reserve(l_attributes);
+    const int l_attributes = attributes_count();
     for (int i = 0; i < l_attributes; i++) {
         m_attributes->push_back(std::move(std::unique_ptr<attribute_info_t>(new attribute_info_t(m__io, this, m__root))));
     }
@@ -219,9 +212,8 @@ java_class_t::attribute_info_t::attr_body_exceptions_t::attr_body_exceptions_t(k
 
 void java_class_t::attribute_info_t::attr_body_exceptions_t::_read() {
     m_number_of_exceptions = m__io->read_u2be();
-    int l_exceptions = number_of_exceptions();
     m_exceptions = std::unique_ptr<std::vector<std::unique_ptr<exception_table_entry_t>>>(new std::vector<std::unique_ptr<exception_table_entry_t>>());
-    m_exceptions->reserve(l_exceptions);
+    const int l_exceptions = number_of_exceptions();
     for (int i = 0; i < l_exceptions; i++) {
         m_exceptions->push_back(std::move(std::unique_ptr<exception_table_entry_t>(new exception_table_entry_t(m__io, this, m__root))));
     }
@@ -304,9 +296,8 @@ java_class_t::attribute_info_t::attr_body_line_number_table_t::attr_body_line_nu
 
 void java_class_t::attribute_info_t::attr_body_line_number_table_t::_read() {
     m_line_number_table_length = m__io->read_u2be();
-    int l_line_number_table = line_number_table_length();
     m_line_number_table = std::unique_ptr<std::vector<std::unique_ptr<line_number_table_entry_t>>>(new std::vector<std::unique_ptr<line_number_table_entry_t>>());
-    m_line_number_table->reserve(l_line_number_table);
+    const int l_line_number_table = line_number_table_length();
     for (int i = 0; i < l_line_number_table; i++) {
         m_line_number_table->push_back(std::move(std::unique_ptr<line_number_table_entry_t>(new line_number_table_entry_t(m__io, this, m__root))));
     }
@@ -394,9 +385,8 @@ void java_class_t::field_info_t::_read() {
     m_name_index = m__io->read_u2be();
     m_descriptor_index = m__io->read_u2be();
     m_attributes_count = m__io->read_u2be();
-    int l_attributes = attributes_count();
     m_attributes = std::unique_ptr<std::vector<std::unique_ptr<attribute_info_t>>>(new std::vector<std::unique_ptr<attribute_info_t>>());
-    m_attributes->reserve(l_attributes);
+    const int l_attributes = attributes_count();
     for (int i = 0; i < l_attributes; i++) {
         m_attributes->push_back(std::move(std::unique_ptr<attribute_info_t>(new attribute_info_t(m__io, this, m__root))));
     }
@@ -789,9 +779,8 @@ void java_class_t::method_info_t::_read() {
     m_name_index = m__io->read_u2be();
     m_descriptor_index = m__io->read_u2be();
     m_attributes_count = m__io->read_u2be();
-    int l_attributes = attributes_count();
     m_attributes = std::unique_ptr<std::vector<std::unique_ptr<attribute_info_t>>>(new std::vector<std::unique_ptr<attribute_info_t>>());
-    m_attributes->reserve(l_attributes);
+    const int l_attributes = attributes_count();
     for (int i = 0; i < l_attributes; i++) {
         m_attributes->push_back(std::move(std::unique_ptr<attribute_info_t>(new attribute_info_t(m__io, this, m__root))));
     }

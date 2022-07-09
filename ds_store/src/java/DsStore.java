@@ -121,16 +121,16 @@ public class DsStore extends KaitaiStruct {
         private void _read() {
             this.numBlocks = this._io.readU4be();
             this._unnamed1 = this._io.readBytes(4);
-            blockAddresses = new ArrayList<BlockDescriptor>(((Number) (numBlockAddresses())).intValue());
+            this.blockAddresses = new ArrayList<BlockDescriptor>();
             for (int i = 0; i < numBlockAddresses(); i++) {
                 this.blockAddresses.add(new BlockDescriptor(this._io, this, _root));
             }
             this.numDirectories = this._io.readU4be();
-            directoryEntries = new ArrayList<DirectoryEntry>(((Number) (numDirectories())).intValue());
+            this.directoryEntries = new ArrayList<DirectoryEntry>();
             for (int i = 0; i < numDirectories(); i++) {
                 this.directoryEntries.add(new DirectoryEntry(this._io, this, _root));
             }
-            freeLists = new ArrayList<FreeList>(((Number) (numFreeLists())).intValue());
+            this.freeLists = new ArrayList<FreeList>();
             for (int i = 0; i < numFreeLists(); i++) {
                 this.freeLists.add(new FreeList(this._io, this, _root));
             }
@@ -161,7 +161,7 @@ public class DsStore extends KaitaiStruct {
             public Integer offset() {
                 if (this.offset != null)
                     return this.offset;
-                int _tmp = (int) (((addressRaw() & ~(_root.blockAddressMask())) + 4));
+                int _tmp = (int) (((addressRaw() & ~(_root().blockAddressMask())) + 4));
                 this.offset = _tmp;
                 return this.offset;
             }
@@ -169,7 +169,7 @@ public class DsStore extends KaitaiStruct {
             public Integer size() {
                 if (this.size != null)
                     return this.size;
-                int _tmp = (int) (((1 << addressRaw()) & _root.blockAddressMask()));
+                int _tmp = (int) (((1 << addressRaw()) & _root().blockAddressMask()));
                 this.size = _tmp;
                 return this.size;
             }
@@ -236,7 +236,7 @@ public class DsStore extends KaitaiStruct {
             }
             private void _read() {
                 this.counter = this._io.readU4be();
-                offsets = new ArrayList<Long>(((Number) (counter())).intValue());
+                this.offsets = new ArrayList<Long>();
                 for (int i = 0; i < counter(); i++) {
                     this.offsets.add(this._io.readU4be());
                 }
@@ -274,8 +274,8 @@ public class DsStore extends KaitaiStruct {
         public ArrayList<MasterBlockRef> directories() {
             if (this.directories != null)
                 return this.directories;
-            KaitaiStream io = _root._io();
-            directories = new ArrayList<MasterBlockRef>(((Number) (numDirectories())).intValue());
+            KaitaiStream io = _root()._io();
+            this.directories = new ArrayList<MasterBlockRef>();
             for (int i = 0; i < numDirectories(); i++) {
                 this.directories.add(new MasterBlockRef(io, this, _root, i));
             }
@@ -367,9 +367,9 @@ public class DsStore extends KaitaiStruct {
             public Block rootBlock() {
                 if (this.rootBlock != null)
                     return this.rootBlock;
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek(_root.buddyAllocatorBody().blockAddresses().get((int) blockId()).offset());
+                io.seek(_root().buddyAllocatorBody().blockAddresses().get((int) blockId()).offset());
                 this.rootBlock = new Block(io, this, _root);
                 io.seek(_pos);
                 return this.rootBlock;
@@ -452,7 +452,7 @@ public class DsStore extends KaitaiStruct {
         private void _read() {
             this.mode = this._io.readU4be();
             this.counter = this._io.readU4be();
-            data = new ArrayList<BlockData>(((Number) (counter())).intValue());
+            this.data = new ArrayList<BlockData>();
             for (int i = 0; i < counter(); i++) {
                 this.data.add(new BlockData(this._io, this, _root, mode()));
             }
@@ -657,9 +657,9 @@ public class DsStore extends KaitaiStruct {
                 if (this.block != null)
                     return this.block;
                 if (mode() > 0) {
-                    KaitaiStream io = _root._io();
+                    KaitaiStream io = _root()._io();
                     long _pos = io.pos();
-                    io.seek(_root.buddyAllocatorBody().blockAddresses().get((int) blockId()).offset());
+                    io.seek(_root().buddyAllocatorBody().blockAddresses().get((int) blockId()).offset());
                     this.block = new Block(io, this, _root);
                     io.seek(_pos);
                 }
@@ -685,9 +685,9 @@ public class DsStore extends KaitaiStruct {
             if (this.rightmostBlock != null)
                 return this.rightmostBlock;
             if (mode() > 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek(_root.buddyAllocatorBody().blockAddresses().get((int) mode()).offset());
+                io.seek(_root().buddyAllocatorBody().blockAddresses().get((int) mode()).offset());
                 this.rightmostBlock = new Block(io, this, _root);
                 io.seek(_pos);
             }

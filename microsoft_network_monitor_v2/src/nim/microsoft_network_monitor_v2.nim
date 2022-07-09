@@ -26,7 +26,8 @@ type
     `conversationStatsLen`*: uint32
     `parent`*: KaitaiStruct
     `rawFrameTableInst`*: seq[byte]
-    `frameTableInst`*: MicrosoftNetworkMonitorV2_FrameIndex
+    `frameTableInst`: MicrosoftNetworkMonitorV2_FrameIndex
+    `frameTableInstFlag`: bool
   MicrosoftNetworkMonitorV2_Linktype* = enum
     null_linktype = 0
     ethernet = 1
@@ -138,7 +139,8 @@ type
   MicrosoftNetworkMonitorV2_FrameIndexEntry* = ref object of KaitaiStruct
     `ofs`*: uint32
     `parent`*: MicrosoftNetworkMonitorV2_FrameIndex
-    `bodyInst`*: MicrosoftNetworkMonitorV2_Frame
+    `bodyInst`: MicrosoftNetworkMonitorV2_Frame
+    `bodyInstFlag`: bool
   MicrosoftNetworkMonitorV2_Frame* = ref object of KaitaiStruct
     `tsDelta`*: uint64
     `origLen`*: uint32
@@ -232,7 +234,7 @@ proc frameTable(this: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_Fram
   ##[
   Index that is used to access individual captured frames
   ]##
-  if this.frameTableInst != nil:
+  if this.frameTableInstFlag:
     return this.frameTableInst
   let pos = this.io.pos()
   this.io.seek(int(this.frameTableOfs))
@@ -242,8 +244,8 @@ proc frameTable(this: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_Fram
   let frameTableInstExpr = MicrosoftNetworkMonitorV2_FrameIndex.read(rawFrameTableInstIo, this.root, this)
   this.frameTableInst = frameTableInstExpr
   this.io.seek(pos)
-  if this.frameTableInst != nil:
-    return this.frameTableInst
+  this.frameTableInstFlag = true
+  return this.frameTableInst
 
 proc fromFile*(_: typedesc[MicrosoftNetworkMonitorV2], filename: string): MicrosoftNetworkMonitorV2 =
   MicrosoftNetworkMonitorV2.read(newKaitaiFileStream(filename), nil, nil)
@@ -292,7 +294,7 @@ proc body(this: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMoni
   ##[
   Frame body itself
   ]##
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let io = MicrosoftNetworkMonitorV2(this.root).io
   let pos = io.pos()
@@ -300,8 +302,8 @@ proc body(this: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMoni
   let bodyInstExpr = MicrosoftNetworkMonitorV2_Frame.read(io, this.root, this)
   this.bodyInst = bodyInstExpr
   io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], filename: string): MicrosoftNetworkMonitorV2_FrameIndexEntry =
   MicrosoftNetworkMonitorV2_FrameIndexEntry.read(newKaitaiFileStream(filename), nil, nil)

@@ -318,7 +318,8 @@ type
     `body`*: KaitaiStruct
     `parent`*: QuicktimeMov_AtomList
     `rawBody`*: seq[byte]
-    `lenInst`*: int
+    `lenInst`: int
+    `lenInstFlag`: bool
   QuicktimeMov_TkhdBody* = ref object of KaitaiStruct
     `version`*: uint8
     `flags`*: seq[byte]
@@ -637,12 +638,12 @@ proc read*(_: typedesc[QuicktimeMov_Atom], io: KaitaiStream, root: KaitaiStruct,
       this.body = bodyExpr
 
 proc len(this: QuicktimeMov_Atom): int = 
-  if this.lenInst != nil:
+  if this.lenInstFlag:
     return this.lenInst
   let lenInstExpr = int((if this.len32 == 0: (this.io.size - 8) else: (if this.len32 == 1: (this.len64 - 16) else: (this.len32 - 8))))
   this.lenInst = lenInstExpr
-  if this.lenInst != nil:
-    return this.lenInst
+  this.lenInstFlag = true
+  return this.lenInst
 
 proc fromFile*(_: typedesc[QuicktimeMov_Atom], filename: string): QuicktimeMov_Atom =
   QuicktimeMov_Atom.read(newKaitaiFileStream(filename), nil, nil)

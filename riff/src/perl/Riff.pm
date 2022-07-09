@@ -411,7 +411,7 @@ sub chunk_data {
 sub is_unregistered_tag {
     my ($self) = @_;
     return $self->{is_unregistered_tag} if ($self->{is_unregistered_tag});
-    $self->{is_unregistered_tag} =  (( ((@{$self->id_chars()}[0] >= 97) && (@{$self->id_chars()}[0] <= 122)) ) || ( ((@{$self->id_chars()}[1] >= 97) && (@{$self->id_chars()}[1] <= 122)) ) || ( ((@{$self->id_chars()}[2] >= 97) && (@{$self->id_chars()}[2] <= 122)) ) || ( ((@{$self->id_chars()}[3] >= 97) && (@{$self->id_chars()}[3] <= 122)) )) ;
+    $self->{is_unregistered_tag} =  (( ((unpack('C', substr($self->id_chars(), 0, 1)) >= 97) && (unpack('C', substr($self->id_chars(), 0, 1)) <= 122)) ) || ( ((unpack('C', substr($self->id_chars(), 1, 1)) >= 97) && (unpack('C', substr($self->id_chars(), 1, 1)) <= 122)) ) || ( ((unpack('C', substr($self->id_chars(), 2, 1)) >= 97) && (unpack('C', substr($self->id_chars(), 2, 1)) <= 122)) ) || ( ((unpack('C', substr($self->id_chars(), 3, 1)) >= 97) && (unpack('C', substr($self->id_chars(), 3, 1)) <= 122)) )) ;
     return $self->{is_unregistered_tag};
 }
 

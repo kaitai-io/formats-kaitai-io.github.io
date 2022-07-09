@@ -356,7 +356,7 @@ sub _read {
     $self->{points} = ();
     my $n_points = $self->num_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = Wmf::PointS->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, Wmf::PointS->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -613,7 +613,7 @@ sub _read {
     $self->{points} = ();
     my $n_points = $self->num_points();
     for (my $i = 0; $i < $n_points; $i++) {
-        $self->{points}[$i] = Wmf::PointS->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{points}}, Wmf::PointS->new($self->{_io}, $self, $self->{_root});
     }
 }
 

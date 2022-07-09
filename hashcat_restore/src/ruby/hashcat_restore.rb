@@ -24,9 +24,9 @@ class HashcatRestore < Kaitai::Struct::Struct
     @current_restore_point = @_io.read_u8le
     @argc = @_io.read_u4le
     @padding2 = @_io.read_bytes(12)
-    @argv = Array.new(argc)
+    @argv = []
     (argc).times { |i|
-      @argv[i] = (@_io.read_bytes_term(10, false, true, true)).force_encoding("UTF-8")
+      @argv << (@_io.read_bytes_term(10, false, true, true)).force_encoding("UTF-8")
     }
     self
   end

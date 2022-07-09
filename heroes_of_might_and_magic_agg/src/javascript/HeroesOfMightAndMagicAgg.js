@@ -8,7 +8,7 @@
   } else {
     root.HeroesOfMightAndMagicAgg = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)|Source}
  */
@@ -23,9 +23,9 @@ var HeroesOfMightAndMagicAgg = (function() {
   }
   HeroesOfMightAndMagicAgg.prototype._read = function() {
     this.numFiles = this._io.readU2le();
-    this.entries = new Array(this.numFiles);
+    this.entries = [];
     for (var i = 0; i < this.numFiles; i++) {
-      this.entries[i] = new Entry(this._io, this, this._root);
+      this.entries.push(new Entry(this._io, this, this._root));
     }
   }
 
@@ -78,12 +78,12 @@ var HeroesOfMightAndMagicAgg = (function() {
         return this._m_filenames;
       var _pos = this._io.pos;
       this._io.seek((this.entries[this.entries.length - 1].offset + this.entries[this.entries.length - 1].size));
-      this._raw__m_filenames = new Array(this.numFiles);
-      this._m_filenames = new Array(this.numFiles);
+      this._raw__m_filenames = [];
+      this._m_filenames = [];
       for (var i = 0; i < this.numFiles; i++) {
-        this._raw__m_filenames[i] = this._io.readBytes(15);
+        this._raw__m_filenames.push(this._io.readBytes(15));
         var _io__raw__m_filenames = new KaitaiStream(this._raw__m_filenames[i]);
-        this._m_filenames[i] = new Filename(_io__raw__m_filenames, this, this._root);
+        this._m_filenames.push(new Filename(_io__raw__m_filenames, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_filenames;

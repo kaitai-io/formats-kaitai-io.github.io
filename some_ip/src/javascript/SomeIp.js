@@ -8,7 +8,7 @@
   } else {
     root.SomeIp = factory(root.KaitaiStream, root.SomeIpSd);
   }
-}(this, function (KaitaiStream, SomeIpSd) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, SomeIpSd) {
 /**
  * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
  * communication protocol which supports remoteprocedure calls, event notifications

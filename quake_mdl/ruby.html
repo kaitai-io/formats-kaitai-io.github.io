@@ -311,21 +311,21 @@ section#format-index .row {
 
   <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@header</span> <span class="o">=</span> <span class="no">MdlHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@skins</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_skins</span><span class="p">)</span>
+    <span class="vi">@skins</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_skins</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@skins</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlSkin</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@skins</span> <span class="o">&lt;&lt;</span> <span class="no">MdlSkin</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
-    <span class="vi">@texture_coordinates</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span>
+    <span class="vi">@texture_coordinates</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@texture_coordinates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlTexcoord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@texture_coordinates</span> <span class="o">&lt;&lt;</span> <span class="no">MdlTexcoord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
-    <span class="vi">@triangles</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_tris</span><span class="p">)</span>
+    <span class="vi">@triangles</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_tris</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@triangles</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlTriangle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@triangles</span> <span class="o">&lt;&lt;</span> <span class="no">MdlTriangle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
-    <span class="vi">@frames</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_frames</span><span class="p">)</span>
+    <span class="vi">@frames</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@frames</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@frames</span> <span class="o">&lt;&lt;</span> <span class="no">MdlFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -336,9 +336,9 @@ section#format-index .row {
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="p">}</span>
       <span class="vi">@normal_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="nb">self</span>
@@ -429,15 +429,15 @@ section#format-index .row {
         <span class="vi">@num_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="k">end</span>
       <span class="k">if</span> <span class="n">group</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="vi">@frame_times</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_frames</span><span class="p">)</span>
+        <span class="vi">@frame_times</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">num_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@frame_times</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+          <span class="vi">@frame_times</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
         <span class="p">}</span>
       <span class="k">end</span>
       <span class="k">if</span> <span class="n">group</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="vi">@group_texture_data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_frames</span><span class="p">)</span>
+        <span class="vi">@group_texture_data</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">num_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@group_texture_data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">skin_size</span><span class="p">)</span>
+          <span class="vi">@group_texture_data</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">skin_size</span><span class="p">)</span>
         <span class="p">}</span>
       <span class="k">end</span>
       <span class="nb">self</span>
@@ -463,14 +463,14 @@ section#format-index .row {
         <span class="vi">@max</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">end</span>
       <span class="k">if</span> <span class="n">type</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="vi">@time</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+        <span class="vi">@time</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="p">(</span><span class="n">type</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@time</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+          <span class="vi">@time</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
         <span class="p">}</span>
       <span class="k">end</span>
-      <span class="vi">@frames</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_simple_frames</span><span class="p">)</span>
+      <span class="vi">@frames</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">num_simple_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@frames</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlSimpleFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@frames</span> <span class="o">&lt;&lt;</span> <span class="no">MdlSimpleFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -495,9 +495,9 @@ section#format-index .row {
       <span class="vi">@bbox_min</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@bbox_max</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@name</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@vertices</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span>
+      <span class="vi">@vertices</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@vertices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@vertices</span> <span class="o">&lt;&lt;</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>
@@ -514,9 +514,9 @@ section#format-index .row {
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@faces_front</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
-      <span class="vi">@vertices</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@vertices</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-        <span class="vi">@vertices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+        <span class="vi">@vertices</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
       <span class="p">}</span>
       <span class="nb">self</span>
     <span class="k">end</span>

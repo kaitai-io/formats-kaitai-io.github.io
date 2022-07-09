@@ -366,82 +366,82 @@ requested time boundary.</p>
   <span class="n">self</span><span class="p">.</span><span class="n">_m_entries</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
   <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="n">self</span><span class="p">.</span><span class="n">_m_entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
     <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span> <span class="kr">then</span>
       <span class="kr">break</span>
     <span class="kr">end</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
   <span class="kr">end</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_entries</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_entries</span>
 <span class="kr">end</span>
 
 
 <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Tsm</span><span class="p">.</span><span class="nc">Index</span><span class="p">.</span><span class="nc">IndexHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">Tsm</span><span class="p">.</span><span class="nc">Index</span><span class="p">.</span><span class="nc">IndexHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">key_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">key_len</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">entry_count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">index_entries</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">entry_count</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">index_entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">.</span><span class="n">IndexEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">key_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">key_len</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entry_count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">index_entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">entry_count</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">index_entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">.</span><span class="n">IndexEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 
 
 <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">.</span><span class="n">IndexEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Tsm</span><span class="p">.</span><span class="nc">Index</span><span class="p">.</span><span class="nc">IndexHeader</span><span class="p">.</span><span class="nc">IndexEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">Tsm</span><span class="p">.</span><span class="nc">Index</span><span class="p">.</span><span class="nc">IndexHeader</span><span class="p">.</span><span class="nc">IndexEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">min_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">max_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">block_offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">block_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">min_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">max_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">block_offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">block_size</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">.</span><span class="n">IndexEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">block</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Tsm</span><span class="p">.</span><span class="nc">Index</span><span class="p">.</span><span class="nc">IndexHeader</span><span class="p">.</span><span class="nc">IndexEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">block</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_block</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_block</span>
-<span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_block</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_block</span>
+  <span class="kr">end</span>
 
-<span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
-<span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
-<span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">block_offset</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_m_block</span> <span class="o">=</span> <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">.</span><span class="n">IndexEntry</span><span class="p">.</span><span class="n">BlockEntry</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-<span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_block</span>
+  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">block_offset</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_block</span> <span class="o">=</span> <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">.</span><span class="n">IndexEntry</span><span class="p">.</span><span class="n">BlockEntry</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_block</span>
 <span class="kr">end</span>
 
 
 <span class="n">Tsm</span><span class="p">.</span><span class="n">Index</span><span class="p">.</span><span class="n">IndexHeader</span><span class="p">.</span><span class="n">IndexEntry</span><span class="p">.</span><span class="n">BlockEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Tsm</span><span class="p">.</span><span class="nc">Index</span><span class="p">.</span><span class="nc">IndexHeader</span><span class="p">.</span><span class="nc">IndexEntry</span><span class="p">.</span><span class="nc">BlockEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">Tsm</span><span class="p">.</span><span class="nc">Index</span><span class="p">.</span><span class="nc">IndexHeader</span><span class="p">.</span><span class="nc">IndexEntry</span><span class="p">.</span><span class="nc">BlockEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">crc32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-<span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">block_size</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">crc32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">block_size</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
 <span class="kr">end</span>
 </pre></div>
 

@@ -107,7 +107,7 @@ public class RubyMarshal extends KaitaiStruct {
         }
         private void _read() {
             this.numElements = new PackedInt(this._io, this, _root);
-            elements = new ArrayList<Record>(((Number) (numElements().value())).intValue());
+            this.elements = new ArrayList<Record>();
             for (int i = 0; i < numElements().value(); i++) {
                 this.elements.add(new Record(this._io, this, _root));
             }
@@ -198,7 +198,7 @@ public class RubyMarshal extends KaitaiStruct {
         private void _read() {
             this.name = new Record(this._io, this, _root);
             this.numMembers = new PackedInt(this._io, this, _root);
-            members = new ArrayList<Pair>(((Number) (numMembers().value())).intValue());
+            this.members = new ArrayList<Pair>();
             for (int i = 0; i < numMembers().value(); i++) {
                 this.members.add(new Pair(this._io, this, _root));
             }
@@ -443,7 +443,7 @@ public class RubyMarshal extends KaitaiStruct {
         private void _read() {
             this.obj = new Record(this._io, this, _root);
             this.numVars = new PackedInt(this._io, this, _root);
-            vars = new ArrayList<Pair>(((Number) (numVars().value())).intValue());
+            this.vars = new ArrayList<Pair>();
             for (int i = 0; i < numVars().value(); i++) {
                 this.vars.add(new Pair(this._io, this, _root));
             }
@@ -568,7 +568,7 @@ public class RubyMarshal extends KaitaiStruct {
         }
         private void _read() {
             this.numPairs = new PackedInt(this._io, this, _root);
-            pairs = new ArrayList<Pair>(((Number) (numPairs().value())).intValue());
+            this.pairs = new ArrayList<Pair>();
             for (int i = 0; i < numPairs().value(); i++) {
                 this.pairs.add(new Pair(this._io, this, _root));
             }

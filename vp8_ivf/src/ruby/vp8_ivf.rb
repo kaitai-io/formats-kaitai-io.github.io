@@ -33,9 +33,9 @@ class Vp8Ivf < Kaitai::Struct::Struct
     @timescale = @_io.read_u4le
     @num_frames = @_io.read_u4le
     @unused = @_io.read_u4le
-    @image_data = Array.new(num_frames)
+    @image_data = []
     (num_frames).times { |i|
-      @image_data[i] = Blocks.new(@_io, self, @_root)
+      @image_data << Blocks.new(@_io, self, @_root)
     }
     self
   end

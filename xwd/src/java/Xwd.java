@@ -95,8 +95,8 @@ public class Xwd extends KaitaiStruct {
         this._raw_hdr = this._io.readBytes((lenHeader() - 4));
         KaitaiStream _io__raw_hdr = new ByteBufferKaitaiStream(_raw_hdr);
         this.hdr = new Header(_io__raw_hdr, this, _root);
-        this._raw_colorMap = new ArrayList<byte[]>(((Number) (hdr().colorMapEntries())).intValue());
-        colorMap = new ArrayList<ColorMapEntry>(((Number) (hdr().colorMapEntries())).intValue());
+        this._raw_colorMap = new ArrayList<byte[]>();
+        this.colorMap = new ArrayList<ColorMapEntry>();
         for (int i = 0; i < hdr().colorMapEntries(); i++) {
             this._raw_colorMap.add(this._io.readBytes(12));
             KaitaiStream _io__raw_colorMap = new ByteBufferKaitaiStream(_raw_colorMap.get(_raw_colorMap.size() - 1));
@@ -147,7 +147,7 @@ public class Xwd extends KaitaiStruct {
             this.windowX = this._io.readS4be();
             this.windowY = this._io.readS4be();
             this.windowBorderWidth = this._io.readU4be();
-            this.creator = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+            this.creator = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
         }
         private long fileVersion;
         private PixmapFormat pixmapFormat;

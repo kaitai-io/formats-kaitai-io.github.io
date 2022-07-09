@@ -8,7 +8,7 @@
   } else {
     root.ApmPartitionTable = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://en.wikipedia.org/wiki/Apple_Partition_Map|Source}
  */
@@ -172,12 +172,12 @@ var ApmPartitionTable = (function() {
       var io = this._root._io;
       var _pos = io.pos;
       io.seek(this._root.sectorSize);
-      this._raw__m_partitionEntries = new Array(this._root.partitionLookup.numberOfPartitions);
-      this._m_partitionEntries = new Array(this._root.partitionLookup.numberOfPartitions);
+      this._raw__m_partitionEntries = [];
+      this._m_partitionEntries = [];
       for (var i = 0; i < this._root.partitionLookup.numberOfPartitions; i++) {
-        this._raw__m_partitionEntries[i] = io.readBytes(this.sectorSize);
+        this._raw__m_partitionEntries.push(io.readBytes(this.sectorSize));
         var _io__raw__m_partitionEntries = new KaitaiStream(this._raw__m_partitionEntries[i]);
-        this._m_partitionEntries[i] = new PartitionEntry(_io__raw__m_partitionEntries, this, this._root);
+        this._m_partitionEntries.push(new PartitionEntry(_io__raw__m_partitionEntries, this, this._root));
       }
       io.seek(_pos);
       return this._m_partitionEntries;

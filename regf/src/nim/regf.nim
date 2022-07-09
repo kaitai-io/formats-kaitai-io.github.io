@@ -29,8 +29,10 @@ type
     `data`*: KaitaiStruct
     `parent`*: Regf_HiveBin
     `rawData`*: seq[byte]
-    `cellSizeInst`*: int
-    `isAllocatedInst`*: bool
+    `cellSizeInst`: int
+    `cellSizeInstFlag`: bool
+    `isAllocatedInst`: bool
+    `isAllocatedInstFlag`: bool
   Regf_HiveBinCell_SubKeyListVk* = ref object of KaitaiStruct
     `valueNameSize`*: uint16
     `dataSize`*: uint32
@@ -352,20 +354,20 @@ proc read*(_: typedesc[Regf_HiveBinCell], io: KaitaiStream, root: KaitaiStruct, 
       this.data = dataExpr
 
 proc cellSize(this: Regf_HiveBinCell): int = 
-  if this.cellSizeInst != nil:
+  if this.cellSizeInstFlag:
     return this.cellSizeInst
   let cellSizeInstExpr = int(((if this.cellSizeRaw < 0: -1 else: 1) * this.cellSizeRaw))
   this.cellSizeInst = cellSizeInstExpr
-  if this.cellSizeInst != nil:
-    return this.cellSizeInst
+  this.cellSizeInstFlag = true
+  return this.cellSizeInst
 
 proc isAllocated(this: Regf_HiveBinCell): bool = 
-  if this.isAllocatedInst != nil:
+  if this.isAllocatedInstFlag:
     return this.isAllocatedInst
   let isAllocatedInstExpr = bool(this.cellSizeRaw < 0)
   this.isAllocatedInst = isAllocatedInstExpr
-  if this.isAllocatedInst != nil:
-    return this.isAllocatedInst
+  this.isAllocatedInstFlag = true
+  return this.isAllocatedInst
 
 proc fromFile*(_: typedesc[Regf_HiveBinCell], filename: string): Regf_HiveBinCell =
   Regf_HiveBinCell.read(newKaitaiFileStream(filename), nil, nil)

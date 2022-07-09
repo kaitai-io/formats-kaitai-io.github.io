@@ -40,7 +40,7 @@ public class AndroidDto extends KaitaiStruct {
     }
     private void _read() {
         this.header = new DtTableHeader(this._io, this, _root);
-        entries = new ArrayList<DtTableEntry>(((Number) (header().dtEntryCount())).intValue());
+        this.entries = new ArrayList<DtTableEntry>();
         for (int i = 0; i < header().dtEntryCount(); i++) {
             this.entries.add(new DtTableEntry(this._io, this, _root));
         }
@@ -150,7 +150,7 @@ public class AndroidDto extends KaitaiStruct {
             this.dtOffset = this._io.readU4be();
             this.id = this._io.readU4be();
             this.rev = this._io.readU4be();
-            custom = new ArrayList<Long>(((Number) (4)).intValue());
+            this.custom = new ArrayList<Long>();
             for (int i = 0; i < 4; i++) {
                 this.custom.add(this._io.readU4be());
             }
@@ -163,7 +163,7 @@ public class AndroidDto extends KaitaiStruct {
         public byte[] body() {
             if (this.body != null)
                 return this.body;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(dtOffset());
             this.body = io.readBytes(dtSize());

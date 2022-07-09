@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class WindowsMinidump(KaitaiStruct):
@@ -106,9 +105,9 @@ class WindowsMinidump(KaitaiStruct):
 
         def _read(self):
             self.num_threads = self._io.read_u4le()
-            self.threads = [None] * (self.num_threads)
+            self.threads = []
             for i in range(self.num_threads):
-                self.threads[i] = WindowsMinidump.Thread(self._io, self, self._root)
+                self.threads.append(WindowsMinidump.Thread(self._io, self, self._root))
 
 
 
@@ -130,14 +129,14 @@ class WindowsMinidump(KaitaiStruct):
         @property
         def data(self):
             if hasattr(self, '_m_data'):
-                return self._m_data if hasattr(self, '_m_data') else None
+                return self._m_data
 
             io = self._root._io
             _pos = io.pos()
             io.seek(self.ofs_data)
             self._m_data = io.read_bytes(self.len_data)
             io.seek(_pos)
-            return self._m_data if hasattr(self, '_m_data') else None
+            return getattr(self, '_m_data', None)
 
 
     class MinidumpString(KaitaiStruct):
@@ -195,7 +194,7 @@ class WindowsMinidump(KaitaiStruct):
         @property
         def service_pack(self):
             if hasattr(self, '_m_service_pack'):
-                return self._m_service_pack if hasattr(self, '_m_service_pack') else None
+                return self._m_service_pack
 
             if self.ofs_service_pack > 0:
                 io = self._root._io
@@ -204,7 +203,7 @@ class WindowsMinidump(KaitaiStruct):
                 self._m_service_pack = WindowsMinidump.MinidumpString(io, self, self._root)
                 io.seek(_pos)
 
-            return self._m_service_pack if hasattr(self, '_m_service_pack') else None
+            return getattr(self, '_m_service_pack', None)
 
 
     class ExceptionRecord(KaitaiStruct):
@@ -225,9 +224,9 @@ class WindowsMinidump(KaitaiStruct):
             self.addr = self._io.read_u8le()
             self.num_params = self._io.read_u4le()
             self.reserved = self._io.read_u4le()
-            self.params = [None] * (15)
+            self.params = []
             for i in range(15):
-                self.params[i] = self._io.read_u8le()
+                self.params.append(self._io.read_u8le())
 
 
 
@@ -275,7 +274,7 @@ class WindowsMinidump(KaitaiStruct):
         @property
         def data(self):
             if hasattr(self, '_m_data'):
-                return self._m_data if hasattr(self, '_m_data') else None
+                return self._m_data
 
             _pos = self._io.pos()
             self._io.seek(self.ofs_data)
@@ -303,7 +302,7 @@ class WindowsMinidump(KaitaiStruct):
             else:
                 self._m_data = self._io.read_bytes(self.len_data)
             self._io.seek(_pos)
-            return self._m_data if hasattr(self, '_m_data') else None
+            return getattr(self, '_m_data', None)
 
 
     class Thread(KaitaiStruct):
@@ -340,9 +339,9 @@ class WindowsMinidump(KaitaiStruct):
 
         def _read(self):
             self.num_mem_ranges = self._io.read_u4le()
-            self.mem_ranges = [None] * (self.num_mem_ranges)
+            self.mem_ranges = []
             for i in range(self.num_mem_ranges):
-                self.mem_ranges[i] = WindowsMinidump.MemoryDescriptor(self._io, self, self._root)
+                self.mem_ranges.append(WindowsMinidump.MemoryDescriptor(self._io, self, self._root))
 
 
 
@@ -383,15 +382,15 @@ class WindowsMinidump(KaitaiStruct):
     @property
     def streams(self):
         if hasattr(self, '_m_streams'):
-            return self._m_streams if hasattr(self, '_m_streams') else None
+            return self._m_streams
 
         _pos = self._io.pos()
         self._io.seek(self.ofs_streams)
-        self._m_streams = [None] * (self.num_streams)
+        self._m_streams = []
         for i in range(self.num_streams):
-            self._m_streams[i] = WindowsMinidump.Dir(self._io, self, self._root)
+            self._m_streams.append(WindowsMinidump.Dir(self._io, self, self._root))
 
         self._io.seek(_pos)
-        return self._m_streams if hasattr(self, '_m_streams') else None
+        return getattr(self, '_m_streams', None)
 
 

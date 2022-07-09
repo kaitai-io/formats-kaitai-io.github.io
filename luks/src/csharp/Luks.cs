@@ -64,7 +64,7 @@ namespace Kaitai
                 _masterKeySaltParameter = m_io.ReadBytes(32);
                 _masterKeyIterationsParameter = m_io.ReadU4be();
                 _uuid = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(40));
-                _keySlots = new List<KeySlot>((int) (8));
+                _keySlots = new List<KeySlot>();
                 for (var i = 0; i < 8; i++)
                 {
                     _keySlots.Add(new KeySlot(m_io, this, m_root));

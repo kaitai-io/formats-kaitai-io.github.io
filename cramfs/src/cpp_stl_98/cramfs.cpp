@@ -134,9 +134,8 @@ cramfs_t::chunked_data_inode_t::chunked_data_inode_t(kaitai::kstream* p__io, cra
 }
 
 void cramfs_t::chunked_data_inode_t::_read() {
-    int l_block_end_index = (((_parent()->size() + _root()->page_size()) - 1) / _root()->page_size());
     m_block_end_index = new std::vector<uint32_t>();
-    m_block_end_index->reserve(l_block_end_index);
+    const int l_block_end_index = (((_parent()->size() + _root()->page_size()) - 1) / _root()->page_size());
     for (int i = 0; i < l_block_end_index; i++) {
         m_block_end_index->push_back(m__io->read_u4le());
     }

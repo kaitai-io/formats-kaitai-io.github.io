@@ -5,7 +5,8 @@ type
   TrDosImage* = ref object of KaitaiStruct
     `files`*: seq[TrDosImage_File]
     `parent`*: KaitaiStruct
-    `volumeInfoInst`*: TrDosImage_VolumeInfo
+    `volumeInfoInst`: TrDosImage_VolumeInfo
+    `volumeInfoInstFlag`: bool
   TrDosImage_DiskType* = enum
     type_80_tracks_double_side = 22
     type_40_tracks_double_side = 23
@@ -27,8 +28,10 @@ type
     `label`*: seq[byte]
     `unused4`*: seq[byte]
     `parent`*: TrDosImage
-    `numTracksInst`*: int8
-    `numSidesInst`*: int8
+    `numTracksInst`: int8
+    `numTracksInstFlag`: bool
+    `numSidesInst`: int8
+    `numSidesInstFlag`: bool
   TrDosImage_PositionAndLengthCode* = ref object of KaitaiStruct
     `startAddress`*: uint16
     `length`*: uint16
@@ -36,7 +39,8 @@ type
   TrDosImage_Filename* = ref object of KaitaiStruct
     `name`*: seq[byte]
     `parent`*: TrDosImage_File
-    `firstByteInst`*: uint8
+    `firstByteInst`: uint8
+    `firstByteInstFlag`: bool
   TrDosImage_PositionAndLengthPrint* = ref object of KaitaiStruct
     `extentNo`*: uint8
     `reserved`*: uint8
@@ -59,9 +63,12 @@ type
     `startingTrack`*: uint8
     `parent`*: TrDosImage
     `rawName`*: seq[byte]
-    `isDeletedInst`*: bool
-    `isTerminatorInst`*: bool
-    `contentsInst`*: seq[byte]
+    `isDeletedInst`: bool
+    `isDeletedInstFlag`: bool
+    `isTerminatorInst`: bool
+    `isTerminatorInstFlag`: bool
+    `contentsInst`: seq[byte]
+    `contentsInstFlag`: bool
 
 proc read*(_: typedesc[TrDosImage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): TrDosImage
 proc read*(_: typedesc[TrDosImage_VolumeInfo], io: KaitaiStream, root: KaitaiStruct, parent: TrDosImage): TrDosImage_VolumeInfo
@@ -120,15 +127,15 @@ proc read*(_: typedesc[TrDosImage], io: KaitaiStream, root: KaitaiStruct, parent
       inc i
 
 proc volumeInfo(this: TrDosImage): TrDosImage_VolumeInfo = 
-  if this.volumeInfoInst != nil:
+  if this.volumeInfoInstFlag:
     return this.volumeInfoInst
   let pos = this.io.pos()
   this.io.seek(int(2048))
   let volumeInfoInstExpr = TrDosImage_VolumeInfo.read(this.io, this.root, this)
   this.volumeInfoInst = volumeInfoInstExpr
   this.io.seek(pos)
-  if this.volumeInfoInst != nil:
-    return this.volumeInfoInst
+  this.volumeInfoInstFlag = true
+  return this.volumeInfoInst
 
 proc fromFile*(_: typedesc[TrDosImage], filename: string): TrDosImage =
   TrDosImage.read(newKaitaiFileStream(filename), nil, nil)
@@ -184,20 +191,20 @@ number_of_files entries due to deleted files
   this.unused4 = unused4Expr
 
 proc numTracks(this: TrDosImage_VolumeInfo): int8 = 
-  if this.numTracksInst != nil:
+  if this.numTracksInstFlag:
     return this.numTracksInst
   let numTracksInstExpr = int8((if (ord(this.diskType) and 1) != 0: 40 else: 80))
   this.numTracksInst = numTracksInstExpr
-  if this.numTracksInst != nil:
-    return this.numTracksInst
+  this.numTracksInstFlag = true
+  return this.numTracksInst
 
 proc numSides(this: TrDosImage_VolumeInfo): int8 = 
-  if this.numSidesInst != nil:
+  if this.numSidesInstFlag:
     return this.numSidesInst
   let numSidesInstExpr = int8((if (ord(this.diskType) and 8) != 0: 1 else: 2))
   this.numSidesInst = numSidesInstExpr
-  if this.numSidesInst != nil:
-    return this.numSidesInst
+  this.numSidesInstFlag = true
+  return this.numSidesInst
 
 proc fromFile*(_: typedesc[TrDosImage_VolumeInfo], filename: string): TrDosImage_VolumeInfo =
   TrDosImage_VolumeInfo.read(newKaitaiFileStream(filename), nil, nil)
@@ -234,15 +241,15 @@ proc read*(_: typedesc[TrDosImage_Filename], io: KaitaiStream, root: KaitaiStruc
   this.name = nameExpr
 
 proc firstByte(this: TrDosImage_Filename): uint8 = 
-  if this.firstByteInst != nil:
+  if this.firstByteInstFlag:
     return this.firstByteInst
   let pos = this.io.pos()
   this.io.seek(int(0))
   let firstByteInstExpr = this.io.readU1()
   this.firstByteInst = firstByteInstExpr
   this.io.seek(pos)
-  if this.firstByteInst != nil:
-    return this.firstByteInst
+  this.firstByteInstFlag = true
+  return this.firstByteInst
 
 proc fromFile*(_: typedesc[TrDosImage_Filename], filename: string): TrDosImage_Filename =
   TrDosImage_Filename.read(newKaitaiFileStream(filename), nil, nil)
@@ -334,31 +341,31 @@ proc read*(_: typedesc[TrDosImage_File], io: KaitaiStream, root: KaitaiStruct, p
   this.startingTrack = startingTrackExpr
 
 proc isDeleted(this: TrDosImage_File): bool = 
-  if this.isDeletedInst != nil:
+  if this.isDeletedInstFlag:
     return this.isDeletedInst
   let isDeletedInstExpr = bool(this.name.firstByte == 1)
   this.isDeletedInst = isDeletedInstExpr
-  if this.isDeletedInst != nil:
-    return this.isDeletedInst
+  this.isDeletedInstFlag = true
+  return this.isDeletedInst
 
 proc isTerminator(this: TrDosImage_File): bool = 
-  if this.isTerminatorInst != nil:
+  if this.isTerminatorInstFlag:
     return this.isTerminatorInst
   let isTerminatorInstExpr = bool(this.name.firstByte == 0)
   this.isTerminatorInst = isTerminatorInstExpr
-  if this.isTerminatorInst != nil:
-    return this.isTerminatorInst
+  this.isTerminatorInstFlag = true
+  return this.isTerminatorInst
 
 proc contents(this: TrDosImage_File): seq[byte] = 
-  if this.contentsInst.len != 0:
+  if this.contentsInstFlag:
     return this.contentsInst
   let pos = this.io.pos()
   this.io.seek(int((((this.startingTrack * 256) * 16) + (this.startingSector * 256))))
   let contentsInstExpr = this.io.readBytes(int((this.lengthSectors * 256)))
   this.contentsInst = contentsInstExpr
   this.io.seek(pos)
-  if this.contentsInst.len != 0:
-    return this.contentsInst
+  this.contentsInstFlag = true
+  return this.contentsInst
 
 proc fromFile*(_: typedesc[TrDosImage_File], filename: string): TrDosImage_File =
   TrDosImage_File.read(newKaitaiFileStream(filename), nil, nil)

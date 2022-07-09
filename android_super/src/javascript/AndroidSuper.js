@@ -8,7 +8,7 @@
   } else {
     root.AndroidSuper = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The metadata stored by Android at the beginning of a "super" partition, which
  * is what it calls a disk partition that holds one or more Dynamic Partitions.
@@ -45,19 +45,19 @@ var AndroidSuper = (function() {
       this._raw_backupGeometry = this._io.readBytes(4096);
       var _io__raw_backupGeometry = new KaitaiStream(this._raw_backupGeometry);
       this.backupGeometry = new Geometry(_io__raw_backupGeometry, this, this._root);
-      this._raw_primaryMetadata = new Array(this.primaryGeometry.metadataSlotCount);
-      this.primaryMetadata = new Array(this.primaryGeometry.metadataSlotCount);
+      this._raw_primaryMetadata = [];
+      this.primaryMetadata = [];
       for (var i = 0; i < this.primaryGeometry.metadataSlotCount; i++) {
-        this._raw_primaryMetadata[i] = this._io.readBytes(this.primaryGeometry.metadataMaxSize);
+        this._raw_primaryMetadata.push(this._io.readBytes(this.primaryGeometry.metadataMaxSize));
         var _io__raw_primaryMetadata = new KaitaiStream(this._raw_primaryMetadata[i]);
-        this.primaryMetadata[i] = new Metadata(_io__raw_primaryMetadata, this, this._root);
+        this.primaryMetadata.push(new Metadata(_io__raw_primaryMetadata, this, this._root));
       }
-      this._raw_backupMetadata = new Array(this.primaryGeometry.metadataSlotCount);
-      this.backupMetadata = new Array(this.primaryGeometry.metadataSlotCount);
+      this._raw_backupMetadata = [];
+      this.backupMetadata = [];
       for (var i = 0; i < this.primaryGeometry.metadataSlotCount; i++) {
-        this._raw_backupMetadata[i] = this._io.readBytes(this.primaryGeometry.metadataMaxSize);
+        this._raw_backupMetadata.push(this._io.readBytes(this.primaryGeometry.metadataMaxSize));
         var _io__raw_backupMetadata = new KaitaiStream(this._raw_backupMetadata[i]);
-        this.backupMetadata[i] = new Metadata(_io__raw_backupMetadata, this, this._root);
+        this.backupMetadata.push(new Metadata(_io__raw_backupMetadata, this, this._root));
       }
     }
 
@@ -196,32 +196,32 @@ var AndroidSuper = (function() {
             return this._m_table;
           var _pos = this._io.pos;
           this._io.seek((this._parent.headerSize + this.offset));
-          this._raw__m_table = new Array(this.numEntries);
-          this._m_table = new Array(this.numEntries);
+          this._raw__m_table = [];
+          this._m_table = [];
           for (var i = 0; i < this.numEntries; i++) {
             switch (this.kind) {
             case AndroidSuper.Metadata.TableKind.PARTITIONS:
-              this._raw__m_table[i] = this._io.readBytes(this.entrySize);
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
               var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table[i] = new Partition(_io__raw__m_table, this, this._root);
+              this._m_table.push(new Partition(_io__raw__m_table, this, this._root));
               break;
             case AndroidSuper.Metadata.TableKind.EXTENTS:
-              this._raw__m_table[i] = this._io.readBytes(this.entrySize);
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
               var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table[i] = new Extent(_io__raw__m_table, this, this._root);
+              this._m_table.push(new Extent(_io__raw__m_table, this, this._root));
               break;
             case AndroidSuper.Metadata.TableKind.GROUPS:
-              this._raw__m_table[i] = this._io.readBytes(this.entrySize);
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
               var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table[i] = new Group(_io__raw__m_table, this, this._root);
+              this._m_table.push(new Group(_io__raw__m_table, this, this._root));
               break;
             case AndroidSuper.Metadata.TableKind.BLOCK_DEVICES:
-              this._raw__m_table[i] = this._io.readBytes(this.entrySize);
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
               var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table[i] = new BlockDevice(_io__raw__m_table, this, this._root);
+              this._m_table.push(new BlockDevice(_io__raw__m_table, this, this._root));
               break;
             default:
-              this._m_table[i] = this._io.readBytes(this.entrySize);
+              this._m_table.push(this._io.readBytes(this.entrySize));
               break;
             }
           }

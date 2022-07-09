@@ -57,7 +57,8 @@ type
     `hi`*: uint8
     `lo`*: uint16
     `parent`*: S3m_Instrument_Sampled
-    `valueInst`*: int
+    `valueInst`: int
+    `valueInstFlag`: bool
   S3m_Pattern* = ref object of KaitaiStruct
     `size`*: uint16
     `body`*: S3m_PatternCells
@@ -66,11 +67,13 @@ type
   S3m_PatternPtr* = ref object of KaitaiStruct
     `paraptr`*: uint16
     `parent`*: S3m
-    `bodyInst`*: S3m_Pattern
+    `bodyInst`: S3m_Pattern
+    `bodyInstFlag`: bool
   S3m_InstrumentPtr* = ref object of KaitaiStruct
     `paraptr`*: uint16
     `parent`*: S3m
-    `bodyInst`*: S3m_Instrument
+    `bodyInst`: S3m_Instrument
+    `bodyInstFlag`: bool
   S3m_Instrument* = ref object of KaitaiStruct
     `type`*: S3m_Instrument_InstTypes
     `filename`*: seq[byte]
@@ -98,7 +101,8 @@ type
     `isPacked`*: uint8
     `flags`*: uint8
     `parent`*: S3m_Instrument
-    `sampleInst`*: seq[byte]
+    `sampleInst`: seq[byte]
+    `sampleInstFlag`: bool
   S3m_Instrument_Adlib* = ref object of KaitaiStruct
     `reserved1`*: seq[byte]
     `unnamed1`*: seq[byte]
@@ -353,12 +357,12 @@ proc read*(_: typedesc[S3m_SwappedU3], io: KaitaiStream, root: KaitaiStruct, par
   this.lo = loExpr
 
 proc value(this: S3m_SwappedU3): int = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = int((this.lo or (this.hi shl 16)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[S3m_SwappedU3], filename: string): S3m_SwappedU3 =
   S3m_SwappedU3.read(newKaitaiFileStream(filename), nil, nil)
@@ -394,15 +398,15 @@ proc read*(_: typedesc[S3m_PatternPtr], io: KaitaiStream, root: KaitaiStruct, pa
   this.paraptr = paraptrExpr
 
 proc body(this: S3m_PatternPtr): S3m_Pattern = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int((this.paraptr * 16)))
   let bodyInstExpr = S3m_Pattern.read(this.io, this.root, this)
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[S3m_PatternPtr], filename: string): S3m_PatternPtr =
   S3m_PatternPtr.read(newKaitaiFileStream(filename), nil, nil)
@@ -419,15 +423,15 @@ proc read*(_: typedesc[S3m_InstrumentPtr], io: KaitaiStream, root: KaitaiStruct,
   this.paraptr = paraptrExpr
 
 proc body(this: S3m_InstrumentPtr): S3m_Instrument = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int((this.paraptr * 16)))
   let bodyInstExpr = S3m_Instrument.read(this.io, this.root, this)
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[S3m_InstrumentPtr], filename: string): S3m_InstrumentPtr =
   S3m_InstrumentPtr.read(newKaitaiFileStream(filename), nil, nil)
@@ -498,15 +502,15 @@ proc read*(_: typedesc[S3m_Instrument_Sampled], io: KaitaiStream, root: KaitaiSt
   this.flags = flagsExpr
 
 proc sample(this: S3m_Instrument_Sampled): seq[byte] = 
-  if this.sampleInst.len != 0:
+  if this.sampleInstFlag:
     return this.sampleInst
   let pos = this.io.pos()
   this.io.seek(int((this.paraptrSample.value * 16)))
   let sampleInstExpr = this.io.readBytes(int(this.lenSample))
   this.sampleInst = sampleInstExpr
   this.io.seek(pos)
-  if this.sampleInst.len != 0:
-    return this.sampleInst
+  this.sampleInstFlag = true
+  return this.sampleInst
 
 proc fromFile*(_: typedesc[S3m_Instrument_Sampled], filename: string): S3m_Instrument_Sampled =
   S3m_Instrument_Sampled.read(newKaitaiFileStream(filename), nil, nil)

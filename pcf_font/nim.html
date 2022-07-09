@@ -309,7 +309,8 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
     <span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont</span>
     <span class="p">`</span><span class="n">rawBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">PcfFont_Table_Swidths</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
     <span class="p">`</span><span class="n">numGlyphs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -329,9 +330,12 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
     <span class="p">`</span><span class="n">isString</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">valueOrOfsValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties</span>
-    <span class="p">`</span><span class="n">nameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">strValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">intValueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">nameInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">strValueInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">strValueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">intValueInst</span><span class="p">`:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">intValueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">PcfFont_Table_BdfEncodings</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
     <span class="p">`</span><span class="n">minCharOrByte2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -352,7 +356,8 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">ofsString</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Table_GlyphNames</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">PcfFont_Table_Bitmaps</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">format</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcfFont_Format</span>
     <span class="p">`</span><span class="n">numGlyphs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -447,7 +452,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">=</span> <span class="n">ofsBodyExpr</span>
 
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
@@ -487,8 +492,8 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
       <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
       <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table], filename: string): PcfFont_Table =</span>
   <span class="n">PcfFont_Table</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -614,7 +619,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="n">Name</span> <span class="k">of</span> <span class="n">the</span> <span class="n">property</span> <span class="n">addressed</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">strings</span> <span class="n">buffer</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">strings</span><span class="p">.</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -622,8 +627,8 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="k">let</span> <span class="n">nameInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span> <span class="o">=</span> <span class="n">nameInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
 
 <span class="k">proc </span><span class="nf">strValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
 
@@ -632,7 +637,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="n">buffer</span><span class="p">,</span> <span class="k">if</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="kt">string</span> <span class="n">value</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isString</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">strings</span><span class="p">.</span><span class="n">io</span>
@@ -641,8 +646,8 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
     <span class="k">let</span> <span class="n">strValueInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span> <span class="o">=</span> <span class="n">strValueInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">strValueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">strValueInst</span>
 
 <span class="k">proc </span><span class="nf">intValue</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
 
@@ -650,13 +655,13 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="n">Value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">property</span><span class="p">,</span> <span class="k">if</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">integer</span> <span class="n">value</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isString</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">intValueInstExpr</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">valueOrOfsValue</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span> <span class="o">=</span> <span class="n">intValueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">intValueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">intValueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_Properties_Prop], filename: string): PcfFont_Table_Properties_Prop =</span>
   <span class="n">PcfFont_Table_Properties_Prop</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -755,7 +760,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="n">this</span><span class="p">.</span><span class="n">ofsString</span> <span class="o">=</span> <span class="n">ofsStringExpr</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">strings</span><span class="p">.</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -763,8 +768,8 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcfFont_Table_GlyphNames_StringRef], filename: string): PcfFont_Table_GlyphNames_StringRef =</span>
   <span class="n">PcfFont_Table_GlyphNames_StringRef</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

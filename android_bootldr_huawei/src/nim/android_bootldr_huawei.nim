@@ -27,8 +27,10 @@ type
     `ofsBody`*: uint32
     `lenBody`*: uint32
     `parent`*: AndroidBootldrHuawei_ImageHdr
-    `isUsedInst`*: bool
-    `bodyInst`*: seq[byte]
+    `isUsedInst`: bool
+    `isUsedInstFlag`: bool
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[AndroidBootldrHuawei], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrHuawei
 proc read*(_: typedesc[AndroidBootldrHuawei_MetaHdr], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrHuawei): AndroidBootldrHuawei_MetaHdr
@@ -176,15 +178,15 @@ proc isUsed(this: AndroidBootldrHuawei_ImageHdrEntry): bool =
   ##[
   @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119">Source</a>
   ]##
-  if this.isUsedInst != nil:
+  if this.isUsedInstFlag:
     return this.isUsedInst
   let isUsedInstExpr = bool( ((this.ofsBody != 0) and (this.lenBody != 0)) )
   this.isUsedInst = isUsedInstExpr
-  if this.isUsedInst != nil:
-    return this.isUsedInst
+  this.isUsedInstFlag = true
+  return this.isUsedInst
 
 proc body(this: AndroidBootldrHuawei_ImageHdrEntry): seq[byte] = 
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   if this.isUsed:
     let io = AndroidBootldrHuawei(this.root).io
@@ -193,8 +195,8 @@ proc body(this: AndroidBootldrHuawei_ImageHdrEntry): seq[byte] =
     let bodyInstExpr = io.readBytes(int(this.lenBody))
     this.bodyInst = bodyInstExpr
     io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[AndroidBootldrHuawei_ImageHdrEntry], filename: string): AndroidBootldrHuawei_ImageHdrEntry =
   AndroidBootldrHuawei_ImageHdrEntry.read(newKaitaiFileStream(filename), nil, nil)

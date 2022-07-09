@@ -413,7 +413,7 @@ public class SomeIpSdOptions extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.key = new String(this._io.readBytesTerm(61, false, true, true), Charset.forName("ASCII"));
+                this.key = new String(this._io.readBytesTerm((byte) 61, false, true, true), Charset.forName("ASCII"));
                 this.value = new String(this._io.readBytesFull(), Charset.forName("ASCII"));
             }
             private String key;

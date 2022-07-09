@@ -622,7 +622,7 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.keyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
             this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
             this._raw_textDatastream = this._io.readBytesFull();
             this.textDatastream = KaitaiStream.processZlib(_raw_textDatastream);
@@ -801,9 +801,9 @@ public class Png extends KaitaiStruct {
         }
         private void _read() {
             {
-                ColorType on = _root.ihdr().colorType();
+                ColorType on = _root().ihdr().colorType();
                 if (on != null) {
-                    switch (_root.ihdr().colorType()) {
+                    switch (_root().ihdr().colorType()) {
                     case INDEXED: {
                         this.bkgd = new BkgdIndexed(this._io, this, _root);
                         break;
@@ -915,23 +915,23 @@ public class Png extends KaitaiStruct {
             if (!(width() >= 1)) {
                 throw new KaitaiStream.ValidationLessThanError(1, width(), _io(), "/types/frame_control_chunk/seq/1");
             }
-            if (!(width() <= _root.ihdr().width())) {
-                throw new KaitaiStream.ValidationGreaterThanError(_root.ihdr().width(), width(), _io(), "/types/frame_control_chunk/seq/1");
+            if (!(width() <= _root().ihdr().width())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().width(), width(), _io(), "/types/frame_control_chunk/seq/1");
             }
             this.height = this._io.readU4be();
             if (!(height() >= 1)) {
                 throw new KaitaiStream.ValidationLessThanError(1, height(), _io(), "/types/frame_control_chunk/seq/2");
             }
-            if (!(height() <= _root.ihdr().height())) {
-                throw new KaitaiStream.ValidationGreaterThanError(_root.ihdr().height(), height(), _io(), "/types/frame_control_chunk/seq/2");
+            if (!(height() <= _root().ihdr().height())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().height(), height(), _io(), "/types/frame_control_chunk/seq/2");
             }
             this.xOffset = this._io.readU4be();
-            if (!(xOffset() <= (_root.ihdr().width() - width()))) {
-                throw new KaitaiStream.ValidationGreaterThanError((_root.ihdr().width() - width()), xOffset(), _io(), "/types/frame_control_chunk/seq/3");
+            if (!(xOffset() <= (_root().ihdr().width() - width()))) {
+                throw new KaitaiStream.ValidationGreaterThanError((_root().ihdr().width() - width()), xOffset(), _io(), "/types/frame_control_chunk/seq/3");
             }
             this.yOffset = this._io.readU4be();
-            if (!(yOffset() <= (_root.ihdr().height() - height()))) {
-                throw new KaitaiStream.ValidationGreaterThanError((_root.ihdr().height() - height()), yOffset(), _io(), "/types/frame_control_chunk/seq/4");
+            if (!(yOffset() <= (_root().ihdr().height() - height()))) {
+                throw new KaitaiStream.ValidationGreaterThanError((_root().ihdr().height() - height()), yOffset(), _io(), "/types/frame_control_chunk/seq/4");
             }
             this.delayNum = this._io.readU2be();
             this.delayDen = this._io.readU2be();
@@ -1037,11 +1037,11 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.keyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
             this.compressionFlag = this._io.readU1();
             this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
-            this.languageTag = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
-            this.translatedKeyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+            this.languageTag = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
+            this.translatedKeyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
             this.text = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
         }
         private String keyword;
@@ -1115,7 +1115,7 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.keyword = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("iso8859-1"));
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("iso8859-1"));
             this.text = new String(this._io.readBytesFull(), Charset.forName("iso8859-1"));
         }
         private String keyword;

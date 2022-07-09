@@ -6,9 +6,12 @@ type
     `header`*: MicrosoftCfb_CfbHeader
     `parent`*: KaitaiStruct
     `rawFatInst`*: seq[byte]
-    `sectorSizeInst`*: int
-    `fatInst`*: MicrosoftCfb_FatEntries
-    `dirInst`*: MicrosoftCfb_DirEntry
+    `sectorSizeInst`: int
+    `sectorSizeInstFlag`: bool
+    `fatInst`: MicrosoftCfb_FatEntries
+    `fatInstFlag`: bool
+    `dirInst`: MicrosoftCfb_DirEntry
+    `dirInstFlag`: bool
   MicrosoftCfb_CfbHeader* = ref object of KaitaiStruct
     `signature`*: seq[byte]
     `clsid`*: seq[byte]
@@ -47,10 +50,14 @@ type
     `ofs`*: int32
     `size`*: uint64
     `parent`*: KaitaiStruct
-    `miniStreamInst`*: seq[byte]
-    `childInst`*: MicrosoftCfb_DirEntry
-    `leftSiblingInst`*: MicrosoftCfb_DirEntry
-    `rightSiblingInst`*: MicrosoftCfb_DirEntry
+    `miniStreamInst`: seq[byte]
+    `miniStreamInstFlag`: bool
+    `childInst`: MicrosoftCfb_DirEntry
+    `childInstFlag`: bool
+    `leftSiblingInst`: MicrosoftCfb_DirEntry
+    `leftSiblingInstFlag`: bool
+    `rightSiblingInst`: MicrosoftCfb_DirEntry
+    `rightSiblingInstFlag`: bool
   MicrosoftCfb_DirEntry_ObjType* = enum
     unknown = 0
     storage = 1
@@ -85,15 +92,15 @@ proc read*(_: typedesc[MicrosoftCfb], io: KaitaiStream, root: KaitaiStruct, pare
   this.header = headerExpr
 
 proc sectorSize(this: MicrosoftCfb): int = 
-  if this.sectorSizeInst != nil:
+  if this.sectorSizeInstFlag:
     return this.sectorSizeInst
   let sectorSizeInstExpr = int((1 shl this.header.sectorShift))
   this.sectorSizeInst = sectorSizeInstExpr
-  if this.sectorSizeInst != nil:
-    return this.sectorSizeInst
+  this.sectorSizeInstFlag = true
+  return this.sectorSizeInst
 
 proc fat(this: MicrosoftCfb): MicrosoftCfb_FatEntries = 
-  if this.fatInst != nil:
+  if this.fatInstFlag:
     return this.fatInst
   let pos = this.io.pos()
   this.io.seek(int(this.sectorSize))
@@ -103,19 +110,19 @@ proc fat(this: MicrosoftCfb): MicrosoftCfb_FatEntries =
   let fatInstExpr = MicrosoftCfb_FatEntries.read(rawFatInstIo, this.root, this)
   this.fatInst = fatInstExpr
   this.io.seek(pos)
-  if this.fatInst != nil:
-    return this.fatInst
+  this.fatInstFlag = true
+  return this.fatInst
 
 proc dir(this: MicrosoftCfb): MicrosoftCfb_DirEntry = 
-  if this.dirInst != nil:
+  if this.dirInstFlag:
     return this.dirInst
   let pos = this.io.pos()
   this.io.seek(int(((this.header.ofsDir + 1) * this.sectorSize)))
   let dirInstExpr = MicrosoftCfb_DirEntry.read(this.io, this.root, this)
   this.dirInst = dirInstExpr
   this.io.seek(pos)
-  if this.dirInst != nil:
-    return this.dirInst
+  this.dirInstFlag = true
+  return this.dirInst
 
 proc fromFile*(_: typedesc[MicrosoftCfb], filename: string): MicrosoftCfb =
   MicrosoftCfb.read(newKaitaiFileStream(filename), nil, nil)
@@ -291,7 +298,7 @@ proc read*(_: typedesc[MicrosoftCfb_DirEntry], io: KaitaiStream, root: KaitaiStr
   this.size = sizeExpr
 
 proc miniStream(this: MicrosoftCfb_DirEntry): seq[byte] = 
-  if this.miniStreamInst.len != 0:
+  if this.miniStreamInstFlag:
     return this.miniStreamInst
   if this.objectType == microsoft_cfb.root_storage:
     let io = MicrosoftCfb(this.root).io
@@ -300,11 +307,11 @@ proc miniStream(this: MicrosoftCfb_DirEntry): seq[byte] =
     let miniStreamInstExpr = io.readBytes(int(this.size))
     this.miniStreamInst = miniStreamInstExpr
     io.seek(pos)
-  if this.miniStreamInst.len != 0:
-    return this.miniStreamInst
+  this.miniStreamInstFlag = true
+  return this.miniStreamInst
 
 proc child(this: MicrosoftCfb_DirEntry): MicrosoftCfb_DirEntry = 
-  if this.childInst != nil:
+  if this.childInstFlag:
     return this.childInst
   if this.childId != -1:
     let io = MicrosoftCfb(this.root).io
@@ -313,11 +320,11 @@ proc child(this: MicrosoftCfb_DirEntry): MicrosoftCfb_DirEntry =
     let childInstExpr = MicrosoftCfb_DirEntry.read(io, this.root, this)
     this.childInst = childInstExpr
     io.seek(pos)
-  if this.childInst != nil:
-    return this.childInst
+  this.childInstFlag = true
+  return this.childInst
 
 proc leftSibling(this: MicrosoftCfb_DirEntry): MicrosoftCfb_DirEntry = 
-  if this.leftSiblingInst != nil:
+  if this.leftSiblingInstFlag:
     return this.leftSiblingInst
   if this.leftSiblingId != -1:
     let io = MicrosoftCfb(this.root).io
@@ -326,11 +333,11 @@ proc leftSibling(this: MicrosoftCfb_DirEntry): MicrosoftCfb_DirEntry =
     let leftSiblingInstExpr = MicrosoftCfb_DirEntry.read(io, this.root, this)
     this.leftSiblingInst = leftSiblingInstExpr
     io.seek(pos)
-  if this.leftSiblingInst != nil:
-    return this.leftSiblingInst
+  this.leftSiblingInstFlag = true
+  return this.leftSiblingInst
 
 proc rightSibling(this: MicrosoftCfb_DirEntry): MicrosoftCfb_DirEntry = 
-  if this.rightSiblingInst != nil:
+  if this.rightSiblingInstFlag:
     return this.rightSiblingInst
   if this.rightSiblingId != -1:
     let io = MicrosoftCfb(this.root).io
@@ -339,8 +346,8 @@ proc rightSibling(this: MicrosoftCfb_DirEntry): MicrosoftCfb_DirEntry =
     let rightSiblingInstExpr = MicrosoftCfb_DirEntry.read(io, this.root, this)
     this.rightSiblingInst = rightSiblingInstExpr
     io.seek(pos)
-  if this.rightSiblingInst != nil:
-    return this.rightSiblingInst
+  this.rightSiblingInstFlag = true
+  return this.rightSiblingInst
 
 proc fromFile*(_: typedesc[MicrosoftCfb_DirEntry], filename: string): MicrosoftCfb_DirEntry =
   MicrosoftCfb_DirEntry.read(newKaitaiFileStream(filename), nil, nil)

@@ -253,7 +253,7 @@ public class Bson extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.str = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
+            this.str = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
         }
         private String str;
         private Bson _root;

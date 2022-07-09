@@ -43,7 +43,8 @@ type
     `imageDataField`*: seq[byte]
     `idx`*: uint16
     `parent`*: Nitf
-    `hasMaskInst`*: bool
+    `hasMaskInst`: bool
+    `hasMaskInstFlag`: bool
   Nitf_TextSegment* = ref object of KaitaiStruct
     `textSubHeader`*: seq[byte]
     `textDataField`*: seq[byte]
@@ -100,13 +101,20 @@ type
     `bmrbnd`*: seq[uint32]
     `tmrbnd`*: seq[uint32]
     `parent`*: Nitf_ImageSegment
-    `hasBmrInst`*: bool
-    `hasTmrInst`*: bool
-    `tmrbndSizeInst`*: int
-    `tpxcdSizeInst`*: int
-    `totalSizeInst`*: int
-    `bmrbndSizeInst`*: int
-    `bmrtmrCountInst`*: int
+    `hasBmrInst`: bool
+    `hasBmrInstFlag`: bool
+    `hasTmrInst`: bool
+    `hasTmrInstFlag`: bool
+    `tmrbndSizeInst`: int
+    `tmrbndSizeInstFlag`: bool
+    `tpxcdSizeInst`: int
+    `tpxcdSizeInstFlag`: bool
+    `totalSizeInst`: int
+    `totalSizeInstFlag`: bool
+    `bmrbndSizeInst`: int
+    `bmrbndSizeInstFlag`: bool
+    `bmrtmrCountInst`: int
+    `bmrtmrCountInstFlag`: bool
   Nitf_GraphicsSegment* = ref object of KaitaiStruct
     `graphicSubHeader`*: Nitf_GraphicSubHeader
     `graphicDataField`*: seq[byte]
@@ -120,7 +128,8 @@ type
     `desshf`*: string
     `desDefinedDataField`*: string
     `parent`*: Nitf_DataExtensionSegment
-    `treOflInst`*: bool
+    `treOflInst`: bool
+    `treOflInstFlag`: bool
   Nitf_DataExtensionSegment* = ref object of KaitaiStruct
     `dataSubHeader`*: Nitf_DataSubHeader
     `dataDataField`*: seq[byte]
@@ -483,12 +492,12 @@ proc read*(_: typedesc[Nitf_ImageSegment], io: KaitaiStream, root: KaitaiStruct,
     this.imageDataField = imageDataFieldExpr
 
 proc hasMask(this: Nitf_ImageSegment): bool = 
-  if this.hasMaskInst != nil:
+  if this.hasMaskInstFlag:
     return this.hasMaskInst
   let hasMaskInstExpr = bool(this.imageSubHeader.imgCompression.substr(0, 2 - 1) == "MM")
   this.hasMaskInst = hasMaskInstExpr
-  if this.hasMaskInst != nil:
-    return this.hasMaskInst
+  this.hasMaskInstFlag = true
+  return this.hasMaskInst
 
 proc fromFile*(_: typedesc[Nitf_ImageSegment], filename: string): Nitf_ImageSegment =
   Nitf_ImageSegment.read(newKaitaiFileStream(filename), nil, nil)
@@ -687,60 +696,60 @@ proc read*(_: typedesc[Nitf_ImageDataMask], io: KaitaiStream, root: KaitaiStruct
       this.tmrbnd.add(it)
 
 proc hasBmr(this: Nitf_ImageDataMask): bool = 
-  if this.hasBmrInst != nil:
+  if this.hasBmrInstFlag:
     return this.hasBmrInst
   let hasBmrInstExpr = bool(this.bmrlnth != 0)
   this.hasBmrInst = hasBmrInstExpr
-  if this.hasBmrInst != nil:
-    return this.hasBmrInst
+  this.hasBmrInstFlag = true
+  return this.hasBmrInst
 
 proc hasTmr(this: Nitf_ImageDataMask): bool = 
-  if this.hasTmrInst != nil:
+  if this.hasTmrInstFlag:
     return this.hasTmrInst
   let hasTmrInstExpr = bool(this.tmrlnth != 0)
   this.hasTmrInst = hasTmrInstExpr
-  if this.hasTmrInst != nil:
-    return this.hasTmrInst
+  this.hasTmrInstFlag = true
+  return this.hasTmrInst
 
 proc tmrbndSize(this: Nitf_ImageDataMask): int = 
-  if this.tmrbndSizeInst != nil:
+  if this.tmrbndSizeInstFlag:
     return this.tmrbndSizeInst
   let tmrbndSizeInstExpr = int((if this.hasTmr: (this.bmrtmrCount * 4) else: 0))
   this.tmrbndSizeInst = tmrbndSizeInstExpr
-  if this.tmrbndSizeInst != nil:
-    return this.tmrbndSizeInst
+  this.tmrbndSizeInstFlag = true
+  return this.tmrbndSizeInst
 
 proc tpxcdSize(this: Nitf_ImageDataMask): int = 
-  if this.tpxcdSizeInst != nil:
+  if this.tpxcdSizeInstFlag:
     return this.tpxcdSizeInst
   let tpxcdSizeInstExpr = int(((if (this.tpxcdlnth %%% 8) == 0: this.tpxcdlnth else: (this.tpxcdlnth + (8 - (this.tpxcdlnth %%% 8)))) div 8))
   this.tpxcdSizeInst = tpxcdSizeInstExpr
-  if this.tpxcdSizeInst != nil:
-    return this.tpxcdSizeInst
+  this.tpxcdSizeInstFlag = true
+  return this.tpxcdSizeInst
 
 proc totalSize(this: Nitf_ImageDataMask): int = 
-  if this.totalSizeInst != nil:
+  if this.totalSizeInstFlag:
     return this.totalSizeInst
   let totalSizeInstExpr = int(((((((4 + 2) + 2) + 2) + this.tpxcdSize) + this.bmrbndSize) + this.tmrbndSize))
   this.totalSizeInst = totalSizeInstExpr
-  if this.totalSizeInst != nil:
-    return this.totalSizeInst
+  this.totalSizeInstFlag = true
+  return this.totalSizeInst
 
 proc bmrbndSize(this: Nitf_ImageDataMask): int = 
-  if this.bmrbndSizeInst != nil:
+  if this.bmrbndSizeInstFlag:
     return this.bmrbndSizeInst
   let bmrbndSizeInstExpr = int((if this.hasBmr: (this.bmrtmrCount * 4) else: 0))
   this.bmrbndSizeInst = bmrbndSizeInstExpr
-  if this.bmrbndSizeInst != nil:
-    return this.bmrbndSizeInst
+  this.bmrbndSizeInstFlag = true
+  return this.bmrbndSizeInst
 
 proc bmrtmrCount(this: Nitf_ImageDataMask): int = 
-  if this.bmrtmrCountInst != nil:
+  if this.bmrtmrCountInstFlag:
     return this.bmrtmrCountInst
   let bmrtmrCountInstExpr = int(((this.parent.imageSubHeader.numBlocksPerRow.parseInt(10) * this.parent.imageSubHeader.numBlocksPerCol.parseInt(10)) * (if this.parent.imageSubHeader.imgMode != "S": 1 else: (if this.parent.imageSubHeader.numBands.parseInt(10) != 0: this.parent.imageSubHeader.numBands.parseInt(10) else: this.parent.imageSubHeader.numMultispectralBands.parseInt(10)))))
   this.bmrtmrCountInst = bmrtmrCountInstExpr
-  if this.bmrtmrCountInst != nil:
-    return this.bmrtmrCountInst
+  this.bmrtmrCountInstFlag = true
+  return this.bmrtmrCountInst
 
 proc fromFile*(_: typedesc[Nitf_ImageDataMask], filename: string): Nitf_ImageDataMask =
   Nitf_ImageDataMask.read(newKaitaiFileStream(filename), nil, nil)
@@ -787,12 +796,12 @@ proc read*(_: typedesc[Nitf_DataSubHeader], io: KaitaiStream, root: KaitaiStruct
   this.desDefinedDataField = desDefinedDataFieldExpr
 
 proc treOfl(this: Nitf_DataSubHeader): bool = 
-  if this.treOflInst != nil:
+  if this.treOflInstFlag:
     return this.treOflInst
   let treOflInstExpr = bool(this.desBase.desid == "TRE_OVERFLOW")
   this.treOflInst = treOflInstExpr
-  if this.treOflInst != nil:
-    return this.treOflInst
+  this.treOflInstFlag = true
+  return this.treOflInst
 
 proc fromFile*(_: typedesc[Nitf_DataSubHeader], filename: string): Nitf_DataSubHeader =
   Nitf_DataSubHeader.read(newKaitaiFileStream(filename), nil, nil)

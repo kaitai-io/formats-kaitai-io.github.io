@@ -50,7 +50,8 @@ type
     `brMantissa`*: uint64
     `ssrcList`*: seq[uint32]
     `parent`*: RtcpPayload_PsfbAfbPacket
-    `maxTotalBitrateInst`*: int
+    `maxTotalBitrateInst`: int
+    `maxTotalBitrateInstFlag`: bool
   RtcpPayload_SrPacket* = ref object of KaitaiStruct
     `ssrc`*: uint32
     `ntpMsw`*: uint32
@@ -60,7 +61,8 @@ type
     `senderOctetCount`*: uint32
     `reportBlock`*: seq[RtcpPayload_ReportBlock]
     `parent`*: RtcpPayload_RtcpPacket
-    `ntpInst`*: int
+    `ntpInst`: int
+    `ntpInstFlag`: bool
   RtcpPayload_RrPacket* = ref object of KaitaiStruct
     `ssrc`*: uint32
     `reportBlock`*: seq[RtcpPayload_ReportBlock]
@@ -87,25 +89,32 @@ type
     `lsr`*: uint32
     `dlsr`*: uint32
     `parent`*: KaitaiStruct
-    `fractionLostInst`*: int
-    `cumulativePacketsLostInst`*: int
+    `fractionLostInst`: int
+    `fractionLostInstFlag`: bool
+    `cumulativePacketsLostInst`: int
+    `cumulativePacketsLostInstFlag`: bool
   RtcpPayload_RtpfbTransportFeedbackPacket* = ref object of KaitaiStruct
     `baseSequenceNumber`*: uint16
     `packetStatusCount`*: uint16
     `b4`*: uint32
     `remaining`*: seq[byte]
     `parent`*: RtcpPayload_RtpfbPacket
-    `referenceTimeInst`*: int
-    `fbPktCountInst`*: int
-    `packetStatusInst`*: seq[byte]
-    `recvDeltaInst`*: seq[byte]
+    `referenceTimeInst`: int
+    `referenceTimeInstFlag`: bool
+    `fbPktCountInst`: int
+    `fbPktCountInstFlag`: bool
+    `packetStatusInst`: seq[byte]
+    `packetStatusInstFlag`: bool
+    `recvDeltaInst`: seq[byte]
+    `recvDeltaInstFlag`: bool
   RtcpPayload_PsfbPacket* = ref object of KaitaiStruct
     `ssrc`*: uint32
     `ssrcMediaSource`*: uint32
     `fciBlock`*: KaitaiStruct
     `parent`*: RtcpPayload_RtcpPacket
     `rawFciBlock`*: seq[byte]
-    `fmtInst`*: RtcpPayload_PsfbSubtype
+    `fmtInst`: RtcpPayload_PsfbSubtype
+    `fmtInstFlag`: bool
   RtcpPayload_SourceChunk* = ref object of KaitaiStruct
     `ssrc`*: uint32
     `sdesTlv`*: seq[RtcpPayload_SdesTlv]
@@ -113,14 +122,16 @@ type
   RtcpPayload_SdesPacket* = ref object of KaitaiStruct
     `sourceChunk`*: seq[RtcpPayload_SourceChunk]
     `parent`*: RtcpPayload_RtcpPacket
-    `sourceCountInst`*: uint64
+    `sourceCountInst`: uint64
+    `sourceCountInstFlag`: bool
   RtcpPayload_RtpfbPacket* = ref object of KaitaiStruct
     `ssrc`*: uint32
     `ssrcMediaSource`*: uint32
     `fciBlock`*: KaitaiStruct
     `parent`*: RtcpPayload_RtcpPacket
     `rawFciBlock`*: seq[byte]
-    `fmtInst`*: RtcpPayload_RtpfbSubtype
+    `fmtInst`: RtcpPayload_RtpfbSubtype
+    `fmtInstFlag`: bool
   RtcpPayload_PacketStatusChunk* = ref object of KaitaiStruct
     `t`*: bool
     `s2`*: uint64
@@ -128,7 +139,8 @@ type
     `rle`*: uint64
     `symbolList`*: uint64
     `parent`*: KaitaiStruct
-    `sInst`*: int
+    `sInst`: int
+    `sInstFlag`: bool
   RtcpPayload_PsfbAfbPacket* = ref object of KaitaiStruct
     `uid`*: uint32
     `contents`*: KaitaiStruct
@@ -206,12 +218,12 @@ proc read*(_: typedesc[RtcpPayload_PsfbAfbRembPacket], io: KaitaiStream, root: K
     this.ssrcList.add(it)
 
 proc maxTotalBitrate(this: RtcpPayload_PsfbAfbRembPacket): int = 
-  if this.maxTotalBitrateInst != nil:
+  if this.maxTotalBitrateInstFlag:
     return this.maxTotalBitrateInst
   let maxTotalBitrateInstExpr = int((this.brMantissa * (1 shl this.brExp)))
   this.maxTotalBitrateInst = maxTotalBitrateInstExpr
-  if this.maxTotalBitrateInst != nil:
-    return this.maxTotalBitrateInst
+  this.maxTotalBitrateInstFlag = true
+  return this.maxTotalBitrateInst
 
 proc fromFile*(_: typedesc[RtcpPayload_PsfbAfbRembPacket], filename: string): RtcpPayload_PsfbAfbRembPacket =
   RtcpPayload_PsfbAfbRembPacket.read(newKaitaiFileStream(filename), nil, nil)
@@ -241,12 +253,12 @@ proc read*(_: typedesc[RtcpPayload_SrPacket], io: KaitaiStream, root: KaitaiStru
     this.reportBlock.add(it)
 
 proc ntp(this: RtcpPayload_SrPacket): int = 
-  if this.ntpInst != nil:
+  if this.ntpInstFlag:
     return this.ntpInst
   let ntpInstExpr = int(((this.ntpMsw shl 32) and this.ntpLsw))
   this.ntpInst = ntpInstExpr
-  if this.ntpInst != nil:
-    return this.ntpInst
+  this.ntpInstFlag = true
+  return this.ntpInst
 
 proc fromFile*(_: typedesc[RtcpPayload_SrPacket], filename: string): RtcpPayload_SrPacket =
   RtcpPayload_SrPacket.read(newKaitaiFileStream(filename), nil, nil)
@@ -368,20 +380,20 @@ proc read*(_: typedesc[RtcpPayload_ReportBlock], io: KaitaiStream, root: KaitaiS
   this.dlsr = dlsrExpr
 
 proc fractionLost(this: RtcpPayload_ReportBlock): int = 
-  if this.fractionLostInst != nil:
+  if this.fractionLostInstFlag:
     return this.fractionLostInst
   let fractionLostInstExpr = int((this.lostVal shr 24))
   this.fractionLostInst = fractionLostInstExpr
-  if this.fractionLostInst != nil:
-    return this.fractionLostInst
+  this.fractionLostInstFlag = true
+  return this.fractionLostInst
 
 proc cumulativePacketsLost(this: RtcpPayload_ReportBlock): int = 
-  if this.cumulativePacketsLostInst != nil:
+  if this.cumulativePacketsLostInstFlag:
     return this.cumulativePacketsLostInst
   let cumulativePacketsLostInstExpr = int((this.lostVal and 16777215))
   this.cumulativePacketsLostInst = cumulativePacketsLostInstExpr
-  if this.cumulativePacketsLostInst != nil:
-    return this.cumulativePacketsLostInst
+  this.cumulativePacketsLostInstFlag = true
+  return this.cumulativePacketsLostInst
 
 proc fromFile*(_: typedesc[RtcpPayload_ReportBlock], filename: string): RtcpPayload_ReportBlock =
   RtcpPayload_ReportBlock.read(newKaitaiFileStream(filename), nil, nil)
@@ -404,36 +416,36 @@ proc read*(_: typedesc[RtcpPayload_RtpfbTransportFeedbackPacket], io: KaitaiStre
   this.remaining = remainingExpr
 
 proc referenceTime(this: RtcpPayload_RtpfbTransportFeedbackPacket): int = 
-  if this.referenceTimeInst != nil:
+  if this.referenceTimeInstFlag:
     return this.referenceTimeInst
   let referenceTimeInstExpr = int((this.b4 shr 8))
   this.referenceTimeInst = referenceTimeInstExpr
-  if this.referenceTimeInst != nil:
-    return this.referenceTimeInst
+  this.referenceTimeInstFlag = true
+  return this.referenceTimeInst
 
 proc fbPktCount(this: RtcpPayload_RtpfbTransportFeedbackPacket): int = 
-  if this.fbPktCountInst != nil:
+  if this.fbPktCountInstFlag:
     return this.fbPktCountInst
   let fbPktCountInstExpr = int((this.b4 and 255))
   this.fbPktCountInst = fbPktCountInstExpr
-  if this.fbPktCountInst != nil:
-    return this.fbPktCountInst
+  this.fbPktCountInstFlag = true
+  return this.fbPktCountInst
 
 proc packetStatus(this: RtcpPayload_RtpfbTransportFeedbackPacket): seq[byte] = 
-  if this.packetStatusInst.len != 0:
+  if this.packetStatusInstFlag:
     return this.packetStatusInst
   let packetStatusInstExpr = this.io.readBytes(int(0))
   this.packetStatusInst = packetStatusInstExpr
-  if this.packetStatusInst.len != 0:
-    return this.packetStatusInst
+  this.packetStatusInstFlag = true
+  return this.packetStatusInst
 
 proc recvDelta(this: RtcpPayload_RtpfbTransportFeedbackPacket): seq[byte] = 
-  if this.recvDeltaInst.len != 0:
+  if this.recvDeltaInstFlag:
     return this.recvDeltaInst
   let recvDeltaInstExpr = this.io.readBytes(int(0))
   this.recvDeltaInst = recvDeltaInstExpr
-  if this.recvDeltaInst.len != 0:
-    return this.recvDeltaInst
+  this.recvDeltaInstFlag = true
+  return this.recvDeltaInst
 
 proc fromFile*(_: typedesc[RtcpPayload_RtpfbTransportFeedbackPacket], filename: string): RtcpPayload_RtpfbTransportFeedbackPacket =
   RtcpPayload_RtpfbTransportFeedbackPacket.read(newKaitaiFileStream(filename), nil, nil)
@@ -463,12 +475,12 @@ proc read*(_: typedesc[RtcpPayload_PsfbPacket], io: KaitaiStream, root: KaitaiSt
       this.fciBlock = fciBlockExpr
 
 proc fmt(this: RtcpPayload_PsfbPacket): RtcpPayload_PsfbSubtype = 
-  if this.fmtInst != nil:
+  if this.fmtInstFlag:
     return this.fmtInst
   let fmtInstExpr = RtcpPayload_PsfbSubtype(RtcpPayload_PsfbSubtype(this.parent.subtype))
   this.fmtInst = fmtInstExpr
-  if this.fmtInst != nil:
-    return this.fmtInst
+  this.fmtInstFlag = true
+  return this.fmtInst
 
 proc fromFile*(_: typedesc[RtcpPayload_PsfbPacket], filename: string): RtcpPayload_PsfbPacket =
   RtcpPayload_PsfbPacket.read(newKaitaiFileStream(filename), nil, nil)
@@ -506,12 +518,12 @@ proc read*(_: typedesc[RtcpPayload_SdesPacket], io: KaitaiStream, root: KaitaiSt
     this.sourceChunk.add(it)
 
 proc sourceCount(this: RtcpPayload_SdesPacket): uint64 = 
-  if this.sourceCountInst != nil:
+  if this.sourceCountInstFlag:
     return this.sourceCountInst
   let sourceCountInstExpr = uint64(this.parent.subtype)
   this.sourceCountInst = sourceCountInstExpr
-  if this.sourceCountInst != nil:
-    return this.sourceCountInst
+  this.sourceCountInstFlag = true
+  return this.sourceCountInst
 
 proc fromFile*(_: typedesc[RtcpPayload_SdesPacket], filename: string): RtcpPayload_SdesPacket =
   RtcpPayload_SdesPacket.read(newKaitaiFileStream(filename), nil, nil)
@@ -541,12 +553,12 @@ proc read*(_: typedesc[RtcpPayload_RtpfbPacket], io: KaitaiStream, root: KaitaiS
       this.fciBlock = fciBlockExpr
 
 proc fmt(this: RtcpPayload_RtpfbPacket): RtcpPayload_RtpfbSubtype = 
-  if this.fmtInst != nil:
+  if this.fmtInstFlag:
     return this.fmtInst
   let fmtInstExpr = RtcpPayload_RtpfbSubtype(RtcpPayload_RtpfbSubtype(this.parent.subtype))
   this.fmtInst = fmtInstExpr
-  if this.fmtInst != nil:
-    return this.fmtInst
+  this.fmtInstFlag = true
+  return this.fmtInst
 
 proc fromFile*(_: typedesc[RtcpPayload_RtpfbPacket], filename: string): RtcpPayload_RtpfbPacket =
   RtcpPayload_RtpfbPacket.read(newKaitaiFileStream(filename), nil, nil)
@@ -575,12 +587,12 @@ proc read*(_: typedesc[RtcpPayload_PacketStatusChunk], io: KaitaiStream, root: K
     this.symbolList = symbolListExpr
 
 proc s(this: RtcpPayload_PacketStatusChunk): int = 
-  if this.sInst != nil:
+  if this.sInstFlag:
     return this.sInst
   let sInstExpr = int((if (if this.t: 1 else: 0) == 0: this.s2 else: (if (if this.s1: 1 else: 0) == 0: 1 else: 0)))
   this.sInst = sInstExpr
-  if this.sInst != nil:
-    return this.sInst
+  this.sInstFlag = true
+  return this.sInst
 
 proc fromFile*(_: typedesc[RtcpPayload_PacketStatusChunk], filename: string): RtcpPayload_PacketStatusChunk =
   RtcpPayload_PacketStatusChunk.read(newKaitaiFileStream(filename), nil, nil)

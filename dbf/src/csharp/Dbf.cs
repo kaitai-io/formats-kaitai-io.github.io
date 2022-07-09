@@ -34,7 +34,7 @@ namespace Kaitai
             __raw_header2 = m_io.ReadBytes((Header1.LenHeader - 12));
             var io___raw_header2 = new KaitaiStream(__raw_header2);
             _header2 = new Header2(io___raw_header2, this, m_root);
-            _records = new List<byte[]>((int) (Header1.NumRecords));
+            _records = new List<byte[]>();
             for (var i = 0; i < Header1.NumRecords; i++)
             {
                 _records.Add(m_io.ReadBytes(Header1.LenRecord));
@@ -61,7 +61,7 @@ namespace Kaitai
                 if (M_Root.Header1.DbaseLevel == 7) {
                     _headerDbase7 = new HeaderDbase7(m_io, this, m_root);
                 }
-                _fields = new List<Field>((int) (11));
+                _fields = new List<Field>();
                 for (var i = 0; i < 11; i++)
                 {
                     _fields.Add(new Field(m_io, this, m_root));

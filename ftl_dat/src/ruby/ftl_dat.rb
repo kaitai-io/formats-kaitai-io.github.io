@@ -14,9 +14,9 @@ class FtlDat < Kaitai::Struct::Struct
 
   def _read
     @num_files = @_io.read_u4le
-    @files = Array.new(num_files)
+    @files = []
     (num_files).times { |i|
-      @files[i] = File.new(@_io, self, @_root)
+      @files << File.new(@_io, self, @_root)
     }
     self
   end

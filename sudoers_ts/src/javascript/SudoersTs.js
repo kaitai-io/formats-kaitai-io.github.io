@@ -8,7 +8,7 @@
   } else {
     root.SudoersTs = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * This spec can be used to parse sudo time stamp files located in directories
  * such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.

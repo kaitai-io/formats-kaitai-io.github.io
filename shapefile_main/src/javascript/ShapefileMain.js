@@ -8,7 +8,7 @@
   } else {
     root.ShapefileMain = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var ShapefileMain = (function() {
   ShapefileMain.ShapeType = Object.freeze({
     NULL_SHAPE: 0,
@@ -86,14 +86,14 @@ var ShapefileMain = (function() {
     MultiPointM.prototype._read = function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfPoints = this._io.readS4le();
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
       this.mRange = new BoundsMinMax(this._io, this, this._root);
-      this.mValues = new Array(this.numberOfPoints);
+      this.mValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.mValues[i] = this._io.readF8le();
+        this.mValues.push(this._io.readF8le());
       }
     }
 
@@ -146,13 +146,13 @@ var ShapefileMain = (function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfParts = this._io.readS4le();
       this.numberOfPoints = this._io.readS4le();
-      this.parts = new Array(this.numberOfParts);
+      this.parts = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.parts[i] = this._io.readS4le();
+        this.parts.push(this._io.readS4le());
       }
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
     }
 
@@ -187,13 +187,13 @@ var ShapefileMain = (function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfParts = this._io.readS4le();
       this.numberOfPoints = this._io.readS4le();
-      this.parts = new Array(this.numberOfParts);
+      this.parts = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.parts[i] = this._io.readS4le();
+        this.parts.push(this._io.readS4le());
       }
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
     }
 
@@ -211,19 +211,19 @@ var ShapefileMain = (function() {
     MultiPointZ.prototype._read = function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfPoints = this._io.readS4le();
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
       this.zRange = new BoundsMinMax(this._io, this, this._root);
-      this.zValues = new Array(this.numberOfPoints);
+      this.zValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.zValues[i] = this._io.readF8le();
+        this.zValues.push(this._io.readF8le());
       }
       this.mRange = new BoundsMinMax(this._io, this, this._root);
-      this.mValues = new Array(this.numberOfPoints);
+      this.mValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.mValues[i] = this._io.readF8le();
+        this.mValues.push(this._io.readF8le());
       }
     }
 
@@ -242,23 +242,23 @@ var ShapefileMain = (function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfParts = this._io.readS4le();
       this.numberOfPoints = this._io.readS4le();
-      this.parts = new Array(this.numberOfParts);
+      this.parts = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.parts[i] = this._io.readS4le();
+        this.parts.push(this._io.readS4le());
       }
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
       this.zRange = new BoundsMinMax(this._io, this, this._root);
-      this.zValues = new Array(this.numberOfPoints);
+      this.zValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.zValues[i] = this._io.readF8le();
+        this.zValues.push(this._io.readF8le());
       }
       this.mRange = new BoundsMinMax(this._io, this, this._root);
-      this.mValues = new Array(this.numberOfPoints);
+      this.mValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.mValues[i] = this._io.readF8le();
+        this.mValues.push(this._io.readF8le());
       }
     }
 
@@ -277,23 +277,23 @@ var ShapefileMain = (function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfParts = this._io.readS4le();
       this.numberOfPoints = this._io.readS4le();
-      this.parts = new Array(this.numberOfParts);
+      this.parts = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.parts[i] = this._io.readS4le();
+        this.parts.push(this._io.readS4le());
       }
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
       this.zRange = new BoundsMinMax(this._io, this, this._root);
-      this.zValues = new Array(this.numberOfPoints);
+      this.zValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.zValues[i] = this._io.readF8le();
+        this.zValues.push(this._io.readF8le());
       }
       this.mRange = new BoundsMinMax(this._io, this, this._root);
-      this.mValues = new Array(this.numberOfPoints);
+      this.mValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.mValues[i] = this._io.readF8le();
+        this.mValues.push(this._io.readF8le());
       }
     }
 
@@ -345,18 +345,18 @@ var ShapefileMain = (function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfParts = this._io.readS4le();
       this.numberOfPoints = this._io.readS4le();
-      this.parts = new Array(this.numberOfParts);
+      this.parts = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.parts[i] = this._io.readS4le();
+        this.parts.push(this._io.readS4le());
       }
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
       this.mRange = new BoundsMinMax(this._io, this, this._root);
-      this.mValues = new Array(this.numberOfPoints);
+      this.mValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.mValues[i] = this._io.readF8le();
+        this.mValues.push(this._io.readF8le());
       }
     }
 
@@ -390,9 +390,9 @@ var ShapefileMain = (function() {
     MultiPoint.prototype._read = function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfPoints = this._io.readS4le();
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
     }
 
@@ -560,27 +560,27 @@ var ShapefileMain = (function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfParts = this._io.readS4le();
       this.numberOfPoints = this._io.readS4le();
-      this.parts = new Array(this.numberOfParts);
+      this.parts = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.parts[i] = this._io.readS4le();
+        this.parts.push(this._io.readS4le());
       }
-      this.partTypes = new Array(this.numberOfParts);
+      this.partTypes = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.partTypes[i] = this._io.readS4le();
+        this.partTypes.push(this._io.readS4le());
       }
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
       this.zRange = new BoundsMinMax(this._io, this, this._root);
-      this.zValues = new Array(this.numberOfPoints);
+      this.zValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.zValues[i] = this._io.readF8le();
+        this.zValues.push(this._io.readF8le());
       }
       this.mRange = new BoundsMinMax(this._io, this, this._root);
-      this.mValues = new Array(this.numberOfPoints);
+      this.mValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.mValues[i] = this._io.readF8le();
+        this.mValues.push(this._io.readF8le());
       }
     }
 
@@ -599,18 +599,18 @@ var ShapefileMain = (function() {
       this.boundingBox = new BoundingBoxXY(this._io, this, this._root);
       this.numberOfParts = this._io.readS4le();
       this.numberOfPoints = this._io.readS4le();
-      this.parts = new Array(this.numberOfParts);
+      this.parts = [];
       for (var i = 0; i < this.numberOfParts; i++) {
-        this.parts[i] = this._io.readS4le();
+        this.parts.push(this._io.readS4le());
       }
-      this.points = new Array(this.numberOfPoints);
+      this.points = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.points[i] = new Point(this._io, this, this._root);
+        this.points.push(new Point(this._io, this, this._root));
       }
       this.mRange = new BoundsMinMax(this._io, this, this._root);
-      this.mValues = new Array(this.numberOfPoints);
+      this.mValues = [];
       for (var i = 0; i < this.numberOfPoints; i++) {
-        this.mValues[i] = this._io.readF8le();
+        this.mValues.push(this._io.readF8le());
       }
     }
 

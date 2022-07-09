@@ -6,17 +6,18 @@ import /network/udp_datagram
 import /network/ipv4_packet
 import /network/ipv6_packet
 
-import "icmp_packet"
+import "tcp_segment"
 import "udp_datagram"
 import "ipv4_packet"
+import "icmp_packet"
 import "ipv6_packet"
-import "tcp_segment"
 type
   ProtocolBody* = ref object of KaitaiStruct
     `body`*: KaitaiStruct
     `protocolNum`*: uint8
     `parent`*: KaitaiStruct
-    `protocolInst`*: ProtocolBody_ProtocolEnum
+    `protocolInst`: ProtocolBody_ProtocolEnum
+    `protocolInstFlag`: bool
   ProtocolBody_ProtocolEnum* = enum
     hopopt = 0
     icmp = 1
@@ -229,12 +230,12 @@ proc read*(_: typedesc[ProtocolBody], io: KaitaiStream, root: KaitaiStruct, pare
       this.body = bodyExpr
 
 proc protocol(this: ProtocolBody): ProtocolBody_ProtocolEnum = 
-  if this.protocolInst != nil:
+  if this.protocolInstFlag:
     return this.protocolInst
   let protocolInstExpr = ProtocolBody_ProtocolEnum(ProtocolBody_ProtocolEnum(this.protocolNum))
   this.protocolInst = protocolInstExpr
-  if this.protocolInst != nil:
-    return this.protocolInst
+  this.protocolInstFlag = true
+  return this.protocolInst
 
 proc fromFile*(_: typedesc[ProtocolBody], filename: string): ProtocolBody =
   ProtocolBody.read(newKaitaiFileStream(filename), nil, nil)

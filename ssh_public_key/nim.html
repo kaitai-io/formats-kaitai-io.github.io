@@ -255,7 +255,8 @@ Implementation closely follows code in OpenSSH.</p>
     <span class="p">`</span><span class="n">rsaE</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SshPublicKey_Bignum2</span>
     <span class="p">`</span><span class="n">rsaN</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SshPublicKey_Bignum2</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SshPublicKey</span>
-    <span class="p">`</span><span class="n">keyLengthInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">keyLengthInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">keyLengthInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">SshPublicKey_KeyEd25519</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lenPk</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">pk</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -282,7 +283,8 @@ Implementation closely follows code in OpenSSH.</p>
     <span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">lengthInBitsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lengthInBitsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lengthInBitsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SshPublicKey], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SshPublicKey</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SshPublicKey_KeyRsa], io: KaitaiStream, root: KaitaiStruct, parent: SshPublicKey): SshPublicKey_KeyRsa</span>
@@ -370,12 +372,12 @@ Implementation closely follows code in OpenSSH.</p>
   <span class="sd">##[</span>
   <span class="n">Key</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">bits</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInst</span>
   <span class="k">let</span> <span class="n">keyLengthInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">rsaN</span><span class="p">.</span><span class="n">lengthInBits</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInst</span> <span class="o">=</span> <span class="n">keyLengthInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">keyLengthInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SshPublicKey_KeyRsa], filename: string): SshPublicKey_KeyRsa =</span>
   <span class="n">SshPublicKey_KeyRsa</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -530,12 +532,12 @@ Implementation closely follows code in OpenSSH.</p>
 <span class="p">`</span><span class="n">BN_num_bits</span><span class="p">`</span> <span class="n">function</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInst</span>
   <span class="k">let</span> <span class="n">lengthInBitsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInst</span> <span class="o">=</span> <span class="n">lengthInBitsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lengthInBitsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SshPublicKey_Bignum2], filename: string): SshPublicKey_Bignum2 =</span>
   <span class="n">SshPublicKey_Bignum2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

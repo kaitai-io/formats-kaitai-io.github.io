@@ -130,7 +130,7 @@ public class Fallout2Dat extends KaitaiStruct {
         }
         private void _read() {
             this.fileCount = this._io.readU4le();
-            files = new ArrayList<File>(((Number) (fileCount())).intValue());
+            this.files = new ArrayList<File>();
             for (int i = 0; i < fileCount(); i++) {
                 this.files.add(new File(this._io, this, _root));
             }
@@ -175,7 +175,7 @@ public class Fallout2Dat extends KaitaiStruct {
             if (this.contentsRaw != null)
                 return this.contentsRaw;
             if (flags() == Fallout2Dat.Compression.NONE) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(offset());
                 this.contentsRaw = io.readBytes(sizeUnpacked());
@@ -188,7 +188,7 @@ public class Fallout2Dat extends KaitaiStruct {
             if (this.contentsZlib != null)
                 return this.contentsZlib;
             if (flags() == Fallout2Dat.Compression.ZLIB) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(offset());
                 this._raw_contentsZlib = io.readBytes(sizePacked());

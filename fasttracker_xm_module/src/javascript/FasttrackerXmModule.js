@@ -8,7 +8,7 @@
   } else {
     root.FasttrackerXmModule = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * XM (standing for eXtended Module) is a popular module music file
  * format, that was introduced in 1994 in FastTracker2 by Triton demo
@@ -35,13 +35,13 @@ var FasttrackerXmModule = (function() {
     this._raw_header = this._io.readBytes((this.preheader.headerSize - 4));
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new Header(_io__raw_header, this, this._root);
-    this.patterns = new Array(this.header.numPatterns);
+    this.patterns = [];
     for (var i = 0; i < this.header.numPatterns; i++) {
-      this.patterns[i] = new Pattern(this._io, this, this._root);
+      this.patterns.push(new Pattern(this._io, this, this._root));
     }
-    this.instruments = new Array(this.header.numInstruments);
+    this.instruments = [];
     for (var i = 0; i < this.header.numInstruments; i++) {
-      this.instruments[i] = new Instrument(this._io, this, this._root);
+      this.instruments.push(new Instrument(this._io, this, this._root));
     }
   }
 
@@ -238,9 +238,9 @@ var FasttrackerXmModule = (function() {
       this.flags = new Flags(this._io, this, this._root);
       this.defaultTempo = this._io.readU2le();
       this.defaultBpm = this._io.readU2le();
-      this.patternOrderTable = new Array(256);
+      this.patternOrderTable = [];
       for (var i = 0; i < 256; i++) {
-        this.patternOrderTable[i] = this._io.readU1();
+        this.patternOrderTable.push(this._io.readU1());
       }
     }
 
@@ -291,13 +291,13 @@ var FasttrackerXmModule = (function() {
       this._raw_header = this._io.readBytes((this.headerSize - 4));
       var _io__raw_header = new KaitaiStream(this._raw_header);
       this.header = new Header(_io__raw_header, this, this._root);
-      this.samplesHeaders = new Array(this.header.numSamples);
+      this.samplesHeaders = [];
       for (var i = 0; i < this.header.numSamples; i++) {
-        this.samplesHeaders[i] = new SampleHeader(this._io, this, this._root);
+        this.samplesHeaders.push(new SampleHeader(this._io, this, this._root));
       }
-      this.samples = new Array(this.header.numSamples);
+      this.samples = [];
       for (var i = 0; i < this.header.numSamples; i++) {
-        this.samples[i] = new SamplesData(this._io, this, this._root, this.samplesHeaders[i]);
+        this.samples.push(new SamplesData(this._io, this, this._root, this.samplesHeaders[i]));
       }
     }
 
@@ -345,17 +345,17 @@ var FasttrackerXmModule = (function() {
       }
       ExtraHeader.prototype._read = function() {
         this.lenSampleHeader = this._io.readU4le();
-        this.idxSamplePerNote = new Array(96);
+        this.idxSamplePerNote = [];
         for (var i = 0; i < 96; i++) {
-          this.idxSamplePerNote[i] = this._io.readU1();
+          this.idxSamplePerNote.push(this._io.readU1());
         }
-        this.volumePoints = new Array(12);
+        this.volumePoints = [];
         for (var i = 0; i < 12; i++) {
-          this.volumePoints[i] = new EnvelopePoint(this._io, this, this._root);
+          this.volumePoints.push(new EnvelopePoint(this._io, this, this._root));
         }
-        this.panningPoints = new Array(12);
+        this.panningPoints = [];
         for (var i = 0; i < 12; i++) {
-          this.panningPoints[i] = new EnvelopePoint(this._io, this, this._root);
+          this.panningPoints.push(new EnvelopePoint(this._io, this, this._root));
         }
         this.numVolumePoints = this._io.readU1();
         this.numPanningPoints = this._io.readU1();

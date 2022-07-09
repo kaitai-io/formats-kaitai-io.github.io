@@ -7,8 +7,8 @@ require("kaitaistruct")
 local enum = require("enum")
 local stringstream = require("string_stream")
 
-require("ethernet_frame")
 require("packet_ppi")
+require("ethernet_frame")
 -- 
 -- PCAP (named after libpcap / winpcap) is a popular format for saving
 -- network traffic grabbed by network sniffers. It is typically

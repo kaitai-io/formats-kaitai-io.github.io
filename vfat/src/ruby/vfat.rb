@@ -356,9 +356,9 @@ class Vfat < Kaitai::Struct::Struct
     end
 
     def _read
-      @records = Array.new(_root.boot_sector.bpb.max_root_dir_rec)
+      @records = []
       (_root.boot_sector.bpb.max_root_dir_rec).times { |i|
-        @records[i] = RootDirectoryRec.new(@_io, self, @_root)
+        @records << RootDirectoryRec.new(@_io, self, @_root)
       }
       self
     end
@@ -415,9 +415,9 @@ class Vfat < Kaitai::Struct::Struct
     return @fats unless @fats.nil?
     _pos = @_io.pos
     @_io.seek(boot_sector.pos_fats)
-    @fats = Array.new(boot_sector.bpb.num_fats)
+    @fats = []
     (boot_sector.bpb.num_fats).times { |i|
-      @fats[i] = @_io.read_bytes(boot_sector.size_fat)
+      @fats << @_io.read_bytes(boot_sector.size_fat)
     }
     @_io.seek(_pos)
     @fats

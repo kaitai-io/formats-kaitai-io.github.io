@@ -82,7 +82,7 @@ sub raw1 {
     my ($self) = @_;
     return $self->{raw1} if ($self->{raw1});
     if ($self->len_bytes() >= 2) {
-        $self->{raw1} = (@{$self->bytes()}[1] & 63);
+        $self->{raw1} = (unpack('C', substr($self->bytes(), 1, 1)) & 63);
     }
     return $self->{raw1};
 }
@@ -98,7 +98,7 @@ sub raw3 {
     my ($self) = @_;
     return $self->{raw3} if ($self->{raw3});
     if ($self->len_bytes() >= 4) {
-        $self->{raw3} = (@{$self->bytes()}[3] & 63);
+        $self->{raw3} = (unpack('C', substr($self->bytes(), 3, 1)) & 63);
     }
     return $self->{raw3};
 }
@@ -113,7 +113,7 @@ sub value_as_int {
 sub raw0 {
     my ($self) = @_;
     return $self->{raw0} if ($self->{raw0});
-    $self->{raw0} = (@{$self->bytes()}[0] & ($self->len_bytes() == 1 ? 127 : ($self->len_bytes() == 2 ? 31 : ($self->len_bytes() == 3 ? 15 : ($self->len_bytes() == 4 ? 7 : 0)))));
+    $self->{raw0} = (unpack('C', substr($self->bytes(), 0, 1)) & ($self->len_bytes() == 1 ? 127 : ($self->len_bytes() == 2 ? 31 : ($self->len_bytes() == 3 ? 15 : ($self->len_bytes() == 4 ? 7 : 0)))));
     return $self->{raw0};
 }
 
@@ -131,7 +131,7 @@ sub raw2 {
     my ($self) = @_;
     return $self->{raw2} if ($self->{raw2});
     if ($self->len_bytes() >= 3) {
-        $self->{raw2} = (@{$self->bytes()}[2] & 63);
+        $self->{raw2} = (unpack('C', substr($self->bytes(), 2, 1)) & 63);
     }
     return $self->{raw2};
 }

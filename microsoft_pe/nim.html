@@ -284,7 +284,8 @@ section#format-index .row {
   <span class="n">MicrosoftPe</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">mz</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_MzPlaceholder</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">peInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_PeHeader</span>
+    <span class="p">`</span><span class="n">peInst</span><span class="p">`:</span> <span class="n">MicrosoftPe_PeHeader</span>
+    <span class="p">`</span><span class="n">peInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftPe_PeFormat</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">rom_image</span> <span class="o">=</span> <span class="mi">263</span>
     <span class="n">pe32</span> <span class="o">=</span> <span class="mi">267</span>
@@ -374,8 +375,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">numberOfAuxSymbols</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffHeader</span>
     <span class="p">`</span><span class="n">rawNameAnnoying</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">sectionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_Section</span>
-    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">sectionInst</span><span class="p">`:</span> <span class="n">MicrosoftPe_Section</span>
+    <span class="p">`</span><span class="n">sectionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">dataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftPe_PeHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">peSignature</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">coffHdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffHeader</span>
@@ -384,7 +387,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe</span>
     <span class="p">`</span><span class="n">rawOptionalHdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">rawCertificateTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">certificateTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_CertificateTable</span>
+    <span class="p">`</span><span class="n">certificateTableInst</span><span class="p">`:</span> <span class="n">MicrosoftPe_CertificateTable</span>
+    <span class="p">`</span><span class="n">certificateTableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftPe_OptionalHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">std</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_OptionalHeaderStd</span>
     <span class="p">`</span><span class="n">windows</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_OptionalHeaderWindows</span>
@@ -402,7 +406,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">numberOfLinenumbers</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">characteristics</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_PeHeader</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftPe_CertificateTable</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">items</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">MicrosoftPe_CertificateEntry</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_PeHeader</span>
@@ -431,10 +436,14 @@ section#format-index .row {
     <span class="p">`</span><span class="n">sizeOfOptionalHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">characteristics</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_PeHeader</span>
-    <span class="p">`</span><span class="n">symbolTableSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">symbolNameTableOffsetInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">symbolNameTableSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">symbolTableInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">MicrosoftPe_CoffSymbol</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">symbolTableSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">symbolTableSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">symbolNameTableOffsetInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">symbolNameTableOffsetInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">symbolNameTableSizeInst</span><span class="p">`:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">symbolNameTableSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">symbolTableInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">MicrosoftPe_CoffSymbol</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">symbolTableInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">MicrosoftPe_CoffHeader_MachineType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">i386</span> <span class="o">=</span> <span class="mi">332</span>
@@ -464,11 +473,16 @@ section#format-index .row {
     <span class="n">arm64</span> <span class="o">=</span> <span class="mi">43620</span>
   <span class="n">MicrosoftPe_Annoyingstring</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffSymbol</span>
-    <span class="p">`</span><span class="n">nameFromOffsetInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">nameOffsetInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">nameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">nameZeroesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">nameFromShortInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameFromOffsetInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameFromOffsetInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">nameOffsetInst</span><span class="p">`:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">nameOffsetInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">nameInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">nameZeroesInst</span><span class="p">`:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">nameZeroesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">nameFromShortInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">nameFromShortInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftPe</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe_CertificateEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CertificateTable): MicrosoftPe_CertificateEntry</span>
@@ -516,15 +530,15 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">mz</span> <span class="o">=</span> <span class="n">mzExpr</span>
 
 <span class="k">proc </span><span class="nf">pe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe</span><span class="p">):</span> <span class="n">MicrosoftPe_PeHeader</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">peInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">peInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">peInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">ofsPe</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">peInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftPe_PeHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">peInst</span> <span class="o">=</span> <span class="n">peInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">peInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">peInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">peInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">peInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe], filename: string): MicrosoftPe =</span>
   <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -726,23 +740,23 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">numberOfAuxSymbols</span> <span class="o">=</span> <span class="n">numberOfAuxSymbolsExpr</span>
 
 <span class="k">proc </span><span class="nf">section</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffSymbol</span><span class="p">):</span> <span class="n">MicrosoftPe_Section</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectionInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectionInst</span>
   <span class="k">let</span> <span class="n">sectionInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftPe_Section</span><span class="p">(</span><span class="n">MicrosoftPe</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">pe</span><span class="p">.</span><span class="n">sections</span><span class="o">[</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">sectionNumber</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sectionInst</span> <span class="o">=</span> <span class="n">sectionInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sectionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectionInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sectionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sectionInst</span>
 
 <span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffSymbol</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">section</span><span class="p">.</span><span class="n">pointerToRawData</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="p">)))</span>
   <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe_CoffSymbol], filename: string): MicrosoftPe_CoffSymbol =</span>
   <span class="n">MicrosoftPe_CoffSymbol</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -769,7 +783,7 @@ section#format-index .row {
     <span class="n">this</span><span class="p">.</span><span class="n">sections</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">certificateTable</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_PeHeader</span><span class="p">):</span> <span class="n">MicrosoftPe_CertificateTable</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">optionalHdr</span><span class="p">.</span><span class="n">dataDirs</span><span class="p">.</span><span class="n">certificateTable</span><span class="p">.</span><span class="n">virtualAddress</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -780,8 +794,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">certificateTableInstExpr</span> <span class="o">=</span> <span class="n">MicrosoftPe_CertificateTable</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawCertificateTableInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInst</span> <span class="o">=</span> <span class="n">certificateTableInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">certificateTableInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe_PeHeader], filename: string): MicrosoftPe_PeHeader =</span>
   <span class="n">MicrosoftPe_PeHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -834,15 +848,15 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">characteristics</span> <span class="o">=</span> <span class="n">characteristicsExpr</span>
 
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_Section</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">pointerToRawData</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">sizeOfRawData</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe_Section], filename: string): MicrosoftPe_Section =</span>
   <span class="n">MicrosoftPe_Section</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -946,34 +960,34 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">characteristics</span> <span class="o">=</span> <span class="n">characteristicsExpr</span>
 
 <span class="k">proc </span><span class="nf">symbolTableSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInst</span>
   <span class="k">let</span> <span class="n">symbolTableSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">numberOfSymbols</span> <span class="o">*</span> <span class="mi">18</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInst</span> <span class="o">=</span> <span class="n">symbolTableSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSizeInst</span>
 
 <span class="k">proc </span><span class="nf">symbolNameTableOffset</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInst</span>
   <span class="k">let</span> <span class="n">symbolNameTableOffsetInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">pointerToSymbolTable</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableSize</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInst</span> <span class="o">=</span> <span class="n">symbolNameTableOffsetInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffsetInst</span>
 
 <span class="k">proc </span><span class="nf">symbolNameTableSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffHeader</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableOffset</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">symbolNameTableSizeInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInst</span> <span class="o">=</span> <span class="n">symbolNameTableSizeInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolNameTableSizeInst</span>
 
 <span class="k">proc </span><span class="nf">symbolTable</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_CoffHeader</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">MicrosoftPe_CoffSymbol</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">pointerToSymbolTable</span><span class="p">))</span>
@@ -981,8 +995,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">MicrosoftPe_CoffSymbol</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">symbolTableInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe_CoffHeader], filename: string): MicrosoftPe_CoffHeader =</span>
   <span class="n">MicrosoftPe_CoffHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -997,7 +1011,7 @@ section#format-index .row {
 
 
 <span class="k">proc </span><span class="nf">nameFromOffset</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_Annoyingstring</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -1006,41 +1020,41 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">nameFromOffsetInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">),</span> <span class="s">&quot;ascii&quot;</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInst</span> <span class="o">=</span> <span class="n">nameFromOffsetInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffsetInst</span>
 
 <span class="k">proc </span><span class="nf">nameOffset</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_Annoyingstring</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">nameOffsetInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInst</span> <span class="o">=</span> <span class="n">nameOffsetInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameOffsetInst</span>
 
 <span class="k">proc </span><span class="nf">name</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_Annoyingstring</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
   <span class="k">let</span> <span class="n">nameInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromOffset</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromShort</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span> <span class="o">=</span> <span class="n">nameInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
 
 <span class="k">proc </span><span class="nf">nameZeroes</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_Annoyingstring</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
   <span class="k">let</span> <span class="n">nameZeroesInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInst</span> <span class="o">=</span> <span class="n">nameZeroesInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroesInst</span>
 
 <span class="k">proc </span><span class="nf">nameFromShort</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">MicrosoftPe_Annoyingstring</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameZeroes</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -1048,8 +1062,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">nameFromShortInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">),</span> <span class="s">&quot;ascii&quot;</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInst</span> <span class="o">=</span> <span class="n">nameFromShortInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameFromShortInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftPe_Annoyingstring], filename: string): MicrosoftPe_Annoyingstring =</span>
   <span class="n">MicrosoftPe_Annoyingstring</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

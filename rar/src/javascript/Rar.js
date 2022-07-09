@@ -8,7 +8,7 @@
   } else {
     root.Rar = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream, DosDatetime) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
 /**
  * RAR is a archive format used by popular proprietary RAR archiver,
  * created by Eugene Roshal. There are two major versions of format

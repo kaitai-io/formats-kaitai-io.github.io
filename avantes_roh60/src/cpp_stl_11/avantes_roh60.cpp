@@ -18,23 +18,20 @@ void avantes_roh60_t::_read() {
     m_wlx2 = m__io->read_f4le();
     m_wlx3 = m__io->read_f4le();
     m_wlx4 = m__io->read_f4le();
-    int l_unknown2 = 9;
     m_unknown2 = std::unique_ptr<std::vector<float>>(new std::vector<float>());
-    m_unknown2->reserve(l_unknown2);
+    const int l_unknown2 = 9;
     for (int i = 0; i < l_unknown2; i++) {
         m_unknown2->push_back(std::move(m__io->read_f4le()));
     }
     m_ipixfirst = m__io->read_f4le();
     m_ipixlast = m__io->read_f4le();
-    int l_unknown3 = 4;
     m_unknown3 = std::unique_ptr<std::vector<float>>(new std::vector<float>());
-    m_unknown3->reserve(l_unknown3);
+    const int l_unknown3 = 4;
     for (int i = 0; i < l_unknown3; i++) {
         m_unknown3->push_back(std::move(m__io->read_f4le()));
     }
-    int l_spectrum = ((static_cast<int>(ipixlast()) - static_cast<int>(ipixfirst())) - 1);
     m_spectrum = std::unique_ptr<std::vector<float>>(new std::vector<float>());
-    m_spectrum->reserve(l_spectrum);
+    const int l_spectrum = ((static_cast<int>(ipixlast()) - static_cast<int>(ipixfirst())) - 1);
     for (int i = 0; i < l_spectrum; i++) {
         m_spectrum->push_back(std::move(m__io->read_f4le()));
     }

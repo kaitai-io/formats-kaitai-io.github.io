@@ -591,7 +591,7 @@ public class PythonPyc27 extends KaitaiStruct {
             }
             private void _read() {
                 this.count = this._io.readU4le();
-                items = new ArrayList<PyObject>(((Number) (count())).intValue());
+                this.items = new ArrayList<PyObject>();
                 for (int i = 0; i < count(); i++) {
                     this.items.add(new PyObject(this._io, this, _root));
                 }

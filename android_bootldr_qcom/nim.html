@@ -343,7 +343,8 @@ devices, however, these code names are the same.</p>
     <span class="p">`</span><span class="n">bootloaderSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">imgHeaders</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">imgBodiesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">imgBodiesInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">imgBodiesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">AndroidBootldrQcom_ImgHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">lenBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -352,7 +353,8 @@ devices, however, these code names are the same.</p>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">idx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidBootldrQcom</span>
-    <span class="p">`</span><span class="n">imgHeaderInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidBootldrQcom_ImgHeader</span>
+    <span class="p">`</span><span class="n">imgHeaderInst</span><span class="p">`:</span> <span class="n">AndroidBootldrQcom_ImgHeader</span>
+    <span class="p">`</span><span class="n">imgHeaderInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrQcom], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrQcom</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrQcom_ImgHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom): AndroidBootldrQcom_ImgHeader</span>
@@ -514,7 +516,7 @@ devices, however, these code names are the same.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">imgHeaders</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">imgBodies</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidBootldrQcom</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsImgBodies</span><span class="p">))</span>
@@ -522,8 +524,8 @@ devices, however, these code names are the same.</p>
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">AndroidBootldrQcom_ImgBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgBodiesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrQcom], filename: string): AndroidBootldrQcom =</span>
   <span class="n">AndroidBootldrQcom</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -558,12 +560,12 @@ devices, however, these code names are the same.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">imgHeader</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidBootldrQcom_ImgBody</span><span class="p">):</span> <span class="n">AndroidBootldrQcom_ImgHeader</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInst</span>
   <span class="k">let</span> <span class="n">imgHeaderInstExpr</span> <span class="o">=</span> <span class="n">AndroidBootldrQcom_ImgHeader</span><span class="p">(</span><span class="n">AndroidBootldrQcom</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">imgHeaders</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">idx</span><span class="o">]</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInst</span> <span class="o">=</span> <span class="n">imgHeaderInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">imgHeaderInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrQcom_ImgBody], filename: string): AndroidBootldrQcom_ImgBody =</span>
   <span class="n">AndroidBootldrQcom_ImgBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

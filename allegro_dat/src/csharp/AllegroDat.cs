@@ -48,7 +48,7 @@ namespace Kaitai
                 throw new ValidationNotEqualError(new byte[] { 65, 76, 76, 46 }, DatMagic, M_Io, "/seq/1");
             }
             _numObjects = m_io.ReadU4be();
-            _objects = new List<DatObject>((int) (NumObjects));
+            _objects = new List<DatObject>();
             for (var i = 0; i < NumObjects; i++)
             {
                 _objects.Add(new DatObject(m_io, this, m_root));
@@ -74,7 +74,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _chars = new List<byte[]>((int) (95));
+                _chars = new List<byte[]>();
                 for (var i = 0; i < 95; i++)
                 {
                     _chars.Add(m_io.ReadBytes(16));
@@ -180,7 +180,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _chars = new List<byte[]>((int) (95));
+                _chars = new List<byte[]>();
                 for (var i = 0; i < 95; i++)
                 {
                     _chars.Add(m_io.ReadBytes(8));
@@ -296,7 +296,7 @@ namespace Kaitai
             private void _read()
             {
                 _numRanges = m_io.ReadS2be();
-                _ranges = new List<Range>((int) (NumRanges));
+                _ranges = new List<Range>();
                 for (var i = 0; i < NumRanges; i++)
                 {
                     _ranges.Add(new Range(m_io, this, m_root));
@@ -320,7 +320,7 @@ namespace Kaitai
                     _mono = m_io.ReadU1();
                     _startChar = m_io.ReadU4be();
                     _endChar = m_io.ReadU4be();
-                    _chars = new List<FontChar>((int) (((EndChar - StartChar) + 1)));
+                    _chars = new List<FontChar>();
                     for (var i = 0; i < ((EndChar - StartChar) + 1); i++)
                     {
                         _chars.Add(new FontChar(m_io, this, m_root));

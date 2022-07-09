@@ -39,12 +39,12 @@ sub _read {
     $self->{instruments} = ();
     my $n_instruments = 175;
     for (my $i = 0; $i < $n_instruments; $i++) {
-        $self->{instruments}[$i] = GenmidiOp2::InstrumentEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{instruments}}, GenmidiOp2::InstrumentEntry->new($self->{_io}, $self, $self->{_root});
     }
     $self->{instrument_names} = ();
     my $n_instrument_names = 175;
     for (my $i = 0; $i < $n_instrument_names; $i++) {
-        $self->{instrument_names}[$i] = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate(IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(32), 0), 0, 0));
+        push @{$self->{instrument_names}}, Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate(IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(32), 0), 0, 0));
     }
 }
 
@@ -99,7 +99,7 @@ sub _read {
     $self->{instruments} = ();
     my $n_instruments = 2;
     for (my $i = 0; $i < $n_instruments; $i++) {
-        $self->{instruments}[$i] = GenmidiOp2::Instrument->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{instruments}}, GenmidiOp2::Instrument->new($self->{_io}, $self, $self->{_root});
     }
 }
 

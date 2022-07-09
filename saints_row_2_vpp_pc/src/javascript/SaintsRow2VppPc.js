@@ -8,7 +8,7 @@
   } else {
     root.SaintsRow2VppPc = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 var SaintsRow2VppPc = (function() {
   function SaintsRow2VppPc(_io, _parent, _root) {
     this._io = _io;

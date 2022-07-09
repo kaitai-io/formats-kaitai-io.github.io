@@ -53,9 +53,9 @@ function SomeIpSd.SdFlags:_init(io, parent, root)
 end
 
 function SomeIpSd.SdFlags:_read()
-  self.reboot = self._io:read_bits_int_be(1)
-  self.unicast = self._io:read_bits_int_be(1)
-  self.initial_data = self._io:read_bits_int_be(1)
+  self.reboot = self._io:read_bits_int_be(1) ~= 0
+  self.unicast = self._io:read_bits_int_be(1) ~= 0
+  self.initial_data = self._io:read_bits_int_be(1) ~= 0
   self.reserved = self._io:read_bits_int_be(5)
 end
 

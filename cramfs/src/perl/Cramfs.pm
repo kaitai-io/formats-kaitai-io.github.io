@@ -198,7 +198,7 @@ sub _read {
     $self->{block_end_index} = ();
     my $n_block_end_index = int((($self->_parent()->size() + $self->_root()->page_size()) - 1) / $self->_root()->page_size());
     for (my $i = 0; $i < $n_block_end_index; $i++) {
-        $self->{block_end_index}[$i] = $self->{_io}->read_u4le();
+        push @{$self->{block_end_index}}, $self->{_io}->read_u4le();
     }
     $self->{raw_blocks} = $self->{_io}->read_bytes_full();
 }

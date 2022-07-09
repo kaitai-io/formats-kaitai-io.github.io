@@ -259,7 +259,7 @@ sub _read {
     $self->{data} = ();
     my $n_data = 16;
     for (my $i = 0; $i < $n_data; $i++) {
-        $self->{data}[$i] = $self->{_io}->read_u1();
+        push @{$self->{data}}, $self->{_io}->read_u1();
     }
 }
 
@@ -301,7 +301,7 @@ sub _read {
     $self->{frames} = ();
     my $n_frames = ($self->_root()->last_frame() + 1);
     for (my $i = 0; $i < $n_frames; $i++) {
-        $self->{frames}[$i] = NtMdt::Frame->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{frames}}, NtMdt::Frame->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -407,12 +407,12 @@ sub _read {
     $self->{coordinates} = ();
     my $n_coordinates = $self->fm_ndots();
     for (my $i = 0; $i < $n_coordinates; $i++) {
-        $self->{coordinates}[$i] = NtMdt::Frame::Dots::DotsData->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{coordinates}}, NtMdt::Frame::Dots::DotsData->new($self->{_io}, $self, $self->{_root});
     }
     $self->{data} = ();
     my $n_data = $self->fm_ndots();
     for (my $i = 0; $i < $n_data; $i++) {
-        $self->{data}[$i] = NtMdt::Frame::Dots::DataLinez->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{data}}, NtMdt::Frame::Dots::DataLinez->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -626,12 +626,12 @@ sub _read {
     $self->{forward} = ();
     my $n_forward = @{$self->_parent()->coordinates()}[$self->index()]->forward_size();
     for (my $i = 0; $i < $n_forward; $i++) {
-        $self->{forward}[$i] = $self->{_io}->read_s2le();
+        push @{$self->{forward}}, $self->{_io}->read_s2le();
     }
     $self->{backward} = ();
     my $n_backward = @{$self->_parent()->coordinates()}[$self->index()]->backward_size();
     for (my $i = 0; $i < $n_backward; $i++) {
-        $self->{backward}[$i] = $self->{_io}->read_s2le();
+        push @{$self->{backward}}, $self->{_io}->read_s2le();
     }
 }
 
@@ -779,17 +779,17 @@ sub _read {
     $self->{blocks_headers} = ();
     my $n_blocks_headers = $self->block_count();
     for (my $i = 0; $i < $n_blocks_headers; $i++) {
-        $self->{blocks_headers}[$i] = NtMdt::Frame::FdCurvesNew::BlockDescr->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{blocks_headers}}, NtMdt::Frame::FdCurvesNew::BlockDescr->new($self->{_io}, $self, $self->{_root});
     }
     $self->{blocks_names} = ();
     my $n_blocks_names = $self->block_count();
     for (my $i = 0; $i < $n_blocks_names; $i++) {
-        $self->{blocks_names}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes(@{$self->blocks_headers()}[$i]->name_len()));
+        push @{$self->{blocks_names}}, Encode::decode("UTF-8", $self->{_io}->read_bytes(@{$self->blocks_headers()}[$i]->name_len()));
     }
     $self->{blocks_data} = ();
     my $n_blocks_data = $self->block_count();
     for (my $i = 0; $i < $n_blocks_data; $i++) {
-        $self->{blocks_data}[$i] = $self->{_io}->read_bytes(@{$self->blocks_headers()}[$i]->len());
+        push @{$self->{blocks_data}}, $self->{_io}->read_bytes(@{$self->blocks_headers()}[$i]->len());
     }
 }
 
@@ -892,7 +892,7 @@ sub _read {
     $self->{guids} = ();
     my $n_guids = 2;
     for (my $i = 0; $i < $n_guids; $i++) {
-        $self->{guids}[$i] = NtMdt::Uuid->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{guids}}, NtMdt::Uuid->new($self->{_io}, $self, $self->{_root});
     }
     $self->{frame_status} = $self->{_io}->read_bytes(4);
     $self->{name_size} = $self->{_io}->read_u4le();
@@ -913,12 +913,12 @@ sub _read {
     $self->{dimensions} = ();
     my $n_dimensions = $self->n_dimensions();
     for (my $i = 0; $i < $n_dimensions; $i++) {
-        $self->{dimensions}[$i] = NtMdt::Frame::FdMetaData::Calibration->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{dimensions}}, NtMdt::Frame::FdMetaData::Calibration->new($self->{_io}, $self, $self->{_root});
     }
     $self->{mesurands} = ();
     my $n_mesurands = $self->n_mesurands();
     for (my $i = 0; $i < $n_mesurands; $i++) {
-        $self->{mesurands}[$i] = NtMdt::Frame::FdMetaData::Calibration->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{mesurands}}, NtMdt::Frame::FdMetaData::Calibration->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1120,34 +1120,34 @@ sub _read {
     for (my $i = 0; $i < $n_items; $i++) {
         my $_on = @{$self->_parent()->_parent()->mesurands()}[$i]->data_type();
         if ($_on == $NtMdt::DATA_TYPE_UINT64) {
-            $self->{items}[$i] = $self->{_io}->read_u8le();
+            push @{$self->{items}}, $self->{_io}->read_u8le();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_UINT8) {
-            $self->{items}[$i] = $self->{_io}->read_u1();
+            push @{$self->{items}}, $self->{_io}->read_u1();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_FLOAT32) {
-            $self->{items}[$i] = $self->{_io}->read_f4le();
+            push @{$self->{items}}, $self->{_io}->read_f4le();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_INT8) {
-            $self->{items}[$i] = $self->{_io}->read_s1();
+            push @{$self->{items}}, $self->{_io}->read_s1();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_UINT16) {
-            $self->{items}[$i] = $self->{_io}->read_u2le();
+            push @{$self->{items}}, $self->{_io}->read_u2le();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_INT64) {
-            $self->{items}[$i] = $self->{_io}->read_s8le();
+            push @{$self->{items}}, $self->{_io}->read_s8le();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_UINT32) {
-            $self->{items}[$i] = $self->{_io}->read_u4le();
+            push @{$self->{items}}, $self->{_io}->read_u4le();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_FLOAT64) {
-            $self->{items}[$i] = $self->{_io}->read_f8le();
+            push @{$self->{items}}, $self->{_io}->read_f8le();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_INT16) {
-            $self->{items}[$i] = $self->{_io}->read_s2le();
+            push @{$self->{items}}, $self->{_io}->read_s2le();
         }
         elsif ($_on == $NtMdt::DATA_TYPE_INT32) {
-            $self->{items}[$i] = $self->{_io}->read_s4le();
+            push @{$self->{items}}, $self->{_io}->read_s4le();
         }
     }
 }
@@ -1344,7 +1344,7 @@ sub _read {
     $self->{data} = ();
     my $n_data = ($self->fm_xres() * $self->fm_yres());
     for (my $i = 0; $i < $n_data; $i++) {
-        $self->{data}[$i] = $self->{_io}->read_s2le();
+        push @{$self->{data}}, $self->{_io}->read_s2le();
     }
     $self->{title} = NtMdt::Title->new($self->{_io}, $self, $self->{_root});
     $self->{xml} = NtMdt::Xml->new($self->{_io}, $self, $self->{_root});
@@ -1810,7 +1810,7 @@ sub _read {
     $self->{image} = ();
     my $n_image = ($self->fm_xres() * $self->fm_yres());
     for (my $i = 0; $i < $n_image; $i++) {
-        $self->{image}[$i] = $self->{_io}->read_s2le();
+        push @{$self->{image}}, $self->{_io}->read_s2le();
     }
     $self->{title} = NtMdt::Title->new($self->{_io}, $self, $self->{_root});
     $self->{xml} = NtMdt::Xml->new($self->{_io}, $self, $self->{_root});

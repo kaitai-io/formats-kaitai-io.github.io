@@ -25,9 +25,8 @@ void systemd_journal_t::_read() {
     m__raw_header = m__io->read_bytes(len_header());
     m__io__raw_header = new kaitai::kstream(m__raw_header);
     m_header = new header_t(m__io__raw_header, this, m__root);
-    int l_objects = header()->num_objects();
     m_objects = new std::vector<journal_object_t*>();
-    m_objects->reserve(l_objects);
+    const int l_objects = header()->num_objects();
     for (int i = 0; i < l_objects; i++) {
         m_objects->push_back(new journal_object_t(m__io, this, m__root));
     }

@@ -281,7 +281,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">byte0</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_U1beSynchsafe</span>
     <span class="p">`</span><span class="n">byte1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_U1beSynchsafe</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_U4beSynchsafe</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Id3v23_Tag</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_Header</span>
     <span class="p">`</span><span class="n">headerEx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_HeaderEx</span>
@@ -292,14 +293,16 @@ section#format-index .row {
     <span class="p">`</span><span class="n">short0</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_U2beSynchsafe</span>
     <span class="p">`</span><span class="n">short1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_U2beSynchsafe</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_Header</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Id3v23_Frame</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_Frame_Flags</span>
     <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Id3v23_Tag</span>
-    <span class="p">`</span><span class="n">isInvalidInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isInvalidInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isInvalidInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Id3v23_Frame_Flags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">flagDiscardAlterTag</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
     <span class="p">`</span><span class="n">flagDiscardAlterFile</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
@@ -398,12 +401,12 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">byte1</span> <span class="o">=</span> <span class="n">byte1Expr</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Id3v23_U2beSynchsafe</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">byte0</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">7</span><span class="p">)</span> <span class="ow">or</span> <span class="n">this</span><span class="p">.</span><span class="n">byte1</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Id3v23_U2beSynchsafe], filename: string): Id3v23_U2beSynchsafe =</span>
   <span class="n">Id3v23_U2beSynchsafe</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -454,12 +457,12 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">short1</span> <span class="o">=</span> <span class="n">short1Expr</span>
 
 <span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Id3v23_U4beSynchsafe</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
   <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">short0</span><span class="p">.</span><span class="n">value</span> <span class="ow">shl</span> <span class="mi">14</span><span class="p">)</span> <span class="ow">or</span> <span class="n">this</span><span class="p">.</span><span class="n">short1</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Id3v23_U4beSynchsafe], filename: string): Id3v23_U4beSynchsafe =</span>
   <span class="n">Id3v23_U4beSynchsafe</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -486,12 +489,12 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
 
 <span class="k">proc </span><span class="nf">isInvalid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Id3v23_Frame</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInst</span>
   <span class="k">let</span> <span class="n">isInvalidInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> <span class="s">&quot;</span><span class="se">\000\000\000\000</span><span class="s">&quot;</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInst</span> <span class="o">=</span> <span class="n">isInvalidInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isInvalidInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Id3v23_Frame], filename: string): Id3v23_Frame =</span>
   <span class="n">Id3v23_Frame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

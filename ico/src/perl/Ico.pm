@@ -39,7 +39,7 @@ sub _read {
     $self->{images} = ();
     my $n_images = $self->num_images();
     for (my $i = 0; $i < $n_images; $i++) {
-        $self->{images}[$i] = Ico::IconDirEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{images}}, Ico::IconDirEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 

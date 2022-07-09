@@ -43,19 +43,19 @@ sub _read {
     $self->{unknown2} = ();
     my $n_unknown2 = 9;
     for (my $i = 0; $i < $n_unknown2; $i++) {
-        $self->{unknown2}[$i] = $self->{_io}->read_f4le();
+        push @{$self->{unknown2}}, $self->{_io}->read_f4le();
     }
     $self->{ipixfirst} = $self->{_io}->read_f4le();
     $self->{ipixlast} = $self->{_io}->read_f4le();
     $self->{unknown3} = ();
     my $n_unknown3 = 4;
     for (my $i = 0; $i < $n_unknown3; $i++) {
-        $self->{unknown3}[$i] = $self->{_io}->read_f4le();
+        push @{$self->{unknown3}}, $self->{_io}->read_f4le();
     }
     $self->{spectrum} = ();
     my $n_spectrum = ((int($self->ipixlast()) - int($self->ipixfirst())) - 1);
     for (my $i = 0; $i < $n_spectrum; $i++) {
-        $self->{spectrum}[$i] = $self->{_io}->read_f4le();
+        push @{$self->{spectrum}}, $self->{_io}->read_f4le();
     }
     $self->{integration_ms} = $self->{_io}->read_f4le();
     $self->{averaging} = $self->{_io}->read_f4le();

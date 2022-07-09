@@ -98,7 +98,7 @@ public class Specpr extends KaitaiStruct {
             this.itchan = this._io.readS4be();
             this.irmas = this._io.readS4be();
             this.revs = this._io.readS4be();
-            iband = new ArrayList<Integer>(((Number) (2)).intValue());
+            this.iband = new ArrayList<Integer>();
             for (int i = 0; i < 2; i++) {
                 this.iband.add(this._io.readS4be());
             }
@@ -107,7 +107,7 @@ public class Specpr extends KaitaiStruct {
             this.irecno = this._io.readS4be();
             this.itpntr = this._io.readS4be();
             this.ihist = new String(KaitaiStream.bytesStripRight(this._io.readBytes(60), (byte) 32), Charset.forName("ascii"));
-            mhist = new ArrayList<String>(((Number) (4)).intValue());
+            this.mhist = new ArrayList<String>();
             for (int i = 0; i < 4; i++) {
                 this.mhist.add(new String(this._io.readBytes(74), Charset.forName("ascii")));
             }
@@ -121,7 +121,7 @@ public class Specpr extends KaitaiStruct {
             this.scatim = this._io.readF4be();
             this.timint = this._io.readF4be();
             this.tempd = this._io.readF4be();
-            data = new ArrayList<Float>(((Number) (256)).intValue());
+            this.data = new ArrayList<Float>();
             for (int i = 0; i < 256; i++) {
                 this.data.add(this._io.readF4be());
             }
@@ -470,7 +470,7 @@ public class Specpr extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            cdata = new ArrayList<Float>(((Number) (383)).intValue());
+            this.cdata = new ArrayList<Float>();
             for (int i = 0; i < 383; i++) {
                 this.cdata.add(this._io.readF4be());
             }

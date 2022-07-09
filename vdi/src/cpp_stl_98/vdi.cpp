@@ -372,9 +372,8 @@ vdi_t::blocks_map_t::blocks_map_t(kaitai::kstream* p__io, vdi_t* p__parent, vdi_
 }
 
 void vdi_t::blocks_map_t::_read() {
-    int l_index = _root()->header()->header_main()->blocks_in_image();
     m_index = new std::vector<block_index_t*>();
-    m_index->reserve(l_index);
+    const int l_index = _root()->header()->header_main()->blocks_in_image();
     for (int i = 0; i < l_index; i++) {
         m_index->push_back(new block_index_t(m__io, this, m__root));
     }
@@ -452,9 +451,8 @@ vdi_t::disk_t::disk_t(kaitai::kstream* p__io, vdi_t* p__parent, vdi_t* p__root) 
 }
 
 void vdi_t::disk_t::_read() {
-    int l_blocks = _root()->header()->header_main()->blocks_in_image();
     m_blocks = new std::vector<block_t*>();
-    m_blocks->reserve(l_blocks);
+    const int l_blocks = _root()->header()->header_main()->blocks_in_image();
     for (int i = 0; i < l_blocks; i++) {
         m_blocks->push_back(new block_t(m__io, this, m__root));
     }

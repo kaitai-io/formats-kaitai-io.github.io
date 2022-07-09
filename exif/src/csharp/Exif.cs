@@ -99,7 +99,7 @@ namespace Kaitai
                 private void _readLE()
                 {
                     _numFields = m_io.ReadU2le();
-                    _fields = new List<IfdField>((int) (NumFields));
+                    _fields = new List<IfdField>();
                     for (var i = 0; i < NumFields; i++)
                     {
                         _fields.Add(new IfdField(m_io, this, m_root, m_isLe));
@@ -109,7 +109,7 @@ namespace Kaitai
                 private void _readBE()
                 {
                     _numFields = m_io.ReadU2be();
-                    _fields = new List<IfdField>((int) (NumFields));
+                    _fields = new List<IfdField>();
                     for (var i = 0; i < NumFields; i++)
                     {
                         _fields.Add(new IfdField(m_io, this, m_root, m_isLe));

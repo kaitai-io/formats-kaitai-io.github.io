@@ -49,7 +49,7 @@ function Dcmp0:_read()
   self.chunks = {}
   local i = 0
   while true do
-    _ = Dcmp0.Chunk(self._io, self, self._root)
+    local _ = Dcmp0.Chunk(self._io, self, self._root)
     self.chunks[i + 1] = _
     if _.tag == 255 then
       break
@@ -75,35 +75,35 @@ end
 Dcmp0.Chunk = class.class(KaitaiStruct)
 
 Dcmp0.Chunk.TagKind = enum.Enum {
-invalid = -1,
-literal = 0,
-backreference = 1,
-table_lookup = 2,
-extended = 3,
-end = 4,
+  invalid = -1,
+  literal = 0,
+  backreference = 1,
+  table_lookup = 2,
+  extended = 3,
+  end = 4,
 }
 
 function Dcmp0.Chunk:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dcmp0.Chunk:_read()
-self.tag = self._io:read_u1()
-local _on = utils.box_unwrap(( ((self.tag >= 0) and (self.tag <= 31)) ) and utils.box_wrap(Dcmp0.Chunk.TagKind.literal) or (utils.box_unwrap(( ((self.tag >= 32) and (self.tag <= 74)) ) and utils.box_wrap(Dcmp0.Chunk.TagKind.backreference) or (utils.box_unwrap(( ((self.tag >= 75) and (self.tag <= 253)) ) and utils.box_wrap(Dcmp0.Chunk.TagKind.table_lookup) or (utils.box_unwrap((self.tag == 254) and utils.box_wrap(Dcmp0.Chunk.TagKind.extended) or (utils.box_unwrap((self.tag == 255) and utils.box_wrap(Dcmp0.Chunk.TagKind.end) or (Dcmp0.Chunk.TagKind.invalid))))))))))
-if _on == Dcmp0.Chunk.TagKind.extended then
-  self.body = Dcmp0.Chunk.ExtendedBody(self._io, self, self._root)
-elseif _on == Dcmp0.Chunk.TagKind.literal then
-  self.body = Dcmp0.Chunk.LiteralBody(self.tag, self._io, self, self._root)
-elseif _on == Dcmp0.Chunk.TagKind.end then
-  self.body = Dcmp0.Chunk.EndBody(self._io, self, self._root)
-elseif _on == Dcmp0.Chunk.TagKind.table_lookup then
-  self.body = Dcmp0.Chunk.TableLookupBody(self.tag, self._io, self, self._root)
-elseif _on == Dcmp0.Chunk.TagKind.backreference then
-  self.body = Dcmp0.Chunk.BackreferenceBody(self.tag, self._io, self, self._root)
-end
+  self.tag = self._io:read_u1()
+  local _on = utils.box_unwrap(( ((self.tag >= 0) and (self.tag <= 31)) ) and utils.box_wrap(Dcmp0.Chunk.TagKind.literal) or (utils.box_unwrap(( ((self.tag >= 32) and (self.tag <= 74)) ) and utils.box_wrap(Dcmp0.Chunk.TagKind.backreference) or (utils.box_unwrap(( ((self.tag >= 75) and (self.tag <= 253)) ) and utils.box_wrap(Dcmp0.Chunk.TagKind.table_lookup) or (utils.box_unwrap((self.tag == 254) and utils.box_wrap(Dcmp0.Chunk.TagKind.extended) or (utils.box_unwrap((self.tag == 255) and utils.box_wrap(Dcmp0.Chunk.TagKind.end) or (Dcmp0.Chunk.TagKind.invalid))))))))))
+  if _on == Dcmp0.Chunk.TagKind.extended then
+    self.body = Dcmp0.Chunk.ExtendedBody(self._io, self, self._root)
+  elseif _on == Dcmp0.Chunk.TagKind.literal then
+    self.body = Dcmp0.Chunk.LiteralBody(self.tag, self._io, self, self._root)
+  elseif _on == Dcmp0.Chunk.TagKind.end then
+    self.body = Dcmp0.Chunk.EndBody(self._io, self, self._root)
+  elseif _on == Dcmp0.Chunk.TagKind.table_lookup then
+    self.body = Dcmp0.Chunk.TableLookupBody(self.tag, self._io, self, self._root)
+  elseif _on == Dcmp0.Chunk.TagKind.backreference then
+    self.body = Dcmp0.Chunk.BackreferenceBody(self.tag, self._io, self, self._root)
+  end
 end
 
 -- 
@@ -128,18 +128,18 @@ end
 Dcmp0.Chunk.LiteralBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.LiteralBody:_init(tag, io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self.tag = tag
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.tag = tag
+  self:_read()
 end
 
 function Dcmp0.Chunk.LiteralBody:_read()
-if self.is_len_literal_div2_separate then
-  self.len_literal_div2_separate = self._io:read_u1()
-end
-self.literal = self._io:read_bytes(self.len_literal)
+  if self.is_len_literal_div2_separate then
+    self.len_literal_div2_separate = self._io:read_u1()
+  end
+  self.literal = self._io:read_bytes(self.len_literal)
 end
 
 -- 
@@ -148,12 +148,12 @@ end
 -- See the documentation of the `backreference_body` type for details about backreference chunks.
 Dcmp0.Chunk.LiteralBody.property.do_store = {}
 function Dcmp0.Chunk.LiteralBody.property.do_store:get()
-if self._m_do_store ~= nil then
-  return self._m_do_store
-end
+  if self._m_do_store ~= nil then
+    return self._m_do_store
+  end
 
-self._m_do_store = (self.tag & 16) ~= 0
-return self._m_do_store
+  self._m_do_store = (self.tag & 16) ~= 0
+  return self._m_do_store
 end
 
 -- 
@@ -165,12 +165,12 @@ end
 -- as there is no use in storing a zero-length literal.
 Dcmp0.Chunk.LiteralBody.property.len_literal_div2 = {}
 function Dcmp0.Chunk.LiteralBody.property.len_literal_div2:get()
-if self._m_len_literal_div2 ~= nil then
-  return self._m_len_literal_div2
-end
+  if self._m_len_literal_div2 ~= nil then
+    return self._m_len_literal_div2
+  end
 
-self._m_len_literal_div2 = utils.box_unwrap((self.is_len_literal_div2_separate) and utils.box_wrap(self.len_literal_div2_separate) or (self.len_literal_div2_in_tag))
-return self._m_len_literal_div2
+  self._m_len_literal_div2 = utils.box_unwrap((self.is_len_literal_div2_separate) and utils.box_wrap(self.len_literal_div2_separate) or (self.len_literal_div2_in_tag))
+  return self._m_len_literal_div2
 end
 
 -- 
@@ -178,12 +178,12 @@ end
 -- in bytes.
 Dcmp0.Chunk.LiteralBody.property.len_literal = {}
 function Dcmp0.Chunk.LiteralBody.property.len_literal:get()
-if self._m_len_literal ~= nil then
-  return self._m_len_literal
-end
+  if self._m_len_literal ~= nil then
+    return self._m_len_literal
+  end
 
-self._m_len_literal = (self.len_literal_div2 * 2)
-return self._m_len_literal
+  self._m_len_literal = (self.len_literal_div2 * 2)
+  return self._m_len_literal
 end
 
 -- 
@@ -193,24 +193,24 @@ end
 -- the length is stored in a separate byte after the tag byte and before the literal data.
 Dcmp0.Chunk.LiteralBody.property.len_literal_div2_in_tag = {}
 function Dcmp0.Chunk.LiteralBody.property.len_literal_div2_in_tag:get()
-if self._m_len_literal_div2_in_tag ~= nil then
-  return self._m_len_literal_div2_in_tag
-end
+  if self._m_len_literal_div2_in_tag ~= nil then
+    return self._m_len_literal_div2_in_tag
+  end
 
-self._m_len_literal_div2_in_tag = (self.tag & 15)
-return self._m_len_literal_div2_in_tag
+  self._m_len_literal_div2_in_tag = (self.tag & 15)
+  return self._m_len_literal_div2_in_tag
 end
 
 -- 
 -- Whether the length of the literal is stored separately from the tag.
 Dcmp0.Chunk.LiteralBody.property.is_len_literal_div2_separate = {}
 function Dcmp0.Chunk.LiteralBody.property.is_len_literal_div2_separate:get()
-if self._m_is_len_literal_div2_separate ~= nil then
-  return self._m_is_len_literal_div2_separate
-end
+  if self._m_is_len_literal_div2_separate ~= nil then
+    return self._m_is_len_literal_div2_separate
+  end
 
-self._m_is_len_literal_div2_separate = self.len_literal_div2_in_tag == 0
-return self._m_is_len_literal_div2_separate
+  self._m_is_len_literal_div2_separate = self.len_literal_div2_in_tag == 0
+  return self._m_is_len_literal_div2_separate
 end
 
 -- 
@@ -234,36 +234,36 @@ end
 Dcmp0.Chunk.BackreferenceBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.BackreferenceBody:_init(tag, io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self.tag = tag
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.tag = tag
+  self:_read()
 end
 
 function Dcmp0.Chunk.BackreferenceBody:_read()
-if self.is_index_separate then
-  local _on = self.tag
-  if _on == 32 then
-    self.index_separate_minus = self._io:read_u1()
-  elseif _on == 33 then
-    self.index_separate_minus = self._io:read_u1()
-  elseif _on == 34 then
-    self.index_separate_minus = self._io:read_u2be()
+  if self.is_index_separate then
+    local _on = self.tag
+    if _on == 32 then
+      self.index_separate_minus = self._io:read_u1()
+    elseif _on == 33 then
+      self.index_separate_minus = self._io:read_u1()
+    elseif _on == 34 then
+      self.index_separate_minus = self._io:read_u2be()
+    end
   end
-end
 end
 
 -- 
 -- Whether the index is stored separately from the tag.
 Dcmp0.Chunk.BackreferenceBody.property.is_index_separate = {}
 function Dcmp0.Chunk.BackreferenceBody.property.is_index_separate:get()
-if self._m_is_index_separate ~= nil then
-  return self._m_is_index_separate
-end
+  if self._m_is_index_separate ~= nil then
+    return self._m_is_index_separate
+  end
 
-self._m_is_index_separate =  ((self.tag >= 32) and (self.tag <= 34)) 
-return self._m_is_index_separate
+  self._m_is_index_separate =  ((self.tag >= 32) and (self.tag <= 34)) 
+  return self._m_is_index_separate
 end
 
 -- 
@@ -271,12 +271,12 @@ end
 -- as stored in the tag byte.
 Dcmp0.Chunk.BackreferenceBody.property.index_in_tag = {}
 function Dcmp0.Chunk.BackreferenceBody.property.index_in_tag:get()
-if self._m_index_in_tag ~= nil then
-  return self._m_index_in_tag
-end
+  if self._m_index_in_tag ~= nil then
+    return self._m_index_in_tag
+  end
 
-self._m_index_in_tag = (self.tag - 35)
-return self._m_index_in_tag
+  self._m_index_in_tag = (self.tag - 35)
+  return self._m_index_in_tag
 end
 
 -- 
@@ -285,14 +285,14 @@ end
 -- with the implicit offset corrected for.
 Dcmp0.Chunk.BackreferenceBody.property.index_separate = {}
 function Dcmp0.Chunk.BackreferenceBody.property.index_separate:get()
-if self._m_index_separate ~= nil then
-  return self._m_index_separate
-end
+  if self._m_index_separate ~= nil then
+    return self._m_index_separate
+  end
 
-if self.is_index_separate then
-  self._m_index_separate = ((self.index_separate_minus + 40) + utils.box_unwrap((self.tag == 33) and utils.box_wrap(256) or (0)))
-end
-return self._m_index_separate
+  if self.is_index_separate then
+    self._m_index_separate = ((self.index_separate_minus + 40) + utils.box_unwrap((self.tag == 33) and utils.box_wrap(256) or (0)))
+  end
+  return self._m_index_separate
 end
 
 -- 
@@ -309,12 +309,12 @@ end
 -- not ones that come after it.
 Dcmp0.Chunk.BackreferenceBody.property.index = {}
 function Dcmp0.Chunk.BackreferenceBody.property.index:get()
-if self._m_index ~= nil then
-  return self._m_index
-end
+  if self._m_index ~= nil then
+    return self._m_index
+  end
 
-self._m_index = utils.box_unwrap((self.is_index_separate) and utils.box_wrap(self.index_separate) or (self.index_in_tag))
-return self._m_index
+  self._m_index = utils.box_unwrap((self.is_index_separate) and utils.box_wrap(self.index_separate) or (self.index_in_tag))
+  return self._m_index
 end
 
 -- 
@@ -349,11 +349,11 @@ end
 Dcmp0.Chunk.TableLookupBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.TableLookupBody:_init(tag, io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self.tag = tag
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.tag = tag
+  self:_read()
 end
 
 function Dcmp0.Chunk.TableLookupBody:_read()
@@ -366,12 +366,12 @@ end
 -- index 0 stands for tag 0x4b, 1 for 0x4c, etc.
 Dcmp0.Chunk.TableLookupBody.property.lookup_table = {}
 function Dcmp0.Chunk.TableLookupBody.property.lookup_table:get()
-if self._m_lookup_table ~= nil then
-  return self._m_lookup_table
-end
+  if self._m_lookup_table ~= nil then
+    return self._m_lookup_table
+  end
 
-self._m_lookup_table = {"\000\000", "\078\186", "\000\008", "\078\117", "\000\012", "\078\173", "\032\083", "\047\011", "\097\000", "\000\016", "\112\000", "\047\000", "\072\110", "\032\080", "\032\110", "\047\046", "\255\252", "\072\231", "\063\060", "\000\004", "\255\248", "\047\012", "\032\006", "\078\237", "\078\086", "\032\104", "\078\094", "\000\001", "\088\143", "\079\239", "\000\002", "\000\024", "\096\000", "\255\255", "\080\143", "\078\144", "\000\006", "\038\110", "\000\020", "\255\244", "\076\238", "\000\010", "\000\014", "\065\238", "\076\223", "\072\192", "\255\240", "\045\064", "\000\018", "\048\046", "\112\001", "\047\040", "\032\084", "\103\000", "\000\032", "\000\028", "\032\095", "\024\000", "\038\111", "\072\120", "\000\022", "\065\250", "\048\060", "\040\064", "\114\000", "\040\110", "\032\012", "\102\000", "\032\107", "\047\007", "\085\143", "\000\040", "\255\254", "\255\236", "\034\216", "\032\011", "\000\015", "\089\143", "\047\060", "\255\000", "\001\024", "\129\225", "\074\000", "\078\176", "\255\232", "\072\199", "\000\003", "\000\034", "\000\007", "\000\026", "\103\006", "\103\008", "\078\249", "\000\036", "\032\120", "\008\000", "\102\004", "\000\042", "\078\208", "\048\040", "\038\095", "\103\004", "\000\048", "\067\238", "\063\000", "\032\031", "\000\030", "\255\246", "\032\046", "\066\167", "\032\007", "\255\250", "\096\002", "\061\064", "\012\064", "\102\006", "\000\038", "\045\072", "\047\001", "\112\255", "\096\004", "\024\128", "\074\064", "\000\064", "\000\044", "\047\008", "\000\017", "\255\228", "\033\064", "\038\064", "\255\242", "\066\110", "\078\185", "\061\124", "\000\056", "\000\013", "\096\006", "\066\046", "\032\060", "\103\012", "\045\104", "\102\008", "\074\046", "\074\174", "\000\046", "\072\064", "\034\095", "\034\000", "\103\010", "\048\007", "\066\103", "\000\050", "\032\040", "\000\009", "\072\122", "\002\000", "\047\043", "\000\005", "\034\110", "\102\002", "\229\128", "\103\014", "\102\010", "\000\080", "\062\000", "\102\012", "\046\000", "\255\238", "\032\109", "\032\064", "\255\224", "\083\064", "\096\008", "\004\128", "\000\104", "\011\124", "\068\000", "\065\232", "\072\065"}
-return self._m_lookup_table
+  self._m_lookup_table = {"\000\000", "\078\186", "\000\008", "\078\117", "\000\012", "\078\173", "\032\083", "\047\011", "\097\000", "\000\016", "\112\000", "\047\000", "\072\110", "\032\080", "\032\110", "\047\046", "\255\252", "\072\231", "\063\060", "\000\004", "\255\248", "\047\012", "\032\006", "\078\237", "\078\086", "\032\104", "\078\094", "\000\001", "\088\143", "\079\239", "\000\002", "\000\024", "\096\000", "\255\255", "\080\143", "\078\144", "\000\006", "\038\110", "\000\020", "\255\244", "\076\238", "\000\010", "\000\014", "\065\238", "\076\223", "\072\192", "\255\240", "\045\064", "\000\018", "\048\046", "\112\001", "\047\040", "\032\084", "\103\000", "\000\032", "\000\028", "\032\095", "\024\000", "\038\111", "\072\120", "\000\022", "\065\250", "\048\060", "\040\064", "\114\000", "\040\110", "\032\012", "\102\000", "\032\107", "\047\007", "\085\143", "\000\040", "\255\254", "\255\236", "\034\216", "\032\011", "\000\015", "\089\143", "\047\060", "\255\000", "\001\024", "\129\225", "\074\000", "\078\176", "\255\232", "\072\199", "\000\003", "\000\034", "\000\007", "\000\026", "\103\006", "\103\008", "\078\249", "\000\036", "\032\120", "\008\000", "\102\004", "\000\042", "\078\208", "\048\040", "\038\095", "\103\004", "\000\048", "\067\238", "\063\000", "\032\031", "\000\030", "\255\246", "\032\046", "\066\167", "\032\007", "\255\250", "\096\002", "\061\064", "\012\064", "\102\006", "\000\038", "\045\072", "\047\001", "\112\255", "\096\004", "\024\128", "\074\064", "\000\064", "\000\044", "\047\008", "\000\017", "\255\228", "\033\064", "\038\064", "\255\242", "\066\110", "\078\185", "\061\124", "\000\056", "\000\013", "\096\006", "\066\046", "\032\060", "\103\012", "\045\104", "\102\008", "\074\046", "\074\174", "\000\046", "\072\064", "\034\095", "\034\000", "\103\010", "\048\007", "\066\103", "\000\050", "\032\040", "\000\009", "\072\122", "\002\000", "\047\043", "\000\005", "\034\110", "\102\002", "\229\128", "\103\014", "\102\010", "\000\080", "\062\000", "\102\012", "\046\000", "\255\238", "\032\109", "\032\064", "\255\224", "\083\064", "\096\008", "\004\128", "\000\104", "\011\124", "\068\000", "\065\232", "\072\065"}
+  return self._m_lookup_table
 end
 
 -- 
@@ -379,12 +379,12 @@ end
 -- based on the fixed lookup table.
 Dcmp0.Chunk.TableLookupBody.property.value = {}
 function Dcmp0.Chunk.TableLookupBody.property.value:get()
-if self._m_value ~= nil then
-  return self._m_value
-end
+  if self._m_value ~= nil then
+    return self._m_value
+  end
 
-self._m_value = self.lookup_table[(self.tag - 75) + 1]
-return self._m_value
+  self._m_value = self.lookup_table[(self.tag - 75) + 1]
+  return self._m_value
 end
 
 -- 
@@ -399,10 +399,10 @@ end
 Dcmp0.Chunk.EndBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.EndBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dcmp0.Chunk.EndBody:_read()
@@ -415,26 +415,26 @@ end
 Dcmp0.Chunk.ExtendedBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.ExtendedBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dcmp0.Chunk.ExtendedBody:_read()
-self.tag = self._io:read_u1()
-local _on = self.tag
-if _on == 0 then
-  self.body = Dcmp0.Chunk.ExtendedBody.JumpTableBody(self._io, self, self._root)
-elseif _on == 4 then
-  self.body = Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody(self._io, self, self._root)
-elseif _on == 6 then
-  self.body = Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody(self._io, self, self._root)
-elseif _on == 3 then
-  self.body = Dcmp0.Chunk.ExtendedBody.RepeatBody(self.tag, self._io, self, self._root)
-elseif _on == 2 then
-  self.body = Dcmp0.Chunk.ExtendedBody.RepeatBody(self.tag, self._io, self, self._root)
-end
+  self.tag = self._io:read_u1()
+  local _on = self.tag
+  if _on == 0 then
+    self.body = Dcmp0.Chunk.ExtendedBody.JumpTableBody(self._io, self, self._root)
+  elseif _on == 4 then
+    self.body = Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody(self._io, self, self._root)
+  elseif _on == 6 then
+    self.body = Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody(self._io, self, self._root)
+  elseif _on == 3 then
+    self.body = Dcmp0.Chunk.ExtendedBody.RepeatBody(self.tag, self._io, self, self._root)
+  elseif _on == 2 then
+    self.body = Dcmp0.Chunk.ExtendedBody.RepeatBody(self.tag, self._io, self, self._root)
+  end
 end
 
 -- 
@@ -466,19 +466,19 @@ end
 Dcmp0.Chunk.ExtendedBody.JumpTableBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.ExtendedBody.JumpTableBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dcmp0.Chunk.ExtendedBody.JumpTableBody:_read()
-self.segment_number_raw = DcmpVariableLengthInteger(self._io)
-self.num_addresses_raw = DcmpVariableLengthInteger(self._io)
-self.addresses_raw = {}
-for i = 0, self.num_addresses - 1 do
-  self.addresses_raw[i + 1] = DcmpVariableLengthInteger(self._io)
-end
+  self.segment_number_raw = DcmpVariableLengthInteger(self._io)
+  self.num_addresses_raw = DcmpVariableLengthInteger(self._io)
+  self.addresses_raw = {}
+  for i = 0, self.num_addresses - 1 do
+    self.addresses_raw[i + 1] = DcmpVariableLengthInteger(self._io)
+  end
 end
 
 -- 
@@ -489,12 +489,12 @@ end
 -- i. e. an unsigned 16-bit integer.
 Dcmp0.Chunk.ExtendedBody.JumpTableBody.property.segment_number = {}
 function Dcmp0.Chunk.ExtendedBody.JumpTableBody.property.segment_number:get()
-if self._m_segment_number ~= nil then
-  return self._m_segment_number
-end
+  if self._m_segment_number ~= nil then
+    return self._m_segment_number
+  end
 
-self._m_segment_number = self.segment_number_raw.value
-return self._m_segment_number
+  self._m_segment_number = self.segment_number_raw.value
+  return self._m_segment_number
 end
 
 -- 
@@ -503,12 +503,12 @@ end
 -- This number must be greater than 0.
 Dcmp0.Chunk.ExtendedBody.JumpTableBody.property.num_addresses = {}
 function Dcmp0.Chunk.ExtendedBody.JumpTableBody.property.num_addresses:get()
-if self._m_num_addresses ~= nil then
-  return self._m_num_addresses
-end
+  if self._m_num_addresses ~= nil then
+    return self._m_num_addresses
+  end
 
-self._m_num_addresses = self.num_addresses_raw.value
-return self._m_num_addresses
+  self._m_num_addresses = self.num_addresses_raw.value
+  return self._m_num_addresses
 end
 
 -- 
@@ -540,16 +540,16 @@ end
 Dcmp0.Chunk.ExtendedBody.RepeatBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.ExtendedBody.RepeatBody:_init(tag, io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self.tag = tag
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.tag = tag
+  self:_read()
 end
 
 function Dcmp0.Chunk.ExtendedBody.RepeatBody:_read()
-self.to_repeat_raw = DcmpVariableLengthInteger(self._io)
-self.repeat_count_m1_raw = DcmpVariableLengthInteger(self._io)
+  self.to_repeat_raw = DcmpVariableLengthInteger(self._io)
+  self.repeat_count_m1_raw = DcmpVariableLengthInteger(self._io)
 end
 
 -- 
@@ -558,12 +558,12 @@ end
 -- the value to be repeated is stored as a variable-length integer.
 Dcmp0.Chunk.ExtendedBody.RepeatBody.property.byte_count = {}
 function Dcmp0.Chunk.ExtendedBody.RepeatBody.property.byte_count:get()
-if self._m_byte_count ~= nil then
-  return self._m_byte_count
-end
+  if self._m_byte_count ~= nil then
+    return self._m_byte_count
+  end
 
-self._m_byte_count = utils.box_unwrap((self.tag == 2) and utils.box_wrap(1) or (utils.box_unwrap((self.tag == 3) and utils.box_wrap(2) or (-1))))
-return self._m_byte_count
+  self._m_byte_count = utils.box_unwrap((self.tag == 2) and utils.box_wrap(1) or (utils.box_unwrap((self.tag == 3) and utils.box_wrap(2) or (-1))))
+  return self._m_byte_count
 end
 
 -- 
@@ -574,12 +574,12 @@ end
 -- i. e. either 8 or 16 bits.
 Dcmp0.Chunk.ExtendedBody.RepeatBody.property.to_repeat = {}
 function Dcmp0.Chunk.ExtendedBody.RepeatBody.property.to_repeat:get()
-if self._m_to_repeat ~= nil then
-  return self._m_to_repeat
-end
+  if self._m_to_repeat ~= nil then
+    return self._m_to_repeat
+  end
 
-self._m_to_repeat = self.to_repeat_raw.value
-return self._m_to_repeat
+  self._m_to_repeat = self.to_repeat_raw.value
+  return self._m_to_repeat
 end
 
 -- 
@@ -589,12 +589,12 @@ end
 -- This value must not be negative.
 Dcmp0.Chunk.ExtendedBody.RepeatBody.property.repeat_count_m1 = {}
 function Dcmp0.Chunk.ExtendedBody.RepeatBody.property.repeat_count_m1:get()
-if self._m_repeat_count_m1 ~= nil then
-  return self._m_repeat_count_m1
-end
+  if self._m_repeat_count_m1 ~= nil then
+    return self._m_repeat_count_m1
+  end
 
-self._m_repeat_count_m1 = self.repeat_count_m1_raw.value
-return self._m_repeat_count_m1
+  self._m_repeat_count_m1 = self.repeat_count_m1_raw.value
+  return self._m_repeat_count_m1
 end
 
 -- 
@@ -603,12 +603,12 @@ end
 -- This value must be positive.
 Dcmp0.Chunk.ExtendedBody.RepeatBody.property.repeat_count = {}
 function Dcmp0.Chunk.ExtendedBody.RepeatBody.property.repeat_count:get()
-if self._m_repeat_count ~= nil then
-  return self._m_repeat_count
-end
+  if self._m_repeat_count ~= nil then
+    return self._m_repeat_count
+  end
 
-self._m_repeat_count = (self.repeat_count_m1 + 1)
-return self._m_repeat_count
+  self._m_repeat_count = (self.repeat_count_m1 + 1)
+  return self._m_repeat_count
 end
 
 -- 
@@ -627,19 +627,19 @@ end
 Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody:_read()
-self.first_value_raw = DcmpVariableLengthInteger(self._io)
-self.num_deltas_raw = DcmpVariableLengthInteger(self._io)
-self.deltas = {}
-for i = 0, self.num_deltas - 1 do
-  self.deltas[i + 1] = self._io:read_s1()
-end
+  self.first_value_raw = DcmpVariableLengthInteger(self._io)
+  self.num_deltas_raw = DcmpVariableLengthInteger(self._io)
+  self.deltas = {}
+  for i = 0, self.num_deltas - 1 do
+    self.deltas[i + 1] = self._io:read_s1()
+  end
 end
 
 -- 
@@ -650,12 +650,12 @@ end
 -- i. e. a signed 16-bit integer.
 Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody.property.first_value = {}
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody.property.first_value:get()
-if self._m_first_value ~= nil then
-  return self._m_first_value
-end
+  if self._m_first_value ~= nil then
+    return self._m_first_value
+  end
 
-self._m_first_value = self.first_value_raw.value
-return self._m_first_value
+  self._m_first_value = self.first_value_raw.value
+  return self._m_first_value
 end
 
 -- 
@@ -664,12 +664,12 @@ end
 -- This number must not be negative.
 Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody.property.num_deltas = {}
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding16BitBody.property.num_deltas:get()
-if self._m_num_deltas ~= nil then
-  return self._m_num_deltas
-end
+  if self._m_num_deltas ~= nil then
+    return self._m_num_deltas
+  end
 
-self._m_num_deltas = self.num_deltas_raw.value
-return self._m_num_deltas
+  self._m_num_deltas = self.num_deltas_raw.value
+  return self._m_num_deltas
 end
 
 -- 
@@ -693,31 +693,31 @@ end
 Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody = class.class(KaitaiStruct)
 
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody:_init(io, parent, root)
-KaitaiStruct._init(self, io)
-self._parent = parent
-self._root = root or self
-self:_read()
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
 end
 
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody:_read()
-self.first_value_raw = DcmpVariableLengthInteger(self._io)
-self.num_deltas_raw = DcmpVariableLengthInteger(self._io)
-self.deltas_raw = {}
-for i = 0, self.num_deltas - 1 do
-  self.deltas_raw[i + 1] = DcmpVariableLengthInteger(self._io)
-end
+  self.first_value_raw = DcmpVariableLengthInteger(self._io)
+  self.num_deltas_raw = DcmpVariableLengthInteger(self._io)
+  self.deltas_raw = {}
+  for i = 0, self.num_deltas - 1 do
+    self.deltas_raw[i + 1] = DcmpVariableLengthInteger(self._io)
+  end
 end
 
 -- 
 -- The first value in the sequence.
 Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody.property.first_value = {}
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody.property.first_value:get()
-if self._m_first_value ~= nil then
-  return self._m_first_value
-end
+  if self._m_first_value ~= nil then
+    return self._m_first_value
+  end
 
-self._m_first_value = self.first_value_raw.value
-return self._m_first_value
+  self._m_first_value = self.first_value_raw.value
+  return self._m_first_value
 end
 
 -- 
@@ -726,12 +726,12 @@ end
 -- This number must not be negative.
 Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody.property.num_deltas = {}
 function Dcmp0.Chunk.ExtendedBody.DeltaEncoding32BitBody.property.num_deltas:get()
-if self._m_num_deltas ~= nil then
-  return self._m_num_deltas
-end
+  if self._m_num_deltas ~= nil then
+    return self._m_num_deltas
+  end
 
-self._m_num_deltas = self.num_deltas_raw.value
-return self._m_num_deltas
+  self._m_num_deltas = self.num_deltas_raw.value
+  return self._m_num_deltas
 end
 
 -- 

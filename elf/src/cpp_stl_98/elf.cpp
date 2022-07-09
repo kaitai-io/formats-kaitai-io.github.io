@@ -1798,13 +1798,10 @@ std::vector<elf_t::endian_elf_t::program_header_t*>* elf_t::endian_elf_t::progra
     std::streampos _pos = m__io->pos();
     m__io->seek(program_header_offset());
     if (m__is_le == 1) {
-        int l_program_headers = qty_program_header();
         m__raw_program_headers = new std::vector<std::string>();
-        m__raw_program_headers->reserve(l_program_headers);
         m__io__raw_program_headers = new std::vector<kaitai::kstream*>();
-        m__io__raw_program_headers->reserve(l_program_headers);
         m_program_headers = new std::vector<program_header_t*>();
-        m_program_headers->reserve(l_program_headers);
+        const int l_program_headers = qty_program_header();
         for (int i = 0; i < l_program_headers; i++) {
             m__raw_program_headers->push_back(m__io->read_bytes(program_header_entry_size()));
             kaitai::kstream* io__raw_program_headers = new kaitai::kstream(m__raw_program_headers->at(m__raw_program_headers->size() - 1));
@@ -1812,13 +1809,10 @@ std::vector<elf_t::endian_elf_t::program_header_t*>* elf_t::endian_elf_t::progra
             m_program_headers->push_back(new program_header_t(io__raw_program_headers, this, m__root, m__is_le));
         }
     } else {
-        int l_program_headers = qty_program_header();
         m__raw_program_headers = new std::vector<std::string>();
-        m__raw_program_headers->reserve(l_program_headers);
         m__io__raw_program_headers = new std::vector<kaitai::kstream*>();
-        m__io__raw_program_headers->reserve(l_program_headers);
         m_program_headers = new std::vector<program_header_t*>();
-        m_program_headers->reserve(l_program_headers);
+        const int l_program_headers = qty_program_header();
         for (int i = 0; i < l_program_headers; i++) {
             m__raw_program_headers->push_back(m__io->read_bytes(program_header_entry_size()));
             kaitai::kstream* io__raw_program_headers = new kaitai::kstream(m__raw_program_headers->at(m__raw_program_headers->size() - 1));
@@ -1837,13 +1831,10 @@ std::vector<elf_t::endian_elf_t::section_header_t*>* elf_t::endian_elf_t::sectio
     std::streampos _pos = m__io->pos();
     m__io->seek(section_header_offset());
     if (m__is_le == 1) {
-        int l_section_headers = qty_section_header();
         m__raw_section_headers = new std::vector<std::string>();
-        m__raw_section_headers->reserve(l_section_headers);
         m__io__raw_section_headers = new std::vector<kaitai::kstream*>();
-        m__io__raw_section_headers->reserve(l_section_headers);
         m_section_headers = new std::vector<section_header_t*>();
-        m_section_headers->reserve(l_section_headers);
+        const int l_section_headers = qty_section_header();
         for (int i = 0; i < l_section_headers; i++) {
             m__raw_section_headers->push_back(m__io->read_bytes(section_header_entry_size()));
             kaitai::kstream* io__raw_section_headers = new kaitai::kstream(m__raw_section_headers->at(m__raw_section_headers->size() - 1));
@@ -1851,13 +1842,10 @@ std::vector<elf_t::endian_elf_t::section_header_t*>* elf_t::endian_elf_t::sectio
             m_section_headers->push_back(new section_header_t(io__raw_section_headers, this, m__root, m__is_le));
         }
     } else {
-        int l_section_headers = qty_section_header();
         m__raw_section_headers = new std::vector<std::string>();
-        m__raw_section_headers->reserve(l_section_headers);
         m__io__raw_section_headers = new std::vector<kaitai::kstream*>();
-        m__io__raw_section_headers->reserve(l_section_headers);
         m_section_headers = new std::vector<section_header_t*>();
-        m_section_headers->reserve(l_section_headers);
+        const int l_section_headers = qty_section_header();
         for (int i = 0; i < l_section_headers; i++) {
             m__raw_section_headers->push_back(m__io->read_bytes(section_header_entry_size()));
             kaitai::kstream* io__raw_section_headers = new kaitai::kstream(m__raw_section_headers->at(m__raw_section_headers->size() - 1));

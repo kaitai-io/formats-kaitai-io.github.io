@@ -28,9 +28,9 @@ class AndroidBootldrAsus < Kaitai::Struct::Struct
     raise Kaitai::Struct::ValidationLessThanError.new(2, revision, _io, "/seq/1") if not revision >= 2
     @reserved1 = @_io.read_u2le
     @reserved2 = @_io.read_u4le
-    @images = Array.new(3)
+    @images = []
     (3).times { |i|
-      @images[i] = Image.new(@_io, self, @_root)
+      @images << Image.new(@_io, self, @_root)
     }
     self
   end

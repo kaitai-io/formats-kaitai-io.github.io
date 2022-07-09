@@ -197,9 +197,9 @@ class Dex < Kaitai::Struct::Struct
 
     def _read
       @size = @_io.read_u4le
-      @list = Array.new(size)
+      @list = []
       (size).times { |i|
-        @list[i] = MapItem.new(@_io, self, @_root)
+        @list << MapItem.new(@_io, self, @_root)
       }
       self
     end
@@ -456,21 +456,21 @@ class Dex < Kaitai::Struct::Struct
       @instance_fields_size = VlqBase128Le.new(@_io)
       @direct_methods_size = VlqBase128Le.new(@_io)
       @virtual_methods_size = VlqBase128Le.new(@_io)
-      @static_fields = Array.new(static_fields_size.value)
+      @static_fields = []
       (static_fields_size.value).times { |i|
-        @static_fields[i] = EncodedField.new(@_io, self, @_root)
+        @static_fields << EncodedField.new(@_io, self, @_root)
       }
-      @instance_fields = Array.new(instance_fields_size.value)
+      @instance_fields = []
       (instance_fields_size.value).times { |i|
-        @instance_fields[i] = EncodedField.new(@_io, self, @_root)
+        @instance_fields << EncodedField.new(@_io, self, @_root)
       }
-      @direct_methods = Array.new(direct_methods_size.value)
+      @direct_methods = []
       (direct_methods_size.value).times { |i|
-        @direct_methods[i] = EncodedMethod.new(@_io, self, @_root)
+        @direct_methods << EncodedMethod.new(@_io, self, @_root)
       }
-      @virtual_methods = Array.new(virtual_methods_size.value)
+      @virtual_methods = []
       (virtual_methods_size.value).times { |i|
-        @virtual_methods[i] = EncodedMethod.new(@_io, self, @_root)
+        @virtual_methods << EncodedMethod.new(@_io, self, @_root)
       }
       self
     end
@@ -582,9 +582,9 @@ class Dex < Kaitai::Struct::Struct
     def _read
       @type_idx = VlqBase128Le.new(@_io)
       @size = VlqBase128Le.new(@_io)
-      @elements = Array.new(size.value)
+      @elements = []
       (size.value).times { |i|
-        @elements[i] = AnnotationElement.new(@_io, self, @_root)
+        @elements << AnnotationElement.new(@_io, self, @_root)
       }
       self
     end
@@ -733,9 +733,9 @@ class Dex < Kaitai::Struct::Struct
 
     def _read
       @size = @_io.read_u4le
-      @list = Array.new(size)
+      @list = []
       (size).times { |i|
-        @list[i] = TypeItem.new(@_io, self, @_root)
+        @list << TypeItem.new(@_io, self, @_root)
       }
       self
     end
@@ -941,9 +941,9 @@ class Dex < Kaitai::Struct::Struct
 
     def _read
       @size = VlqBase128Le.new(@_io)
-      @values = Array.new(size.value)
+      @values = []
       (size.value).times { |i|
-        @values[i] = EncodedValue.new(@_io, self, @_root)
+        @values << EncodedValue.new(@_io, self, @_root)
       }
       self
     end
@@ -963,9 +963,9 @@ class Dex < Kaitai::Struct::Struct
     return @string_ids unless @string_ids.nil?
     _pos = @_io.pos
     @_io.seek(header.string_ids_off)
-    @string_ids = Array.new(header.string_ids_size)
+    @string_ids = []
     (header.string_ids_size).times { |i|
-      @string_ids[i] = StringIdItem.new(@_io, self, @_root)
+      @string_ids << StringIdItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @string_ids
@@ -986,9 +986,9 @@ class Dex < Kaitai::Struct::Struct
     return @method_ids unless @method_ids.nil?
     _pos = @_io.pos
     @_io.seek(header.method_ids_off)
-    @method_ids = Array.new(header.method_ids_size)
+    @method_ids = []
     (header.method_ids_size).times { |i|
-      @method_ids[i] = MethodIdItem.new(@_io, self, @_root)
+      @method_ids << MethodIdItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @method_ids
@@ -1030,9 +1030,9 @@ class Dex < Kaitai::Struct::Struct
     return @class_defs unless @class_defs.nil?
     _pos = @_io.pos
     @_io.seek(header.class_defs_off)
-    @class_defs = Array.new(header.class_defs_size)
+    @class_defs = []
     (header.class_defs_size).times { |i|
-      @class_defs[i] = ClassDefItem.new(@_io, self, @_root)
+      @class_defs << ClassDefItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @class_defs
@@ -1063,9 +1063,9 @@ class Dex < Kaitai::Struct::Struct
     return @type_ids unless @type_ids.nil?
     _pos = @_io.pos
     @_io.seek(header.type_ids_off)
-    @type_ids = Array.new(header.type_ids_size)
+    @type_ids = []
     (header.type_ids_size).times { |i|
-      @type_ids[i] = TypeIdItem.new(@_io, self, @_root)
+      @type_ids << TypeIdItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @type_ids
@@ -1083,9 +1083,9 @@ class Dex < Kaitai::Struct::Struct
     return @proto_ids unless @proto_ids.nil?
     _pos = @_io.pos
     @_io.seek(header.proto_ids_off)
-    @proto_ids = Array.new(header.proto_ids_size)
+    @proto_ids = []
     (header.proto_ids_size).times { |i|
-      @proto_ids[i] = ProtoIdItem.new(@_io, self, @_root)
+      @proto_ids << ProtoIdItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @proto_ids
@@ -1105,9 +1105,9 @@ class Dex < Kaitai::Struct::Struct
     return @field_ids unless @field_ids.nil?
     _pos = @_io.pos
     @_io.seek(header.field_ids_off)
-    @field_ids = Array.new(header.field_ids_size)
+    @field_ids = []
     (header.field_ids_size).times { |i|
-      @field_ids[i] = FieldIdItem.new(@_io, self, @_root)
+      @field_ids << FieldIdItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @field_ids

@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Lvm2(KaitaiStruct):
@@ -126,7 +125,7 @@ class Lvm2(KaitaiStruct):
                     @property
                     def data(self):
                         if hasattr(self, '_m_data'):
-                            return self._m_data if hasattr(self, '_m_data') else None
+                            return self._m_data
 
                         if self.size != 0:
                             _pos = self._io.pos()
@@ -134,7 +133,7 @@ class Lvm2(KaitaiStruct):
                             self._m_data = (self._io.read_bytes(self.size)).decode(u"ascii")
                             self._io.seek(_pos)
 
-                        return self._m_data if hasattr(self, '_m_data') else None
+                        return getattr(self, '_m_data', None)
 
 
                 class MetadataAreaDescriptor(KaitaiStruct):
@@ -151,7 +150,7 @@ class Lvm2(KaitaiStruct):
                     @property
                     def data(self):
                         if hasattr(self, '_m_data'):
-                            return self._m_data if hasattr(self, '_m_data') else None
+                            return self._m_data
 
                         if self.size != 0:
                             _pos = self._io.pos()
@@ -161,7 +160,7 @@ class Lvm2(KaitaiStruct):
                             self._m_data = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io__raw__m_data, self, self._root)
                             self._io.seek(_pos)
 
-                        return self._m_data if hasattr(self, '_m_data') else None
+                        return getattr(self, '_m_data', None)
 
 
                 class MetadataArea(KaitaiStruct):
@@ -220,13 +219,13 @@ class Lvm2(KaitaiStruct):
                         @property
                         def metadata(self):
                             if hasattr(self, '_m_metadata'):
-                                return self._m_metadata if hasattr(self, '_m_metadata') else None
+                                return self._m_metadata
 
                             _pos = self._io.pos()
                             self._io.seek(self.metadata_area_offset)
                             self._m_metadata = self._io.read_bytes(self.metadata_area_size)
                             self._io.seek(_pos)
-                            return self._m_metadata if hasattr(self, '_m_metadata') else None
+                            return getattr(self, '_m_metadata', None)
 
 
 
@@ -236,9 +235,9 @@ class Lvm2(KaitaiStruct):
     @property
     def sector_size(self):
         if hasattr(self, '_m_sector_size'):
-            return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+            return self._m_sector_size
 
         self._m_sector_size = 512
-        return self._m_sector_size if hasattr(self, '_m_sector_size') else None
+        return getattr(self, '_m_sector_size', None)
 
 

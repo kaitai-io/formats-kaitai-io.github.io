@@ -829,8 +829,8 @@ function OpenpgpMessage.Packet:_init(io, parent, root)
 end
 
 function OpenpgpMessage.Packet:_read()
-  self.one = self._io:read_bits_int_be(1)
-  self.new_packet_format = self._io:read_bits_int_be(1)
+  self.one = self._io:read_bits_int_be(1) ~= 0
+  self.new_packet_format = self._io:read_bits_int_be(1) ~= 0
   if self.new_packet_format then
     self.packet_type_new = OpenpgpMessage.PacketTags(self._io:read_bits_int_be(6))
   end

@@ -314,8 +314,10 @@ filesystem with a running Windows OS.</p>
     <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Regf_HiveBin</span>
     <span class="p">`</span><span class="n">rawData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">cellSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">isAllocatedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">cellSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">cellSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isAllocatedInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isAllocatedInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">Regf_HiveBinCell_SubKeyListVk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">valueNameSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">dataSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -637,20 +639,20 @@ filesystem with a running Windows OS.</p>
       <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
 
 <span class="k">proc </span><span class="nf">cellSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Regf_HiveBinCell</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInst</span>
   <span class="k">let</span> <span class="n">cellSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeRaw</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeRaw</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInst</span> <span class="o">=</span> <span class="n">cellSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">cellSizeInst</span>
 
 <span class="k">proc </span><span class="nf">isAllocated</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Regf_HiveBinCell</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInst</span>
   <span class="k">let</span> <span class="n">isAllocatedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">cellSizeRaw</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInst</span> <span class="o">=</span> <span class="n">isAllocatedInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isAllocatedInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Regf_HiveBinCell], filename: string): Regf_HiveBinCell =</span>
   <span class="n">Regf_HiveBinCell</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

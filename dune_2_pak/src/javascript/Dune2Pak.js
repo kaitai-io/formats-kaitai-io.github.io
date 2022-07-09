@@ -8,7 +8,7 @@
   } else {
     root.Dune2Pak = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)|Source}
  */

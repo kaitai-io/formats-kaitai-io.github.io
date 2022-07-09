@@ -42,7 +42,7 @@ sub _read {
     $self->{constant_pool} = ();
     my $n_constant_pool = ($self->constant_pool_count() - 1);
     for (my $i = 0; $i < $n_constant_pool; $i++) {
-        $self->{constant_pool}[$i] = JavaClass::ConstantPoolEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{constant_pool}}, JavaClass::ConstantPoolEntry->new($self->{_io}, $self, $self->{_root});
     }
     $self->{access_flags} = $self->{_io}->read_u2be();
     $self->{this_class} = $self->{_io}->read_u2be();
@@ -51,25 +51,25 @@ sub _read {
     $self->{interfaces} = ();
     my $n_interfaces = $self->interfaces_count();
     for (my $i = 0; $i < $n_interfaces; $i++) {
-        $self->{interfaces}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{interfaces}}, $self->{_io}->read_u2be();
     }
     $self->{fields_count} = $self->{_io}->read_u2be();
     $self->{fields} = ();
     my $n_fields = $self->fields_count();
     for (my $i = 0; $i < $n_fields; $i++) {
-        $self->{fields}[$i] = JavaClass::FieldInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{fields}}, JavaClass::FieldInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{methods_count} = $self->{_io}->read_u2be();
     $self->{methods} = ();
     my $n_methods = $self->methods_count();
     for (my $i = 0; $i < $n_methods; $i++) {
-        $self->{methods}[$i] = JavaClass::MethodInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{methods}}, JavaClass::MethodInfo->new($self->{_io}, $self, $self->{_root});
     }
     $self->{attributes_count} = $self->{_io}->read_u2be();
     $self->{attributes} = ();
     my $n_attributes = $self->attributes_count();
     for (my $i = 0; $i < $n_attributes; $i++) {
-        $self->{attributes}[$i] = JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{attributes}}, JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -314,13 +314,13 @@ sub _read {
     $self->{exception_table} = ();
     my $n_exception_table = $self->exception_table_length();
     for (my $i = 0; $i < $n_exception_table; $i++) {
-        $self->{exception_table}[$i] = JavaClass::AttributeInfo::AttrBodyCode::ExceptionEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{exception_table}}, JavaClass::AttributeInfo::AttrBodyCode::ExceptionEntry->new($self->{_io}, $self, $self->{_root});
     }
     $self->{attributes_count} = $self->{_io}->read_u2be();
     $self->{attributes} = ();
     my $n_attributes = $self->attributes_count();
     for (my $i = 0; $i < $n_attributes; $i++) {
-        $self->{attributes}[$i] = JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{attributes}}, JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -463,7 +463,7 @@ sub _read {
     $self->{exceptions} = ();
     my $n_exceptions = $self->number_of_exceptions();
     for (my $i = 0; $i < $n_exceptions; $i++) {
-        $self->{exceptions}[$i] = JavaClass::AttributeInfo::AttrBodyExceptions::ExceptionTableEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{exceptions}}, JavaClass::AttributeInfo::AttrBodyExceptions::ExceptionTableEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -608,7 +608,7 @@ sub _read {
     $self->{line_number_table} = ();
     my $n_line_number_table = $self->line_number_table_length();
     for (my $i = 0; $i < $n_line_number_table; $i++) {
-        $self->{line_number_table}[$i] = JavaClass::AttributeInfo::AttrBodyLineNumberTable::LineNumberTableEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{line_number_table}}, JavaClass::AttributeInfo::AttrBodyLineNumberTable::LineNumberTableEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -761,7 +761,7 @@ sub _read {
     $self->{attributes} = ();
     my $n_attributes = $self->attributes_count();
     for (my $i = 0; $i < $n_attributes; $i++) {
-        $self->{attributes}[$i] = JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{attributes}}, JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1427,7 +1427,7 @@ sub _read {
     $self->{attributes} = ();
     my $n_attributes = $self->attributes_count();
     for (my $i = 0; $i < $n_attributes; $i++) {
-        $self->{attributes}[$i] = JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{attributes}}, JavaClass::AttributeInfo->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -58,7 +58,7 @@ namespace Kaitai
             _imgDescriptor = m_io.ReadU1();
             _imageId = m_io.ReadBytes(ImageIdLen);
             if (ColorMapType == ColorMapEnum.HasColorMap) {
-                _colorMap = new List<byte[]>((int) (NumColorMap));
+                _colorMap = new List<byte[]>();
                 for (var i = 0; i < NumColorMap; i++)
                 {
                     _colorMap.Add(m_io.ReadBytes(((ColorMapDepth + 7) / 8)));
@@ -153,7 +153,7 @@ namespace Kaitai
             {
                 _extAreaSize = m_io.ReadU2le();
                 _authorName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(41));
-                _comments = new List<string>((int) (4));
+                _comments = new List<string>();
                 for (var i = 0; i < 4; i++)
                 {
                     _comments.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(81)));

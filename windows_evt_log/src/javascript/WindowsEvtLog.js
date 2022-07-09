@@ -8,7 +8,7 @@
   } else {
     root.WindowsEvtLog = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * EVT files are Windows Event Log files written by older Windows
  * operating systems (2000, XP, 2003). They are used as binary log

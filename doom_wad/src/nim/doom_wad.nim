@@ -7,7 +7,8 @@ type
     `numIndexEntries`*: int32
     `indexOffset`*: int32
     `parent`*: KaitaiStruct
-    `indexInst`*: seq[DoomWad_IndexEntry]
+    `indexInst`: seq[DoomWad_IndexEntry]
+    `indexInstFlag`: bool
   DoomWad_Sectors* = ref object of KaitaiStruct
     `entries`*: seq[DoomWad_Sector]
     `parent`*: DoomWad_IndexEntry
@@ -22,7 +23,8 @@ type
   DoomWad_Texture12_TextureIndex* = ref object of KaitaiStruct
     `offset`*: int32
     `parent`*: DoomWad_Texture12
-    `bodyInst`*: DoomWad_Texture12_TextureBody
+    `bodyInst`: DoomWad_Texture12_TextureBody
+    `bodyInstFlag`: bool
   DoomWad_Texture12_TextureBody* = ref object of KaitaiStruct
     `name`*: string
     `masked`*: uint32
@@ -116,7 +118,8 @@ type
     `name`*: string
     `parent`*: DoomWad
     `rawContentsInst`*: seq[byte]
-    `contentsInst`*: KaitaiStruct
+    `contentsInst`: KaitaiStruct
+    `contentsInstFlag`: bool
   DoomWad_Sidedefs* = ref object of KaitaiStruct
     `entries`*: seq[DoomWad_Sidedef]
     `parent`*: DoomWad_IndexEntry
@@ -130,7 +133,8 @@ type
   DoomWad_Blockmap_Blocklist* = ref object of KaitaiStruct
     `offset`*: uint16
     `parent`*: DoomWad_Blockmap
-    `linedefsInst`*: seq[int16]
+    `linedefsInst`: seq[int16]
+    `linedefsInstFlag`: bool
 
 proc read*(_: typedesc[DoomWad], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DoomWad
 proc read*(_: typedesc[DoomWad_Sectors], io: KaitaiStream, root: KaitaiStruct, parent: DoomWad_IndexEntry): DoomWad_Sectors
@@ -181,7 +185,7 @@ proc read*(_: typedesc[DoomWad], io: KaitaiStream, root: KaitaiStruct, parent: K
   this.indexOffset = indexOffsetExpr
 
 proc index(this: DoomWad): seq[DoomWad_IndexEntry] = 
-  if this.indexInst.len != 0:
+  if this.indexInstFlag:
     return this.indexInst
   let pos = this.io.pos()
   this.io.seek(int(this.indexOffset))
@@ -189,8 +193,8 @@ proc index(this: DoomWad): seq[DoomWad_IndexEntry] =
     let it = DoomWad_IndexEntry.read(this.io, this.root, this)
     this.indexInst.add(it)
   this.io.seek(pos)
-  if this.indexInst.len != 0:
-    return this.indexInst
+  this.indexInstFlag = true
+  return this.indexInst
 
 proc fromFile*(_: typedesc[DoomWad], filename: string): DoomWad =
   DoomWad.read(newKaitaiFileStream(filename), nil, nil)
@@ -272,15 +276,15 @@ proc read*(_: typedesc[DoomWad_Texture12_TextureIndex], io: KaitaiStream, root: 
   this.offset = offsetExpr
 
 proc body(this: DoomWad_Texture12_TextureIndex): DoomWad_Texture12_TextureBody = 
-  if this.bodyInst != nil:
+  if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
   this.io.seek(int(this.offset))
   let bodyInstExpr = DoomWad_Texture12_TextureBody.read(this.io, this.root, this)
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
-  if this.bodyInst != nil:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[DoomWad_Texture12_TextureIndex], filename: string): DoomWad_Texture12_TextureIndex =
   DoomWad_Texture12_TextureIndex.read(newKaitaiFileStream(filename), nil, nil)
@@ -564,7 +568,7 @@ proc read*(_: typedesc[DoomWad_IndexEntry], io: KaitaiStream, root: KaitaiStruct
   this.name = nameExpr
 
 proc contents(this: DoomWad_IndexEntry): KaitaiStruct = 
-  if this.contentsInst != nil:
+  if this.contentsInstFlag:
     return this.contentsInst
   let io = DoomWad(this.root).io
   let pos = io.pos()
@@ -629,8 +633,8 @@ proc contents(this: DoomWad_IndexEntry): KaitaiStruct =
       let contentsInstExpr = io.readBytes(int(this.size))
       this.contentsInst = contentsInstExpr
   io.seek(pos)
-  if this.contentsInst != nil:
-    return this.contentsInst
+  this.contentsInstFlag = true
+  return this.contentsInst
 
 proc fromFile*(_: typedesc[DoomWad_IndexEntry], filename: string): DoomWad_IndexEntry =
   DoomWad_IndexEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -716,7 +720,7 @@ proc linedefs(this: DoomWad_Blockmap_Blocklist): seq[int16] =
   ##[
   List of linedefs found in this block
   ]##
-  if this.linedefsInst.len != 0:
+  if this.linedefsInstFlag:
     return this.linedefsInst
   let pos = this.io.pos()
   this.io.seek(int((this.offset * 2)))
@@ -729,8 +733,8 @@ proc linedefs(this: DoomWad_Blockmap_Blocklist): seq[int16] =
         break
       inc i
   this.io.seek(pos)
-  if this.linedefsInst.len != 0:
-    return this.linedefsInst
+  this.linedefsInstFlag = true
+  return this.linedefsInst
 
 proc fromFile*(_: typedesc[DoomWad_Blockmap_Blocklist], filename: string): DoomWad_Blockmap_Blocklist =
   DoomWad_Blockmap_Blocklist.read(newKaitaiFileStream(filename), nil, nil)

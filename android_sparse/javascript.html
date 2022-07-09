@@ -177,6 +177,11 @@ format first have to be converted back to their original format.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Android sparse image parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="Android sparse image parsing Java library">Java</a></li>
                 
                 
@@ -187,7 +192,7 @@ format first have to be converted back to their original format.</p>
                 
                 <li>
                 
-                <a href="nim.html" title="Android sparse image parsing Nim library">Nim</a></li>
+                <a href="lua.html" title="Android sparse image parsing Lua library">Lua</a></li>
                 
                 
                 <li>
@@ -281,7 +286,7 @@ format first have to be converted back to their original format.</p>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">root</span><span class="p">.</span><span class="nx">AndroidSparse</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="ow">typeof</span> <span class="nx">self</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">self</span> <span class="o">:</span> <span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * The Android sparse format is a format to more efficiently store files</span>
 <span class="cm"> * for for example firmware updates to save on bandwidth. Files in sparse</span>
@@ -321,9 +326,9 @@ format first have to be converted back to their original format.</p>
     <span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">headerPrefix</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">-</span> <span class="mf">10</span><span class="p">));</span>
     <span class="kd">var</span> <span class="nx">_io__raw_header</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">FileHeader</span><span class="p">(</span><span class="nx">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span> <span class="o">=</span> <span class="ow">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">numChunks</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span> <span class="o">=</span> <span class="p">[];</span>
     <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">numChunks</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Chunk</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">Chunk</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
     <span class="p">}</span>
   <span class="p">}</span>
 

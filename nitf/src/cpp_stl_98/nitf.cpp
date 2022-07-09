@@ -23,33 +23,28 @@ nitf_t::nitf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, nitf_t* p__ro
 
 void nitf_t::_read() {
     m_header = new header_t(m__io, this, m__root);
-    int l_image_segments = std::stoi(header()->num_image_segments());
     m_image_segments = new std::vector<image_segment_t*>();
-    m_image_segments->reserve(l_image_segments);
+    const int l_image_segments = std::stoi(header()->num_image_segments());
     for (int i = 0; i < l_image_segments; i++) {
         m_image_segments->push_back(new image_segment_t(i, m__io, this, m__root));
     }
-    int l_graphics_segments = std::stoi(header()->num_graphics_segments());
     m_graphics_segments = new std::vector<graphics_segment_t*>();
-    m_graphics_segments->reserve(l_graphics_segments);
+    const int l_graphics_segments = std::stoi(header()->num_graphics_segments());
     for (int i = 0; i < l_graphics_segments; i++) {
         m_graphics_segments->push_back(new graphics_segment_t(i, m__io, this, m__root));
     }
-    int l_text_segments = std::stoi(header()->num_text_files());
     m_text_segments = new std::vector<text_segment_t*>();
-    m_text_segments->reserve(l_text_segments);
+    const int l_text_segments = std::stoi(header()->num_text_files());
     for (int i = 0; i < l_text_segments; i++) {
         m_text_segments->push_back(new text_segment_t(i, m__io, this, m__root));
     }
-    int l_data_extension_segments = std::stoi(header()->num_data_extension());
     m_data_extension_segments = new std::vector<data_extension_segment_t*>();
-    m_data_extension_segments->reserve(l_data_extension_segments);
+    const int l_data_extension_segments = std::stoi(header()->num_data_extension());
     for (int i = 0; i < l_data_extension_segments; i++) {
         m_data_extension_segments->push_back(new data_extension_segment_t(i, m__io, this, m__root));
     }
-    int l_reserved_extension_segments = std::stoi(header()->num_reserved_extension());
     m_reserved_extension_segments = new std::vector<reserved_extension_segment_t*>();
-    m_reserved_extension_segments->reserve(l_reserved_extension_segments);
+    const int l_reserved_extension_segments = std::stoi(header()->num_reserved_extension());
     for (int i = 0; i < l_reserved_extension_segments; i++) {
         m_reserved_extension_segments->push_back(new reserved_extension_segment_t(i, m__io, this, m__root));
     }
@@ -229,9 +224,8 @@ void nitf_t::band_info_t::_read() {
         n_num_lut_entries = false;
         m_num_lut_entries = kaitai::kstream::bytes_to_str(m__io->read_bytes(5), std::string("UTF-8"));
     }
-    int l_luts = std::stoi(num_luts());
     m_luts = new std::vector<std::string>();
-    m_luts->reserve(l_luts);
+    const int l_luts = std::stoi(num_luts());
     for (int i = 0; i < l_luts; i++) {
         m_luts->push_back(m__io->read_bytes(std::stoi(num_lut_entries())));
     }
@@ -499,9 +493,8 @@ void nitf_t::image_data_mask_t::_read() {
     n_bmrbnd = true;
     if (has_bmr()) {
         n_bmrbnd = false;
-        int l_bmrbnd = bmrtmr_count();
         m_bmrbnd = new std::vector<uint32_t>();
-        m_bmrbnd->reserve(l_bmrbnd);
+        const int l_bmrbnd = bmrtmr_count();
         for (int i = 0; i < l_bmrbnd; i++) {
             m_bmrbnd->push_back(m__io->read_u4be());
         }
@@ -509,9 +502,8 @@ void nitf_t::image_data_mask_t::_read() {
     n_tmrbnd = true;
     if (has_tmr()) {
         n_tmrbnd = false;
-        int l_tmrbnd = bmrtmr_count();
         m_tmrbnd = new std::vector<uint32_t>();
-        m_tmrbnd->reserve(l_tmrbnd);
+        const int l_tmrbnd = bmrtmr_count();
         for (int i = 0; i < l_tmrbnd; i++) {
             m_tmrbnd->push_back(m__io->read_u4be());
         }
@@ -792,9 +784,8 @@ void nitf_t::image_sub_header_t::_read() {
     m_image_coordinate_rep = kaitai::kstream::bytes_to_str(m__io->read_bytes(1), std::string("UTF-8"));
     m_image_geo_loc = kaitai::kstream::bytes_to_str(m__io->read_bytes(60), std::string("UTF-8"));
     m_num_img_comments = kaitai::kstream::bytes_to_str(m__io->read_bytes(1), std::string("UTF-8"));
-    int l_img_comments = std::stoi(num_img_comments());
     m_img_comments = new std::vector<image_comment_t*>();
-    m_img_comments->reserve(l_img_comments);
+    const int l_img_comments = std::stoi(num_img_comments());
     for (int i = 0; i < l_img_comments; i++) {
         m_img_comments->push_back(new image_comment_t(m__io, this, m__root));
     }
@@ -806,9 +797,8 @@ void nitf_t::image_sub_header_t::_read() {
         n_num_multispectral_bands = false;
         m_num_multispectral_bands = kaitai::kstream::bytes_to_str(m__io->read_bytes(5), std::string("UTF-8"));
     }
-    int l_bands = ((std::stoi(num_bands()) != 0) ? (std::stoi(num_bands())) : (std::stoi(num_multispectral_bands())));
     m_bands = new std::vector<band_info_t*>();
-    m_bands->reserve(l_bands);
+    const int l_bands = ((std::stoi(num_bands()) != 0) ? (std::stoi(num_bands())) : (std::stoi(num_multispectral_bands())));
     for (int i = 0; i < l_bands; i++) {
         m_bands->push_back(new band_info_t(m__io, this, m__root));
     }
@@ -832,9 +822,8 @@ void nitf_t::image_sub_header_t::_read() {
     n_user_def_img_data = true;
     if (std::stoi(user_def_img_data_len()) > 2) {
         n_user_def_img_data = false;
-        int l_user_def_img_data = (std::stoi(user_def_img_data_len()) - 3);
         m_user_def_img_data = new std::vector<uint8_t>();
-        m_user_def_img_data->reserve(l_user_def_img_data);
+        const int l_user_def_img_data = (std::stoi(user_def_img_data_len()) - 3);
         for (int i = 0; i < l_user_def_img_data; i++) {
             m_user_def_img_data->push_back(m__io->read_u1());
         }
@@ -1063,38 +1052,33 @@ void nitf_t::header_t::_read() {
     m_file_length = kaitai::kstream::bytes_to_str(m__io->read_bytes(12), std::string("UTF-8"));
     m_file_header_length = kaitai::kstream::bytes_to_str(m__io->read_bytes(6), std::string("UTF-8"));
     m_num_image_segments = kaitai::kstream::bytes_to_str(m__io->read_bytes(3), std::string("UTF-8"));
-    int l_linfo = std::stoi(num_image_segments());
     m_linfo = new std::vector<length_image_info_t*>();
-    m_linfo->reserve(l_linfo);
+    const int l_linfo = std::stoi(num_image_segments());
     for (int i = 0; i < l_linfo; i++) {
         m_linfo->push_back(new length_image_info_t(m__io, this, m__root));
     }
     m_num_graphics_segments = kaitai::kstream::bytes_to_str(m__io->read_bytes(3), std::string("UTF-8"));
-    int l_lnnfo = std::stoi(num_graphics_segments());
     m_lnnfo = new std::vector<length_graphic_info_t*>();
-    m_lnnfo->reserve(l_lnnfo);
+    const int l_lnnfo = std::stoi(num_graphics_segments());
     for (int i = 0; i < l_lnnfo; i++) {
         m_lnnfo->push_back(new length_graphic_info_t(m__io, this, m__root));
     }
     m_reserved_numx = kaitai::kstream::bytes_to_str(m__io->read_bytes(3), std::string("UTF-8"));
     m_num_text_files = kaitai::kstream::bytes_to_str(m__io->read_bytes(3), std::string("UTF-8"));
-    int l_ltnfo = std::stoi(num_text_files());
     m_ltnfo = new std::vector<length_text_info_t*>();
-    m_ltnfo->reserve(l_ltnfo);
+    const int l_ltnfo = std::stoi(num_text_files());
     for (int i = 0; i < l_ltnfo; i++) {
         m_ltnfo->push_back(new length_text_info_t(m__io, this, m__root));
     }
     m_num_data_extension = kaitai::kstream::bytes_to_str(m__io->read_bytes(3), std::string("UTF-8"));
-    int l_ldnfo = std::stoi(num_data_extension());
     m_ldnfo = new std::vector<length_data_info_t*>();
-    m_ldnfo->reserve(l_ldnfo);
+    const int l_ldnfo = std::stoi(num_data_extension());
     for (int i = 0; i < l_ldnfo; i++) {
         m_ldnfo->push_back(new length_data_info_t(m__io, this, m__root));
     }
     m_num_reserved_extension = kaitai::kstream::bytes_to_str(m__io->read_bytes(3), std::string("UTF-8"));
-    int l_lrnfo = std::stoi(num_reserved_extension());
     m_lrnfo = new std::vector<length_reserved_info_t*>();
-    m_lrnfo->reserve(l_lrnfo);
+    const int l_lrnfo = std::stoi(num_reserved_extension());
     for (int i = 0; i < l_lrnfo; i++) {
         m_lrnfo->push_back(new length_reserved_info_t(m__io, this, m__root));
     }
@@ -1173,9 +1157,8 @@ void nitf_t::data_sub_header_streaming_t::_read() {
     m_des_defined_subheader_fields_len = kaitai::kstream::bytes_to_str(m__io->read_bytes(4), std::string("UTF-8"));
     m_sfh_l1 = kaitai::kstream::bytes_to_str(m__io->read_bytes(7), std::string("UTF-8"));
     m_sfh_delim1 = m__io->read_u4be();
-    int l_sfh_dr = std::stoi(sfh_l1());
     m_sfh_dr = new std::vector<uint8_t>();
-    m_sfh_dr->reserve(l_sfh_dr);
+    const int l_sfh_dr = std::stoi(sfh_l1());
     for (int i = 0; i < l_sfh_dr; i++) {
         m_sfh_dr->push_back(m__io->read_u1());
     }
@@ -1219,9 +1202,8 @@ void nitf_t::tre_header_t::_read() {
     n_header_data = true;
     if (std::stoi(header_data_length()) > 2) {
         n_header_data = false;
-        int l_header_data = (std::stoi(header_data_length()) - 3);
         m_header_data = new std::vector<uint8_t>();
-        m_header_data->reserve(l_header_data);
+        const int l_header_data = (std::stoi(header_data_length()) - 3);
         for (int i = 0; i < l_header_data; i++) {
             m_header_data->push_back(m__io->read_u1());
         }

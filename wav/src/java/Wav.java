@@ -654,7 +654,7 @@ public class Wav extends KaitaiStruct {
             KaitaiStream io = chunk().dataSlot()._io();
             long _pos = io.pos();
             io.seek(0);
-            this.chunkData = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+            this.chunkData = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
             io.seek(_pos);
             return this.chunkData;
         }
@@ -820,7 +820,7 @@ public class Wav extends KaitaiStruct {
         }
         private void _read() {
             this.dwCuePoints = this._io.readU4le();
-            cuePoints = new ArrayList<CuePointType>(((Number) (dwCuePoints())).intValue());
+            this.cuePoints = new ArrayList<CuePointType>();
             for (int i = 0; i < dwCuePoints(); i++) {
                 this.cuePoints.add(new CuePointType(this._io, this, _root));
             }
@@ -1016,7 +1016,7 @@ public class Wav extends KaitaiStruct {
             {
                 int i = 0;
                 while (!this._io.isEof()) {
-                    this.infoRecords.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                    this.infoRecords.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII")));
                     i++;
                 }
             }

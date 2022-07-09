@@ -18,7 +18,8 @@ type
     `imageId`*: seq[byte]
     `colorMap`*: seq[seq[byte]]
     `parent`*: KaitaiStruct
-    `footerInst`*: Tga_TgaFooter
+    `footerInst`: Tga_TgaFooter
+    `footerInstFlag`: bool
   Tga_ColorMapEnum* = enum
     no_color_map = 0
     has_color_map = 1
@@ -35,8 +36,10 @@ type
     `devDirOfs`*: uint32
     `versionMagic`*: seq[byte]
     `parent`*: Tga
-    `isValidInst`*: bool
-    `extAreaInst`*: Tga_TgaExtArea
+    `isValidInst`: bool
+    `isValidInstFlag`: bool
+    `extAreaInst`: Tga_TgaExtArea
+    `extAreaInstFlag`: bool
   Tga_TgaExtArea* = ref object of KaitaiStruct
     `extAreaSize`*: uint16
     `authorName`*: string
@@ -134,15 +137,15 @@ identify image. May contain text or some binary data.
       this.colorMap.add(it)
 
 proc footer(this: Tga): Tga_TgaFooter = 
-  if this.footerInst != nil:
+  if this.footerInstFlag:
     return this.footerInst
   let pos = this.io.pos()
   this.io.seek(int((this.io.size - 26)))
   let footerInstExpr = Tga_TgaFooter.read(this.io, this.root, this)
   this.footerInst = footerInstExpr
   this.io.seek(pos)
-  if this.footerInst != nil:
-    return this.footerInst
+  this.footerInstFlag = true
+  return this.footerInst
 
 proc fromFile*(_: typedesc[Tga], filename: string): Tga =
   Tga.read(newKaitaiFileStream(filename), nil, nil)
@@ -171,15 +174,15 @@ proc read*(_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, par
   this.versionMagic = versionMagicExpr
 
 proc isValid(this: Tga_TgaFooter): bool = 
-  if this.isValidInst != nil:
+  if this.isValidInstFlag:
     return this.isValidInst
   let isValidInstExpr = bool(this.versionMagic == @[84'u8, 82'u8, 85'u8, 69'u8, 86'u8, 73'u8, 83'u8, 73'u8, 79'u8, 78'u8, 45'u8, 88'u8, 70'u8, 73'u8, 76'u8, 69'u8, 46'u8, 0'u8])
   this.isValidInst = isValidInstExpr
-  if this.isValidInst != nil:
-    return this.isValidInst
+  this.isValidInstFlag = true
+  return this.isValidInst
 
 proc extArea(this: Tga_TgaFooter): Tga_TgaExtArea = 
-  if this.extAreaInst != nil:
+  if this.extAreaInstFlag:
     return this.extAreaInst
   if this.isValid:
     let pos = this.io.pos()
@@ -187,8 +190,8 @@ proc extArea(this: Tga_TgaFooter): Tga_TgaExtArea =
     let extAreaInstExpr = Tga_TgaExtArea.read(this.io, this.root, this)
     this.extAreaInst = extAreaInstExpr
     this.io.seek(pos)
-  if this.extAreaInst != nil:
-    return this.extAreaInst
+  this.extAreaInstFlag = true
+  return this.extAreaInst
 
 proc fromFile*(_: typedesc[Tga_TgaFooter], filename: string): Tga_TgaFooter =
   Tga_TgaFooter.read(newKaitaiFileStream(filename), nil, nil)

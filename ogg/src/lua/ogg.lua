@@ -56,9 +56,9 @@ function Ogg.Page:_read()
     error("not equal, expected " ..  "\000" .. ", but got " .. self.version)
   end
   self.reserved1 = self._io:read_bits_int_be(5)
-  self.is_end_of_stream = self._io:read_bits_int_be(1)
-  self.is_beginning_of_stream = self._io:read_bits_int_be(1)
-  self.is_continuation = self._io:read_bits_int_be(1)
+  self.is_end_of_stream = self._io:read_bits_int_be(1) ~= 0
+  self.is_beginning_of_stream = self._io:read_bits_int_be(1) ~= 0
+  self.is_continuation = self._io:read_bits_int_be(1) ~= 0
   self._io:align_to_byte()
   self.granule_pos = self._io:read_u8le()
   self.bitstream_serial = self._io:read_u4le()

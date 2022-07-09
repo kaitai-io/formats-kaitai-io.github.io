@@ -23,23 +23,33 @@ type
     `literal`*: seq[byte]
     `tag`*: uint8
     `parent`*: Dcmp1_Chunk
-    `doStoreInst`*: bool
-    `lenLiteralM1InTagInst`*: int
-    `isLenLiteralSeparateInst`*: bool
-    `lenLiteralInst`*: int
+    `doStoreInst`: bool
+    `doStoreInstFlag`: bool
+    `lenLiteralM1InTagInst`: int
+    `lenLiteralM1InTagInstFlag`: bool
+    `isLenLiteralSeparateInst`: bool
+    `isLenLiteralSeparateInstFlag`: bool
+    `lenLiteralInst`: int
+    `lenLiteralInstFlag`: bool
   Dcmp1_Chunk_BackreferenceBody* = ref object of KaitaiStruct
     `indexSeparateMinus`*: uint8
     `tag`*: uint8
     `parent`*: Dcmp1_Chunk
-    `isIndexSeparateInst`*: bool
-    `indexInTagInst`*: int
-    `indexSeparateInst`*: int
-    `indexInst`*: int
+    `isIndexSeparateInst`: bool
+    `isIndexSeparateInstFlag`: bool
+    `indexInTagInst`: int
+    `indexInTagInstFlag`: bool
+    `indexSeparateInst`: int
+    `indexSeparateInstFlag`: bool
+    `indexInst`: int
+    `indexInstFlag`: bool
   Dcmp1_Chunk_TableLookupBody* = ref object of KaitaiStruct
     `tag`*: uint8
     `parent`*: Dcmp1_Chunk
-    `lookupTableInst`*: seq[seq[byte]]
-    `valueInst`*: seq[byte]
+    `lookupTableInst`: seq[seq[byte]]
+    `lookupTableInstFlag`: bool
+    `valueInst`: seq[byte]
+    `valueInstFlag`: bool
   Dcmp1_Chunk_EndBody* = ref object of KaitaiStruct
     `parent`*: Dcmp1_Chunk
   Dcmp1_Chunk_ExtendedBody* = ref object of KaitaiStruct
@@ -50,9 +60,12 @@ type
     `toRepeatRaw`*: DcmpVariableLengthInteger
     `repeatCountM1Raw`*: DcmpVariableLengthInteger
     `parent`*: Dcmp1_Chunk_ExtendedBody
-    `toRepeatInst`*: int
-    `repeatCountM1Inst`*: int
-    `repeatCountInst`*: int
+    `toRepeatInst`: int
+    `toRepeatInstFlag`: bool
+    `repeatCountM1Inst`: int
+    `repeatCountM1InstFlag`: bool
+    `repeatCountInst`: int
+    `repeatCountInstFlag`: bool
 
 proc read*(_: typedesc[Dcmp1], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dcmp1
 proc read*(_: typedesc[Dcmp1_Chunk], io: KaitaiStream, root: KaitaiStruct, parent: Dcmp1): Dcmp1_Chunk
@@ -239,12 +252,12 @@ proc doStore(this: Dcmp1_Chunk_LiteralBody): bool =
 See the documentation of the `backreference_body` type for details about backreference chunks.
 
   ]##
-  if this.doStoreInst != nil:
+  if this.doStoreInstFlag:
     return this.doStoreInst
   let doStoreInstExpr = bool((if this.isLenLiteralSeparate: this.tag == 209 else: (this.tag and 16) != 0))
   this.doStoreInst = doStoreInstExpr
-  if this.doStoreInst != nil:
-    return this.doStoreInst
+  this.doStoreInstFlag = true
+  return this.doStoreInst
 
 proc lenLiteralM1InTag(this: Dcmp1_Chunk_LiteralBody): int = 
 
@@ -257,13 +270,13 @@ If the tag byte is 0xd0 or 0xd1,
 the length is stored in a separate byte after the tag byte and before the literal data.
 
   ]##
-  if this.lenLiteralM1InTagInst != nil:
+  if this.lenLiteralM1InTagInstFlag:
     return this.lenLiteralM1InTagInst
   if not(this.isLenLiteralSeparate):
     let lenLiteralM1InTagInstExpr = int((this.tag and 15))
     this.lenLiteralM1InTagInst = lenLiteralM1InTagInstExpr
-  if this.lenLiteralM1InTagInst != nil:
-    return this.lenLiteralM1InTagInst
+  this.lenLiteralM1InTagInstFlag = true
+  return this.lenLiteralM1InTagInst
 
 proc isLenLiteralSeparate(this: Dcmp1_Chunk_LiteralBody): bool = 
 
@@ -271,12 +284,12 @@ proc isLenLiteralSeparate(this: Dcmp1_Chunk_LiteralBody): bool =
   Whether the length of the literal is stored separately from the tag.
 
   ]##
-  if this.isLenLiteralSeparateInst != nil:
+  if this.isLenLiteralSeparateInstFlag:
     return this.isLenLiteralSeparateInst
   let isLenLiteralSeparateInstExpr = bool(this.tag >= 208)
   this.isLenLiteralSeparateInst = isLenLiteralSeparateInstExpr
-  if this.isLenLiteralSeparateInst != nil:
-    return this.isLenLiteralSeparateInst
+  this.isLenLiteralSeparateInstFlag = true
+  return this.isLenLiteralSeparateInst
 
 proc lenLiteral(this: Dcmp1_Chunk_LiteralBody): int = 
 
@@ -289,12 +302,12 @@ this value is always greater than zero,
 as there is no use in storing a zero-length literal.
 
   ]##
-  if this.lenLiteralInst != nil:
+  if this.lenLiteralInstFlag:
     return this.lenLiteralInst
   let lenLiteralInstExpr = int((if this.isLenLiteralSeparate: this.lenLiteralSeparate else: (this.lenLiteralM1InTag + 1)))
   this.lenLiteralInst = lenLiteralInstExpr
-  if this.lenLiteralInst != nil:
-    return this.lenLiteralInst
+  this.lenLiteralInstFlag = true
+  return this.lenLiteralInst
 
 proc fromFile*(_: typedesc[Dcmp1_Chunk_LiteralBody], filename: string): Dcmp1_Chunk_LiteralBody =
   Dcmp1_Chunk_LiteralBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -340,12 +353,12 @@ proc isIndexSeparate(this: Dcmp1_Chunk_BackreferenceBody): bool =
   Whether the index is stored separately from the tag.
 
   ]##
-  if this.isIndexSeparateInst != nil:
+  if this.isIndexSeparateInstFlag:
     return this.isIndexSeparateInst
   let isIndexSeparateInstExpr = bool(this.tag == 210)
   this.isIndexSeparateInst = isIndexSeparateInstExpr
-  if this.isIndexSeparateInst != nil:
-    return this.isIndexSeparateInst
+  this.isIndexSeparateInstFlag = true
+  return this.isIndexSeparateInst
 
 proc indexInTag(this: Dcmp1_Chunk_BackreferenceBody): int = 
 
@@ -354,12 +367,12 @@ proc indexInTag(this: Dcmp1_Chunk_BackreferenceBody): int =
 as stored in the tag byte.
 
   ]##
-  if this.indexInTagInst != nil:
+  if this.indexInTagInstFlag:
     return this.indexInTagInst
   let indexInTagInstExpr = int((this.tag - 32))
   this.indexInTagInst = indexInTagInstExpr
-  if this.indexInTagInst != nil:
-    return this.indexInTagInst
+  this.indexInTagInstFlag = true
+  return this.indexInTagInst
 
 proc indexSeparate(this: Dcmp1_Chunk_BackreferenceBody): int = 
 
@@ -369,13 +382,13 @@ as stored separately from the tag byte,
 with the implicit offset corrected for.
 
   ]##
-  if this.indexSeparateInst != nil:
+  if this.indexSeparateInstFlag:
     return this.indexSeparateInst
   if this.isIndexSeparate:
     let indexSeparateInstExpr = int((this.indexSeparateMinus + 176))
     this.indexSeparateInst = indexSeparateInstExpr
-  if this.indexSeparateInst != nil:
-    return this.indexSeparateInst
+  this.indexSeparateInstFlag = true
+  return this.indexSeparateInst
 
 proc index(this: Dcmp1_Chunk_BackreferenceBody): int = 
 
@@ -393,12 +406,12 @@ a backreference can only reference stored literal chunks found *before* the back
 not ones that come after it.
 
   ]##
-  if this.indexInst != nil:
+  if this.indexInstFlag:
     return this.indexInst
   let indexInstExpr = int((if this.isIndexSeparate: this.indexSeparate else: this.indexInTag))
   this.indexInst = indexInstExpr
-  if this.indexInst != nil:
-    return this.indexInst
+  this.indexInstFlag = true
+  return this.indexInst
 
 proc fromFile*(_: typedesc[Dcmp1_Chunk_BackreferenceBody], filename: string): Dcmp1_Chunk_BackreferenceBody =
   Dcmp1_Chunk_BackreferenceBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -433,12 +446,12 @@ The entries in the lookup table are offset -
 index 0 stands for tag 0xd5, 1 for 0xd6, etc.
 
   ]##
-  if this.lookupTableInst.len != 0:
+  if this.lookupTableInstFlag:
     return this.lookupTableInst
-  let lookupTableInstExpr = seq[seq[byte]](@[seq[byte](@[0'u8, 0'u8]), seq[byte](@[0'u8, 1'u8]), seq[byte](@[0'u8, 2'u8]), seq[byte](@[0'u8, 3'u8]), seq[byte](@[46'u8, 1'u8]), seq[byte](@[62'u8, 1'u8]), seq[byte](@[1'u8, 1'u8]), seq[byte](@[30'u8, 1'u8]), seq[byte](@[-1'u8, -1'u8]), seq[byte](@[14'u8, 1'u8]), seq[byte](@[49'u8, 0'u8]), seq[byte](@[17'u8, 18'u8]), seq[byte](@[1'u8, 7'u8]), seq[byte](@[51'u8, 50'u8]), seq[byte](@[18'u8, 57'u8]), seq[byte](@[-19'u8, 16'u8]), seq[byte](@[1'u8, 39'u8]), seq[byte](@[35'u8, 34'u8]), seq[byte](@[1'u8, 55'u8]), seq[byte](@[7'u8, 6'u8]), seq[byte](@[1'u8, 23'u8]), seq[byte](@[1'u8, 35'u8]), seq[byte](@[0'u8, -1'u8]), seq[byte](@[0'u8, 47'u8]), seq[byte](@[7'u8, 14'u8]), seq[byte](@[-3'u8, 60'u8]), seq[byte](@[1'u8, 53'u8]), seq[byte](@[1'u8, 21'u8]), seq[byte](@[1'u8, 2'u8]), seq[byte](@[0'u8, 7'u8]), seq[byte](@[0'u8, 62'u8]), seq[byte](@[5'u8, -43'u8]), seq[byte](@[2'u8, 1'u8]), seq[byte](@[6'u8, 7'u8]), seq[byte](@[7'u8, 8'u8]), seq[byte](@[48'u8, 1'u8]), seq[byte](@[1'u8, 51'u8]), seq[byte](@[0'u8, 16'u8]), seq[byte](@[23'u8, 22'u8]), seq[byte](@[55'u8, 62'u8]), seq[byte](@[54'u8, 55'u8])])
+  let lookupTableInstExpr = seq[seq[byte]](@[seq[byte](@[0'u8, 0'u8]), seq[byte](@[0'u8, 1'u8]), seq[byte](@[0'u8, 2'u8]), seq[byte](@[0'u8, 3'u8]), seq[byte](@[46'u8, 1'u8]), seq[byte](@[62'u8, 1'u8]), seq[byte](@[1'u8, 1'u8]), seq[byte](@[30'u8, 1'u8]), seq[byte](@[255'u8, 255'u8]), seq[byte](@[14'u8, 1'u8]), seq[byte](@[49'u8, 0'u8]), seq[byte](@[17'u8, 18'u8]), seq[byte](@[1'u8, 7'u8]), seq[byte](@[51'u8, 50'u8]), seq[byte](@[18'u8, 57'u8]), seq[byte](@[237'u8, 16'u8]), seq[byte](@[1'u8, 39'u8]), seq[byte](@[35'u8, 34'u8]), seq[byte](@[1'u8, 55'u8]), seq[byte](@[7'u8, 6'u8]), seq[byte](@[1'u8, 23'u8]), seq[byte](@[1'u8, 35'u8]), seq[byte](@[0'u8, 255'u8]), seq[byte](@[0'u8, 47'u8]), seq[byte](@[7'u8, 14'u8]), seq[byte](@[253'u8, 60'u8]), seq[byte](@[1'u8, 53'u8]), seq[byte](@[1'u8, 21'u8]), seq[byte](@[1'u8, 2'u8]), seq[byte](@[0'u8, 7'u8]), seq[byte](@[0'u8, 62'u8]), seq[byte](@[5'u8, 213'u8]), seq[byte](@[2'u8, 1'u8]), seq[byte](@[6'u8, 7'u8]), seq[byte](@[7'u8, 8'u8]), seq[byte](@[48'u8, 1'u8]), seq[byte](@[1'u8, 51'u8]), seq[byte](@[0'u8, 16'u8]), seq[byte](@[23'u8, 22'u8]), seq[byte](@[55'u8, 62'u8]), seq[byte](@[54'u8, 55'u8])])
   this.lookupTableInst = lookupTableInstExpr
-  if this.lookupTableInst.len != 0:
-    return this.lookupTableInst
+  this.lookupTableInstFlag = true
+  return this.lookupTableInst
 
 proc value(this: Dcmp1_Chunk_TableLookupBody): seq[byte] = 
 
@@ -447,12 +460,12 @@ proc value(this: Dcmp1_Chunk_TableLookupBody): seq[byte] =
 based on the fixed lookup table.
 
   ]##
-  if this.valueInst.len != 0:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = seq[byte](this.lookupTable[(this.tag - 213)])
   this.valueInst = valueInstExpr
-  if this.valueInst.len != 0:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[Dcmp1_Chunk_TableLookupBody], filename: string): Dcmp1_Chunk_TableLookupBody =
   Dcmp1_Chunk_TableLookupBody.read(newKaitaiFileStream(filename), nil, nil)
@@ -554,12 +567,12 @@ Although it is stored as a variable-length integer,
 this value must fit into an unsigned 8-bit integer.
 
   ]##
-  if this.toRepeatInst != nil:
+  if this.toRepeatInstFlag:
     return this.toRepeatInst
   let toRepeatInstExpr = int(this.toRepeatRaw.value)
   this.toRepeatInst = toRepeatInstExpr
-  if this.toRepeatInst != nil:
-    return this.toRepeatInst
+  this.toRepeatInstFlag = true
+  return this.toRepeatInst
 
 proc repeatCountM1(this: Dcmp1_Chunk_ExtendedBody_RepeatBody): int = 
 
@@ -570,12 +583,12 @@ minus one.
 This value must not be negative.
 
   ]##
-  if this.repeatCountM1Inst != nil:
+  if this.repeatCountM1InstFlag:
     return this.repeatCountM1Inst
   let repeatCountM1InstExpr = int(this.repeatCountM1Raw.value)
   this.repeatCountM1Inst = repeatCountM1InstExpr
-  if this.repeatCountM1Inst != nil:
-    return this.repeatCountM1Inst
+  this.repeatCountM1InstFlag = true
+  return this.repeatCountM1Inst
 
 proc repeatCount(this: Dcmp1_Chunk_ExtendedBody_RepeatBody): int = 
 
@@ -585,12 +598,12 @@ proc repeatCount(this: Dcmp1_Chunk_ExtendedBody_RepeatBody): int =
 This value must be positive.
 
   ]##
-  if this.repeatCountInst != nil:
+  if this.repeatCountInstFlag:
     return this.repeatCountInst
   let repeatCountInstExpr = int((this.repeatCountM1 + 1))
   this.repeatCountInst = repeatCountInstExpr
-  if this.repeatCountInst != nil:
-    return this.repeatCountInst
+  this.repeatCountInstFlag = true
+  return this.repeatCountInst
 
 proc fromFile*(_: typedesc[Dcmp1_Chunk_ExtendedBody_RepeatBody], filename: string): Dcmp1_Chunk_ExtendedBody_RepeatBody =
   Dcmp1_Chunk_ExtendedBody_RepeatBody.read(newKaitaiFileStream(filename), nil, nil)

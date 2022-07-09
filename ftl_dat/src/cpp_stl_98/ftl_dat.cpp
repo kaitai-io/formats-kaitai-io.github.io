@@ -17,9 +17,8 @@ ftl_dat_t::ftl_dat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ftl_dat
 
 void ftl_dat_t::_read() {
     m_num_files = m__io->read_u4le();
-    int l_files = num_files();
     m_files = new std::vector<file_t*>();
-    m_files->reserve(l_files);
+    const int l_files = num_files();
     for (int i = 0; i < l_files; i++) {
         m_files->push_back(new file_t(m__io, this, m__root));
     }

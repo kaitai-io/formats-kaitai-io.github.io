@@ -20,9 +20,8 @@ void apple_single_double_t::_read() {
     m_version = m__io->read_u4be();
     m_reserved = m__io->read_bytes(16);
     m_num_entries = m__io->read_u2be();
-    int l_entries = num_entries();
     m_entries = new std::vector<entry_t*>();
-    m_entries->reserve(l_entries);
+    const int l_entries = num_entries();
     for (int i = 0; i < l_entries; i++) {
         m_entries->push_back(new entry_t(m__io, this, m__root));
     }

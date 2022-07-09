@@ -8,7 +8,7 @@
   } else {
     root.Msgpack = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * MessagePack (msgpack) is a system to serialize arbitrary structured
  * data into a compact binary stream.
@@ -76,9 +76,9 @@ var Msgpack = (function() {
       this.numArrayElements32 = this._io.readU4be();
     }
     if (this.isArray) {
-      this.arrayElements = new Array(this.numArrayElements);
+      this.arrayElements = [];
       for (var i = 0; i < this.numArrayElements; i++) {
-        this.arrayElements[i] = new Msgpack(this._io, this, null);
+        this.arrayElements.push(new Msgpack(this._io, this, null));
       }
     }
     if (this.isMap16) {
@@ -88,9 +88,9 @@ var Msgpack = (function() {
       this.numMapElements32 = this._io.readU4be();
     }
     if (this.isMap) {
-      this.mapElements = new Array(this.numMapElements);
+      this.mapElements = [];
       for (var i = 0; i < this.numMapElements; i++) {
-        this.mapElements[i] = new MapTuple(this._io, this, this._root);
+        this.mapElements.push(new MapTuple(this._io, this, this._root));
       }
     }
   }

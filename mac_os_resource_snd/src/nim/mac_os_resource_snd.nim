@@ -10,7 +10,8 @@ type
     `numSoundCommands`*: uint16
     `soundCommands`*: seq[MacOsResourceSnd_SoundCommand]
     `parent`*: KaitaiStruct
-    `midiNoteToFrequencyInst`*: seq[float64]
+    `midiNoteToFrequencyInst`: seq[float64]
+    `midiNoteToFrequencyInstFlag`: bool
   MacOsResourceSnd_CmdType* = enum
     null_cmd = 0
     quiet_cmd = 3
@@ -87,21 +88,26 @@ type
     `extendedOrCompressed`*: MacOsResourceSnd_ExtendedOrCompressed
     `sampleArea`*: seq[byte]
     `parent`*: MacOsResourceSnd_SoundCommand
-    `startOfsInst`*: int
-    `baseFreqeuncyInst`*: float64
-    `soundHeaderTypeInst`*: MacOsResourceSnd_SoundHeaderType
+    `startOfsInst`: int
+    `startOfsInstFlag`: bool
+    `baseFreqeuncyInst`: float64
+    `baseFreqeuncyInstFlag`: bool
+    `soundHeaderTypeInst`: MacOsResourceSnd_SoundHeaderType
+    `soundHeaderTypeInstFlag`: bool
   MacOsResourceSnd_UnsignedFixedPoint* = ref object of KaitaiStruct
     `integerPart`*: uint16
     `fractionPart`*: uint16
     `parent`*: MacOsResourceSnd_SoundHeader
-    `valueInst`*: float64
+    `valueInst`: float64
+    `valueInstFlag`: bool
   MacOsResourceSnd_SoundCommand* = ref object of KaitaiStruct
     `isDataOffset`*: bool
     `cmd`*: MacOsResourceSnd_CmdType
     `param1`*: uint16
     `param2`*: uint32
     `parent`*: MacOsResourceSnd
-    `soundHeaderInst`*: MacOsResourceSnd_SoundHeader
+    `soundHeaderInst`: MacOsResourceSnd_SoundHeader
+    `soundHeaderInstFlag`: bool
   MacOsResourceSnd_Compressed* = ref object of KaitaiStruct
     `format`*: string
     `reserved`*: seq[byte]
@@ -111,7 +117,8 @@ type
     `packetSize`*: uint16
     `synthesizerId`*: uint16
     `parent`*: MacOsResourceSnd_ExtendedOrCompressed
-    `compressionTypeInst`*: MacOsResourceSnd_CompressionTypeEnum
+    `compressionTypeInst`: MacOsResourceSnd_CompressionTypeEnum
+    `compressionTypeInstFlag`: bool
   MacOsResourceSnd_ExtendedOrCompressed* = ref object of KaitaiStruct
     `numFrames`*: uint32
     `aiffSampleRate`*: seq[byte]
@@ -125,14 +132,22 @@ type
     `id`*: MacOsResourceSnd_DataType
     `options`*: uint32
     `parent`*: MacOsResourceSnd
-    `initPanMaskInst`*: int8
-    `waveInitChannelMaskInst`*: int8
-    `initStereoMaskInst`*: uint8
-    `waveInitInst`*: MacOsResourceSnd_WaveInitOption
-    `panInitInst`*: MacOsResourceSnd_InitOption
-    `initCompMaskInst`*: int
-    `stereoInitInst`*: MacOsResourceSnd_InitOption
-    `compInitInst`*: MacOsResourceSnd_InitOption
+    `initPanMaskInst`: int8
+    `initPanMaskInstFlag`: bool
+    `waveInitChannelMaskInst`: int8
+    `waveInitChannelMaskInstFlag`: bool
+    `initStereoMaskInst`: uint8
+    `initStereoMaskInstFlag`: bool
+    `waveInitInst`: MacOsResourceSnd_WaveInitOption
+    `waveInitInstFlag`: bool
+    `panInitInst`: MacOsResourceSnd_InitOption
+    `panInitInstFlag`: bool
+    `initCompMaskInst`: int
+    `initCompMaskInstFlag`: bool
+    `stereoInitInst`: MacOsResourceSnd_InitOption
+    `stereoInitInstFlag`: bool
+    `compInitInst`: MacOsResourceSnd_InitOption
+    `compInitInstFlag`: bool
 
 proc read*(_: typedesc[MacOsResourceSnd], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MacOsResourceSnd
 proc read*(_: typedesc[MacOsResourceSnd_Extended], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_ExtendedOrCompressed): MacOsResourceSnd_Extended
@@ -201,12 +216,12 @@ The lookup table represents the formula (2 ** ((midi_note - 69) / 12)) * 440
 
   @see <a href="https://en.wikipedia.org/wiki/MIDI_tuning_standard">Source</a>
   ]##
-  if this.midiNoteToFrequencyInst.len != 0:
+  if this.midiNoteToFrequencyInstFlag:
     return this.midiNoteToFrequencyInst
   let midiNoteToFrequencyInstExpr = seq[float64](@[float64(8.18), float64(8.66), float64(9.18), float64(9.72), float64(10.30), float64(10.91), float64(11.56), float64(12.25), float64(12.98), float64(13.75), float64(14.57), float64(15.43), float64(16.35), float64(17.32), float64(18.35), float64(19.45), float64(20.60), float64(21.83), float64(23.12), float64(24.50), float64(25.96), float64(27.50), float64(29.14), float64(30.87), float64(32.70), float64(34.65), float64(36.71), float64(38.89), float64(41.20), float64(43.65), float64(46.25), float64(49.00), float64(51.91), float64(55.00), float64(58.27), float64(61.74), float64(65.41), float64(69.30), float64(73.42), float64(77.78), float64(82.41), float64(87.31), float64(92.50), float64(98.00), float64(103.83), float64(110.00), float64(116.54), float64(123.47), float64(130.81), float64(138.59), float64(146.83), float64(155.56), float64(164.81), float64(174.61), float64(185.00), float64(196.00), float64(207.65), float64(220.00), float64(233.08), float64(246.94), float64(261.63), float64(277.18), float64(293.66), float64(311.13), float64(329.63), float64(349.23), float64(369.99), float64(392.00), float64(415.30), float64(440.00), float64(466.16), float64(493.88), float64(523.25), float64(554.37), float64(587.33), float64(622.25), float64(659.26), float64(698.46), float64(739.99), float64(783.99), float64(830.61), float64(880.00), float64(932.33), float64(987.77), float64(1046.50), float64(1108.73), float64(1174.66), float64(1244.51), float64(1318.51), float64(1396.91), float64(1479.98), float64(1567.98), float64(1661.22), float64(1760.00), float64(1864.66), float64(1975.53), float64(2093.00), float64(2217.46), float64(2349.32), float64(2489.02), float64(2637.02), float64(2793.83), float64(2959.96), float64(3135.96), float64(3322.44), float64(3520.00), float64(3729.31), float64(3951.07), float64(4186.01), float64(4434.92), float64(4698.64), float64(4978.03), float64(5274.04), float64(5587.65), float64(5919.91), float64(6271.93), float64(6644.88), float64(7040.00), float64(7458.62), float64(7902.13), float64(8372.02), float64(8869.84), float64(9397.27), float64(9956.06), float64(10548.08), float64(11175.30), float64(11839.82), float64(12543.85)])
   this.midiNoteToFrequencyInst = midiNoteToFrequencyInstExpr
-  if this.midiNoteToFrequencyInst.len != 0:
-    return this.midiNoteToFrequencyInst
+  this.midiNoteToFrequencyInstFlag = true
+  return this.midiNoteToFrequencyInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd], filename: string): MacOsResourceSnd =
   MacOsResourceSnd.read(newKaitaiFileStream(filename), nil, nil)
@@ -308,12 +323,12 @@ proc read*(_: typedesc[MacOsResourceSnd_SoundHeader], io: KaitaiStream, root: Ka
     this.sampleArea = sampleAreaExpr
 
 proc startOfs(this: MacOsResourceSnd_SoundHeader): int = 
-  if this.startOfsInst != nil:
+  if this.startOfsInstFlag:
     return this.startOfsInst
   let startOfsInstExpr = int(this.io.pos)
   this.startOfsInst = startOfsInstExpr
-  if this.startOfsInst != nil:
-    return this.startOfsInst
+  this.startOfsInstFlag = true
+  return this.startOfsInst
 
 proc baseFreqeuncy(this: MacOsResourceSnd_SoundHeader): float64 = 
 
@@ -323,24 +338,24 @@ Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
 
   @see <a href="https://en.wikipedia.org/wiki/MIDI_tuning_standard">Source</a>
   ]##
-  if this.baseFreqeuncyInst != nil:
+  if this.baseFreqeuncyInstFlag:
     return this.baseFreqeuncyInst
   if  ((this.midiNote >= 0) and (this.midiNote < 128)) :
     let baseFreqeuncyInstExpr = float64(MacOsResourceSnd(this.root).midiNoteToFrequency[this.midiNote])
     this.baseFreqeuncyInst = baseFreqeuncyInstExpr
-  if this.baseFreqeuncyInst != nil:
-    return this.baseFreqeuncyInst
+  this.baseFreqeuncyInstFlag = true
+  return this.baseFreqeuncyInst
 
 proc soundHeaderType(this: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_SoundHeaderType = 
-  if this.soundHeaderTypeInst != nil:
+  if this.soundHeaderTypeInstFlag:
     return this.soundHeaderTypeInst
   let pos = this.io.pos()
   this.io.seek(int((this.startOfs + 20)))
   let soundHeaderTypeInstExpr = MacOsResourceSnd_SoundHeaderType(this.io.readU1())
   this.soundHeaderTypeInst = soundHeaderTypeInstExpr
   this.io.seek(pos)
-  if this.soundHeaderTypeInst != nil:
-    return this.soundHeaderTypeInst
+  this.soundHeaderTypeInstFlag = true
+  return this.soundHeaderTypeInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_SoundHeader], filename: string): MacOsResourceSnd_SoundHeader =
   MacOsResourceSnd_SoundHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -359,12 +374,12 @@ proc read*(_: typedesc[MacOsResourceSnd_UnsignedFixedPoint], io: KaitaiStream, r
   this.fractionPart = fractionPartExpr
 
 proc value(this: MacOsResourceSnd_UnsignedFixedPoint): float64 = 
-  if this.valueInst != nil:
+  if this.valueInstFlag:
     return this.valueInst
   let valueInstExpr = float64((this.integerPart + (this.fractionPart div 65535.0)))
   this.valueInst = valueInstExpr
-  if this.valueInst != nil:
-    return this.valueInst
+  this.valueInstFlag = true
+  return this.valueInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_UnsignedFixedPoint], filename: string): MacOsResourceSnd_UnsignedFixedPoint =
   MacOsResourceSnd_UnsignedFixedPoint.read(newKaitaiFileStream(filename), nil, nil)
@@ -388,7 +403,7 @@ proc read*(_: typedesc[MacOsResourceSnd_SoundCommand], io: KaitaiStream, root: K
   this.param2 = param2Expr
 
 proc soundHeader(this: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHeader = 
-  if this.soundHeaderInst != nil:
+  if this.soundHeaderInstFlag:
     return this.soundHeaderInst
   if  ((this.isDataOffset) and (this.cmd == mac_os_resource_snd.buffer_cmd)) :
     let pos = this.io.pos()
@@ -396,8 +411,8 @@ proc soundHeader(this: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHea
     let soundHeaderInstExpr = MacOsResourceSnd_SoundHeader.read(this.io, this.root, this)
     this.soundHeaderInst = soundHeaderInstExpr
     this.io.seek(pos)
-  if this.soundHeaderInst != nil:
-    return this.soundHeaderInst
+  this.soundHeaderInstFlag = true
+  return this.soundHeaderInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_SoundCommand], filename: string): MacOsResourceSnd_SoundCommand =
   MacOsResourceSnd_SoundCommand.read(newKaitaiFileStream(filename), nil, nil)
@@ -455,12 +470,12 @@ Indicates the resource ID number of the 'snth' resource that was used to compres
   this.synthesizerId = synthesizerIdExpr
 
 proc compressionType(this: MacOsResourceSnd_Compressed): MacOsResourceSnd_CompressionTypeEnum = 
-  if this.compressionTypeInst != nil:
+  if this.compressionTypeInstFlag:
     return this.compressionTypeInst
   let compressionTypeInstExpr = MacOsResourceSnd_CompressionTypeEnum(MacOsResourceSnd_CompressionTypeEnum(this.compressionId))
   this.compressionTypeInst = compressionTypeInstExpr
-  if this.compressionTypeInst != nil:
-    return this.compressionTypeInst
+  this.compressionTypeInstFlag = true
+  return this.compressionTypeInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_Compressed], filename: string): MacOsResourceSnd_Compressed =
   MacOsResourceSnd_Compressed.read(newKaitaiFileStream(filename), nil, nil)
@@ -532,81 +547,81 @@ proc initPanMask(this: MacOsResourceSnd_DataFormat): int8 =
   ##[
   mask for right/left pan values
   ]##
-  if this.initPanMaskInst != nil:
+  if this.initPanMaskInstFlag:
     return this.initPanMaskInst
   let initPanMaskInstExpr = int8(3)
   this.initPanMaskInst = initPanMaskInstExpr
-  if this.initPanMaskInst != nil:
-    return this.initPanMaskInst
+  this.initPanMaskInstFlag = true
+  return this.initPanMaskInst
 
 proc waveInitChannelMask(this: MacOsResourceSnd_DataFormat): int8 = 
 
   ##[
   wave table only, Sound Manager 2.0 and earlier
   ]##
-  if this.waveInitChannelMaskInst != nil:
+  if this.waveInitChannelMaskInstFlag:
     return this.waveInitChannelMaskInst
   let waveInitChannelMaskInstExpr = int8(7)
   this.waveInitChannelMaskInst = waveInitChannelMaskInstExpr
-  if this.waveInitChannelMaskInst != nil:
-    return this.waveInitChannelMaskInst
+  this.waveInitChannelMaskInstFlag = true
+  return this.waveInitChannelMaskInst
 
 proc initStereoMask(this: MacOsResourceSnd_DataFormat): uint8 = 
 
   ##[
   mask for mono/stereo values
   ]##
-  if this.initStereoMaskInst != nil:
+  if this.initStereoMaskInstFlag:
     return this.initStereoMaskInst
   let initStereoMaskInstExpr = uint8(192)
   this.initStereoMaskInst = initStereoMaskInstExpr
-  if this.initStereoMaskInst != nil:
-    return this.initStereoMaskInst
+  this.initStereoMaskInstFlag = true
+  return this.initStereoMaskInst
 
 proc waveInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_WaveInitOption = 
-  if this.waveInitInst != nil:
+  if this.waveInitInstFlag:
     return this.waveInitInst
   if this.id == mac_os_resource_snd.wave_table_synth:
     let waveInitInstExpr = MacOsResourceSnd_WaveInitOption(MacOsResourceSnd_WaveInitOption((this.options and this.waveInitChannelMask)))
     this.waveInitInst = waveInitInstExpr
-  if this.waveInitInst != nil:
-    return this.waveInitInst
+  this.waveInitInstFlag = true
+  return this.waveInitInst
 
 proc panInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
-  if this.panInitInst != nil:
+  if this.panInitInstFlag:
     return this.panInitInst
   let panInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption((this.options and this.initPanMask)))
   this.panInitInst = panInitInstExpr
-  if this.panInitInst != nil:
-    return this.panInitInst
+  this.panInitInstFlag = true
+  return this.panInitInst
 
 proc initCompMask(this: MacOsResourceSnd_DataFormat): int = 
 
   ##[
   mask for compression IDs
   ]##
-  if this.initCompMaskInst != nil:
+  if this.initCompMaskInstFlag:
     return this.initCompMaskInst
   let initCompMaskInstExpr = int(65280)
   this.initCompMaskInst = initCompMaskInstExpr
-  if this.initCompMaskInst != nil:
-    return this.initCompMaskInst
+  this.initCompMaskInstFlag = true
+  return this.initCompMaskInst
 
 proc stereoInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
-  if this.stereoInitInst != nil:
+  if this.stereoInitInstFlag:
     return this.stereoInitInst
   let stereoInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption((this.options and this.initStereoMask)))
   this.stereoInitInst = stereoInitInstExpr
-  if this.stereoInitInst != nil:
-    return this.stereoInitInst
+  this.stereoInitInstFlag = true
+  return this.stereoInitInst
 
 proc compInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
-  if this.compInitInst != nil:
+  if this.compInitInstFlag:
     return this.compInitInst
   let compInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption((this.options and this.initCompMask)))
   this.compInitInst = compInitInstExpr
-  if this.compInitInst != nil:
-    return this.compInitInst
+  this.compInitInstFlag = true
+  return this.compInitInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_DataFormat], filename: string): MacOsResourceSnd_DataFormat =
   MacOsResourceSnd_DataFormat.read(newKaitaiFileStream(filename), nil, nil)

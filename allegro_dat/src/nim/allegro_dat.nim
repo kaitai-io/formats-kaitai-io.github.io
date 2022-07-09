@@ -33,7 +33,8 @@ type
     `body`*: KaitaiStruct
     `parent`*: AllegroDat
     `rawBody`*: seq[byte]
-    `typeInst`*: string
+    `typeInst`: string
+    `typeInstFlag`: bool
   AllegroDat_DatFont39* = ref object of KaitaiStruct
     `numRanges`*: int16
     `ranges`*: seq[AllegroDat_DatFont39_Range]
@@ -55,7 +56,8 @@ type
     `lenBody`*: uint32
     `body`*: string
     `parent`*: AllegroDat_DatObject
-    `isValidInst`*: bool
+    `isValidInst`: bool
+    `isValidInstFlag`: bool
   AllegroDat_DatRleSprite* = ref object of KaitaiStruct
     `bitsPerPixel`*: int16
     `width`*: uint16
@@ -248,12 +250,12 @@ proc read*(_: typedesc[AllegroDat_DatObject], io: KaitaiStream, root: KaitaiStru
       this.body = bodyExpr
 
 proc type(this: AllegroDat_DatObject): string = 
-  if this.typeInst.len != 0:
+  if this.typeInstFlag:
     return this.typeInst
   let typeInstExpr = string(this.properties[^1].magic)
   this.typeInst = typeInstExpr
-  if this.typeInst.len != 0:
-    return this.typeInst
+  this.typeInstFlag = true
+  return this.typeInst
 
 proc fromFile*(_: typedesc[AllegroDat_DatObject], filename: string): AllegroDat_DatObject =
   AllegroDat_DatObject.read(newKaitaiFileStream(filename), nil, nil)
@@ -350,12 +352,12 @@ proc read*(_: typedesc[AllegroDat_Property], io: KaitaiStream, root: KaitaiStruc
     this.body = bodyExpr
 
 proc isValid(this: AllegroDat_Property): bool = 
-  if this.isValidInst != nil:
+  if this.isValidInstFlag:
     return this.isValidInst
   let isValidInstExpr = bool(this.magic == "prop")
   this.isValidInst = isValidInstExpr
-  if this.isValidInst != nil:
-    return this.isValidInst
+  this.isValidInstFlag = true
+  return this.isValidInst
 
 proc fromFile*(_: typedesc[AllegroDat_Property], filename: string): AllegroDat_Property =
   AllegroDat_Property.read(newKaitaiFileStream(filename), nil, nil)

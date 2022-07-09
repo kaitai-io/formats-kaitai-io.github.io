@@ -38,7 +38,7 @@ public class GranTurismoVol extends KaitaiStruct {
         if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0 }))) {
             throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, reserved(), _io(), "/seq/3");
         }
-        offsets = new ArrayList<Long>(((Number) (numFiles())).intValue());
+        this.offsets = new ArrayList<Long>();
         for (int i = 0; i < numFiles(); i++) {
             this.offsets.add(this._io.readU4le());
         }
@@ -72,7 +72,7 @@ public class GranTurismoVol extends KaitaiStruct {
         public Integer size() {
             if (this.size != null)
                 return this.size;
-            int _tmp = (int) (((_root.offsets().get((int) (offsetIdx() + 1)) & 4294965248L) - _root.offsets().get((int) offsetIdx())));
+            int _tmp = (int) (((_root().offsets().get((int) (offsetIdx() + 1)) & 4294965248L) - _root().offsets().get((int) offsetIdx())));
             this.size = _tmp;
             return this.size;
         }
@@ -82,7 +82,7 @@ public class GranTurismoVol extends KaitaiStruct {
                 return this.body;
             if (!(isDir())) {
                 long _pos = this._io.pos();
-                this._io.seek((_root.offsets().get((int) offsetIdx()) & 4294965248L));
+                this._io.seek((_root().offsets().get((int) offsetIdx()) & 4294965248L));
                 this.body = this._io.readBytes(size());
                 this._io.seek(_pos);
             }
@@ -131,8 +131,8 @@ public class GranTurismoVol extends KaitaiStruct {
             return this.files;
         long _pos = this._io.pos();
         this._io.seek((ofsDir() & 4294965248L));
-        files = new ArrayList<FileInfo>(((Number) (_root.numEntries())).intValue());
-        for (int i = 0; i < _root.numEntries(); i++) {
+        this.files = new ArrayList<FileInfo>();
+        for (int i = 0; i < _root().numEntries(); i++) {
             this.files.add(new FileInfo(this._io, this, _root));
         }
         this._io.seek(_pos);

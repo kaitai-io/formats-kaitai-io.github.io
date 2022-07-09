@@ -8,7 +8,7 @@
   } else {
     root.Uimage = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images

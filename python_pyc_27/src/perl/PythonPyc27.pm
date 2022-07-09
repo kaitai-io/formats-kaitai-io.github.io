@@ -680,7 +680,7 @@ sub _read {
     $self->{items} = ();
     my $n_items = $self->count();
     for (my $i = 0; $i < $n_items; $i++) {
-        $self->{items}[$i] = PythonPyc27::PyObject->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{items}}, PythonPyc27::PyObject->new($self->{_io}, $self, $self->{_root});
     }
 }
 

@@ -5,7 +5,8 @@ type
   Lvm2* = ref object of KaitaiStruct
     `pv`*: Lvm2_PhysicalVolume
     `parent`*: KaitaiStruct
-    `sectorSizeInst`*: int
+    `sectorSizeInst`: int
+    `sectorSizeInstFlag`: bool
   Lvm2_PhysicalVolume* = ref object of KaitaiStruct
     `emptySector`*: seq[byte]
     `label`*: Lvm2_PhysicalVolume_Label
@@ -34,13 +35,15 @@ type
     `offset`*: uint64
     `size`*: uint64
     `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader
-    `dataInst`*: string
+    `dataInst`: string
+    `dataInstFlag`: bool
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor* = ref object of KaitaiStruct
     `offset`*: uint64
     `size`*: uint64
     `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader
     `rawDataInst`*: seq[byte]
-    `dataInst`*: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
+    `dataInst`: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
+    `dataInstFlag`: bool
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea* = ref object of KaitaiStruct
     `header`*: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader
     `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor
@@ -52,7 +55,8 @@ type
     `metadataAreaSize`*: uint64
     `rawLocationDescriptors`*: seq[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor]
     `parent`*: KaitaiStruct
-    `metadataInst`*: seq[byte]
+    `metadataInst`: seq[byte]
+    `metadataInstFlag`: bool
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor* = ref object of KaitaiStruct
     `offset`*: uint64
     `size`*: uint64
@@ -110,12 +114,12 @@ proc read*(_: typedesc[Lvm2], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.pv = pvExpr
 
 proc sectorSize(this: Lvm2): int = 
-  if this.sectorSizeInst != nil:
+  if this.sectorSizeInstFlag:
     return this.sectorSizeInst
   let sectorSizeInstExpr = int(512)
   this.sectorSizeInst = sectorSizeInstExpr
-  if this.sectorSizeInst != nil:
-    return this.sectorSizeInst
+  this.sectorSizeInstFlag = true
+  return this.sectorSizeInst
 
 proc fromFile*(_: typedesc[Lvm2], filename: string): Lvm2 =
   Lvm2.read(newKaitaiFileStream(filename), nil, nil)
@@ -268,7 +272,7 @@ proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor
   this.size = sizeExpr
 
 proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor): string = 
-  if this.dataInst.len != 0:
+  if this.dataInstFlag:
     return this.dataInst
   if this.size != 0:
     let pos = this.io.pos()
@@ -276,8 +280,8 @@ proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor): stri
     let dataInstExpr = encode(this.io.readBytes(int(this.size)), "ascii")
     this.dataInst = dataInstExpr
     this.io.seek(pos)
-  if this.dataInst.len != 0:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor =
   Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor.read(newKaitaiFileStream(filename), nil, nil)
@@ -304,7 +308,7 @@ proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescri
   this.size = sizeExpr
 
 proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea = 
-  if this.dataInst != nil:
+  if this.dataInstFlag:
     return this.dataInst
   if this.size != 0:
     let pos = this.io.pos()
@@ -315,8 +319,8 @@ proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor): 
     let dataInstExpr = Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea.read(rawDataInstIo, this.root, this)
     this.dataInst = dataInstExpr
     this.io.seek(pos)
-  if this.dataInst != nil:
-    return this.dataInst
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc fromFile*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor =
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor.read(newKaitaiFileStream(filename), nil, nil)
@@ -379,15 +383,15 @@ proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_Metad
       inc i
 
 proc metadata(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader): seq[byte] = 
-  if this.metadataInst.len != 0:
+  if this.metadataInstFlag:
     return this.metadataInst
   let pos = this.io.pos()
   this.io.seek(int(this.metadataAreaOffset))
   let metadataInstExpr = this.io.readBytes(int(this.metadataAreaSize))
   this.metadataInst = metadataInstExpr
   this.io.seek(pos)
-  if this.metadataInst.len != 0:
-    return this.metadataInst
+  this.metadataInstFlag = true
+  return this.metadataInst
 
 proc fromFile*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader =
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader.read(newKaitaiFileStream(filename), nil, nil)

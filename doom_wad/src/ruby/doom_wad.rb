@@ -65,9 +65,9 @@ class DoomWad < Kaitai::Struct::Struct
 
     def _read
       @num_textures = @_io.read_s4le
-      @textures = Array.new(num_textures)
+      @textures = []
       (num_textures).times { |i|
-        @textures[i] = TextureIndex.new(@_io, self, @_root)
+        @textures << TextureIndex.new(@_io, self, @_root)
       }
       self
     end
@@ -104,9 +104,9 @@ class DoomWad < Kaitai::Struct::Struct
         @height = @_io.read_u2le
         @column_directory = @_io.read_u4le
         @num_patches = @_io.read_u2le
-        @patches = Array.new(num_patches)
+        @patches = []
         (num_patches).times { |i|
-          @patches[i] = Patch.new(@_io, self, @_root)
+          @patches << Patch.new(@_io, self, @_root)
         }
         self
       end
@@ -197,9 +197,9 @@ class DoomWad < Kaitai::Struct::Struct
 
     def _read
       @num_patches = @_io.read_u4le
-      @names = Array.new(num_patches)
+      @names = []
       (num_patches).times { |i|
-        @names[i] = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
+        @names << (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("ASCII")
       }
       self
     end
@@ -456,9 +456,9 @@ class DoomWad < Kaitai::Struct::Struct
       @origin_y = @_io.read_s2le
       @num_cols = @_io.read_s2le
       @num_rows = @_io.read_s2le
-      @linedefs_in_block = Array.new((num_cols * num_rows))
+      @linedefs_in_block = []
       ((num_cols * num_rows)).times { |i|
-        @linedefs_in_block[i] = Blocklist.new(@_io, self, @_root)
+        @linedefs_in_block << Blocklist.new(@_io, self, @_root)
       }
       self
     end
@@ -519,9 +519,9 @@ class DoomWad < Kaitai::Struct::Struct
     return @index unless @index.nil?
     _pos = @_io.pos
     @_io.seek(index_offset)
-    @index = Array.new(num_index_entries)
+    @index = []
     (num_index_entries).times { |i|
-      @index[i] = IndexEntry.new(@_io, self, @_root)
+      @index << IndexEntry.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @index

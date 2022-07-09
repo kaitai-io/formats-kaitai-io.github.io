@@ -148,8 +148,8 @@ public class Cramfs extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            blockEndIndex = new ArrayList<Long>(((Number) ((((_parent().size() + _root.pageSize()) - 1) / _root.pageSize()))).intValue());
-            for (int i = 0; i < (((_parent().size() + _root.pageSize()) - 1) / _root.pageSize()); i++) {
+            this.blockEndIndex = new ArrayList<Long>();
+            for (int i = 0; i < (((_parent().size() + _root().pageSize()) - 1) / _root().pageSize()); i++) {
                 this.blockEndIndex.add(this._io.readU4le());
             }
             this.rawBlocks = this._io.readBytesFull();
@@ -221,7 +221,7 @@ public class Cramfs extends KaitaiStruct {
         public ChunkedDataInode asRegFile() {
             if (this.asRegFile != null)
                 return this.asRegFile;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(offset());
             this.asRegFile = new ChunkedDataInode(io, this, _root);
@@ -240,7 +240,7 @@ public class Cramfs extends KaitaiStruct {
         public ChunkedDataInode asSymlink() {
             if (this.asSymlink != null)
                 return this.asSymlink;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(offset());
             this.asSymlink = new ChunkedDataInode(io, this, _root);
@@ -291,7 +291,7 @@ public class Cramfs extends KaitaiStruct {
         public DirInode asDir() {
             if (this.asDir != null)
                 return this.asDir;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(offset());
             this._raw_asDir = io.readBytes(size());

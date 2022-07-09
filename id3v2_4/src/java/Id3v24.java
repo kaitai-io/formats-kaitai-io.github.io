@@ -521,7 +521,7 @@ public class Id3v24 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.padding = this._io.readBytes((_root.tag().header().size().value() - _io().pos()));
+            this.padding = this._io.readBytes((_root().tag().header().size().value() - _io().pos()));
         }
         private byte[] padding;
         private Id3v24 _root;

@@ -87,17 +87,17 @@ sub _read {
     $self->{primary_metadata} = ();
     my $n_primary_metadata = $self->primary_geometry()->metadata_slot_count();
     for (my $i = 0; $i < $n_primary_metadata; $i++) {
-        $self->{_raw_primary_metadata}[$i] = $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
+        push @{$self->{_raw_primary_metadata}}, $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
         my $io__raw_primary_metadata = IO::KaitaiStruct::Stream->new($self->{_raw_primary_metadata}[$i]);
-        $self->{primary_metadata}[$i] = AndroidSuper::Metadata->new($io__raw_primary_metadata, $self, $self->{_root});
+        push @{$self->{primary_metadata}}, AndroidSuper::Metadata->new($io__raw_primary_metadata, $self, $self->{_root});
     }
     $self->{_raw_backup_metadata} = ();
     $self->{backup_metadata} = ();
     my $n_backup_metadata = $self->primary_geometry()->metadata_slot_count();
     for (my $i = 0; $i < $n_backup_metadata; $i++) {
-        $self->{_raw_backup_metadata}[$i] = $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
+        push @{$self->{_raw_backup_metadata}}, $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
         my $io__raw_backup_metadata = IO::KaitaiStruct::Stream->new($self->{_raw_backup_metadata}[$i]);
-        $self->{backup_metadata}[$i] = AndroidSuper::Metadata->new($io__raw_backup_metadata, $self, $self->{_root});
+        push @{$self->{backup_metadata}}, AndroidSuper::Metadata->new($io__raw_backup_metadata, $self, $self->{_root});
     }
 }
 
@@ -491,27 +491,27 @@ sub table {
     for (my $i = 0; $i < $n_table; $i++) {
         my $_on = $self->kind();
         if ($_on == $AndroidSuper::Metadata::TABLE_KIND_PARTITIONS) {
-            $self->{_raw_table}[$i] = $self->{_io}->read_bytes($self->entry_size());
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
             my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            $self->{table}[$i] = AndroidSuper::Metadata::Partition->new($io__raw_table, $self, $self->{_root});
+            push @{$self->{table}}, AndroidSuper::Metadata::Partition->new($io__raw_table, $self, $self->{_root});
         }
         elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_EXTENTS) {
-            $self->{_raw_table}[$i] = $self->{_io}->read_bytes($self->entry_size());
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
             my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            $self->{table}[$i] = AndroidSuper::Metadata::Extent->new($io__raw_table, $self, $self->{_root});
+            push @{$self->{table}}, AndroidSuper::Metadata::Extent->new($io__raw_table, $self, $self->{_root});
         }
         elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_GROUPS) {
-            $self->{_raw_table}[$i] = $self->{_io}->read_bytes($self->entry_size());
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
             my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            $self->{table}[$i] = AndroidSuper::Metadata::Group->new($io__raw_table, $self, $self->{_root});
+            push @{$self->{table}}, AndroidSuper::Metadata::Group->new($io__raw_table, $self, $self->{_root});
         }
         elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_BLOCK_DEVICES) {
-            $self->{_raw_table}[$i] = $self->{_io}->read_bytes($self->entry_size());
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
             my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            $self->{table}[$i] = AndroidSuper::Metadata::BlockDevice->new($io__raw_table, $self, $self->{_root});
+            push @{$self->{table}}, AndroidSuper::Metadata::BlockDevice->new($io__raw_table, $self, $self->{_root});
         }
         else {
-            $self->{table}[$i] = $self->{_io}->read_bytes($self->entry_size());
+            push @{$self->{table}}, $self->{_io}->read_bytes($self->entry_size());
         }
     }
     $self->{_io}->seek($_pos);

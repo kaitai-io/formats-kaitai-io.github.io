@@ -8,7 +8,7 @@
   } else {
     root.Lvm2 = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * ### Building a test file
  * 
@@ -124,14 +124,14 @@ var Lvm2 = (function() {
         VolumeHeader.prototype._read = function() {
           this.id = KaitaiStream.bytesToStr(this._io.readBytes(32), "ascii");
           this.size = this._io.readU8le();
-          this.dataAreaDescriptors = []
+          this.dataAreaDescriptors = [];
           var i = 0;
           do {
             var _ = new DataAreaDescriptor(this._io, this, this._root);
             this.dataAreaDescriptors.push(_);
             i++;
           } while (!( ((_.size != 0) && (_.offset != 0)) ));
-          this.metadataAreaDescriptors = []
+          this.metadataAreaDescriptors = [];
           var i = 0;
           do {
             var _ = new MetadataAreaDescriptor(this._io, this, this._root);
@@ -249,7 +249,7 @@ var Lvm2 = (function() {
               this.version = this._io.readU4le();
               this.metadataAreaOffset = this._io.readU8le();
               this.metadataAreaSize = this._io.readU8le();
-              this.rawLocationDescriptors = []
+              this.rawLocationDescriptors = [];
               var i = 0;
               do {
                 var _ = new RawLocationDescriptor(this._io, this, this._root);

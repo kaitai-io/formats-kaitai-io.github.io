@@ -140,9 +140,9 @@ class Jpeg < Kaitai::Struct::Struct
 
     def _read
       @num_components = @_io.read_u1
-      @components = Array.new(num_components)
+      @components = []
       (num_components).times { |i|
-        @components[i] = Component.new(@_io, self, @_root)
+        @components << Component.new(@_io, self, @_root)
       }
       @start_spectral_selection = @_io.read_u1
       @end_spectral = @_io.read_u1
@@ -215,9 +215,9 @@ class Jpeg < Kaitai::Struct::Struct
       @image_height = @_io.read_u2be
       @image_width = @_io.read_u2be
       @num_components = @_io.read_u1
-      @components = Array.new(num_components)
+      @components = []
       (num_components).times { |i|
-        @components[i] = Component.new(@_io, self, @_root)
+        @components << Component.new(@_io, self, @_root)
       }
       self
     end

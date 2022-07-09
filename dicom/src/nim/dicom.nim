@@ -4044,10 +4044,14 @@ type
     `items`*: seq[Dicom_SeqItem]
     `elementsImplicit`*: seq[Dicom_TDataElementImplicit]
     `parent`*: KaitaiStruct
-    `isForcedImplicitInst`*: bool
-    `isLongLenInst`*: bool
-    `isTransferSyntaxChangeImplicitInst`*: bool
-    `tagInst`*: Dicom_Tags
+    `isForcedImplicitInst`: bool
+    `isForcedImplicitInstFlag`: bool
+    `isLongLenInst`: bool
+    `isLongLenInstFlag`: bool
+    `isTransferSyntaxChangeImplicitInst`: bool
+    `isTransferSyntaxChangeImplicitInstFlag`: bool
+    `tagInst`: Dicom_Tags
+    `tagInstFlag`: bool
   Dicom_TDataElementImplicit* = ref object of KaitaiStruct
     `tagGroup`*: uint16
     `tagElem`*: uint16
@@ -4058,11 +4062,16 @@ type
     `items`*: seq[Dicom_SeqItem]
     `elements`*: seq[Dicom_TDataElementExplicit]
     `parent`*: KaitaiStruct
-    `tagInst`*: Dicom_Tags
-    `isTransferSyntaxChangeExplicitInst`*: bool
-    `isLongLenInst`*: bool
-    `pIsTransferSyntaxChangeExplicitInst`*: bool
-    `isForcedExplicitInst`*: bool
+    `tagInst`: Dicom_Tags
+    `tagInstFlag`: bool
+    `isTransferSyntaxChangeExplicitInst`: bool
+    `isTransferSyntaxChangeExplicitInstFlag`: bool
+    `isLongLenInst`: bool
+    `isLongLenInstFlag`: bool
+    `pIsTransferSyntaxChangeExplicitInst`: bool
+    `pIsTransferSyntaxChangeExplicitInstFlag`: bool
+    `isForcedExplicitInst`: bool
+    `isForcedExplicitInstFlag`: bool
   Dicom_SeqItem* = ref object of KaitaiStruct
     `tagGroup`*: seq[byte]
     `tagElem`*: uint16
@@ -4189,36 +4198,36 @@ proc read*(_: typedesc[Dicom_TDataElementExplicit], io: KaitaiStream, root: Kait
         inc i
 
 proc isForcedImplicit(this: Dicom_TDataElementExplicit): bool = 
-  if this.isForcedImplicitInst != nil:
+  if this.isForcedImplicitInstFlag:
     return this.isForcedImplicitInst
   let isForcedImplicitInstExpr = bool(this.tagGroup == 65534)
   this.isForcedImplicitInst = isForcedImplicitInstExpr
-  if this.isForcedImplicitInst != nil:
-    return this.isForcedImplicitInst
+  this.isForcedImplicitInstFlag = true
+  return this.isForcedImplicitInst
 
 proc isLongLen(this: Dicom_TDataElementExplicit): bool = 
-  if this.isLongLenInst != nil:
+  if this.isLongLenInstFlag:
     return this.isLongLenInst
   let isLongLenInstExpr = bool( ((this.isForcedImplicit) or (this.vr == "OB") or (this.vr == "OD") or (this.vr == "OF") or (this.vr == "OL") or (this.vr == "OW") or (this.vr == "SQ") or (this.vr == "UC") or (this.vr == "UR") or (this.vr == "UT") or (this.vr == "UN")) )
   this.isLongLenInst = isLongLenInstExpr
-  if this.isLongLenInst != nil:
-    return this.isLongLenInst
+  this.isLongLenInstFlag = true
+  return this.isLongLenInst
 
 proc isTransferSyntaxChangeImplicit(this: Dicom_TDataElementExplicit): bool = 
-  if this.isTransferSyntaxChangeImplicitInst != nil:
+  if this.isTransferSyntaxChangeImplicitInstFlag:
     return this.isTransferSyntaxChangeImplicitInst
   let isTransferSyntaxChangeImplicitInstExpr = bool(false)
   this.isTransferSyntaxChangeImplicitInst = isTransferSyntaxChangeImplicitInstExpr
-  if this.isTransferSyntaxChangeImplicitInst != nil:
-    return this.isTransferSyntaxChangeImplicitInst
+  this.isTransferSyntaxChangeImplicitInstFlag = true
+  return this.isTransferSyntaxChangeImplicitInst
 
 proc tag(this: Dicom_TDataElementExplicit): Dicom_Tags = 
-  if this.tagInst != nil:
+  if this.tagInstFlag:
     return this.tagInst
   let tagInstExpr = Dicom_Tags(Dicom_Tags(((this.tagGroup shl 16) or this.tagElem)))
   this.tagInst = tagInstExpr
-  if this.tagInst != nil:
-    return this.tagInst
+  this.tagInstFlag = true
+  return this.tagInst
 
 proc fromFile*(_: typedesc[Dicom_TDataElementExplicit], filename: string): Dicom_TDataElementExplicit =
   Dicom_TDataElementExplicit.read(newKaitaiFileStream(filename), nil, nil)
@@ -4274,44 +4283,44 @@ proc read*(_: typedesc[Dicom_TDataElementImplicit], io: KaitaiStream, root: Kait
         inc i
 
 proc tag(this: Dicom_TDataElementImplicit): Dicom_Tags = 
-  if this.tagInst != nil:
+  if this.tagInstFlag:
     return this.tagInst
   let tagInstExpr = Dicom_Tags(Dicom_Tags(((this.tagGroup shl 16) or this.tagElem)))
   this.tagInst = tagInstExpr
-  if this.tagInst != nil:
-    return this.tagInst
+  this.tagInstFlag = true
+  return this.tagInst
 
 proc isTransferSyntaxChangeExplicit(this: Dicom_TDataElementImplicit): bool = 
-  if this.isTransferSyntaxChangeExplicitInst != nil:
+  if this.isTransferSyntaxChangeExplicitInstFlag:
     return this.isTransferSyntaxChangeExplicitInst
   let isTransferSyntaxChangeExplicitInstExpr = bool(this.pIsTransferSyntaxChangeExplicit)
   this.isTransferSyntaxChangeExplicitInst = isTransferSyntaxChangeExplicitInstExpr
-  if this.isTransferSyntaxChangeExplicitInst != nil:
-    return this.isTransferSyntaxChangeExplicitInst
+  this.isTransferSyntaxChangeExplicitInstFlag = true
+  return this.isTransferSyntaxChangeExplicitInst
 
 proc isLongLen(this: Dicom_TDataElementImplicit): bool = 
-  if this.isLongLenInst != nil:
+  if this.isLongLenInstFlag:
     return this.isLongLenInst
   let isLongLenInstExpr = bool( ((this.isForcedExplicit) and ( ((this.vr == "OB") or (this.vr == "OD") or (this.vr == "OF") or (this.vr == "OL") or (this.vr == "OW") or (this.vr == "SQ") or (this.vr == "UC") or (this.vr == "UR") or (this.vr == "UT") or (this.vr == "UN")) )) )
   this.isLongLenInst = isLongLenInstExpr
-  if this.isLongLenInst != nil:
-    return this.isLongLenInst
+  this.isLongLenInstFlag = true
+  return this.isLongLenInst
 
 proc pIsTransferSyntaxChangeExplicit(this: Dicom_TDataElementImplicit): bool = 
-  if this.pIsTransferSyntaxChangeExplicitInst != nil:
+  if this.pIsTransferSyntaxChangeExplicitInstFlag:
     return this.pIsTransferSyntaxChangeExplicitInst
   let pIsTransferSyntaxChangeExplicitInstExpr = bool(this.value == @[49'u8, 46'u8, 50'u8, 46'u8, 56'u8, 52'u8, 48'u8, 46'u8, 49'u8, 48'u8, 48'u8, 48'u8, 56'u8, 46'u8, 49'u8, 46'u8, 50'u8, 46'u8, 49'u8, 0'u8])
   this.pIsTransferSyntaxChangeExplicitInst = pIsTransferSyntaxChangeExplicitInstExpr
-  if this.pIsTransferSyntaxChangeExplicitInst != nil:
-    return this.pIsTransferSyntaxChangeExplicitInst
+  this.pIsTransferSyntaxChangeExplicitInstFlag = true
+  return this.pIsTransferSyntaxChangeExplicitInst
 
 proc isForcedExplicit(this: Dicom_TDataElementImplicit): bool = 
-  if this.isForcedExplicitInst != nil:
+  if this.isForcedExplicitInstFlag:
     return this.isForcedExplicitInst
   let isForcedExplicitInstExpr = bool(this.tagGroup == 2)
   this.isForcedExplicitInst = isForcedExplicitInstExpr
-  if this.isForcedExplicitInst != nil:
-    return this.isForcedExplicitInst
+  this.isForcedExplicitInstFlag = true
+  return this.isForcedExplicitInst
 
 proc fromFile*(_: typedesc[Dicom_TDataElementImplicit], filename: string): Dicom_TDataElementImplicit =
   Dicom_TDataElementImplicit.read(newKaitaiFileStream(filename), nil, nil)

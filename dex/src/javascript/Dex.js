@@ -8,7 +8,7 @@
   } else {
     root.Dex = factory(root.KaitaiStream, root.VlqBase128Le);
   }
-}(this, function (KaitaiStream, VlqBase128Le) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Le) {
 /**
  * Android OS applications executables are typically stored in its own
  * format, optimized for more efficient execution in Dalvik virtual
@@ -220,9 +220,9 @@ var Dex = (function() {
     }
     MapList.prototype._read = function() {
       this.size = this._io.readU4le();
-      this.list = new Array(this.size);
+      this.list = [];
       for (var i = 0; i < this.size; i++) {
-        this.list[i] = new MapItem(this._io, this, this._root);
+        this.list.push(new MapItem(this._io, this, this._root));
       }
     }
 
@@ -560,21 +560,21 @@ var Dex = (function() {
       this.instanceFieldsSize = new VlqBase128Le(this._io, this, null);
       this.directMethodsSize = new VlqBase128Le(this._io, this, null);
       this.virtualMethodsSize = new VlqBase128Le(this._io, this, null);
-      this.staticFields = new Array(this.staticFieldsSize.value);
+      this.staticFields = [];
       for (var i = 0; i < this.staticFieldsSize.value; i++) {
-        this.staticFields[i] = new EncodedField(this._io, this, this._root);
+        this.staticFields.push(new EncodedField(this._io, this, this._root));
       }
-      this.instanceFields = new Array(this.instanceFieldsSize.value);
+      this.instanceFields = [];
       for (var i = 0; i < this.instanceFieldsSize.value; i++) {
-        this.instanceFields[i] = new EncodedField(this._io, this, this._root);
+        this.instanceFields.push(new EncodedField(this._io, this, this._root));
       }
-      this.directMethods = new Array(this.directMethodsSize.value);
+      this.directMethods = [];
       for (var i = 0; i < this.directMethodsSize.value; i++) {
-        this.directMethods[i] = new EncodedMethod(this._io, this, this._root);
+        this.directMethods.push(new EncodedMethod(this._io, this, this._root));
       }
-      this.virtualMethods = new Array(this.virtualMethodsSize.value);
+      this.virtualMethods = [];
       for (var i = 0; i < this.virtualMethodsSize.value; i++) {
-        this.virtualMethods[i] = new EncodedMethod(this._io, this, this._root);
+        this.virtualMethods.push(new EncodedMethod(this._io, this, this._root));
       }
     }
 
@@ -706,9 +706,9 @@ var Dex = (function() {
     EncodedAnnotation.prototype._read = function() {
       this.typeIdx = new VlqBase128Le(this._io, this, null);
       this.size = new VlqBase128Le(this._io, this, null);
-      this.elements = new Array(this.size.value);
+      this.elements = [];
       for (var i = 0; i < this.size.value; i++) {
-        this.elements[i] = new AnnotationElement(this._io, this, this._root);
+        this.elements.push(new AnnotationElement(this._io, this, this._root));
       }
     }
 
@@ -874,9 +874,9 @@ var Dex = (function() {
     }
     TypeList.prototype._read = function() {
       this.size = this._io.readU4le();
-      this.list = new Array(this.size);
+      this.list = [];
       for (var i = 0; i < this.size; i++) {
-        this.list[i] = new TypeItem(this._io, this, this._root);
+        this.list.push(new TypeItem(this._io, this, this._root));
       }
     }
 
@@ -1137,9 +1137,9 @@ var Dex = (function() {
     }
     EncodedArray.prototype._read = function() {
       this.size = new VlqBase128Le(this._io, this, null);
-      this.values = new Array(this.size.value);
+      this.values = [];
       for (var i = 0; i < this.size.value; i++) {
-        this.values[i] = new EncodedValue(this._io, this, this._root);
+        this.values.push(new EncodedValue(this._io, this, this._root));
       }
     }
 
@@ -1161,9 +1161,9 @@ var Dex = (function() {
         return this._m_stringIds;
       var _pos = this._io.pos;
       this._io.seek(this.header.stringIdsOff);
-      this._m_stringIds = new Array(this.header.stringIdsSize);
+      this._m_stringIds = [];
       for (var i = 0; i < this.header.stringIdsSize; i++) {
-        this._m_stringIds[i] = new StringIdItem(this._io, this, this._root);
+        this._m_stringIds.push(new StringIdItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_stringIds;
@@ -1188,9 +1188,9 @@ var Dex = (function() {
         return this._m_methodIds;
       var _pos = this._io.pos;
       this._io.seek(this.header.methodIdsOff);
-      this._m_methodIds = new Array(this.header.methodIdsSize);
+      this._m_methodIds = [];
       for (var i = 0; i < this.header.methodIdsSize; i++) {
-        this._m_methodIds[i] = new MethodIdItem(this._io, this, this._root);
+        this._m_methodIds.push(new MethodIdItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_methodIds;
@@ -1243,9 +1243,9 @@ var Dex = (function() {
         return this._m_classDefs;
       var _pos = this._io.pos;
       this._io.seek(this.header.classDefsOff);
-      this._m_classDefs = new Array(this.header.classDefsSize);
+      this._m_classDefs = [];
       for (var i = 0; i < this.header.classDefsSize; i++) {
-        this._m_classDefs[i] = new ClassDefItem(this._io, this, this._root);
+        this._m_classDefs.push(new ClassDefItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_classDefs;
@@ -1284,9 +1284,9 @@ var Dex = (function() {
         return this._m_typeIds;
       var _pos = this._io.pos;
       this._io.seek(this.header.typeIdsOff);
-      this._m_typeIds = new Array(this.header.typeIdsSize);
+      this._m_typeIds = [];
       for (var i = 0; i < this.header.typeIdsSize; i++) {
-        this._m_typeIds[i] = new TypeIdItem(this._io, this, this._root);
+        this._m_typeIds.push(new TypeIdItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_typeIds;
@@ -1308,9 +1308,9 @@ var Dex = (function() {
         return this._m_protoIds;
       var _pos = this._io.pos;
       this._io.seek(this.header.protoIdsOff);
-      this._m_protoIds = new Array(this.header.protoIdsSize);
+      this._m_protoIds = [];
       for (var i = 0; i < this.header.protoIdsSize; i++) {
-        this._m_protoIds[i] = new ProtoIdItem(this._io, this, this._root);
+        this._m_protoIds.push(new ProtoIdItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_protoIds;
@@ -1334,9 +1334,9 @@ var Dex = (function() {
         return this._m_fieldIds;
       var _pos = this._io.pos;
       this._io.seek(this.header.fieldIdsOff);
-      this._m_fieldIds = new Array(this.header.fieldIdsSize);
+      this._m_fieldIds = [];
       for (var i = 0; i < this.header.fieldIdsSize; i++) {
-        this._m_fieldIds[i] = new FieldIdItem(this._io, this, this._root);
+        this._m_fieldIds.push(new FieldIdItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
       return this._m_fieldIds;

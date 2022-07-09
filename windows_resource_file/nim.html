@@ -212,6 +212,11 @@ empty.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Windows resource file parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Windows resource file parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -303,7 +308,8 @@ empty.</p>
     <span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">padding2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsResourceFile</span>
-    <span class="p">`</span><span class="n">typeAsPredefInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsResourceFile_Resource_PredefTypes</span>
+    <span class="p">`</span><span class="n">typeAsPredefInst</span><span class="p">`:</span> <span class="n">WindowsResourceFile_Resource_PredefTypes</span>
+    <span class="p">`</span><span class="n">typeAsPredefInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">WindowsResourceFile_Resource_PredefTypes</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">bitmap</span> <span class="o">=</span> <span class="mi">2</span>
@@ -332,10 +338,14 @@ empty.</p>
     <span class="p">`</span><span class="n">rest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint16</span><span class="o">]</span>
     <span class="p">`</span><span class="n">noop</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">WindowsResourceFile_Resource</span>
-    <span class="p">`</span><span class="n">savePos1Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">savePos2Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">isStringInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">asStringInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">savePos1Inst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">savePos1InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">savePos2Inst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">savePos2InstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isStringInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isStringInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">asStringInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">asStringInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsResourceFile], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsResourceFile</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsResourceFile_Resource], io: KaitaiStream, root: KaitaiStruct, parent: WindowsResourceFile): WindowsResourceFile_Resource</span>
@@ -461,13 +471,13 @@ empty.</p>
 <span class="n">it</span> <span class="k">as</span> <span class="k">enum</span> <span class="n">value</span><span class="p">,</span> <span class="k">if</span> <span class="n">applicable</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInst</span>
   <span class="k">if</span>  <span class="p">((</span><span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="p">.</span><span class="n">isString</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="p">.</span><span class="n">asNumeric</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">))</span> <span class="p">:</span>
     <span class="k">let</span> <span class="n">typeAsPredefInstExpr</span> <span class="o">=</span> <span class="n">WindowsResourceFile_Resource_PredefTypes</span><span class="p">(</span><span class="n">WindowsResourceFile_Resource_PredefTypes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="p">.</span><span class="n">asNumeric</span><span class="p">))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInst</span> <span class="o">=</span> <span class="n">typeAsPredefInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeAsPredefInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsResourceFile_Resource], filename: string): WindowsResourceFile_Resource =</span>
   <span class="n">WindowsResourceFile_Resource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -509,31 +519,31 @@ empty.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">noop</span> <span class="o">=</span> <span class="n">noopExpr</span>
 
 <span class="k">proc </span><span class="nf">savePos1</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsResourceFile_UnicodeOrId</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos1InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos1Inst</span>
   <span class="k">let</span> <span class="n">savePos1InstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">savePos1Inst</span> <span class="o">=</span> <span class="n">savePos1InstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos1Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos1Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">savePos1InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos1Inst</span>
 
 <span class="k">proc </span><span class="nf">savePos2</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsResourceFile_UnicodeOrId</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos2Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos2InstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos2Inst</span>
   <span class="k">let</span> <span class="n">savePos2InstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">savePos2Inst</span> <span class="o">=</span> <span class="n">savePos2InstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos2Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos2Inst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">savePos2InstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos2Inst</span>
 
 <span class="k">proc </span><span class="nf">isString</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsResourceFile_UnicodeOrId</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span>
   <span class="k">let</span> <span class="n">isStringInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="o">!=</span> <span class="mi">65535</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span> <span class="o">=</span> <span class="n">isStringInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isStringInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isStringInst</span>
 
 <span class="k">proc </span><span class="nf">asString</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">WindowsResourceFile_UnicodeOrId</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asStringInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asStringInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asStringInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isString</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -541,8 +551,8 @@ empty.</p>
     <span class="k">let</span> <span class="n">asStringInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">savePos2</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">savePos1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))),</span> <span class="s">&quot;UTF-16LE&quot;</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">asStringInst</span> <span class="o">=</span> <span class="n">asStringInstExpr</span>
     <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">asStringInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asStringInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">asStringInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">asStringInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[WindowsResourceFile_UnicodeOrId], filename: string): WindowsResourceFile_UnicodeOrId =</span>
   <span class="n">WindowsResourceFile_UnicodeOrId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

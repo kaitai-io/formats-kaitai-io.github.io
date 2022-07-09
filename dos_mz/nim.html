@@ -280,12 +280,14 @@ added support for relocations.</p>
     <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DosMz_ExeHeader</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">relocationsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DosMz_Relocation</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">relocationsInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DosMz_Relocation</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">relocationsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DosMz_ExeHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">mz</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DosMz_MzHeader</span>
     <span class="p">`</span><span class="n">restOfHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DosMz</span>
-    <span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenBodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DosMz_MzHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">lastPageExtraBytes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -302,7 +304,8 @@ added support for relocations.</p>
     <span class="p">`</span><span class="n">ofsRelocations</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">overlayId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DosMz_ExeHeader</span>
-    <span class="p">`</span><span class="n">lenHeaderInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenHeaderInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">lenHeaderInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DosMz_Relocation</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">ofs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">seg</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -344,7 +347,7 @@ added support for relocations.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">relocations</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosMz</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DosMz_Relocation</span><span class="o">]</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">relocationsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">relocationsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">relocationsInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">ofsRelocations</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">io</span>
@@ -354,8 +357,8 @@ added support for relocations.</p>
       <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">DosMz_Relocation</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">relocationsInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">relocationsInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">relocationsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">relocationsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">relocationsInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DosMz], filename: string): DosMz =</span>
   <span class="n">DosMz</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -374,12 +377,12 @@ added support for relocations.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">restOfHeader</span> <span class="o">=</span> <span class="n">restOfHeaderExpr</span>
 
 <span class="k">proc </span><span class="nf">lenBody</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosMz_ExeHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
   <span class="k">let</span> <span class="n">lenBodyInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lastPageExtraBytes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">numPages</span> <span class="o">*</span> <span class="mi">512</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">numPages</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">512</span><span class="p">)</span> <span class="o">+</span> <span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lastPageExtraBytes</span><span class="p">))</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lenHeader</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">=</span> <span class="n">lenBodyInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DosMz_ExeHeader], filename: string): DosMz_ExeHeader =</span>
   <span class="n">DosMz_ExeHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -422,12 +425,12 @@ added support for relocations.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">overlayId</span> <span class="o">=</span> <span class="n">overlayIdExpr</span>
 
 <span class="k">proc </span><span class="nf">lenHeader</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DosMz_MzHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>
   <span class="k">let</span> <span class="n">lenHeaderInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">headerSize</span> <span class="o">*</span> <span class="mi">16</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span> <span class="o">=</span> <span class="n">lenHeaderInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DosMz_MzHeader], filename: string): DosMz_MzHeader =</span>
   <span class="n">DosMz_MzHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

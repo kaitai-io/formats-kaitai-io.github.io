@@ -39,7 +39,7 @@ sub _read {
     $self->{entries} = ();
     my $n_entries = $self->num_files();
     for (my $i = 0; $i < $n_entries; $i++) {
-        $self->{entries}[$i] = HeroesOfMightAndMagicAgg::Entry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{entries}}, HeroesOfMightAndMagicAgg::Entry->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -52,9 +52,9 @@ sub filenames {
     $self->{filenames} = ();
     my $n_filenames = $self->num_files();
     for (my $i = 0; $i < $n_filenames; $i++) {
-        $self->{_raw_filenames}[$i] = $self->{_io}->read_bytes(15);
+        push @{$self->{_raw_filenames}}, $self->{_io}->read_bytes(15);
         my $io__raw_filenames = IO::KaitaiStruct::Stream->new($self->{_raw_filenames}[$i]);
-        $self->{filenames}[$i] = HeroesOfMightAndMagicAgg::Filename->new($io__raw_filenames, $self, $self->{_root});
+        push @{$self->{filenames}}, HeroesOfMightAndMagicAgg::Filename->new($io__raw_filenames, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{filenames};

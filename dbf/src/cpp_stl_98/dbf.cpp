@@ -24,9 +24,8 @@ void dbf_t::_read() {
     m__raw_header2 = m__io->read_bytes((header1()->len_header() - 12));
     m__io__raw_header2 = new kaitai::kstream(m__raw_header2);
     m_header2 = new header2_t(m__io__raw_header2, this, m__root);
-    int l_records = header1()->num_records();
     m_records = new std::vector<std::string>();
-    m_records->reserve(l_records);
+    const int l_records = header1()->num_records();
     for (int i = 0; i < l_records; i++) {
         m_records->push_back(m__io->read_bytes(header1()->len_record()));
     }
@@ -77,9 +76,8 @@ void dbf_t::header2_t::_read() {
         n_header_dbase_7 = false;
         m_header_dbase_7 = new header_dbase_7_t(m__io, this, m__root);
     }
-    int l_fields = 11;
     m_fields = new std::vector<field_t*>();
-    m_fields->reserve(l_fields);
+    const int l_fields = 11;
     for (int i = 0; i < l_fields; i++) {
         m_fields->push_back(new field_t(m__io, this, m__root));
     }

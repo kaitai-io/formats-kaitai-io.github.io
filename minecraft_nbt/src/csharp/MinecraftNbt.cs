@@ -139,7 +139,7 @@ namespace Kaitai
             private void _read()
             {
                 _numTags = m_io.ReadS4be();
-                _tags = new List<long>((int) (NumTags));
+                _tags = new List<long>();
                 for (var i = 0; i < NumTags; i++)
                 {
                     _tags.Add(m_io.ReadS8be());
@@ -211,7 +211,7 @@ namespace Kaitai
             private void _read()
             {
                 _numTags = m_io.ReadS4be();
-                _tags = new List<int>((int) (NumTags));
+                _tags = new List<int>();
                 for (var i = 0; i < NumTags; i++)
                 {
                     _tags.Add(m_io.ReadS4be());
@@ -256,7 +256,7 @@ namespace Kaitai
             {
                 _tagsType = ((MinecraftNbt.Tag) m_io.ReadU1());
                 _numTags = m_io.ReadS4be();
-                _tags = new List<object>((int) (NumTags));
+                _tags = new List<object>();
                 for (var i = 0; i < NumTags; i++)
                 {
                     switch (TagsType) {

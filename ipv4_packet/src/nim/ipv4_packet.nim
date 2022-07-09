@@ -20,9 +20,12 @@ type
     `parent`*: KaitaiStruct
     `rawOptions`*: seq[byte]
     `rawBody`*: seq[byte]
-    `versionInst`*: int
-    `ihlInst`*: int
-    `ihlBytesInst`*: int
+    `versionInst`: int
+    `versionInstFlag`: bool
+    `ihlInst`: int
+    `ihlInstFlag`: bool
+    `ihlBytesInst`: int
+    `ihlBytesInstFlag`: bool
   Ipv4Packet_Ipv4Options* = ref object of KaitaiStruct
     `entries`*: seq[Ipv4Packet_Ipv4Option]
     `parent`*: Ipv4Packet
@@ -31,9 +34,12 @@ type
     `len`*: uint8
     `body`*: seq[byte]
     `parent`*: Ipv4Packet_Ipv4Options
-    `copyInst`*: int
-    `optClassInst`*: int
-    `numberInst`*: int
+    `copyInst`: int
+    `copyInstFlag`: bool
+    `optClassInst`: int
+    `optClassInstFlag`: bool
+    `numberInst`: int
+    `numberInstFlag`: bool
 
 proc read*(_: typedesc[Ipv4Packet], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ipv4Packet
 proc read*(_: typedesc[Ipv4Packet_Ipv4Options], io: KaitaiStream, root: KaitaiStruct, parent: Ipv4Packet): Ipv4Packet_Ipv4Options
@@ -86,28 +92,28 @@ proc read*(_: typedesc[Ipv4Packet], io: KaitaiStream, root: KaitaiStruct, parent
   this.body = bodyExpr
 
 proc version(this: Ipv4Packet): int = 
-  if this.versionInst != nil:
+  if this.versionInstFlag:
     return this.versionInst
   let versionInstExpr = int(((this.b1 and 240) shr 4))
   this.versionInst = versionInstExpr
-  if this.versionInst != nil:
-    return this.versionInst
+  this.versionInstFlag = true
+  return this.versionInst
 
 proc ihl(this: Ipv4Packet): int = 
-  if this.ihlInst != nil:
+  if this.ihlInstFlag:
     return this.ihlInst
   let ihlInstExpr = int((this.b1 and 15))
   this.ihlInst = ihlInstExpr
-  if this.ihlInst != nil:
-    return this.ihlInst
+  this.ihlInstFlag = true
+  return this.ihlInst
 
 proc ihlBytes(this: Ipv4Packet): int = 
-  if this.ihlBytesInst != nil:
+  if this.ihlBytesInstFlag:
     return this.ihlBytesInst
   let ihlBytesInstExpr = int((this.ihl * 4))
   this.ihlBytesInst = ihlBytesInstExpr
-  if this.ihlBytesInst != nil:
-    return this.ihlBytesInst
+  this.ihlBytesInstFlag = true
+  return this.ihlBytesInst
 
 proc fromFile*(_: typedesc[Ipv4Packet], filename: string): Ipv4Packet =
   Ipv4Packet.read(newKaitaiFileStream(filename), nil, nil)
@@ -146,28 +152,28 @@ proc read*(_: typedesc[Ipv4Packet_Ipv4Option], io: KaitaiStream, root: KaitaiStr
   this.body = bodyExpr
 
 proc copy(this: Ipv4Packet_Ipv4Option): int = 
-  if this.copyInst != nil:
+  if this.copyInstFlag:
     return this.copyInst
   let copyInstExpr = int(((this.b1 and 128) shr 7))
   this.copyInst = copyInstExpr
-  if this.copyInst != nil:
-    return this.copyInst
+  this.copyInstFlag = true
+  return this.copyInst
 
 proc optClass(this: Ipv4Packet_Ipv4Option): int = 
-  if this.optClassInst != nil:
+  if this.optClassInstFlag:
     return this.optClassInst
   let optClassInstExpr = int(((this.b1 and 96) shr 5))
   this.optClassInst = optClassInstExpr
-  if this.optClassInst != nil:
-    return this.optClassInst
+  this.optClassInstFlag = true
+  return this.optClassInst
 
 proc number(this: Ipv4Packet_Ipv4Option): int = 
-  if this.numberInst != nil:
+  if this.numberInstFlag:
     return this.numberInst
   let numberInstExpr = int((this.b1 and 31))
   this.numberInst = numberInstExpr
-  if this.numberInst != nil:
-    return this.numberInst
+  this.numberInstFlag = true
+  return this.numberInst
 
 proc fromFile*(_: typedesc[Ipv4Packet_Ipv4Option], filename: string): Ipv4Packet_Ipv4Option =
   Ipv4Packet_Ipv4Option.read(newKaitaiFileStream(filename), nil, nil)

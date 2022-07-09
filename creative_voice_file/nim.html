@@ -313,8 +313,10 @@ software due to simplicity and availability of Creative's recording
     <span class="p">`</span><span class="n">durationSamples</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">freqDiv</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CreativeVoiceFile_Block</span>
-    <span class="p">`</span><span class="n">sampleRateInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
-    <span class="p">`</span><span class="n">durationSecInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">sampleRateInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">sampleRateInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">durationSecInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">durationSecInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">CreativeVoiceFile_BlockSoundDataNew</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">sampleRate</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">bitsPerSample</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -330,7 +332,8 @@ software due to simplicity and availability of Creative's recording
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CreativeVoiceFile</span>
     <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">bodySizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">bodySizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">bodySizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">CreativeVoiceFile_BlockRepeatStart</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">repeatCount1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CreativeVoiceFile_Block</span>
@@ -339,14 +342,17 @@ software due to simplicity and availability of Creative's recording
     <span class="p">`</span><span class="n">codec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CreativeVoiceFile_Codecs</span>
     <span class="p">`</span><span class="n">wave</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CreativeVoiceFile_Block</span>
-    <span class="p">`</span><span class="n">sampleRateInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">sampleRateInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">sampleRateInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">CreativeVoiceFile_BlockExtraInfo</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">freqDiv</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">codec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CreativeVoiceFile_Codecs</span>
     <span class="p">`</span><span class="n">numChannels1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CreativeVoiceFile_Block</span>
-    <span class="p">`</span><span class="n">numChannelsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">sampleRateInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">numChannelsInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numChannelsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">sampleRateInst</span><span class="p">`:</span> <span class="kt">float64</span>
+    <span class="p">`</span><span class="n">sampleRateInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CreativeVoiceFile], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CreativeVoiceFile</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CreativeVoiceFile_BlockMarker], io: KaitaiStream, root: KaitaiStruct, parent: CreativeVoiceFile_Block): CreativeVoiceFile_BlockMarker</span>
@@ -465,24 +471,24 @@ software due to simplicity and availability of Creative's recording
   <span class="n">this</span><span class="p">.</span><span class="n">freqDiv</span> <span class="o">=</span> <span class="n">freqDivExpr</span>
 
 <span class="k">proc </span><span class="nf">sampleRate</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CreativeVoiceFile_BlockSilence</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
   <span class="k">let</span> <span class="n">sampleRateInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="mf">1000000.0</span> <span class="ow">div</span> <span class="p">(</span><span class="mi">256</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">freqDiv</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">=</span> <span class="n">sampleRateInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
 
 <span class="k">proc </span><span class="nf">durationSec</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CreativeVoiceFile_BlockSilence</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Duration</span> <span class="k">of</span> <span class="n">silence</span><span class="p">,</span> <span class="ow">in</span> <span class="n">seconds</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">durationSecInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">durationSecInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">durationSecInst</span>
   <span class="k">let</span> <span class="n">durationSecInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">durationSamples</span> <span class="ow">div</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRate</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">durationSecInst</span> <span class="o">=</span> <span class="n">durationSecInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">durationSecInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">durationSecInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">durationSecInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">durationSecInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CreativeVoiceFile_BlockSilence], filename: string): CreativeVoiceFile_BlockSilence =</span>
   <span class="n">CreativeVoiceFile_BlockSilence</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -590,13 +596,13 @@ software due to simplicity and availability of Creative's recording
 <span class="p">(</span><span class="n">body_size1</span> <span class="ow">and</span> <span class="n">body_size2</span><span class="p">).</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockType</span> <span class="o">!=</span> <span class="n">creative_voice_file</span><span class="p">.</span><span class="n">terminator</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">bodySizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bodySize1</span> <span class="o">+</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bodySize2</span> <span class="ow">shl</span> <span class="mi">16</span><span class="p">)))</span>
     <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">=</span> <span class="n">bodySizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CreativeVoiceFile_Block], filename: string): CreativeVoiceFile_Block =</span>
   <span class="n">CreativeVoiceFile_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -647,12 +653,12 @@ software due to simplicity and availability of Creative's recording
   <span class="n">this</span><span class="p">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">waveExpr</span>
 
 <span class="k">proc </span><span class="nf">sampleRate</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CreativeVoiceFile_BlockSoundData</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
   <span class="k">let</span> <span class="n">sampleRateInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="mf">1000000.0</span> <span class="ow">div</span> <span class="p">(</span><span class="mi">256</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">freqDiv</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">=</span> <span class="n">sampleRateInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CreativeVoiceFile_BlockSoundData], filename: string): CreativeVoiceFile_BlockSoundData =</span>
   <span class="n">CreativeVoiceFile_BlockSoundData</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -689,20 +695,20 @@ software due to simplicity and availability of Creative's recording
   <span class="sd">##[</span>
   <span class="n">Number</span> <span class="k">of</span> <span class="n">channels</span> <span class="p">(</span><span class="mi">1</span> <span class="o">=</span> <span class="n">mono</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=</span> <span class="n">stereo</span><span class="p">)</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInst</span>
   <span class="k">let</span> <span class="n">numChannelsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">numChannels1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInst</span> <span class="o">=</span> <span class="n">numChannelsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numChannelsInst</span>
 
 <span class="k">proc </span><span class="nf">sampleRate</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CreativeVoiceFile_BlockExtraInfo</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
   <span class="k">let</span> <span class="n">sampleRateInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="mf">256000000.0</span> <span class="ow">div</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numChannels</span> <span class="o">*</span> <span class="p">(</span><span class="mi">65536</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">freqDiv</span><span class="p">))))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">=</span> <span class="n">sampleRateInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sampleRateInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CreativeVoiceFile_BlockExtraInfo], filename: string): CreativeVoiceFile_BlockExtraInfo =</span>
   <span class="n">CreativeVoiceFile_BlockExtraInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

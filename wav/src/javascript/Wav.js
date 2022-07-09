@@ -8,7 +8,7 @@
   } else {
     root.Wav = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The WAVE file format is a subset of Microsoft's RIFF specification for the
  * storage of multimedia files. A RIFF file starts out with a file header
@@ -875,9 +875,9 @@ var Wav = (function() {
     }
     CueChunkType.prototype._read = function() {
       this.dwCuePoints = this._io.readU4le();
-      this.cuePoints = new Array(this.dwCuePoints);
+      this.cuePoints = [];
       for (var i = 0; i < this.dwCuePoints; i++) {
-        this.cuePoints[i] = new CuePointType(this._io, this, this._root);
+        this.cuePoints.push(new CuePointType(this._io, this, this._root));
       }
     }
 

@@ -45,13 +45,13 @@ class Bcd < Kaitai::Struct::Struct
   end
 
   def _read
-    @digits = Array.new(num_digits)
+    @digits = []
     (num_digits).times { |i|
       case bits_per_digit
       when 4
-        @digits[i] = @_io.read_bits_int_be(4)
+        @digits << @_io.read_bits_int_be(4)
       when 8
-        @digits[i] = @_io.read_u1
+        @digits << @_io.read_u1
       end
     }
     self

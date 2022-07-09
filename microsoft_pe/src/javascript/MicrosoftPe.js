@@ -8,7 +8,7 @@
   } else {
     root.MicrosoftPe = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link https://docs.microsoft.com/en-us/windows/win32/debug/pe-format|Source}
  */
@@ -284,9 +284,9 @@ var MicrosoftPe = (function() {
       this._raw_optionalHdr = this._io.readBytes(this.coffHdr.sizeOfOptionalHeader);
       var _io__raw_optionalHdr = new KaitaiStream(this._raw_optionalHdr);
       this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, this._root);
-      this.sections = new Array(this.coffHdr.numberOfSections);
+      this.sections = [];
       for (var i = 0; i < this.coffHdr.numberOfSections; i++) {
-        this.sections[i] = new Section(this._io, this, this._root);
+        this.sections.push(new Section(this._io, this, this._root));
       }
     }
     Object.defineProperty(PeHeader.prototype, 'certificateTable', {
@@ -539,9 +539,9 @@ var MicrosoftPe = (function() {
           return this._m_symbolTable;
         var _pos = this._io.pos;
         this._io.seek(this.pointerToSymbolTable);
-        this._m_symbolTable = new Array(this.numberOfSymbols);
+        this._m_symbolTable = [];
         for (var i = 0; i < this.numberOfSymbols; i++) {
-          this._m_symbolTable[i] = new CoffSymbol(this._io, this, this._root);
+          this._m_symbolTable.push(new CoffSymbol(this._io, this, this._root));
         }
         this._io.seek(_pos);
         return this._m_symbolTable;

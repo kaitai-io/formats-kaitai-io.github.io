@@ -94,9 +94,9 @@ class TlsClientHello < Kaitai::Struct::Struct
 
     def _read
       @len = @_io.read_u2be
-      @cipher_suites = Array.new((len / 2))
+      @cipher_suites = []
       ((len / 2)).times { |i|
-        @cipher_suites[i] = @_io.read_u2be
+        @cipher_suites << @_io.read_u2be
       }
       self
     end

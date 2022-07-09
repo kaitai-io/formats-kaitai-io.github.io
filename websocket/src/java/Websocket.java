@@ -203,10 +203,10 @@ public class Websocket extends KaitaiStruct {
         }
         private void _read() {
             this.header = new FrameHeader(this._io, this, _root);
-            if (_root.initialFrame().header().opcode() != Websocket.Opcode.TEXT) {
+            if (_root().initialFrame().header().opcode() != Websocket.Opcode.TEXT) {
                 this.payloadBytes = this._io.readBytes(header().lenPayload());
             }
-            if (_root.initialFrame().header().opcode() == Websocket.Opcode.TEXT) {
+            if (_root().initialFrame().header().opcode() == Websocket.Opcode.TEXT) {
                 this.payloadText = new String(this._io.readBytes(header().lenPayload()), Charset.forName("UTF-8"));
             }
         }

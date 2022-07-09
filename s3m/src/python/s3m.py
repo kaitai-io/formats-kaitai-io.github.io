@@ -1,12 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
 
 
-if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class S3m(KaitaiStruct):
@@ -61,23 +60,23 @@ class S3m(KaitaiStruct):
         self.has_custom_pan = self._io.read_u1()
         self.reserved2 = self._io.read_bytes(8)
         self.ofs_special = self._io.read_u2le()
-        self.channels = [None] * (32)
+        self.channels = []
         for i in range(32):
-            self.channels[i] = S3m.Channel(self._io, self, self._root)
+            self.channels.append(S3m.Channel(self._io, self, self._root))
 
         self.orders = self._io.read_bytes(self.num_orders)
-        self.instruments = [None] * (self.num_instruments)
+        self.instruments = []
         for i in range(self.num_instruments):
-            self.instruments[i] = S3m.InstrumentPtr(self._io, self, self._root)
+            self.instruments.append(S3m.InstrumentPtr(self._io, self, self._root))
 
-        self.patterns = [None] * (self.num_patterns)
+        self.patterns = []
         for i in range(self.num_patterns):
-            self.patterns[i] = S3m.PatternPtr(self._io, self, self._root)
+            self.patterns.append(S3m.PatternPtr(self._io, self, self._root))
 
         if self.has_custom_pan == 252:
-            self.channel_pans = [None] * (32)
+            self.channel_pans = []
             for i in range(32):
-                self.channel_pans[i] = S3m.ChannelPan(self._io, self, self._root)
+                self.channel_pans.append(S3m.ChannelPan(self._io, self, self._root))
 
 
 
@@ -168,10 +167,10 @@ class S3m(KaitaiStruct):
         @property
         def value(self):
             if hasattr(self, '_m_value'):
-                return self._m_value if hasattr(self, '_m_value') else None
+                return self._m_value
 
             self._m_value = (self.lo | (self.hi << 16))
-            return self._m_value if hasattr(self, '_m_value') else None
+            return getattr(self, '_m_value', None)
 
 
     class Pattern(KaitaiStruct):
@@ -201,13 +200,13 @@ class S3m(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
             self._m_body = S3m.Pattern(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     class InstrumentPtr(KaitaiStruct):
@@ -223,13 +222,13 @@ class S3m(KaitaiStruct):
         @property
         def body(self):
             if hasattr(self, '_m_body'):
-                return self._m_body if hasattr(self, '_m_body') else None
+                return self._m_body
 
             _pos = self._io.pos()
             self._io.seek((self.paraptr * 16))
             self._m_body = S3m.Instrument(self._io, self, self._root)
             self._io.seek(_pos)
-            return self._m_body if hasattr(self, '_m_body') else None
+            return getattr(self, '_m_body', None)
 
 
     class Instrument(KaitaiStruct):
@@ -283,13 +282,13 @@ class S3m(KaitaiStruct):
             @property
             def sample(self):
                 if hasattr(self, '_m_sample'):
-                    return self._m_sample if hasattr(self, '_m_sample') else None
+                    return self._m_sample
 
                 _pos = self._io.pos()
                 self._io.seek((self.paraptr_sample.value * 16))
                 self._m_sample = self._io.read_bytes(self.len_sample)
                 self._io.seek(_pos)
-                return self._m_sample if hasattr(self, '_m_sample') else None
+                return getattr(self, '_m_sample', None)
 
 
         class Adlib(KaitaiStruct):

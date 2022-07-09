@@ -5,7 +5,8 @@ type
   Cramfs* = ref object of KaitaiStruct
     `superBlock`*: Cramfs_SuperBlockStruct
     `parent`*: KaitaiStruct
-    `pageSizeInst`*: int
+    `pageSizeInst`: int
+    `pageSizeInstFlag`: bool
   Cramfs_SuperBlockStruct* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `size`*: uint32
@@ -16,11 +17,16 @@ type
     `name`*: string
     `root`*: Cramfs_Inode
     `parent`*: Cramfs
-    `flagFsidV2Inst`*: int
-    `flagHolesInst`*: int
-    `flagWrongSignatureInst`*: int
-    `flagSortedDirsInst`*: int
-    `flagShiftedRootOffsetInst`*: int
+    `flagFsidV2Inst`: int
+    `flagFsidV2InstFlag`: bool
+    `flagHolesInst`: int
+    `flagHolesInstFlag`: bool
+    `flagWrongSignatureInst`: int
+    `flagWrongSignatureInstFlag`: bool
+    `flagSortedDirsInst`: int
+    `flagSortedDirsInstFlag`: bool
+    `flagShiftedRootOffsetInst`: int
+    `flagShiftedRootOffsetInstFlag`: bool
   Cramfs_ChunkedDataInode* = ref object of KaitaiStruct
     `blockEndIndex`*: seq[uint32]
     `rawBlocks`*: seq[byte]
@@ -33,18 +39,30 @@ type
     `name`*: string
     `parent`*: KaitaiStruct
     `rawAsDirInst`*: seq[byte]
-    `attrInst`*: int
-    `asRegFileInst`*: Cramfs_ChunkedDataInode
-    `permUInst`*: int
-    `asSymlinkInst`*: Cramfs_ChunkedDataInode
-    `permOInst`*: int
-    `sizeInst`*: int
-    `gidInst`*: int
-    `permGInst`*: int
-    `namelenInst`*: int
-    `asDirInst`*: Cramfs_DirInode
-    `typeInst`*: Cramfs_Inode_FileType
-    `offsetInst`*: int
+    `attrInst`: int
+    `attrInstFlag`: bool
+    `asRegFileInst`: Cramfs_ChunkedDataInode
+    `asRegFileInstFlag`: bool
+    `permUInst`: int
+    `permUInstFlag`: bool
+    `asSymlinkInst`: Cramfs_ChunkedDataInode
+    `asSymlinkInstFlag`: bool
+    `permOInst`: int
+    `permOInstFlag`: bool
+    `sizeInst`: int
+    `sizeInstFlag`: bool
+    `gidInst`: int
+    `gidInstFlag`: bool
+    `permGInst`: int
+    `permGInstFlag`: bool
+    `namelenInst`: int
+    `namelenInstFlag`: bool
+    `asDirInst`: Cramfs_DirInode
+    `asDirInstFlag`: bool
+    `typeInst`: Cramfs_Inode_FileType
+    `typeInstFlag`: bool
+    `offsetInst`: int
+    `offsetInstFlag`: bool
   Cramfs_Inode_FileType* = enum
     fifo = 1
     chrdev = 2
@@ -101,12 +119,12 @@ proc read*(_: typedesc[Cramfs], io: KaitaiStream, root: KaitaiStruct, parent: Ka
   this.superBlock = superBlockExpr
 
 proc pageSize(this: Cramfs): int = 
-  if this.pageSizeInst != nil:
+  if this.pageSizeInstFlag:
     return this.pageSizeInst
   let pageSizeInstExpr = int(4096)
   this.pageSizeInst = pageSizeInstExpr
-  if this.pageSizeInst != nil:
-    return this.pageSizeInst
+  this.pageSizeInstFlag = true
+  return this.pageSizeInst
 
 proc fromFile*(_: typedesc[Cramfs], filename: string): Cramfs =
   Cramfs.read(newKaitaiFileStream(filename), nil, nil)
@@ -137,44 +155,44 @@ proc read*(_: typedesc[Cramfs_SuperBlockStruct], io: KaitaiStream, root: KaitaiS
   this.root = rootExpr
 
 proc flagFsidV2(this: Cramfs_SuperBlockStruct): int = 
-  if this.flagFsidV2Inst != nil:
+  if this.flagFsidV2InstFlag:
     return this.flagFsidV2Inst
   let flagFsidV2InstExpr = int(((this.flags shr 0) and 1))
   this.flagFsidV2Inst = flagFsidV2InstExpr
-  if this.flagFsidV2Inst != nil:
-    return this.flagFsidV2Inst
+  this.flagFsidV2InstFlag = true
+  return this.flagFsidV2Inst
 
 proc flagHoles(this: Cramfs_SuperBlockStruct): int = 
-  if this.flagHolesInst != nil:
+  if this.flagHolesInstFlag:
     return this.flagHolesInst
   let flagHolesInstExpr = int(((this.flags shr 8) and 1))
   this.flagHolesInst = flagHolesInstExpr
-  if this.flagHolesInst != nil:
-    return this.flagHolesInst
+  this.flagHolesInstFlag = true
+  return this.flagHolesInst
 
 proc flagWrongSignature(this: Cramfs_SuperBlockStruct): int = 
-  if this.flagWrongSignatureInst != nil:
+  if this.flagWrongSignatureInstFlag:
     return this.flagWrongSignatureInst
   let flagWrongSignatureInstExpr = int(((this.flags shr 9) and 1))
   this.flagWrongSignatureInst = flagWrongSignatureInstExpr
-  if this.flagWrongSignatureInst != nil:
-    return this.flagWrongSignatureInst
+  this.flagWrongSignatureInstFlag = true
+  return this.flagWrongSignatureInst
 
 proc flagSortedDirs(this: Cramfs_SuperBlockStruct): int = 
-  if this.flagSortedDirsInst != nil:
+  if this.flagSortedDirsInstFlag:
     return this.flagSortedDirsInst
   let flagSortedDirsInstExpr = int(((this.flags shr 1) and 1))
   this.flagSortedDirsInst = flagSortedDirsInstExpr
-  if this.flagSortedDirsInst != nil:
-    return this.flagSortedDirsInst
+  this.flagSortedDirsInstFlag = true
+  return this.flagSortedDirsInst
 
 proc flagShiftedRootOffset(this: Cramfs_SuperBlockStruct): int = 
-  if this.flagShiftedRootOffsetInst != nil:
+  if this.flagShiftedRootOffsetInstFlag:
     return this.flagShiftedRootOffsetInst
   let flagShiftedRootOffsetInstExpr = int(((this.flags shr 10) and 1))
   this.flagShiftedRootOffsetInst = flagShiftedRootOffsetInstExpr
-  if this.flagShiftedRootOffsetInst != nil:
-    return this.flagShiftedRootOffsetInst
+  this.flagShiftedRootOffsetInstFlag = true
+  return this.flagShiftedRootOffsetInst
 
 proc fromFile*(_: typedesc[Cramfs_SuperBlockStruct], filename: string): Cramfs_SuperBlockStruct =
   Cramfs_SuperBlockStruct.read(newKaitaiFileStream(filename), nil, nil)
@@ -216,15 +234,15 @@ proc read*(_: typedesc[Cramfs_Inode], io: KaitaiStream, root: KaitaiStruct, pare
   this.name = nameExpr
 
 proc attr(this: Cramfs_Inode): int = 
-  if this.attrInst != nil:
+  if this.attrInstFlag:
     return this.attrInst
   let attrInstExpr = int(((this.mode shr 9) and 7))
   this.attrInst = attrInstExpr
-  if this.attrInst != nil:
-    return this.attrInst
+  this.attrInstFlag = true
+  return this.attrInst
 
 proc asRegFile(this: Cramfs_Inode): Cramfs_ChunkedDataInode = 
-  if this.asRegFileInst != nil:
+  if this.asRegFileInstFlag:
     return this.asRegFileInst
   let io = Cramfs(this.root).io
   let pos = io.pos()
@@ -232,19 +250,19 @@ proc asRegFile(this: Cramfs_Inode): Cramfs_ChunkedDataInode =
   let asRegFileInstExpr = Cramfs_ChunkedDataInode.read(io, this.root, this)
   this.asRegFileInst = asRegFileInstExpr
   io.seek(pos)
-  if this.asRegFileInst != nil:
-    return this.asRegFileInst
+  this.asRegFileInstFlag = true
+  return this.asRegFileInst
 
 proc permU(this: Cramfs_Inode): int = 
-  if this.permUInst != nil:
+  if this.permUInstFlag:
     return this.permUInst
   let permUInstExpr = int(((this.mode shr 6) and 7))
   this.permUInst = permUInstExpr
-  if this.permUInst != nil:
-    return this.permUInst
+  this.permUInstFlag = true
+  return this.permUInst
 
 proc asSymlink(this: Cramfs_Inode): Cramfs_ChunkedDataInode = 
-  if this.asSymlinkInst != nil:
+  if this.asSymlinkInstFlag:
     return this.asSymlinkInst
   let io = Cramfs(this.root).io
   let pos = io.pos()
@@ -252,51 +270,51 @@ proc asSymlink(this: Cramfs_Inode): Cramfs_ChunkedDataInode =
   let asSymlinkInstExpr = Cramfs_ChunkedDataInode.read(io, this.root, this)
   this.asSymlinkInst = asSymlinkInstExpr
   io.seek(pos)
-  if this.asSymlinkInst != nil:
-    return this.asSymlinkInst
+  this.asSymlinkInstFlag = true
+  return this.asSymlinkInst
 
 proc permO(this: Cramfs_Inode): int = 
-  if this.permOInst != nil:
+  if this.permOInstFlag:
     return this.permOInst
   let permOInstExpr = int((this.mode and 7))
   this.permOInst = permOInstExpr
-  if this.permOInst != nil:
-    return this.permOInst
+  this.permOInstFlag = true
+  return this.permOInst
 
 proc size(this: Cramfs_Inode): int = 
-  if this.sizeInst != nil:
+  if this.sizeInstFlag:
     return this.sizeInst
   let sizeInstExpr = int((this.sizeGid and 16777215))
   this.sizeInst = sizeInstExpr
-  if this.sizeInst != nil:
-    return this.sizeInst
+  this.sizeInstFlag = true
+  return this.sizeInst
 
 proc gid(this: Cramfs_Inode): int = 
-  if this.gidInst != nil:
+  if this.gidInstFlag:
     return this.gidInst
   let gidInstExpr = int((this.sizeGid shr 24))
   this.gidInst = gidInstExpr
-  if this.gidInst != nil:
-    return this.gidInst
+  this.gidInstFlag = true
+  return this.gidInst
 
 proc permG(this: Cramfs_Inode): int = 
-  if this.permGInst != nil:
+  if this.permGInstFlag:
     return this.permGInst
   let permGInstExpr = int(((this.mode shr 3) and 7))
   this.permGInst = permGInstExpr
-  if this.permGInst != nil:
-    return this.permGInst
+  this.permGInstFlag = true
+  return this.permGInst
 
 proc namelen(this: Cramfs_Inode): int = 
-  if this.namelenInst != nil:
+  if this.namelenInstFlag:
     return this.namelenInst
   let namelenInstExpr = int(((this.namelenOffset and 63) shl 2))
   this.namelenInst = namelenInstExpr
-  if this.namelenInst != nil:
-    return this.namelenInst
+  this.namelenInstFlag = true
+  return this.namelenInst
 
 proc asDir(this: Cramfs_Inode): Cramfs_DirInode = 
-  if this.asDirInst != nil:
+  if this.asDirInstFlag:
     return this.asDirInst
   let io = Cramfs(this.root).io
   let pos = io.pos()
@@ -307,24 +325,24 @@ proc asDir(this: Cramfs_Inode): Cramfs_DirInode =
   let asDirInstExpr = Cramfs_DirInode.read(rawAsDirInstIo, this.root, this)
   this.asDirInst = asDirInstExpr
   io.seek(pos)
-  if this.asDirInst != nil:
-    return this.asDirInst
+  this.asDirInstFlag = true
+  return this.asDirInst
 
 proc type(this: Cramfs_Inode): Cramfs_Inode_FileType = 
-  if this.typeInst != nil:
+  if this.typeInstFlag:
     return this.typeInst
   let typeInstExpr = Cramfs_Inode_FileType(Cramfs_Inode_FileType(((this.mode shr 12) and 15)))
   this.typeInst = typeInstExpr
-  if this.typeInst != nil:
-    return this.typeInst
+  this.typeInstFlag = true
+  return this.typeInst
 
 proc offset(this: Cramfs_Inode): int = 
-  if this.offsetInst != nil:
+  if this.offsetInstFlag:
     return this.offsetInst
   let offsetInstExpr = int((((this.namelenOffset shr 6) and 67108863) shl 2))
   this.offsetInst = offsetInstExpr
-  if this.offsetInst != nil:
-    return this.offsetInst
+  this.offsetInstFlag = true
+  return this.offsetInst
 
 proc fromFile*(_: typedesc[Cramfs_Inode], filename: string): Cramfs_Inode =
   Cramfs_Inode.read(newKaitaiFileStream(filename), nil, nil)

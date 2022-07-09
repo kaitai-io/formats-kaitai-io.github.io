@@ -246,8 +246,8 @@ end
 
 function WindowsLnkFile.LinkInfo.LinkInfoFlags:_read()
   self.reserved1 = self._io:read_bits_int_be(6)
-  self.has_common_net_rel_link = self._io:read_bits_int_be(1)
-  self.has_volume_id_and_local_base_path = self._io:read_bits_int_be(1)
+  self.has_common_net_rel_link = self._io:read_bits_int_be(1) ~= 0
+  self.has_volume_id_and_local_base_path = self._io:read_bits_int_be(1) ~= 0
   self.reserved2 = self._io:read_bits_int_be(24)
 end
 
@@ -290,17 +290,17 @@ function WindowsLnkFile.LinkFlags:_init(io, parent, root)
 end
 
 function WindowsLnkFile.LinkFlags:_read()
-  self.is_unicode = self._io:read_bits_int_be(1)
-  self.has_icon_location = self._io:read_bits_int_be(1)
-  self.has_arguments = self._io:read_bits_int_be(1)
-  self.has_work_dir = self._io:read_bits_int_be(1)
-  self.has_rel_path = self._io:read_bits_int_be(1)
-  self.has_name = self._io:read_bits_int_be(1)
-  self.has_link_info = self._io:read_bits_int_be(1)
-  self.has_link_target_id_list = self._io:read_bits_int_be(1)
+  self.is_unicode = self._io:read_bits_int_be(1) ~= 0
+  self.has_icon_location = self._io:read_bits_int_be(1) ~= 0
+  self.has_arguments = self._io:read_bits_int_be(1) ~= 0
+  self.has_work_dir = self._io:read_bits_int_be(1) ~= 0
+  self.has_rel_path = self._io:read_bits_int_be(1) ~= 0
+  self.has_name = self._io:read_bits_int_be(1) ~= 0
+  self.has_link_info = self._io:read_bits_int_be(1) ~= 0
+  self.has_link_target_id_list = self._io:read_bits_int_be(1) ~= 0
   self._unnamed8 = self._io:read_bits_int_be(16)
   self.reserved = self._io:read_bits_int_be(5)
-  self.keep_local_id_list_for_unc_target = self._io:read_bits_int_be(1)
+  self.keep_local_id_list_for_unc_target = self._io:read_bits_int_be(1) ~= 0
   self._unnamed11 = self._io:read_bits_int_be(2)
 end
 

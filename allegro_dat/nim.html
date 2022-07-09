@@ -286,7 +286,8 @@ to 4.4.</p>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AllegroDat</span>
     <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">typeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">typeInst</span><span class="p">`:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">typeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">AllegroDat_DatFont39</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">numRanges</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int16</span>
     <span class="p">`</span><span class="n">ranges</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">AllegroDat_DatFont39_Range</span><span class="o">]</span>
@@ -308,7 +309,8 @@ to 4.4.</p>
     <span class="p">`</span><span class="n">lenBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AllegroDat_DatObject</span>
-    <span class="p">`</span><span class="n">isValidInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isValidInst</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">isValidInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">AllegroDat_DatRleSprite</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">bitsPerPixel</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int16</span>
     <span class="p">`</span><span class="n">width</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -501,12 +503,12 @@ to 4.4.</p>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">type</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AllegroDat_DatObject</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
   <span class="k">let</span> <span class="n">typeInstExpr</span> <span class="o">=</span> <span class="kt">string</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">properties</span><span class="o">[</span><span class="p">^</span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span> <span class="o">=</span> <span class="n">typeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">typeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AllegroDat_DatObject], filename: string): AllegroDat_DatObject =</span>
   <span class="n">AllegroDat_DatObject</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -603,12 +605,12 @@ to 4.4.</p>
     <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">isValid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AllegroDat_Property</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
   <span class="k">let</span> <span class="n">isValidInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s">&quot;prop&quot;</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span> <span class="o">=</span> <span class="n">isValidInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AllegroDat_Property], filename: string): AllegroDat_Property =</span>
   <span class="n">AllegroDat_Property</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

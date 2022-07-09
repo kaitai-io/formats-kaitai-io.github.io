@@ -144,7 +144,7 @@ public class WindowsMinidump extends KaitaiStruct {
         }
         private void _read() {
             this.numThreads = this._io.readU4le();
-            threads = new ArrayList<Thread>(((Number) (numThreads())).intValue());
+            this.threads = new ArrayList<Thread>();
             for (int i = 0; i < numThreads(); i++) {
                 this.threads.add(new Thread(this._io, this, _root));
             }
@@ -189,7 +189,7 @@ public class WindowsMinidump extends KaitaiStruct {
         public byte[] data() {
             if (this.data != null)
                 return this.data;
-            KaitaiStream io = _root._io();
+            KaitaiStream io = _root()._io();
             long _pos = io.pos();
             io.seek(ofsData());
             this.data = io.readBytes(lenData());
@@ -305,7 +305,7 @@ public class WindowsMinidump extends KaitaiStruct {
             if (this.servicePack != null)
                 return this.servicePack;
             if (ofsServicePack() > 0) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsServicePack());
                 this.servicePack = new MinidumpString(io, this, _root);
@@ -372,7 +372,7 @@ public class WindowsMinidump extends KaitaiStruct {
             this.addr = this._io.readU8le();
             this.numParams = this._io.readU4le();
             this.reserved = this._io.readU4le();
-            params = new ArrayList<Long>(((Number) (15)).intValue());
+            this.params = new ArrayList<Long>();
             for (int i = 0; i < 15; i++) {
                 this.params.add(this._io.readU8le());
             }
@@ -649,7 +649,7 @@ public class WindowsMinidump extends KaitaiStruct {
         }
         private void _read() {
             this.numMemRanges = this._io.readU4le();
-            memRanges = new ArrayList<MemoryDescriptor>(((Number) (numMemRanges())).intValue());
+            this.memRanges = new ArrayList<MemoryDescriptor>();
             for (int i = 0; i < numMemRanges(); i++) {
                 this.memRanges.add(new MemoryDescriptor(this._io, this, _root));
             }
@@ -747,7 +747,7 @@ public class WindowsMinidump extends KaitaiStruct {
             return this.streams;
         long _pos = this._io.pos();
         this._io.seek(ofsStreams());
-        streams = new ArrayList<Dir>(((Number) (numStreams())).intValue());
+        this.streams = new ArrayList<Dir>();
         for (int i = 0; i < numStreams(); i++) {
             this.streams.add(new Dir(this._io, this, _root));
         }

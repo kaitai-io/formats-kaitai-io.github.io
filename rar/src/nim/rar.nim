@@ -48,9 +48,12 @@ type
     `addBody`*: seq[byte]
     `parent`*: Rar
     `rawBody`*: seq[byte]
-    `hasAddInst`*: bool
-    `headerSizeInst`*: int8
-    `bodySizeInst`*: int
+    `hasAddInst`: bool
+    `hasAddInstFlag`: bool
+    `headerSizeInst`: int8
+    `headerSizeInstFlag`: bool
+    `bodySizeInst`: int
+    `bodySizeInstFlag`: bool
   Rar_BlockFileHeader* = ref object of KaitaiStruct
     `lowUnpSize`*: uint32
     `hostOs`*: Rar_Oses
@@ -231,28 +234,28 @@ proc hasAdd(this: Rar_Block): bool =
   ##[
   True if block has additional content attached to it
   ]##
-  if this.hasAddInst != nil:
+  if this.hasAddInstFlag:
     return this.hasAddInst
   let hasAddInstExpr = bool((this.flags and 32768) != 0)
   this.hasAddInst = hasAddInstExpr
-  if this.hasAddInst != nil:
-    return this.hasAddInst
+  this.hasAddInstFlag = true
+  return this.hasAddInst
 
 proc headerSize(this: Rar_Block): int8 = 
-  if this.headerSizeInst != nil:
+  if this.headerSizeInstFlag:
     return this.headerSizeInst
   let headerSizeInstExpr = int8((if this.hasAdd: 11 else: 7))
   this.headerSizeInst = headerSizeInstExpr
-  if this.headerSizeInst != nil:
-    return this.headerSizeInst
+  this.headerSizeInstFlag = true
+  return this.headerSizeInst
 
 proc bodySize(this: Rar_Block): int = 
-  if this.bodySizeInst != nil:
+  if this.bodySizeInstFlag:
     return this.bodySizeInst
   let bodySizeInstExpr = int((this.blockSize - this.headerSize))
   this.bodySizeInst = bodySizeInstExpr
-  if this.bodySizeInst != nil:
-    return this.bodySizeInst
+  this.bodySizeInstFlag = true
+  return this.bodySizeInst
 
 proc fromFile*(_: typedesc[Rar_Block], filename: string): Rar_Block =
   Rar_Block.read(newKaitaiFileStream(filename), nil, nil)

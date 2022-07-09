@@ -133,7 +133,7 @@ sub _read {
     $self->{load_commands} = ();
     my $n_load_commands = $self->header()->ncmds();
     for (my $i = 0; $i < $n_load_commands; $i++) {
-        $self->{load_commands}[$i] = MachO::LoadCommand->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{load_commands}}, MachO::LoadCommand->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -536,7 +536,7 @@ sub hashes {
     $self->{hashes} = ();
     my $n_hashes = ($self->n_special_slots() + $self->n_code_slots());
     for (my $i = 0; $i < $n_hashes; $i++) {
-        $self->{hashes}[$i] = $self->{_io}->read_bytes($self->hash_size());
+        push @{$self->{hashes}}, $self->{_io}->read_bytes($self->hash_size());
     }
     $self->{_io}->seek($_pos);
     return $self->{hashes};
@@ -696,7 +696,7 @@ sub _read {
     $self->{blobs} = ();
     my $n_blobs = $self->count();
     for (my $i = 0; $i < $n_blobs; $i++) {
-        $self->{blobs}[$i] = MachO::CsBlob::BlobIndex->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{blobs}}, MachO::CsBlob::BlobIndex->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1455,7 +1455,7 @@ sub _read {
     $self->{items} = ();
     my $n_items = $self->count();
     for (my $i = 0; $i < $n_items; $i++) {
-        $self->{items}[$i] = MachO::CsBlob::RequirementsBlobIndex->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{items}}, MachO::CsBlob::RequirementsBlobIndex->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -1641,7 +1641,7 @@ sub _read {
     $self->{tools} = ();
     my $n_tools = $self->ntools();
     for (my $i = 0; $i < $n_tools; $i++) {
-        $self->{tools}[$i] = MachO::BuildVersionCommand::BuildToolVersion->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{tools}}, MachO::BuildVersionCommand::BuildToolVersion->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -2067,7 +2067,7 @@ sub _read {
     $self->{strings} = ();
     my $n_strings = $self->num_strings();
     for (my $i = 0; $i < $n_strings; $i++) {
-        $self->{strings}[$i] = Encode::decode("utf-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+        push @{$self->{strings}}, Encode::decode("utf-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
 }
 
@@ -2123,7 +2123,7 @@ sub _read {
     $self->{sections} = ();
     my $n_sections = $self->nsects();
     for (my $i = 0; $i < $n_sections; $i++) {
-        $self->{sections}[$i] = MachO::SegmentCommand64::Section64->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{sections}}, MachO::SegmentCommand64::Section64->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -2985,7 +2985,7 @@ sub indirect_symbols {
     $self->{indirect_symbols} = ();
     my $n_indirect_symbols = $self->n_indirect_syms();
     for (my $i = 0; $i < $n_indirect_symbols; $i++) {
-        $self->{indirect_symbols}[$i] = $io->read_u4le();
+        push @{$self->{indirect_symbols}}, $io->read_u4le();
     }
     $io->seek($_pos);
     return $self->{indirect_symbols};
@@ -3875,7 +3875,7 @@ sub _read {
     $self->{children} = ();
     my $n_children = $self->children_count();
     for (my $i = 0; $i < $n_children; $i++) {
-        $self->{children}[$i] = MachO::DyldInfoCommand::ExportNode::Child->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{children}}, MachO::DyldInfoCommand::ExportNode::Child->new($self->{_io}, $self, $self->{_root});
     }
     $self->{terminal} = $self->{_io}->read_bytes($self->terminal_size()->value());
 }
@@ -4179,7 +4179,7 @@ sub _read {
     $self->{sections} = ();
     my $n_sections = $self->nsects();
     for (my $i = 0; $i < $n_sections; $i++) {
-        $self->{sections}[$i] = MachO::SegmentCommand::Section->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{sections}}, MachO::SegmentCommand::Section->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -4729,16 +4729,16 @@ sub symbols {
     for (my $i = 0; $i < $n_symbols; $i++) {
         my $_on = $self->_root()->magic();
         if ($_on == $MachO::MAGIC_TYPE_MACHO_LE_X64) {
-            $self->{symbols}[$i] = MachO::SymtabCommand::Nlist64->new($io, $self, $self->{_root});
+            push @{$self->{symbols}}, MachO::SymtabCommand::Nlist64->new($io, $self, $self->{_root});
         }
         elsif ($_on == $MachO::MAGIC_TYPE_MACHO_BE_X64) {
-            $self->{symbols}[$i] = MachO::SymtabCommand::Nlist64->new($io, $self, $self->{_root});
+            push @{$self->{symbols}}, MachO::SymtabCommand::Nlist64->new($io, $self, $self->{_root});
         }
         elsif ($_on == $MachO::MAGIC_TYPE_MACHO_LE_X86) {
-            $self->{symbols}[$i] = MachO::SymtabCommand::Nlist->new($io, $self, $self->{_root});
+            push @{$self->{symbols}}, MachO::SymtabCommand::Nlist->new($io, $self, $self->{_root});
         }
         elsif ($_on == $MachO::MAGIC_TYPE_MACHO_BE_X86) {
-            $self->{symbols}[$i] = MachO::SymtabCommand::Nlist->new($io, $self, $self->{_root});
+            push @{$self->{symbols}}, MachO::SymtabCommand::Nlist->new($io, $self, $self->{_root});
         }
     }
     $io->seek($_pos);

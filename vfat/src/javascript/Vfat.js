@@ -8,7 +8,7 @@
   } else {
     root.Vfat = factory(root.KaitaiStream, root.DosDatetime);
   }
-}(this, function (KaitaiStream, DosDatetime) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
 /**
  * @see {@link https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc|Source}
  */
@@ -393,9 +393,9 @@ var Vfat = (function() {
       this._read();
     }
     RootDirectory.prototype._read = function() {
-      this.records = new Array(this._root.bootSector.bpb.maxRootDirRec);
+      this.records = [];
       for (var i = 0; i < this._root.bootSector.bpb.maxRootDirRec; i++) {
-        this.records[i] = new RootDirectoryRec(this._io, this, this._root);
+        this.records.push(new RootDirectoryRec(this._io, this, this._root));
       }
     }
 
@@ -456,9 +456,9 @@ var Vfat = (function() {
         return this._m_fats;
       var _pos = this._io.pos;
       this._io.seek(this.bootSector.posFats);
-      this._m_fats = new Array(this.bootSector.bpb.numFats);
+      this._m_fats = [];
       for (var i = 0; i < this.bootSector.bpb.numFats; i++) {
-        this._m_fats[i] = this._io.readBytes(this.bootSector.sizeFat);
+        this._m_fats.push(this._io.readBytes(this.bootSector.sizeFat));
       }
       this._io.seek(_pos);
       return this._m_fats;

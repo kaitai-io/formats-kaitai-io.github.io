@@ -84,8 +84,8 @@ namespace Kaitai
                 _lenSignature = m_io.ReadU4le();
                 _header = m_io.ReadBytes(LenSignatureHeader);
                 if (LenSignature > 0) {
-                    __raw_signatures = new List<byte[]>((int) ((((LenSignatureList - LenSignatureHeader) - 28) / LenSignature)));
-                    _signatures = new List<SignatureData>((int) ((((LenSignatureList - LenSignatureHeader) - 28) / LenSignature)));
+                    __raw_signatures = new List<byte[]>();
+                    _signatures = new List<SignatureData>();
                     for (var i = 0; i < (((LenSignatureList - LenSignatureHeader) - 28) / LenSignature); i++)
                     {
                         __raw_signatures.Add(m_io.ReadBytes(LenSignature));

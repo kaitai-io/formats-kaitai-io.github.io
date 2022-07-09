@@ -61,14 +61,22 @@ type
     `glow`*: float32
     `isTotalPower`*: float32
     `parent`*: MagicavoxelVox_Chunk
-    `hasIsTotalPowerInst`*: bool
-    `hasPlasticInst`*: bool
-    `hasAttenuationInst`*: bool
-    `hasPowerInst`*: bool
-    `hasRoughnessInst`*: bool
-    `hasSpecularInst`*: bool
-    `hasIorInst`*: bool
-    `hasGlowInst`*: bool
+    `hasIsTotalPowerInst`: bool
+    `hasIsTotalPowerInstFlag`: bool
+    `hasPlasticInst`: bool
+    `hasPlasticInstFlag`: bool
+    `hasAttenuationInst`: bool
+    `hasAttenuationInstFlag`: bool
+    `hasPowerInst`: bool
+    `hasPowerInstFlag`: bool
+    `hasRoughnessInst`: bool
+    `hasRoughnessInstFlag`: bool
+    `hasSpecularInst`: bool
+    `hasSpecularInstFlag`: bool
+    `hasIorInst`: bool
+    `hasIorInstFlag`: bool
+    `hasGlowInst`: bool
+    `hasGlowInstFlag`: bool
   MagicavoxelVox_Xyzi* = ref object of KaitaiStruct
     `numVoxels`*: uint32
     `voxels`*: seq[MagicavoxelVox_Voxel]
@@ -282,68 +290,68 @@ proc read*(_: typedesc[MagicavoxelVox_Matt], io: KaitaiStream, root: KaitaiStruc
     this.isTotalPower = isTotalPowerExpr
 
 proc hasIsTotalPower(this: MagicavoxelVox_Matt): bool = 
-  if this.hasIsTotalPowerInst != nil:
+  if this.hasIsTotalPowerInstFlag:
     return this.hasIsTotalPowerInst
   let hasIsTotalPowerInstExpr = bool((this.propertyBits and 128) != 0)
   this.hasIsTotalPowerInst = hasIsTotalPowerInstExpr
-  if this.hasIsTotalPowerInst != nil:
-    return this.hasIsTotalPowerInst
+  this.hasIsTotalPowerInstFlag = true
+  return this.hasIsTotalPowerInst
 
 proc hasPlastic(this: MagicavoxelVox_Matt): bool = 
-  if this.hasPlasticInst != nil:
+  if this.hasPlasticInstFlag:
     return this.hasPlasticInst
   let hasPlasticInstExpr = bool((this.propertyBits and 1) != 0)
   this.hasPlasticInst = hasPlasticInstExpr
-  if this.hasPlasticInst != nil:
-    return this.hasPlasticInst
+  this.hasPlasticInstFlag = true
+  return this.hasPlasticInst
 
 proc hasAttenuation(this: MagicavoxelVox_Matt): bool = 
-  if this.hasAttenuationInst != nil:
+  if this.hasAttenuationInstFlag:
     return this.hasAttenuationInst
   let hasAttenuationInstExpr = bool((this.propertyBits and 16) != 0)
   this.hasAttenuationInst = hasAttenuationInstExpr
-  if this.hasAttenuationInst != nil:
-    return this.hasAttenuationInst
+  this.hasAttenuationInstFlag = true
+  return this.hasAttenuationInst
 
 proc hasPower(this: MagicavoxelVox_Matt): bool = 
-  if this.hasPowerInst != nil:
+  if this.hasPowerInstFlag:
     return this.hasPowerInst
   let hasPowerInstExpr = bool((this.propertyBits and 32) != 0)
   this.hasPowerInst = hasPowerInstExpr
-  if this.hasPowerInst != nil:
-    return this.hasPowerInst
+  this.hasPowerInstFlag = true
+  return this.hasPowerInst
 
 proc hasRoughness(this: MagicavoxelVox_Matt): bool = 
-  if this.hasRoughnessInst != nil:
+  if this.hasRoughnessInstFlag:
     return this.hasRoughnessInst
   let hasRoughnessInstExpr = bool((this.propertyBits and 2) != 0)
   this.hasRoughnessInst = hasRoughnessInstExpr
-  if this.hasRoughnessInst != nil:
-    return this.hasRoughnessInst
+  this.hasRoughnessInstFlag = true
+  return this.hasRoughnessInst
 
 proc hasSpecular(this: MagicavoxelVox_Matt): bool = 
-  if this.hasSpecularInst != nil:
+  if this.hasSpecularInstFlag:
     return this.hasSpecularInst
   let hasSpecularInstExpr = bool((this.propertyBits and 4) != 0)
   this.hasSpecularInst = hasSpecularInstExpr
-  if this.hasSpecularInst != nil:
-    return this.hasSpecularInst
+  this.hasSpecularInstFlag = true
+  return this.hasSpecularInst
 
 proc hasIor(this: MagicavoxelVox_Matt): bool = 
-  if this.hasIorInst != nil:
+  if this.hasIorInstFlag:
     return this.hasIorInst
   let hasIorInstExpr = bool((this.propertyBits and 8) != 0)
   this.hasIorInst = hasIorInstExpr
-  if this.hasIorInst != nil:
-    return this.hasIorInst
+  this.hasIorInstFlag = true
+  return this.hasIorInst
 
 proc hasGlow(this: MagicavoxelVox_Matt): bool = 
-  if this.hasGlowInst != nil:
+  if this.hasGlowInstFlag:
     return this.hasGlowInst
   let hasGlowInstExpr = bool((this.propertyBits and 64) != 0)
   this.hasGlowInst = hasGlowInstExpr
-  if this.hasGlowInst != nil:
-    return this.hasGlowInst
+  this.hasGlowInstFlag = true
+  return this.hasGlowInst
 
 proc fromFile*(_: typedesc[MagicavoxelVox_Matt], filename: string): MagicavoxelVox_Matt =
   MagicavoxelVox_Matt.read(newKaitaiFileStream(filename), nil, nil)

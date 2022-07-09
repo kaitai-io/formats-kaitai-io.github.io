@@ -47,8 +47,10 @@ type
     `xInt`*: uint32
     `yInt`*: uint32
     `parent`*: Png_ChrmChunk
-    `xInst`*: float64
-    `yInst`*: float64
+    `xInst`: float64
+    `xInstFlag`: bool
+    `yInst`: float64
+    `yInstFlag`: bool
   Png_BkgdGreyscale* = ref object of KaitaiStruct
     `value`*: uint16
     `parent`*: Png_BkgdChunk
@@ -96,7 +98,8 @@ type
   Png_GamaChunk* = ref object of KaitaiStruct
     `gammaInt`*: uint32
     `parent`*: Png_Chunk
-    `gammaRatioInst`*: float64
+    `gammaRatioInst`: float64
+    `gammaRatioInstFlag`: bool
   Png_BkgdChunk* = ref object of KaitaiStruct
     `bkgd`*: KaitaiStruct
     `parent`*: Png_Chunk
@@ -116,7 +119,8 @@ type
     `disposeOp`*: Png_DisposeOpValues
     `blendOp`*: Png_BlendOpValues
     `parent`*: Png_Chunk
-    `delayInst`*: float64
+    `delayInst`: float64
+    `delayInstFlag`: bool
   Png_InternationalTextChunk* = ref object of KaitaiStruct
     `keyword`*: string
     `compressionFlag`*: uint8
@@ -358,20 +362,20 @@ proc read*(_: typedesc[Png_Point], io: KaitaiStream, root: KaitaiStruct, parent:
   this.yInt = yIntExpr
 
 proc x(this: Png_Point): float64 = 
-  if this.xInst != nil:
+  if this.xInstFlag:
     return this.xInst
   let xInstExpr = float64((this.xInt div 100000.0))
   this.xInst = xInstExpr
-  if this.xInst != nil:
-    return this.xInst
+  this.xInstFlag = true
+  return this.xInst
 
 proc y(this: Png_Point): float64 = 
-  if this.yInst != nil:
+  if this.yInstFlag:
     return this.yInst
   let yInstExpr = float64((this.yInt div 100000.0))
   this.yInst = yInstExpr
-  if this.yInst != nil:
-    return this.yInst
+  this.yInstFlag = true
+  return this.yInst
 
 proc fromFile*(_: typedesc[Png_Point], filename: string): Png_Point =
   Png_Point.read(newKaitaiFileStream(filename), nil, nil)
@@ -594,12 +598,12 @@ proc read*(_: typedesc[Png_GamaChunk], io: KaitaiStream, root: KaitaiStruct, par
   this.gammaInt = gammaIntExpr
 
 proc gammaRatio(this: Png_GamaChunk): float64 = 
-  if this.gammaRatioInst != nil:
+  if this.gammaRatioInstFlag:
     return this.gammaRatioInst
   let gammaRatioInstExpr = float64((100000.0 div this.gammaInt))
   this.gammaRatioInst = gammaRatioInstExpr
-  if this.gammaRatioInst != nil:
-    return this.gammaRatioInst
+  this.gammaRatioInstFlag = true
+  return this.gammaRatioInst
 
 proc fromFile*(_: typedesc[Png_GamaChunk], filename: string): Png_GamaChunk =
   Png_GamaChunk.read(newKaitaiFileStream(filename), nil, nil)
@@ -749,12 +753,12 @@ proc delay(this: Png_FrameControlChunk): float64 =
   ##[
   Time to display this frame, in seconds
   ]##
-  if this.delayInst != nil:
+  if this.delayInstFlag:
     return this.delayInst
   let delayInstExpr = float64((this.delayNum div (if this.delayDen == 0: 100.0 else: this.delayDen)))
   this.delayInst = delayInstExpr
-  if this.delayInst != nil:
-    return this.delayInst
+  this.delayInstFlag = true
+  return this.delayInst
 
 proc fromFile*(_: typedesc[Png_FrameControlChunk], filename: string): Png_FrameControlChunk =
   Png_FrameControlChunk.read(newKaitaiFileStream(filename), nil, nil)

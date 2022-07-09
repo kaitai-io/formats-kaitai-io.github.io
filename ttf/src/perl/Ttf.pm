@@ -40,7 +40,7 @@ sub _read {
     $self->{directory_table} = ();
     my $n_directory_table = $self->offset_table()->num_tables();
     for (my $i = 0; $i < $n_directory_table; $i++) {
-        $self->{directory_table}[$i] = Ttf::DirTableEntry->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{directory_table}}, Ttf::DirTableEntry->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -182,7 +182,7 @@ sub _read {
     $self->{glyph_name_index} = ();
     my $n_glyph_name_index = $self->number_of_glyphs();
     for (my $i = 0; $i < $n_glyph_name_index; $i++) {
-        $self->{glyph_name_index}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{glyph_name_index}}, $self->{_io}->read_u2be();
     }
     $self->{glyph_names} = ();
     do {
@@ -314,7 +314,7 @@ sub _read {
     $self->{name_records} = ();
     my $n_name_records = $self->num_name_records();
     for (my $i = 0; $i < $n_name_records; $i++) {
-        $self->{name_records}[$i] = Ttf::Name::NameRecord->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{name_records}}, Ttf::Name::NameRecord->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -793,7 +793,7 @@ sub _read {
     $self->{subtables} = ();
     my $n_subtables = $self->subtable_count();
     for (my $i = 0; $i < $n_subtables; $i++) {
-        $self->{subtables}[$i] = Ttf::Kern::Subtable->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{subtables}}, Ttf::Kern::Subtable->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -938,7 +938,7 @@ sub _read {
     $self->{kerning_pairs} = ();
     my $n_kerning_pairs = $self->pair_count();
     for (my $i = 0; $i < $n_kerning_pairs; $i++) {
-        $self->{kerning_pairs}[$i] = Ttf::Kern::Subtable::Format0::KerningPair->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{kerning_pairs}}, Ttf::Kern::Subtable::Format0::KerningPair->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -2453,14 +2453,14 @@ sub _read {
     $self->{end_pts_of_contours} = ();
     my $n_end_pts_of_contours = $self->_parent()->number_of_contours();
     for (my $i = 0; $i < $n_end_pts_of_contours; $i++) {
-        $self->{end_pts_of_contours}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{end_pts_of_contours}}, $self->{_io}->read_u2be();
     }
     $self->{instruction_length} = $self->{_io}->read_u2be();
     $self->{instructions} = $self->{_io}->read_bytes($self->instruction_length());
     $self->{flags} = ();
     my $n_flags = $self->point_count();
     for (my $i = 0; $i < $n_flags; $i++) {
-        $self->{flags}[$i] = Ttf::Glyf::SimpleGlyph::Flag->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{flags}}, Ttf::Glyf::SimpleGlyph::Flag->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -2881,7 +2881,7 @@ sub _read {
     $self->{tables} = ();
     my $n_tables = $self->number_of_encoding_tables();
     for (my $i = 0; $i < $n_tables; $i++) {
-        $self->{tables}[$i] = Ttf::Cmap::SubtableHeader->new($self->{_io}, $self, $self->{_root});
+        push @{$self->{tables}}, Ttf::Cmap::SubtableHeader->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -3121,7 +3121,7 @@ sub _read {
     $self->{sub_header_keys} = ();
     my $n_sub_header_keys = 256;
     for (my $i = 0; $i < $n_sub_header_keys; $i++) {
-        $self->{sub_header_keys}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{sub_header_keys}}, $self->{_io}->read_u2be();
     }
 }
 
@@ -3167,23 +3167,23 @@ sub _read {
     $self->{end_count} = ();
     my $n_end_count = $self->seg_count();
     for (my $i = 0; $i < $n_end_count; $i++) {
-        $self->{end_count}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{end_count}}, $self->{_io}->read_u2be();
     }
     $self->{reserved_pad} = $self->{_io}->read_u2be();
     $self->{start_count} = ();
     my $n_start_count = $self->seg_count();
     for (my $i = 0; $i < $n_start_count; $i++) {
-        $self->{start_count}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{start_count}}, $self->{_io}->read_u2be();
     }
     $self->{id_delta} = ();
     my $n_id_delta = $self->seg_count();
     for (my $i = 0; $i < $n_id_delta; $i++) {
-        $self->{id_delta}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{id_delta}}, $self->{_io}->read_u2be();
     }
     $self->{id_range_offset} = ();
     my $n_id_range_offset = $self->seg_count();
     for (my $i = 0; $i < $n_id_range_offset; $i++) {
-        $self->{id_range_offset}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{id_range_offset}}, $self->{_io}->read_u2be();
     }
     $self->{glyph_id_array} = ();
     while (!$self->{_io}->is_eof()) {
@@ -3283,7 +3283,7 @@ sub _read {
     $self->{glyph_id_array} = ();
     my $n_glyph_id_array = $self->entry_count();
     for (my $i = 0; $i < $n_glyph_id_array; $i++) {
-        $self->{glyph_id_array}[$i] = $self->{_io}->read_u2be();
+        push @{$self->{glyph_id_array}}, $self->{_io}->read_u2be();
     }
 }
 

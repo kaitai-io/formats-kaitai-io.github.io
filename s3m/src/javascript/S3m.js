@@ -8,7 +8,7 @@
   } else {
     root.S3m = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Scream Tracker 3 module is a tracker music file format that, as all
  * tracker music, bundles both sound samples and instructions on which
@@ -64,23 +64,23 @@ var S3m = (function() {
     this.hasCustomPan = this._io.readU1();
     this.reserved2 = this._io.readBytes(8);
     this.ofsSpecial = this._io.readU2le();
-    this.channels = new Array(32);
+    this.channels = [];
     for (var i = 0; i < 32; i++) {
-      this.channels[i] = new Channel(this._io, this, this._root);
+      this.channels.push(new Channel(this._io, this, this._root));
     }
     this.orders = this._io.readBytes(this.numOrders);
-    this.instruments = new Array(this.numInstruments);
+    this.instruments = [];
     for (var i = 0; i < this.numInstruments; i++) {
-      this.instruments[i] = new InstrumentPtr(this._io, this, this._root);
+      this.instruments.push(new InstrumentPtr(this._io, this, this._root));
     }
-    this.patterns = new Array(this.numPatterns);
+    this.patterns = [];
     for (var i = 0; i < this.numPatterns; i++) {
-      this.patterns[i] = new PatternPtr(this._io, this, this._root);
+      this.patterns.push(new PatternPtr(this._io, this, this._root));
     }
     if (this.hasCustomPan == 252) {
-      this.channelPans = new Array(32);
+      this.channelPans = [];
       for (var i = 0; i < 32; i++) {
-        this.channelPans[i] = new ChannelPan(this._io, this, this._root);
+        this.channelPans.push(new ChannelPan(this._io, this, this._root));
       }
     }
   }

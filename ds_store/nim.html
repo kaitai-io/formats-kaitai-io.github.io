@@ -186,6 +186,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="go.html" title="macOS '.DS_Store' format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="macOS '.DS_Store' format parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -265,8 +270,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">buddyAllocatorHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorHeader</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawBuddyAllocatorBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">buddyAllocatorBodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody</span>
-    <span class="p">`</span><span class="n">blockAddressMaskInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">buddyAllocatorBodyInst</span><span class="p">`:</span> <span class="n">DsStore_BuddyAllocatorBody</span>
+    <span class="p">`</span><span class="n">buddyAllocatorBodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">blockAddressMaskInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">blockAddressMaskInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DsStore_BuddyAllocatorHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">ofsBookkeepingInfoBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -282,14 +289,19 @@ section#format-index .row {
     <span class="p">`</span><span class="n">directoryEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DsStore_BuddyAllocatorBody_DirectoryEntry</span><span class="o">]</span>
     <span class="p">`</span><span class="n">freeLists</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DsStore_BuddyAllocatorBody_FreeList</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore</span>
-    <span class="p">`</span><span class="n">numBlockAddressesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">numFreeListsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">directoriesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DsStore_MasterBlockRef</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">numBlockAddressesInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numBlockAddressesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">numFreeListsInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">numFreeListsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">directoriesInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DsStore_MasterBlockRef</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">directoriesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DsStore_BuddyAllocatorBody_BlockDescriptor</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">addressRaw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody</span>
-    <span class="p">`</span><span class="n">offsetInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">sizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">offsetInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">offsetInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">sizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">sizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DsStore_BuddyAllocatorBody_DirectoryEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">lenName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
@@ -303,7 +315,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">idx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody</span>
     <span class="p">`</span><span class="n">rawMasterBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">masterBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_MasterBlockRef_MasterBlock</span>
+    <span class="p">`</span><span class="n">masterBlockInst</span><span class="p">`:</span> <span class="n">DsStore_MasterBlockRef_MasterBlock</span>
+    <span class="p">`</span><span class="n">masterBlockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DsStore_MasterBlockRef_MasterBlock</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">blockId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">numInternalNodes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -311,19 +324,22 @@ section#format-index .row {
     <span class="p">`</span><span class="n">numNodes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">unnamed4</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_MasterBlockRef</span>
-    <span class="p">`</span><span class="n">rootBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_Block</span>
+    <span class="p">`</span><span class="n">rootBlockInst</span><span class="p">`:</span> <span class="n">DsStore_Block</span>
+    <span class="p">`</span><span class="n">rootBlockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DsStore_Block</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">mode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">counter</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DsStore_Block_BlockData</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">rightmostBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_Block</span>
+    <span class="p">`</span><span class="n">rightmostBlockInst</span><span class="p">`:</span> <span class="n">DsStore_Block</span>
+    <span class="p">`</span><span class="n">rightmostBlockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DsStore_Block_BlockData</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">blockId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">record</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_Block_BlockData_Record</span>
     <span class="p">`</span><span class="n">mode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_Block</span>
-    <span class="p">`</span><span class="n">blockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_Block</span>
+    <span class="p">`</span><span class="n">blockInst</span><span class="p">`:</span> <span class="n">DsStore_Block</span>
+    <span class="p">`</span><span class="n">blockInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">DsStore_Block_BlockData_Record</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">filename</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_Block_BlockData_Record_Ustr</span>
     <span class="p">`</span><span class="n">structureType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DsStore_Block_BlockData_Record_FourCharCode</span>
@@ -392,7 +408,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorHeader</span> <span class="o">=</span> <span class="n">buddyAllocatorHeaderExpr</span>
 
 <span class="k">proc </span><span class="nf">buddyAllocatorBody</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore</span><span class="p">):</span> <span class="n">DsStore_BuddyAllocatorBody</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorHeader</span><span class="p">.</span><span class="n">ofsBookkeepingInfoBlock</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)))</span>
@@ -402,8 +418,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">buddyAllocatorBodyInstExpr</span> <span class="o">=</span> <span class="n">DsStore_BuddyAllocatorBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBuddyAllocatorBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInst</span> <span class="o">=</span> <span class="n">buddyAllocatorBodyInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">buddyAllocatorBodyInst</span>
 
 <span class="k">proc </span><span class="nf">blockAddressMask</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
 
@@ -412,12 +428,12 @@ section#format-index .row {
 <span class="k">of</span> <span class="n">the</span> <span class="n">B</span><span class="o">-</span><span class="n">tree</span> <span class="kn">from</span> <span class="n">the</span> <span class="k">block</span> <span class="n">addresses</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInst</span>
   <span class="k">let</span> <span class="n">blockAddressMaskInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInst</span> <span class="o">=</span> <span class="n">blockAddressMaskInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockAddressMaskInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DsStore], filename: string): DsStore =</span>
   <span class="n">DsStore</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -503,34 +519,34 @@ section#format-index .row {
     <span class="n">this</span><span class="p">.</span><span class="n">freeLists</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">numBlockAddresses</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInst</span>
   <span class="k">let</span> <span class="n">numBlockAddressesInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInst</span> <span class="o">=</span> <span class="n">numBlockAddressesInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlockAddressesInst</span>
 
 <span class="k">proc </span><span class="nf">numFreeLists</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInst</span>
   <span class="k">let</span> <span class="n">numFreeListsInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInst</span> <span class="o">=</span> <span class="n">numFreeListsInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numFreeListsInst</span>
 
 <span class="k">proc </span><span class="nf">directories</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DsStore_MasterBlockRef</span><span class="o">]</span> <span class="o">=</span> 
 
   <span class="sd">##[</span>
   <span class="n">Master</span> <span class="n">blocks</span> <span class="k">of</span> <span class="n">the</span> <span class="n">different</span> <span class="n">B</span><span class="o">-</span><span class="n">trees</span><span class="p">.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">directoriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">directoriesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">directoriesInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">DsStore</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numDirectories</span><span class="p">):</span>
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">DsStore_MasterBlockRef</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">directoriesInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">directoriesInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">directoriesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">directoriesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">directoriesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DsStore_BuddyAllocatorBody], filename: string): DsStore_BuddyAllocatorBody =</span>
   <span class="n">DsStore_BuddyAllocatorBody</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -547,20 +563,20 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">addressRaw</span> <span class="o">=</span> <span class="n">addressRawExpr</span>
 
 <span class="k">proc </span><span class="nf">offset</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody_BlockDescriptor</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span>
   <span class="k">let</span> <span class="n">offsetInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">addressRaw</span> <span class="ow">and</span> <span class="ow">not</span><span class="p">(</span><span class="n">DsStore</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">blockAddressMask</span><span class="p">))</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span> <span class="o">=</span> <span class="n">offsetInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">offsetInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">offsetInst</span>
 
 <span class="k">proc </span><span class="nf">size</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_BuddyAllocatorBody_BlockDescriptor</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span>
   <span class="k">let</span> <span class="n">sizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="mi">1</span> <span class="ow">shl</span> <span class="n">this</span><span class="p">.</span><span class="n">addressRaw</span><span class="p">)</span> <span class="ow">and</span> <span class="n">DsStore</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">blockAddressMask</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span> <span class="o">=</span> <span class="n">sizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">sizeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DsStore_BuddyAllocatorBody_BlockDescriptor], filename: string): DsStore_BuddyAllocatorBody_BlockDescriptor =</span>
   <span class="n">DsStore_BuddyAllocatorBody_BlockDescriptor</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -612,7 +628,7 @@ section#format-index .row {
 
 
 <span class="k">proc </span><span class="nf">masterBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_MasterBlockRef</span><span class="p">):</span> <span class="n">DsStore_MasterBlockRef_MasterBlock</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInst</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">blockAddresses</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">directoryEntries</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">idx</span><span class="o">]</span><span class="p">.</span><span class="n">blockId</span><span class="o">]</span><span class="p">.</span><span class="n">offset</span><span class="p">))</span>
@@ -622,8 +638,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">masterBlockInstExpr</span> <span class="o">=</span> <span class="n">DsStore_MasterBlockRef_MasterBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMasterBlockInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInst</span> <span class="o">=</span> <span class="n">masterBlockInstExpr</span>
   <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">masterBlockInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DsStore_MasterBlockRef], filename: string): DsStore_MasterBlockRef =</span>
   <span class="n">DsStore_MasterBlockRef</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -668,7 +684,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">unnamed4</span> <span class="o">=</span> <span class="n">unnamed4Expr</span>
 
 <span class="k">proc </span><span class="nf">rootBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_MasterBlockRef_MasterBlock</span><span class="p">):</span> <span class="n">DsStore_Block</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInst</span>
   <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">DsStore</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
   <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
@@ -676,8 +692,8 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">rootBlockInstExpr</span> <span class="o">=</span> <span class="n">DsStore_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInst</span> <span class="o">=</span> <span class="n">rootBlockInstExpr</span>
   <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rootBlockInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DsStore_MasterBlockRef_MasterBlock], filename: string): DsStore_MasterBlockRef_MasterBlock =</span>
   <span class="n">DsStore_MasterBlockRef_MasterBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -711,7 +727,7 @@ section#format-index .row {
   <span class="sd">##[</span>
   <span class="n">Rightmost</span> <span class="n">child</span> <span class="k">block</span> <span class="n">pointer</span><span class="p">.</span>
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">DsStore</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -720,8 +736,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">rightmostBlockInstExpr</span> <span class="o">=</span> <span class="n">DsStore_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInst</span> <span class="o">=</span> <span class="n">rightmostBlockInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">rightmostBlockInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DsStore_Block], filename: string): DsStore_Block =</span>
   <span class="n">DsStore_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -743,7 +759,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">record</span> <span class="o">=</span> <span class="n">recordExpr</span>
 
 <span class="k">proc </span><span class="nf">block</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DsStore_Block_BlockData</span><span class="p">):</span> <span class="n">DsStore_Block</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">DsStore</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
@@ -752,8 +768,8 @@ section#format-index .row {
     <span class="k">let</span> <span class="n">blockInstExpr</span> <span class="o">=</span> <span class="n">DsStore_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span> <span class="o">=</span> <span class="n">blockInstExpr</span>
     <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DsStore_Block_BlockData], filename: string): DsStore_Block_BlockData =</span>
   <span class="n">DsStore_Block_BlockData</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

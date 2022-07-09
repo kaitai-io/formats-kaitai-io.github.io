@@ -221,7 +221,7 @@ public class AndroidBootldrHuawei extends KaitaiStruct {
             if (this.body != null)
                 return this.body;
             if (isUsed()) {
-                KaitaiStream io = _root._io();
+                KaitaiStream io = _root()._io();
                 long _pos = io.pos();
                 io.seek(ofsBody());
                 this.body = io.readBytes(lenBody());

@@ -776,7 +776,7 @@ namespace Kaitai
             private void _read()
             {
                 _dwCuePoints = m_io.ReadU4le();
-                _cuePoints = new List<CuePointType>((int) (DwCuePoints));
+                _cuePoints = new List<CuePointType>();
                 for (var i = 0; i < DwCuePoints; i++)
                 {
                     _cuePoints.Add(new CuePointType(m_io, this, m_root));

@@ -290,8 +290,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl</span>
-    <span class="p">`</span><span class="n">versionInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">skinSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">versionInst</span><span class="p">`:</span> <span class="kt">int8</span>
+    <span class="p">`</span><span class="n">versionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">skinSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">skinSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">QuakeMdl_MdlSkin</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">group</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">singleTextureData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -306,7 +308,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">time</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">float32</span><span class="o">]</span>
     <span class="p">`</span><span class="n">frames</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">QuakeMdl_MdlSimpleFrame</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl</span>
-    <span class="p">`</span><span class="n">numSimpleFramesInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
+    <span class="p">`</span><span class="n">numSimpleFramesInst</span><span class="p">`:</span> <span class="kt">int32</span>
+    <span class="p">`</span><span class="n">numSimpleFramesInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">QuakeMdl_MdlSimpleFrame</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">bboxMin</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl_MdlVertex</span>
     <span class="p">`</span><span class="n">bboxMax</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl_MdlVertex</span>
@@ -438,20 +441,20 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizeExpr</span>
 
 <span class="k">proc </span><span class="nf">version</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlHeader</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
   <span class="k">let</span> <span class="n">versionInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span> <span class="o">=</span> <span class="n">versionInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">versionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
 
 <span class="k">proc </span><span class="nf">skinSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInst</span>
   <span class="k">let</span> <span class="n">skinSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">skinWidth</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">skinHeight</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInst</span> <span class="o">=</span> <span class="n">skinSizeInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlHeader], filename: string): QuakeMdl_MdlHeader =</span>
   <span class="n">QuakeMdl_MdlHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -509,12 +512,12 @@ section#format-index .row {
     <span class="n">this</span><span class="p">.</span><span class="n">frames</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">numSimpleFrames</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlFrame</span><span class="p">):</span> <span class="kt">int32</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInst</span>
   <span class="k">let</span> <span class="n">numSimpleFramesInstExpr</span> <span class="o">=</span> <span class="kt">int32</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">1</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInst</span> <span class="o">=</span> <span class="n">numSimpleFramesInstExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInst</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numSimpleFramesInst</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlFrame], filename: string): QuakeMdl_MdlFrame =</span>
   <span class="n">QuakeMdl_MdlFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>

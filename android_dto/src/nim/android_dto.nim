@@ -23,7 +23,8 @@ type
     `rev`*: uint32
     `custom`*: seq[uint32]
     `parent`*: AndroidDto
-    `bodyInst`*: seq[byte]
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[AndroidDto], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidDto
 proc read*(_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader
@@ -162,7 +163,7 @@ proc body(this: AndroidDto_DtTableEntry): seq[byte] =
   ##[
   DTB/DTBO file
   ]##
-  if this.bodyInst.len != 0:
+  if this.bodyInstFlag:
     return this.bodyInst
   let io = AndroidDto(this.root).io
   let pos = io.pos()
@@ -170,8 +171,8 @@ proc body(this: AndroidDto_DtTableEntry): seq[byte] =
   let bodyInstExpr = io.readBytes(int(this.dtSize))
   this.bodyInst = bodyInstExpr
   io.seek(pos)
-  if this.bodyInst.len != 0:
-    return this.bodyInst
+  this.bodyInstFlag = true
+  return this.bodyInst
 
 proc fromFile*(_: typedesc[AndroidDto_DtTableEntry], filename: string): AndroidDto_DtTableEntry =
   AndroidDto_DtTableEntry.read(newKaitaiFileStream(filename), nil, nil)

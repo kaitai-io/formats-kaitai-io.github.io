@@ -46,7 +46,7 @@ sub _read {
     $self->{argv} = ();
     my $n_argv = $self->argc();
     for (my $i = 0; $i < $n_argv; $i++) {
-        $self->{argv}[$i] = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(10, 0, 1, 1));
+        push @{$self->{argv}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(10, 0, 1, 1));
     }
 }
 

@@ -281,7 +281,7 @@ namespace Kaitai
             private void _read()
             {
                 _size = m_io.ReadU4le();
-                _list = new List<MapItem>((int) (Size));
+                _list = new List<MapItem>();
                 for (var i = 0; i < Size; i++)
                 {
                     _list.Add(new MapItem(m_io, this, m_root));
@@ -745,22 +745,22 @@ namespace Kaitai
                 _instanceFieldsSize = new VlqBase128Le(m_io);
                 _directMethodsSize = new VlqBase128Le(m_io);
                 _virtualMethodsSize = new VlqBase128Le(m_io);
-                _staticFields = new List<EncodedField>((int) (StaticFieldsSize.Value));
+                _staticFields = new List<EncodedField>();
                 for (var i = 0; i < StaticFieldsSize.Value; i++)
                 {
                     _staticFields.Add(new EncodedField(m_io, this, m_root));
                 }
-                _instanceFields = new List<EncodedField>((int) (InstanceFieldsSize.Value));
+                _instanceFields = new List<EncodedField>();
                 for (var i = 0; i < InstanceFieldsSize.Value; i++)
                 {
                     _instanceFields.Add(new EncodedField(m_io, this, m_root));
                 }
-                _directMethods = new List<EncodedMethod>((int) (DirectMethodsSize.Value));
+                _directMethods = new List<EncodedMethod>();
                 for (var i = 0; i < DirectMethodsSize.Value; i++)
                 {
                     _directMethods.Add(new EncodedMethod(m_io, this, m_root));
                 }
-                _virtualMethods = new List<EncodedMethod>((int) (VirtualMethodsSize.Value));
+                _virtualMethods = new List<EncodedMethod>();
                 for (var i = 0; i < VirtualMethodsSize.Value; i++)
                 {
                     _virtualMethods.Add(new EncodedMethod(m_io, this, m_root));
@@ -949,7 +949,7 @@ namespace Kaitai
             {
                 _typeIdx = new VlqBase128Le(m_io);
                 _size = new VlqBase128Le(m_io);
-                _elements = new List<AnnotationElement>((int) (Size.Value));
+                _elements = new List<AnnotationElement>();
                 for (var i = 0; i < Size.Value; i++)
                 {
                     _elements.Add(new AnnotationElement(m_io, this, m_root));
@@ -1172,7 +1172,7 @@ namespace Kaitai
             private void _read()
             {
                 _size = m_io.ReadU4le();
-                _list = new List<TypeItem>((int) (Size));
+                _list = new List<TypeItem>();
                 for (var i = 0; i < Size; i++)
                 {
                     _list.Add(new TypeItem(m_io, this, m_root));
@@ -1512,7 +1512,7 @@ namespace Kaitai
             private void _read()
             {
                 _size = new VlqBase128Le(m_io);
-                _values = new List<EncodedValue>((int) (Size.Value));
+                _values = new List<EncodedValue>();
                 for (var i = 0; i < Size.Value; i++)
                 {
                     _values.Add(new EncodedValue(m_io, this, m_root));
@@ -1547,7 +1547,7 @@ namespace Kaitai
                     return _stringIds;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.StringIdsOff);
-                _stringIds = new List<StringIdItem>((int) (Header.StringIdsSize));
+                _stringIds = new List<StringIdItem>();
                 for (var i = 0; i < Header.StringIdsSize; i++)
                 {
                     _stringIds.Add(new StringIdItem(m_io, this, m_root));
@@ -1580,7 +1580,7 @@ namespace Kaitai
                     return _methodIds;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.MethodIdsOff);
-                _methodIds = new List<MethodIdItem>((int) (Header.MethodIdsSize));
+                _methodIds = new List<MethodIdItem>();
                 for (var i = 0; i < Header.MethodIdsSize; i++)
                 {
                     _methodIds.Add(new MethodIdItem(m_io, this, m_root));
@@ -1651,7 +1651,7 @@ namespace Kaitai
                     return _classDefs;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.ClassDefsOff);
-                _classDefs = new List<ClassDefItem>((int) (Header.ClassDefsSize));
+                _classDefs = new List<ClassDefItem>();
                 for (var i = 0; i < Header.ClassDefsSize; i++)
                 {
                     _classDefs.Add(new ClassDefItem(m_io, this, m_root));
@@ -1703,7 +1703,7 @@ namespace Kaitai
                     return _typeIds;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.TypeIdsOff);
-                _typeIds = new List<TypeIdItem>((int) (Header.TypeIdsSize));
+                _typeIds = new List<TypeIdItem>();
                 for (var i = 0; i < Header.TypeIdsSize; i++)
                 {
                     _typeIds.Add(new TypeIdItem(m_io, this, m_root));
@@ -1733,7 +1733,7 @@ namespace Kaitai
                     return _protoIds;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.ProtoIdsOff);
-                _protoIds = new List<ProtoIdItem>((int) (Header.ProtoIdsSize));
+                _protoIds = new List<ProtoIdItem>();
                 for (var i = 0; i < Header.ProtoIdsSize; i++)
                 {
                     _protoIds.Add(new ProtoIdItem(m_io, this, m_root));
@@ -1765,7 +1765,7 @@ namespace Kaitai
                     return _fieldIds;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.FieldIdsOff);
-                _fieldIds = new List<FieldIdItem>((int) (Header.FieldIdsSize));
+                _fieldIds = new List<FieldIdItem>();
                 for (var i = 0; i < Header.FieldIdsSize; i++)
                 {
                     _fieldIds.Add(new FieldIdItem(m_io, this, m_root));

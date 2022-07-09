@@ -8,7 +8,7 @@
   } else {
     root.AndroidBootldrAsus = factory(root.KaitaiStream);
   }
-}(this, function (KaitaiStream) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * A bootloader image which only seems to have been used on a few ASUS
  * devices. The encoding is ASCII, because the `releasetools.py` script
@@ -38,9 +38,9 @@ var AndroidBootldrAsus = (function() {
     }
     this.reserved1 = this._io.readU2le();
     this.reserved2 = this._io.readU4le();
-    this.images = new Array(3);
+    this.images = [];
     for (var i = 0; i < 3; i++) {
-      this.images[i] = new Image(this._io, this, this._root);
+      this.images.push(new Image(this._io, this, this._root));
     }
   }
 
