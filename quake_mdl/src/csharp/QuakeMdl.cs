@@ -4,6 +4,31 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// Quake 1 model format is used to store 3D models completely with
+    /// textures and animations used in the game. Quake 1 engine
+    /// (retroactively named &quot;idtech2&quot;) is a popular 3D engine first used
+    /// for Quake game by id Software in 1996.
+    /// 
+    /// Model is constructed traditionally from vertices in 3D space, faces
+    /// which connect vertices, textures (&quot;skins&quot;, i.e. 2D bitmaps) and
+    /// texture UV mapping information. As opposed to more modern,
+    /// bones-based animation formats, Quake model was animated by changing
+    /// locations of all vertices it included in 3D space, frame by frame.
+    /// 
+    /// File format stores:
+    /// 
+    /// * &quot;Skins&quot; — effectively 2D bitmaps which will be used as a
+    ///   texture. Every model can have multiple skins — e.g. these can be
+    ///   switched to depict various levels of damage to the monsters.
+    /// * &quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to
+    ///   skin coordinates.
+    /// * &quot;Triangles&quot; — triangular faces connecting 3D vertices.
+    /// * &quot;Frames&quot; — locations of vertices in 3D space; can include more
+    ///   than one frame, thus allowing representation of different frames
+    ///   for animation purposes.
+    /// </summary>
     public partial class QuakeMdl : KaitaiStruct
     {
         public static QuakeMdl FromFile(string fileName)

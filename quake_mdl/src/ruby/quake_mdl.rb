@@ -6,6 +6,30 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# Quake 1 model format is used to store 3D models completely with
+# textures and animations used in the game. Quake 1 engine
+# (retroactively named "idtech2") is a popular 3D engine first used
+# for Quake game by id Software in 1996.
+# 
+# Model is constructed traditionally from vertices in 3D space, faces
+# which connect vertices, textures ("skins", i.e. 2D bitmaps) and
+# texture UV mapping information. As opposed to more modern,
+# bones-based animation formats, Quake model was animated by changing
+# locations of all vertices it included in 3D space, frame by frame.
+# 
+# File format stores:
+# 
+# * "Skins" — effectively 2D bitmaps which will be used as a
+#   texture. Every model can have multiple skins — e.g. these can be
+#   switched to depict various levels of damage to the monsters.
+# * "Texture coordinates" — UV coordinates, mapping 3D vertices to
+#   skin coordinates.
+# * "Triangles" — triangular faces connecting 3D vertices.
+# * "Frames" — locations of vertices in 3D space; can include more
+#   than one frame, thus allowing representation of different frames
+#   for animation purposes.
 class QuakeMdl < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
