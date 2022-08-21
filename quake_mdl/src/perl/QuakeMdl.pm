@@ -212,7 +212,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{ident} = $self->{_io}->read_bytes(4);
-    $self->{version_must_be_6} = $self->{_io}->read_bytes(4);
+    $self->{version} = $self->{_io}->read_s4le();
     $self->{scale} = QuakeMdl::Vec3->new($self->{_io}, $self, $self->{_root});
     $self->{origin} = QuakeMdl::Vec3->new($self->{_io}, $self, $self->{_root});
     $self->{radius} = $self->{_io}->read_f4le();
@@ -228,13 +228,6 @@ sub _read {
     $self->{size} = $self->{_io}->read_f4le();
 }
 
-sub version {
-    my ($self) = @_;
-    return $self->{version} if ($self->{version});
-    $self->{version} = 6;
-    return $self->{version};
-}
-
 sub skin_size {
     my ($self) = @_;
     return $self->{skin_size} if ($self->{skin_size});
@@ -247,9 +240,9 @@ sub ident {
     return $self->{ident};
 }
 
-sub version_must_be_6 {
+sub version {
     my ($self) = @_;
-    return $self->{version_must_be_6};
+    return $self->{version};
 }
 
 sub scale {

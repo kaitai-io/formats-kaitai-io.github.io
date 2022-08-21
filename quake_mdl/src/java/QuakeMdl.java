@@ -25,13 +25,26 @@ import java.nio.charset.Charset;
  * 
  * * "Skins" — effectively 2D bitmaps which will be used as a
  *   texture. Every model can have multiple skins — e.g. these can be
- *   switched to depict various levels of damage to the monsters.
+ *   switched to depict various levels of damage to the
+ *   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+ *   palette, subject to lighting and gamma adjustment when rendering
+ *   in the game using colormap technique.
  * * "Texture coordinates" — UV coordinates, mapping 3D vertices to
  *   skin coordinates.
  * * "Triangles" — triangular faces connecting 3D vertices.
  * * "Frames" — locations of vertices in 3D space; can include more
  *   than one frame, thus allowing representation of different frames
  *   for animation purposes.
+ * 
+ * Originally, 3D geometry for models for Quake was designed in [Alias
+ * PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+ * precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+ * 3D-related part of Quake model format followed closely Alias TRI
+ * format, and Quake development utilities included a converter from Alias
+ * TRI (`modelgen`).
+ * 
+ * Skins (textures) where prepared as LBM bitmaps with the help from
+ * `texmap` utility in the same development utilities toolkit.
  */
 public class QuakeMdl extends KaitaiStruct {
     public static QuakeMdl fromFile(String fileName) throws IOException {
@@ -106,6 +119,11 @@ public class QuakeMdl extends KaitaiStruct {
         public QuakeMdl _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+     * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+     */
     public static class MdlTexcoord extends KaitaiStruct {
         public static MdlTexcoord fromFile(String fileName) throws IOException {
             return new MdlTexcoord(new ByteBufferKaitaiStream(fileName));
@@ -141,6 +159,11 @@ public class QuakeMdl extends KaitaiStruct {
         public QuakeMdl _root() { return _root; }
         public QuakeMdl _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75">Source</a>
+     * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0">Source</a>
+     */
     public static class MdlHeader extends KaitaiStruct {
         public static MdlHeader fromFile(String fileName) throws IOException {
             return new MdlHeader(new ByteBufferKaitaiStream(fileName));
@@ -165,9 +188,9 @@ public class QuakeMdl extends KaitaiStruct {
             if (!(Arrays.equals(ident(), new byte[] { 73, 68, 80, 79 }))) {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 68, 80, 79 }, ident(), _io(), "/types/mdl_header/seq/0");
             }
-            this.versionMustBe6 = this._io.readBytes(4);
-            if (!(Arrays.equals(versionMustBe6(), new byte[] { 6, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 6, 0, 0, 0 }, versionMustBe6(), _io(), "/types/mdl_header/seq/1");
+            this.version = this._io.readS4le();
+            if (!(version() == 6)) {
+                throw new KaitaiStream.ValidationNotEqualError(6, version(), _io(), "/types/mdl_header/seq/1");
             }
             this.scale = new Vec3(this._io, this, _root);
             this.origin = new Vec3(this._io, this, _root);
@@ -183,15 +206,11 @@ public class QuakeMdl extends KaitaiStruct {
             this.flags = this._io.readS4le();
             this.size = this._io.readF4le();
         }
-        private Byte version;
-        public Byte version() {
-            if (this.version != null)
-                return this.version;
-            byte _tmp = (byte) (6);
-            this.version = _tmp;
-            return this.version;
-        }
         private Integer skinSize;
+
+        /**
+         * Skin size in pixels.
+         */
         public Integer skinSize() {
             if (this.skinSize != null)
                 return this.skinSize;
@@ -200,7 +219,7 @@ public class QuakeMdl extends KaitaiStruct {
             return this.skinSize;
         }
         private byte[] ident;
-        private byte[] versionMustBe6;
+        private int version;
         private Vec3 scale;
         private Vec3 origin;
         private float radius;
@@ -216,17 +235,55 @@ public class QuakeMdl extends KaitaiStruct {
         private float size;
         private QuakeMdl _root;
         private QuakeMdl _parent;
+
+        /**
+         * Magic signature bytes that every Quake model must
+         * have. "IDPO" is short for "IDPOLYHEADER".
+         * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133">Source</a>
+         */
         public byte[] ident() { return ident; }
-        public byte[] versionMustBe6() { return versionMustBe6; }
+        public int version() { return version; }
+
+        /**
+         * Global scaling factors in 3 dimensions for whole model. When
+         * represented in 3D world, this model local coordinates will
+         * be multiplied by these factors.
+         */
         public Vec3 scale() { return scale; }
         public Vec3 origin() { return origin; }
         public float radius() { return radius; }
         public Vec3 eyePosition() { return eyePosition; }
+
+        /**
+         * Number of skins (=texture bitmaps) included in this model.
+         */
         public int numSkins() { return numSkins; }
+
+        /**
+         * Width (U coordinate max) of every skin (=texture) in pixels.
+         */
         public int skinWidth() { return skinWidth; }
+
+        /**
+         * Height (V coordinate max) of every skin (=texture) in
+         * pixels.
+         */
         public int skinHeight() { return skinHeight; }
+
+        /**
+         * Number of vertices in this model. Note that this is constant
+         * for all the animation frames and all textures.
+         */
         public int numVerts() { return numVerts; }
+
+        /**
+         * Number of triangles (=triangular faces) in this model.
+         */
         public int numTris() { return numTris; }
+
+        /**
+         * Number of animation frames included in this model.
+         */
         public int numFrames() { return numFrames; }
         public int synctype() { return synctype; }
         public int flags() { return flags; }
@@ -391,6 +448,13 @@ public class QuakeMdl extends KaitaiStruct {
         public QuakeMdl _root() { return _root; }
         public QuakeMdl.MdlFrame _parent() { return _parent; }
     }
+
+    /**
+     * Represents a triangular face, connecting 3 vertices, referenced
+     * by their indexes.
+     * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88">Source</a>
+     * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3">Source</a>
+     */
     public static class MdlTriangle extends KaitaiStruct {
         public static MdlTriangle fromFile(String fileName) throws IOException {
             return new MdlTriangle(new ByteBufferKaitaiStream(fileName));
@@ -426,6 +490,12 @@ public class QuakeMdl extends KaitaiStruct {
         public QuakeMdl _root() { return _root; }
         public QuakeMdl _parent() { return _parent; }
     }
+
+    /**
+     * Basic 3D vector (x, y, z) using single-precision floating point
+     * coordnates. Can be used to specify a point in 3D space,
+     * direction, scaling factor, etc.
+     */
     public static class Vec3 extends KaitaiStruct {
         public static Vec3 fromFile(String fileName) throws IOException {
             return new Vec3(new ByteBufferKaitaiStream(fileName));

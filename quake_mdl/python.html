@@ -117,7 +117,10 @@ locations of all vertices it included in 3D space, frame by frame.</p>
 <ul>
 <li>&quot;Skins&quot; — effectively 2D bitmaps which will be used as a
 texture. Every model can have multiple skins — e.g. these can be
-switched to depict various levels of damage to the monsters.</li>
+switched to depict various levels of damage to the
+monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+palette, subject to lighting and gamma adjustment when rendering
+in the game using colormap technique.</li>
 <li>&quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to
 skin coordinates.</li>
 <li>&quot;Triangles&quot; — triangular faces connecting 3D vertices.</li>
@@ -125,6 +128,14 @@ skin coordinates.</li>
 than one frame, thus allowing representation of different frames
 for animation purposes.</li>
 </ul>
+<p>Originally, 3D geometry for models for Quake was designed in <a href="https://en.wikipedia.org/wiki/PowerAnimator">Alias
+PowerAnimator</a>,
+precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+3D-related part of Quake model format followed closely Alias TRI
+format, and Quake development utilities included a converter from Alias
+TRI (<code>modelgen</code>).</p>
+<p>Skins (textures) where prepared as LBM bitmaps with the help from
+<code>texmap</code> utility in the same development utilities toolkit.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -156,7 +167,7 @@ for animation purposes.</li>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.1
                     </div>
                     
                     
@@ -343,13 +354,26 @@ for animation purposes.</li>
 <span class="sd">    </span>
 <span class="sd">    * &quot;Skins&quot; — effectively 2D bitmaps which will be used as a</span>
 <span class="sd">      texture. Every model can have multiple skins — e.g. these can be</span>
-<span class="sd">      switched to depict various levels of damage to the monsters.</span>
+<span class="sd">      switched to depict various levels of damage to the</span>
+<span class="sd">      monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake</span>
+<span class="sd">      palette, subject to lighting and gamma adjustment when rendering</span>
+<span class="sd">      in the game using colormap technique.</span>
 <span class="sd">    * &quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to</span>
 <span class="sd">      skin coordinates.</span>
 <span class="sd">    * &quot;Triangles&quot; — triangular faces connecting 3D vertices.</span>
 <span class="sd">    * &quot;Frames&quot; — locations of vertices in 3D space; can include more</span>
 <span class="sd">      than one frame, thus allowing representation of different frames</span>
 <span class="sd">      for animation purposes.</span>
+<span class="sd">    </span>
+<span class="sd">    Originally, 3D geometry for models for Quake was designed in [Alias</span>
+<span class="sd">    PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),</span>
+<span class="sd">    precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,</span>
+<span class="sd">    3D-related part of Quake model format followed closely Alias TRI</span>
+<span class="sd">    format, and Quake development utilities included a converter from Alias</span>
+<span class="sd">    TRI (`modelgen`).</span>
+<span class="sd">    </span>
+<span class="sd">    Skins (textures) where prepared as LBM bitmaps with the help from</span>
+<span class="sd">    `texmap` utility in the same development utilities toolkit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
@@ -392,6 +416,14 @@ for animation purposes.</li>
 
 
     <span class="k">class</span> <span class="nc">MdlTexcoord</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -405,6 +437,14 @@ for animation purposes.</li>
 
 
     <span class="k">class</span> <span class="nc">MdlHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -415,9 +455,9 @@ for animation purposes.</li>
             <span class="bp">self</span><span class="o">.</span><span class="n">ident</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ident</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x49\x44\x50\x4F</span><span class="s2">&quot;</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x49\x44\x50\x4F</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ident</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/mdl_header/seq/0&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">version_must_be_6</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_must_be_6</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x06\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x06\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_must_be_6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/mdl_header/seq/1&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/mdl_header/seq/1&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">QuakeMdl</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">QuakeMdl</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
@@ -433,15 +473,9 @@ for animation purposes.</li>
             <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
 
         <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span> <span class="o">=</span> <span class="mi">6</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">skin_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Skin size in pixels.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_skin_size&#39;</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_skin_size</span>
 
@@ -531,6 +565,16 @@ for animation purposes.</li>
 
 
     <span class="k">class</span> <span class="nc">MdlTriangle</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Represents a triangular face, connecting 3 vertices, referenced</span>
+<span class="sd">        by their indexes.</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -546,6 +590,10 @@ for animation purposes.</li>
 
 
     <span class="k">class</span> <span class="nc">Vec3</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Basic 3D vector (x, y, z) using single-precision floating point</span>
+<span class="sd">        coordnates. Can be used to specify a point in 3D space,</span>
+<span class="sd">        direction, scaling factor, etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>

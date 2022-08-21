@@ -21,13 +21,26 @@ namespace Kaitai
     /// 
     /// * &quot;Skins&quot; — effectively 2D bitmaps which will be used as a
     ///   texture. Every model can have multiple skins — e.g. these can be
-    ///   switched to depict various levels of damage to the monsters.
+    ///   switched to depict various levels of damage to the
+    ///   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+    ///   palette, subject to lighting and gamma adjustment when rendering
+    ///   in the game using colormap technique.
     /// * &quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to
     ///   skin coordinates.
     /// * &quot;Triangles&quot; — triangular faces connecting 3D vertices.
     /// * &quot;Frames&quot; — locations of vertices in 3D space; can include more
     ///   than one frame, thus allowing representation of different frames
     ///   for animation purposes.
+    /// 
+    /// Originally, 3D geometry for models for Quake was designed in [Alias
+    /// PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+    /// precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+    /// 3D-related part of Quake model format followed closely Alias TRI
+    /// format, and Quake development utilities included a converter from Alias
+    /// TRI (`modelgen`).
+    /// 
+    /// Skins (textures) where prepared as LBM bitmaps with the help from
+    /// `texmap` utility in the same development utilities toolkit.
     /// </summary>
     public partial class QuakeMdl : KaitaiStruct
     {
@@ -97,6 +110,13 @@ namespace Kaitai
             public QuakeMdl M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+        /// </remarks>
         public partial class MdlTexcoord : KaitaiStruct
         {
             public static MdlTexcoord FromFile(string fileName)
@@ -127,6 +147,13 @@ namespace Kaitai
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0">Source</a>
+        /// </remarks>
         public partial class MdlHeader : KaitaiStruct
         {
             public static MdlHeader FromFile(string fileName)
@@ -138,7 +165,6 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_version = false;
                 f_skinSize = false;
                 _read();
             }
@@ -149,10 +175,10 @@ namespace Kaitai
                 {
                     throw new ValidationNotEqualError(new byte[] { 73, 68, 80, 79 }, Ident, M_Io, "/types/mdl_header/seq/0");
                 }
-                _versionMustBe6 = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(VersionMustBe6, new byte[] { 6, 0, 0, 0 }) == 0)))
+                _version = m_io.ReadS4le();
+                if (!(Version == 6))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 6, 0, 0, 0 }, VersionMustBe6, M_Io, "/types/mdl_header/seq/1");
+                    throw new ValidationNotEqualError(6, Version, M_Io, "/types/mdl_header/seq/1");
                 }
                 _scale = new Vec3(m_io, this, m_root);
                 _origin = new Vec3(m_io, this, m_root);
@@ -168,21 +194,12 @@ namespace Kaitai
                 _flags = m_io.ReadS4le();
                 _size = m_io.ReadF4le();
             }
-            private bool f_version;
-            private sbyte _version;
-            public sbyte Version
-            {
-                get
-                {
-                    if (f_version)
-                        return _version;
-                    _version = (sbyte) (6);
-                    f_version = true;
-                    return _version;
-                }
-            }
             private bool f_skinSize;
             private int _skinSize;
+
+            /// <summary>
+            /// Skin size in pixels.
+            /// </summary>
             public int SkinSize
             {
                 get
@@ -195,7 +212,7 @@ namespace Kaitai
                 }
             }
             private byte[] _ident;
-            private byte[] _versionMustBe6;
+            private int _version;
             private Vec3 _scale;
             private Vec3 _origin;
             private float _radius;
@@ -211,17 +228,57 @@ namespace Kaitai
             private float _size;
             private QuakeMdl m_root;
             private QuakeMdl m_parent;
+
+            /// <summary>
+            /// Magic signature bytes that every Quake model must
+            /// have. &quot;IDPO&quot; is short for &quot;IDPOLYHEADER&quot;.
+            /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133">Source</a>
+            /// </remarks>
             public byte[] Ident { get { return _ident; } }
-            public byte[] VersionMustBe6 { get { return _versionMustBe6; } }
+            public int Version { get { return _version; } }
+
+            /// <summary>
+            /// Global scaling factors in 3 dimensions for whole model. When
+            /// represented in 3D world, this model local coordinates will
+            /// be multiplied by these factors.
+            /// </summary>
             public Vec3 Scale { get { return _scale; } }
             public Vec3 Origin { get { return _origin; } }
             public float Radius { get { return _radius; } }
             public Vec3 EyePosition { get { return _eyePosition; } }
+
+            /// <summary>
+            /// Number of skins (=texture bitmaps) included in this model.
+            /// </summary>
             public int NumSkins { get { return _numSkins; } }
+
+            /// <summary>
+            /// Width (U coordinate max) of every skin (=texture) in pixels.
+            /// </summary>
             public int SkinWidth { get { return _skinWidth; } }
+
+            /// <summary>
+            /// Height (V coordinate max) of every skin (=texture) in
+            /// pixels.
+            /// </summary>
             public int SkinHeight { get { return _skinHeight; } }
+
+            /// <summary>
+            /// Number of vertices in this model. Note that this is constant
+            /// for all the animation frames and all textures.
+            /// </summary>
             public int NumVerts { get { return _numVerts; } }
+
+            /// <summary>
+            /// Number of triangles (=triangular faces) in this model.
+            /// </summary>
             public int NumTris { get { return _numTris; } }
+
+            /// <summary>
+            /// Number of animation frames included in this model.
+            /// </summary>
             public int NumFrames { get { return _numFrames; } }
             public int Synctype { get { return _synctype; } }
             public int Flags { get { return _flags; } }
@@ -382,6 +439,17 @@ namespace Kaitai
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl.MdlFrame M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// Represents a triangular face, connecting 3 vertices, referenced
+        /// by their indexes.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3">Source</a>
+        /// </remarks>
         public partial class MdlTriangle : KaitaiStruct
         {
             public static MdlTriangle FromFile(string fileName)
@@ -413,6 +481,12 @@ namespace Kaitai
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// Basic 3D vector (x, y, z) using single-precision floating point
+        /// coordnates. Can be used to specify a point in 3D space,
+        /// direction, scaling factor, etc.
+        /// </summary>
         public partial class Vec3 : KaitaiStruct
         {
             public static Vec3 FromFile(string fileName)

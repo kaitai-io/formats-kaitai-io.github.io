@@ -23,13 +23,26 @@ end
 # 
 # * "Skins" — effectively 2D bitmaps which will be used as a
 #   texture. Every model can have multiple skins — e.g. these can be
-#   switched to depict various levels of damage to the monsters.
+#   switched to depict various levels of damage to the
+#   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+#   palette, subject to lighting and gamma adjustment when rendering
+#   in the game using colormap technique.
 # * "Texture coordinates" — UV coordinates, mapping 3D vertices to
 #   skin coordinates.
 # * "Triangles" — triangular faces connecting 3D vertices.
 # * "Frames" — locations of vertices in 3D space; can include more
 #   than one frame, thus allowing representation of different frames
 #   for animation purposes.
+# 
+# Originally, 3D geometry for models for Quake was designed in [Alias
+# PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+# precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+# 3D-related part of Quake model format followed closely Alias TRI
+# format, and Quake development utilities included a converter from Alias
+# TRI (`modelgen`).
+# 
+# Skins (textures) where prepared as LBM bitmaps with the help from
+# `texmap` utility in the same development utilities toolkit.
 class QuakeMdl < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -73,6 +86,10 @@ class QuakeMdl < Kaitai::Struct::Struct
     attr_reader :values
     attr_reader :normal_index
   end
+
+  ##
+  # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83 Source
+  # @see https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2 Source
   class MdlTexcoord < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -89,6 +106,10 @@ class QuakeMdl < Kaitai::Struct::Struct
     attr_reader :s
     attr_reader :t
   end
+
+  ##
+  # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75 Source
+  # @see https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0 Source
   class MdlHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -98,8 +119,8 @@ class QuakeMdl < Kaitai::Struct::Struct
     def _read
       @ident = @_io.read_bytes(4)
       raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 80, 79].pack('C*'), ident, _io, "/types/mdl_header/seq/0") if not ident == [73, 68, 80, 79].pack('C*')
-      @version_must_be_6 = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([6, 0, 0, 0].pack('C*'), version_must_be_6, _io, "/types/mdl_header/seq/1") if not version_must_be_6 == [6, 0, 0, 0].pack('C*')
+      @version = @_io.read_s4le
+      raise Kaitai::Struct::ValidationNotEqualError.new(6, version, _io, "/types/mdl_header/seq/1") if not version == 6
       @scale = Vec3.new(@_io, self, @_root)
       @origin = Vec3.new(@_io, self, @_root)
       @radius = @_io.read_f4le
@@ -115,27 +136,55 @@ class QuakeMdl < Kaitai::Struct::Struct
       @size = @_io.read_f4le
       self
     end
-    def version
-      return @version unless @version.nil?
-      @version = 6
-      @version
-    end
+
+    ##
+    # Skin size in pixels.
     def skin_size
       return @skin_size unless @skin_size.nil?
       @skin_size = (skin_width * skin_height)
       @skin_size
     end
+
+    ##
+    # Magic signature bytes that every Quake model must
+    # have. "IDPO" is short for "IDPOLYHEADER".
+    # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133 Source
     attr_reader :ident
-    attr_reader :version_must_be_6
+    attr_reader :version
+
+    ##
+    # Global scaling factors in 3 dimensions for whole model. When
+    # represented in 3D world, this model local coordinates will
+    # be multiplied by these factors.
     attr_reader :scale
     attr_reader :origin
     attr_reader :radius
     attr_reader :eye_position
+
+    ##
+    # Number of skins (=texture bitmaps) included in this model.
     attr_reader :num_skins
+
+    ##
+    # Width (U coordinate max) of every skin (=texture) in pixels.
     attr_reader :skin_width
+
+    ##
+    # Height (V coordinate max) of every skin (=texture) in
+    # pixels.
     attr_reader :skin_height
+
+    ##
+    # Number of vertices in this model. Note that this is constant
+    # for all the animation frames and all textures.
     attr_reader :num_verts
+
+    ##
+    # Number of triangles (=triangular faces) in this model.
     attr_reader :num_tris
+
+    ##
+    # Number of animation frames included in this model.
     attr_reader :num_frames
     attr_reader :synctype
     attr_reader :flags
@@ -233,6 +282,12 @@ class QuakeMdl < Kaitai::Struct::Struct
     attr_reader :name
     attr_reader :vertices
   end
+
+  ##
+  # Represents a triangular face, connecting 3 vertices, referenced
+  # by their indexes.
+  # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88 Source
+  # @see https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3 Source
   class MdlTriangle < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -250,6 +305,11 @@ class QuakeMdl < Kaitai::Struct::Struct
     attr_reader :faces_front
     attr_reader :vertices
   end
+
+  ##
+  # Basic 3D vector (x, y, z) using single-precision floating point
+  # coordnates. Can be used to specify a point in 3D space,
+  # direction, scaling factor, etc.
   class Vec3 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

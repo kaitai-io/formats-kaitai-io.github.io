@@ -22,13 +22,26 @@ import (
  * 
  * * "Skins" — effectively 2D bitmaps which will be used as a
  *   texture. Every model can have multiple skins — e.g. these can be
- *   switched to depict various levels of damage to the monsters.
+ *   switched to depict various levels of damage to the
+ *   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+ *   palette, subject to lighting and gamma adjustment when rendering
+ *   in the game using colormap technique.
  * * "Texture coordinates" — UV coordinates, mapping 3D vertices to
  *   skin coordinates.
  * * "Triangles" — triangular faces connecting 3D vertices.
  * * "Frames" — locations of vertices in 3D space; can include more
  *   than one frame, thus allowing representation of different frames
  *   for animation purposes.
+ * 
+ * Originally, 3D geometry for models for Quake was designed in [Alias
+ * PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+ * precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+ * 3D-related part of Quake model format followed closely Alias TRI
+ * format, and Quake development utilities included a converter from Alias
+ * TRI (`modelgen`).
+ * 
+ * Skins (textures) where prepared as LBM bitmaps with the help from
+ * `texmap` utility in the same development utilities toolkit.
  */
 type QuakeMdl struct {
 	Header *QuakeMdl_MdlHeader
@@ -126,6 +139,11 @@ func (this *QuakeMdl_MdlVertex) Read(io *kaitai.Stream, parent interface{}, root
 	this.NormalIndex = tmp7
 	return err
 }
+
+/**
+ * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+ * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+ */
 type QuakeMdl_MdlTexcoord struct {
 	OnSeam int32
 	S int32
@@ -161,9 +179,14 @@ func (this *QuakeMdl_MdlTexcoord) Read(io *kaitai.Stream, parent *QuakeMdl, root
 	this.T = int32(tmp10)
 	return err
 }
+
+/**
+ * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75">Source</a>
+ * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0">Source</a>
+ */
 type QuakeMdl_MdlHeader struct {
 	Ident []byte
-	VersionMustBe6 []byte
+	Version int32
 	Scale *QuakeMdl_Vec3
 	Origin *QuakeMdl_Vec3
 	Radius float32
@@ -180,8 +203,6 @@ type QuakeMdl_MdlHeader struct {
 	_io *kaitai.Stream
 	_root *QuakeMdl
 	_parent *QuakeMdl
-	_f_version bool
-	version int8
 	_f_skinSize bool
 	skinSize int
 }
@@ -204,14 +225,13 @@ func (this *QuakeMdl_MdlHeader) Read(io *kaitai.Stream, parent *QuakeMdl, root *
 	if !(bytes.Equal(this.Ident, []uint8{73, 68, 80, 79})) {
 		return kaitai.NewValidationNotEqualError([]uint8{73, 68, 80, 79}, this.Ident, this._io, "/types/mdl_header/seq/0")
 	}
-	tmp12, err := this._io.ReadBytes(int(4))
+	tmp12, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	tmp12 = tmp12
-	this.VersionMustBe6 = tmp12
-	if !(bytes.Equal(this.VersionMustBe6, []uint8{6, 0, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{6, 0, 0, 0}, this.VersionMustBe6, this._io, "/types/mdl_header/seq/1")
+	this.Version = int32(tmp12)
+	if !(this.Version == 6) {
+		return kaitai.NewValidationNotEqualError(6, this.Version, this._io, "/types/mdl_header/seq/1")
 	}
 	tmp13 := NewQuakeMdl_Vec3()
 	err = tmp13.Read(this._io, this, this._root)
@@ -283,14 +303,10 @@ func (this *QuakeMdl_MdlHeader) Read(io *kaitai.Stream, parent *QuakeMdl, root *
 	this.Size = float32(tmp25)
 	return err
 }
-func (this *QuakeMdl_MdlHeader) Version() (v int8, err error) {
-	if (this._f_version) {
-		return this.version, nil
-	}
-	this.version = int8(6)
-	this._f_version = true
-	return this.version, nil
-}
+
+/**
+ * Skin size in pixels.
+ */
 func (this *QuakeMdl_MdlHeader) SkinSize() (v int, err error) {
 	if (this._f_skinSize) {
 		return this.skinSize, nil
@@ -299,6 +315,44 @@ func (this *QuakeMdl_MdlHeader) SkinSize() (v int, err error) {
 	this._f_skinSize = true
 	return this.skinSize, nil
 }
+
+/**
+ * Magic signature bytes that every Quake model must
+ * have. "IDPO" is short for "IDPOLYHEADER".
+ * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133">Source</a>
+ */
+
+/**
+ * Global scaling factors in 3 dimensions for whole model. When
+ * represented in 3D world, this model local coordinates will
+ * be multiplied by these factors.
+ */
+
+/**
+ * Number of skins (=texture bitmaps) included in this model.
+ */
+
+/**
+ * Width (U coordinate max) of every skin (=texture) in pixels.
+ */
+
+/**
+ * Height (V coordinate max) of every skin (=texture) in
+ * pixels.
+ */
+
+/**
+ * Number of vertices in this model. Note that this is constant
+ * for all the animation frames and all textures.
+ */
+
+/**
+ * Number of triangles (=triangular faces) in this model.
+ */
+
+/**
+ * Number of animation frames included in this model.
+ */
 type QuakeMdl_MdlSkin struct {
 	Group int32
 	SingleTextureData []byte
@@ -500,6 +554,13 @@ func (this *QuakeMdl_MdlSimpleFrame) Read(io *kaitai.Stream, parent *QuakeMdl_Md
 	}
 	return err
 }
+
+/**
+ * Represents a triangular face, connecting 3 vertices, referenced
+ * by their indexes.
+ * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88">Source</a>
+ * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3">Source</a>
+ */
 type QuakeMdl_MdlTriangle struct {
 	FacesFront int32
 	Vertices []int32
@@ -532,6 +593,12 @@ func (this *QuakeMdl_MdlTriangle) Read(io *kaitai.Stream, parent *QuakeMdl, root
 	}
 	return err
 }
+
+/**
+ * Basic 3D vector (x, y, z) using single-precision floating point
+ * coordnates. Can be used to specify a point in 3D space,
+ * direction, scaling factor, etc.
+ */
 type QuakeMdl_Vec3 struct {
 	X float32
 	Y float32

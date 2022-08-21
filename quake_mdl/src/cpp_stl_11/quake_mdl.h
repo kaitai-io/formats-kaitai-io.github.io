@@ -27,13 +27,26 @@
  * 
  * * "Skins" — effectively 2D bitmaps which will be used as a
  *   texture. Every model can have multiple skins — e.g. these can be
- *   switched to depict various levels of damage to the monsters.
+ *   switched to depict various levels of damage to the
+ *   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+ *   palette, subject to lighting and gamma adjustment when rendering
+ *   in the game using colormap technique.
  * * "Texture coordinates" — UV coordinates, mapping 3D vertices to
  *   skin coordinates.
  * * "Triangles" — triangular faces connecting 3D vertices.
  * * "Frames" — locations of vertices in 3D space; can include more
  *   than one frame, thus allowing representation of different frames
  *   for animation purposes.
+ * 
+ * Originally, 3D geometry for models for Quake was designed in [Alias
+ * PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+ * precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+ * 3D-related part of Quake model format followed closely Alias TRI
+ * format, and Quake development utilities included a converter from Alias
+ * TRI (`modelgen`).
+ * 
+ * Skins (textures) where prepared as LBM bitmaps with the help from
+ * `texmap` utility in the same development utilities toolkit.
  */
 
 class quake_mdl_t : public kaitai::kstruct {
@@ -83,6 +96,11 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83 Source
+     * \sa https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2 Source
+     */
+
     class mdl_texcoord_t : public kaitai::kstruct {
 
     public:
@@ -111,6 +129,11 @@ public:
         quake_mdl_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75 Source
+     * \sa https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0 Source
+     */
+
     class mdl_header_t : public kaitai::kstruct {
 
     public:
@@ -125,22 +148,19 @@ public:
         ~mdl_header_t();
 
     private:
-        bool f_version;
-        int8_t m_version;
-
-    public:
-        int8_t version();
-
-    private:
         bool f_skin_size;
         int32_t m_skin_size;
 
     public:
+
+        /**
+         * Skin size in pixels.
+         */
         int32_t skin_size();
 
     private:
         std::string m_ident;
-        std::string m_version_must_be_6;
+        int32_t m_version;
         std::unique_ptr<vec3_t> m_scale;
         std::unique_ptr<vec3_t> m_origin;
         float m_radius;
@@ -158,17 +178,55 @@ public:
         quake_mdl_t* m__parent;
 
     public:
+
+        /**
+         * Magic signature bytes that every Quake model must
+         * have. "IDPO" is short for "IDPOLYHEADER".
+         * \sa https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133 Source
+         */
         std::string ident() const { return m_ident; }
-        std::string version_must_be_6() const { return m_version_must_be_6; }
+        int32_t version() const { return m_version; }
+
+        /**
+         * Global scaling factors in 3 dimensions for whole model. When
+         * represented in 3D world, this model local coordinates will
+         * be multiplied by these factors.
+         */
         vec3_t* scale() const { return m_scale.get(); }
         vec3_t* origin() const { return m_origin.get(); }
         float radius() const { return m_radius; }
         vec3_t* eye_position() const { return m_eye_position.get(); }
+
+        /**
+         * Number of skins (=texture bitmaps) included in this model.
+         */
         int32_t num_skins() const { return m_num_skins; }
+
+        /**
+         * Width (U coordinate max) of every skin (=texture) in pixels.
+         */
         int32_t skin_width() const { return m_skin_width; }
+
+        /**
+         * Height (V coordinate max) of every skin (=texture) in
+         * pixels.
+         */
         int32_t skin_height() const { return m_skin_height; }
+
+        /**
+         * Number of vertices in this model. Note that this is constant
+         * for all the animation frames and all textures.
+         */
         int32_t num_verts() const { return m_num_verts; }
+
+        /**
+         * Number of triangles (=triangular faces) in this model.
+         */
         int32_t num_tris() const { return m_num_tris; }
+
+        /**
+         * Number of animation frames included in this model.
+         */
         int32_t num_frames() const { return m_num_frames; }
         int32_t synctype() const { return m_synctype; }
         int32_t flags() const { return m_flags; }
@@ -320,6 +378,13 @@ public:
         quake_mdl_t::mdl_frame_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * Represents a triangular face, connecting 3 vertices, referenced
+     * by their indexes.
+     * \sa https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88 Source
+     * \sa https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3 Source
+     */
+
     class mdl_triangle_t : public kaitai::kstruct {
 
     public:
@@ -345,6 +410,12 @@ public:
         quake_mdl_t* _root() const { return m__root; }
         quake_mdl_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * Basic 3D vector (x, y, z) using single-precision floating point
+     * coordnates. Can be used to specify a point in 3D space,
+     * direction, scaling factor, etc.
+     */
 
     class vec3_t : public kaitai::kstruct {
 

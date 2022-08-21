@@ -20,7 +20,7 @@ type
     `parent`*: QuakeMdl
   QuakeMdl_MdlHeader* = ref object of KaitaiStruct
     `ident`*: seq[byte]
-    `versionMustBe6`*: seq[byte]
+    `version`*: int32
     `scale`*: QuakeMdl_Vec3
     `origin`*: QuakeMdl_Vec3
     `radius`*: float32
@@ -35,8 +35,6 @@ type
     `flags`*: int32
     `size`*: float32
     `parent`*: QuakeMdl
-    `versionInst`: int8
-    `versionInstFlag`: bool
     `skinSizeInst`: int
     `skinSizeInstFlag`: bool
   QuakeMdl_MdlSkin* = ref object of KaitaiStruct
@@ -81,7 +79,6 @@ proc read*(_: typedesc[QuakeMdl_MdlSimpleFrame], io: KaitaiStream, root: KaitaiS
 proc read*(_: typedesc[QuakeMdl_MdlTriangle], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTriangle
 proc read*(_: typedesc[QuakeMdl_Vec3], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlHeader): QuakeMdl_Vec3
 
-proc version*(this: QuakeMdl_MdlHeader): int8
 proc skinSize*(this: QuakeMdl_MdlHeader): int
 proc numSimpleFrames*(this: QuakeMdl_MdlFrame): int32
 
@@ -102,13 +99,26 @@ File format stores:
 
 * "Skins" — effectively 2D bitmaps which will be used as a
   texture. Every model can have multiple skins — e.g. these can be
-  switched to depict various levels of damage to the monsters.
+  switched to depict various levels of damage to the
+  monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+  palette, subject to lighting and gamma adjustment when rendering
+  in the game using colormap technique.
 * "Texture coordinates" — UV coordinates, mapping 3D vertices to
   skin coordinates.
 * "Triangles" — triangular faces connecting 3D vertices.
 * "Frames" — locations of vertices in 3D space; can include more
   than one frame, thus allowing representation of different frames
   for animation purposes.
+
+Originally, 3D geometry for models for Quake was designed in [Alias
+PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+3D-related part of Quake model format followed closely Alias TRI
+format, and Quake development utilities included a converter from Alias
+TRI (`modelgen`).
+
+Skins (textures) where prepared as LBM bitmaps with the help from
+`texmap` utility in the same development utilities toolkit.
 
 ]##
 proc read*(_: typedesc[QuakeMdl], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakeMdl =
@@ -154,6 +164,11 @@ proc read*(_: typedesc[QuakeMdl_MdlVertex], io: KaitaiStream, root: KaitaiStruct
 proc fromFile*(_: typedesc[QuakeMdl_MdlVertex], filename: string): QuakeMdl_MdlVertex =
   QuakeMdl_MdlVertex.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+@see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+@see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+]##
 proc read*(_: typedesc[QuakeMdl_MdlTexcoord], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTexcoord =
   template this: untyped = result
   this = new(QuakeMdl_MdlTexcoord)
@@ -172,6 +187,11 @@ proc read*(_: typedesc[QuakeMdl_MdlTexcoord], io: KaitaiStream, root: KaitaiStru
 proc fromFile*(_: typedesc[QuakeMdl_MdlTexcoord], filename: string): QuakeMdl_MdlTexcoord =
   QuakeMdl_MdlTexcoord.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+@see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75">Source</a>
+@see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0">Source</a>
+]##
 proc read*(_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlHeader =
   template this: untyped = result
   this = new(QuakeMdl_MdlHeader)
@@ -180,10 +200,24 @@ proc read*(_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct
   this.root = root
   this.parent = parent
 
+
+  ##[
+  Magic signature bytes that every Quake model must
+have. "IDPO" is short for "IDPOLYHEADER".
+
+  @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133">Source</a>
+  ]##
   let identExpr = this.io.readBytes(int(4))
   this.ident = identExpr
-  let versionMustBe6Expr = this.io.readBytes(int(4))
-  this.versionMustBe6 = versionMustBe6Expr
+  let versionExpr = this.io.readS4le()
+  this.version = versionExpr
+
+  ##[
+  Global scaling factors in 3 dimensions for whole model. When
+represented in 3D world, this model local coordinates will
+be multiplied by these factors.
+
+  ]##
   let scaleExpr = QuakeMdl_Vec3.read(this.io, this.root, this)
   this.scale = scaleExpr
   let originExpr = QuakeMdl_Vec3.read(this.io, this.root, this)
@@ -192,16 +226,48 @@ proc read*(_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct
   this.radius = radiusExpr
   let eyePositionExpr = QuakeMdl_Vec3.read(this.io, this.root, this)
   this.eyePosition = eyePositionExpr
+
+  ##[
+  Number of skins (=texture bitmaps) included in this model.
+
+  ]##
   let numSkinsExpr = this.io.readS4le()
   this.numSkins = numSkinsExpr
+
+  ##[
+  Width (U coordinate max) of every skin (=texture) in pixels.
+
+  ]##
   let skinWidthExpr = this.io.readS4le()
   this.skinWidth = skinWidthExpr
+
+  ##[
+  Height (V coordinate max) of every skin (=texture) in
+pixels.
+
+  ]##
   let skinHeightExpr = this.io.readS4le()
   this.skinHeight = skinHeightExpr
+
+  ##[
+  Number of vertices in this model. Note that this is constant
+for all the animation frames and all textures.
+
+  ]##
   let numVertsExpr = this.io.readS4le()
   this.numVerts = numVertsExpr
+
+  ##[
+  Number of triangles (=triangular faces) in this model.
+
+  ]##
   let numTrisExpr = this.io.readS4le()
   this.numTris = numTrisExpr
+
+  ##[
+  Number of animation frames included in this model.
+
+  ]##
   let numFramesExpr = this.io.readS4le()
   this.numFrames = numFramesExpr
   let synctypeExpr = this.io.readS4le()
@@ -211,15 +277,12 @@ proc read*(_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct
   let sizeExpr = this.io.readF4le()
   this.size = sizeExpr
 
-proc version(this: QuakeMdl_MdlHeader): int8 = 
-  if this.versionInstFlag:
-    return this.versionInst
-  let versionInstExpr = int8(6)
-  this.versionInst = versionInstExpr
-  this.versionInstFlag = true
-  return this.versionInst
-
 proc skinSize(this: QuakeMdl_MdlHeader): int = 
+
+  ##[
+  Skin size in pixels.
+
+  ]##
   if this.skinSizeInstFlag:
     return this.skinSizeInst
   let skinSizeInstExpr = int((this.skinWidth * this.skinHeight))
@@ -314,6 +377,14 @@ proc read*(_: typedesc[QuakeMdl_MdlSimpleFrame], io: KaitaiStream, root: KaitaiS
 proc fromFile*(_: typedesc[QuakeMdl_MdlSimpleFrame], filename: string): QuakeMdl_MdlSimpleFrame =
   QuakeMdl_MdlSimpleFrame.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+Represents a triangular face, connecting 3 vertices, referenced
+by their indexes.
+
+@see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88">Source</a>
+@see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3">Source</a>
+]##
 proc read*(_: typedesc[QuakeMdl_MdlTriangle], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTriangle =
   template this: untyped = result
   this = new(QuakeMdl_MdlTriangle)
@@ -331,6 +402,13 @@ proc read*(_: typedesc[QuakeMdl_MdlTriangle], io: KaitaiStream, root: KaitaiStru
 proc fromFile*(_: typedesc[QuakeMdl_MdlTriangle], filename: string): QuakeMdl_MdlTriangle =
   QuakeMdl_MdlTriangle.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+Basic 3D vector (x, y, z) using single-precision floating point
+coordnates. Can be used to specify a point in 3D space,
+direction, scaling factor, etc.
+
+]##
 proc read*(_: typedesc[QuakeMdl_Vec3], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlHeader): QuakeMdl_Vec3 =
   template this: untyped = result
   this = new(QuakeMdl_Vec3)

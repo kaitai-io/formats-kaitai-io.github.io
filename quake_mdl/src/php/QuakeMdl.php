@@ -17,13 +17,26 @@
  * 
  * * "Skins" — effectively 2D bitmaps which will be used as a
  *   texture. Every model can have multiple skins — e.g. these can be
- *   switched to depict various levels of damage to the monsters.
+ *   switched to depict various levels of damage to the
+ *   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+ *   palette, subject to lighting and gamma adjustment when rendering
+ *   in the game using colormap technique.
  * * "Texture coordinates" — UV coordinates, mapping 3D vertices to
  *   skin coordinates.
  * * "Triangles" — triangular faces connecting 3D vertices.
  * * "Frames" — locations of vertices in 3D space; can include more
  *   than one frame, thus allowing representation of different frames
  *   for animation purposes.
+ * 
+ * Originally, 3D geometry for models for Quake was designed in [Alias
+ * PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+ * precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+ * 3D-related part of Quake model format followed closely Alias TRI
+ * format, and Quake development utilities included a converter from Alias
+ * TRI (`modelgen`).
+ * 
+ * Skins (textures) where prepared as LBM bitmaps with the help from
+ * `texmap` utility in the same development utilities toolkit.
  */
 
 namespace {
@@ -124,9 +137,9 @@ namespace QuakeMdl {
             if (!($this->ident() == "\x49\x44\x50\x4F")) {
                 throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x44\x50\x4F", $this->ident(), $this->_io(), "/types/mdl_header/seq/0");
             }
-            $this->_m_versionMustBe6 = $this->_io->readBytes(4);
-            if (!($this->versionMustBe6() == "\x06\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x06\x00\x00\x00", $this->versionMustBe6(), $this->_io(), "/types/mdl_header/seq/1");
+            $this->_m_version = $this->_io->readS4le();
+            if (!($this->version() == 6)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(6, $this->version(), $this->_io(), "/types/mdl_header/seq/1");
             }
             $this->_m_scale = new \QuakeMdl\Vec3($this->_io, $this, $this->_root);
             $this->_m_origin = new \QuakeMdl\Vec3($this->_io, $this, $this->_root);
@@ -142,14 +155,11 @@ namespace QuakeMdl {
             $this->_m_flags = $this->_io->readS4le();
             $this->_m_size = $this->_io->readF4le();
         }
-        protected $_m_version;
-        public function version() {
-            if ($this->_m_version !== null)
-                return $this->_m_version;
-            $this->_m_version = 6;
-            return $this->_m_version;
-        }
         protected $_m_skinSize;
+
+        /**
+         * Skin size in pixels.
+         */
         public function skinSize() {
             if ($this->_m_skinSize !== null)
                 return $this->_m_skinSize;
@@ -157,7 +167,7 @@ namespace QuakeMdl {
             return $this->_m_skinSize;
         }
         protected $_m_ident;
-        protected $_m_versionMustBe6;
+        protected $_m_version;
         protected $_m_scale;
         protected $_m_origin;
         protected $_m_radius;
@@ -171,17 +181,54 @@ namespace QuakeMdl {
         protected $_m_synctype;
         protected $_m_flags;
         protected $_m_size;
+
+        /**
+         * Magic signature bytes that every Quake model must
+         * have. "IDPO" is short for "IDPOLYHEADER".
+         */
         public function ident() { return $this->_m_ident; }
-        public function versionMustBe6() { return $this->_m_versionMustBe6; }
+        public function version() { return $this->_m_version; }
+
+        /**
+         * Global scaling factors in 3 dimensions for whole model. When
+         * represented in 3D world, this model local coordinates will
+         * be multiplied by these factors.
+         */
         public function scale() { return $this->_m_scale; }
         public function origin() { return $this->_m_origin; }
         public function radius() { return $this->_m_radius; }
         public function eyePosition() { return $this->_m_eyePosition; }
+
+        /**
+         * Number of skins (=texture bitmaps) included in this model.
+         */
         public function numSkins() { return $this->_m_numSkins; }
+
+        /**
+         * Width (U coordinate max) of every skin (=texture) in pixels.
+         */
         public function skinWidth() { return $this->_m_skinWidth; }
+
+        /**
+         * Height (V coordinate max) of every skin (=texture) in
+         * pixels.
+         */
         public function skinHeight() { return $this->_m_skinHeight; }
+
+        /**
+         * Number of vertices in this model. Note that this is constant
+         * for all the animation frames and all textures.
+         */
         public function numVerts() { return $this->_m_numVerts; }
+
+        /**
+         * Number of triangles (=triangular faces) in this model.
+         */
         public function numTris() { return $this->_m_numTris; }
+
+        /**
+         * Number of animation frames included in this model.
+         */
         public function numFrames() { return $this->_m_numFrames; }
         public function synctype() { return $this->_m_synctype; }
         public function flags() { return $this->_m_flags; }
@@ -308,6 +355,11 @@ namespace QuakeMdl {
     }
 }
 
+/**
+ * Represents a triangular face, connecting 3 vertices, referenced
+ * by their indexes.
+ */
+
 namespace QuakeMdl {
     class MdlTriangle extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
@@ -329,6 +381,12 @@ namespace QuakeMdl {
         public function vertices() { return $this->_m_vertices; }
     }
 }
+
+/**
+ * Basic 3D vector (x, y, z) using single-precision floating point
+ * coordnates. Can be used to specify a point in 3D space,
+ * direction, scaling factor, etc.
+ */
 
 namespace QuakeMdl {
     class Vec3 extends \Kaitai\Struct\Struct {

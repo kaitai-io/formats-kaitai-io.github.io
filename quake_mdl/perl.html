@@ -117,7 +117,10 @@ locations of all vertices it included in 3D space, frame by frame.</p>
 <ul>
 <li>&quot;Skins&quot; — effectively 2D bitmaps which will be used as a
 texture. Every model can have multiple skins — e.g. these can be
-switched to depict various levels of damage to the monsters.</li>
+switched to depict various levels of damage to the
+monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+palette, subject to lighting and gamma adjustment when rendering
+in the game using colormap technique.</li>
 <li>&quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to
 skin coordinates.</li>
 <li>&quot;Triangles&quot; — triangular faces connecting 3D vertices.</li>
@@ -125,6 +128,14 @@ skin coordinates.</li>
 than one frame, thus allowing representation of different frames
 for animation purposes.</li>
 </ul>
+<p>Originally, 3D geometry for models for Quake was designed in <a href="https://en.wikipedia.org/wiki/PowerAnimator">Alias
+PowerAnimator</a>,
+precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+3D-related part of Quake model format followed closely Alias TRI
+format, and Quake development utilities included a converter from Alias
+TRI (<code>modelgen</code>).</p>
+<p>Skins (textures) where prepared as LBM bitmaps with the help from
+<code>texmap</code> utility in the same development utilities toolkit.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -156,7 +167,7 @@ for animation purposes.</li>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.1
                     </div>
                     
                     
@@ -488,7 +499,7 @@ for animation purposes.</li>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ident</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_must_be_6</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s4le</span><span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">scale</span><span class="p">}</span> <span class="o">=</span> <span class="nn">QuakeMdl::Vec3</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">}</span> <span class="o">=</span> <span class="nn">QuakeMdl::Vec3</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">radius</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_f4le</span><span class="p">();</span>
@@ -504,13 +515,6 @@ for animation purposes.</li>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">size</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_f4le</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">version</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">}</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">};</span>
-<span class="p">}</span>
-
 <span class="k">sub</span> <span class="nf">skin_size</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">skin_size</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">skin_size</span><span class="p">});</span>
@@ -523,9 +527,9 @@ for animation purposes.</li>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ident</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">version_must_be_6</span> <span class="p">{</span>
+<span class="k">sub</span> <span class="nf">version</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_must_be_6</span><span class="p">};</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">scale</span> <span class="p">{</span>

@@ -141,7 +141,6 @@ quake_mdl_t::mdl_header_t::mdl_header_t(kaitai::kstream* p__io, quake_mdl_t* p__
     m_scale = 0;
     m_origin = 0;
     m_eye_position = 0;
-    f_version = false;
     f_skin_size = false;
 
     try {
@@ -157,9 +156,9 @@ void quake_mdl_t::mdl_header_t::_read() {
     if (!(ident() == std::string("\x49\x44\x50\x4F", 4))) {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x49\x44\x50\x4F", 4), ident(), _io(), std::string("/types/mdl_header/seq/0"));
     }
-    m_version_must_be_6 = m__io->read_bytes(4);
-    if (!(version_must_be_6() == std::string("\x06\x00\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x06\x00\x00\x00", 4), version_must_be_6(), _io(), std::string("/types/mdl_header/seq/1"));
+    m_version = m__io->read_s4le();
+    if (!(version() == 6)) {
+        throw kaitai::validation_not_equal_error<int32_t>(6, version(), _io(), std::string("/types/mdl_header/seq/1"));
     }
     m_scale = new vec3_t(m__io, this, m__root);
     m_origin = new vec3_t(m__io, this, m__root);
@@ -190,14 +189,6 @@ void quake_mdl_t::mdl_header_t::_clean_up() {
     if (m_eye_position) {
         delete m_eye_position; m_eye_position = 0;
     }
-}
-
-int8_t quake_mdl_t::mdl_header_t::version() {
-    if (f_version)
-        return m_version;
-    m_version = 6;
-    f_version = true;
-    return m_version;
 }
 
 int32_t quake_mdl_t::mdl_header_t::skin_size() {

@@ -117,7 +117,10 @@ locations of all vertices it included in 3D space, frame by frame.</p>
 <ul>
 <li>&quot;Skins&quot; — effectively 2D bitmaps which will be used as a
 texture. Every model can have multiple skins — e.g. these can be
-switched to depict various levels of damage to the monsters.</li>
+switched to depict various levels of damage to the
+monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+palette, subject to lighting and gamma adjustment when rendering
+in the game using colormap technique.</li>
 <li>&quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to
 skin coordinates.</li>
 <li>&quot;Triangles&quot; — triangular faces connecting 3D vertices.</li>
@@ -125,6 +128,14 @@ skin coordinates.</li>
 than one frame, thus allowing representation of different frames
 for animation purposes.</li>
 </ul>
+<p>Originally, 3D geometry for models for Quake was designed in <a href="https://en.wikipedia.org/wiki/PowerAnimator">Alias
+PowerAnimator</a>,
+precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+3D-related part of Quake model format followed closely Alias TRI
+format, and Quake development utilities included a converter from Alias
+TRI (<code>modelgen</code>).</p>
+<p>Skins (textures) where prepared as LBM bitmaps with the help from
+<code>texmap</code> utility in the same development utilities toolkit.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -156,7 +167,7 @@ for animation purposes.</li>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.1
                     </div>
                     
                     
@@ -296,7 +307,7 @@ for animation purposes.</li>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl</span>
   <span class="n">QuakeMdl_MdlHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">ident</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">versionMustBe6</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">scale</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl_Vec3</span>
     <span class="p">`</span><span class="n">origin</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl_Vec3</span>
     <span class="p">`</span><span class="n">radius</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
@@ -311,8 +322,6 @@ for animation purposes.</li>
     <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">QuakeMdl</span>
-    <span class="p">`</span><span class="n">versionInst</span><span class="p">`:</span> <span class="kt">int8</span>
-    <span class="p">`</span><span class="n">versionInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
     <span class="p">`</span><span class="n">skinSizeInst</span><span class="p">`:</span> <span class="kt">int</span>
     <span class="p">`</span><span class="n">skinSizeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
   <span class="n">QuakeMdl_MdlSkin</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
@@ -357,7 +366,6 @@ for animation purposes.</li>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlTriangle], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTriangle</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_Vec3], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlHeader): QuakeMdl_Vec3</span>
 
-<span class="k">proc </span><span class="nf">version</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlHeader</span><span class="p">):</span> <span class="kt">int8</span>
 <span class="k">proc </span><span class="nf">skinSize</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlHeader</span><span class="p">):</span> <span class="kt">int</span>
 <span class="k">proc </span><span class="nf">numSimpleFrames</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlFrame</span><span class="p">):</span> <span class="kt">int32</span>
 
@@ -378,13 +386,26 @@ for animation purposes.</li>
 
 <span class="o">*</span> <span class="s">&quot;Skins&quot;</span> <span class="err">— effectively 2D bitmaps which will be used as a</span>
   <span class="n">texture</span><span class="p">.</span> <span class="n">Every</span> <span class="n">model</span> <span class="n">can</span> <span class="n">have</span> <span class="n">multiple</span> <span class="n">skins</span> <span class="err">— e.g. these can be</span>
-  <span class="n">switched</span> <span class="n">to</span> <span class="n">depict</span> <span class="n">various</span> <span class="n">levels</span> <span class="k">of</span> <span class="n">damage</span> <span class="n">to</span> <span class="n">the</span> <span class="n">monsters</span><span class="p">.</span>
+  <span class="n">switched</span> <span class="n">to</span> <span class="n">depict</span> <span class="n">various</span> <span class="n">levels</span> <span class="k">of</span> <span class="n">damage</span> <span class="n">to</span> <span class="n">the</span>
+  <span class="n">monsters</span><span class="p">.</span> <span class="n">Bitmaps</span> <span class="n">are</span> <span class="mi">8</span><span class="o">-</span><span class="n">bit</span><span class="o">-</span><span class="n">per</span><span class="o">-</span><span class="n">pixel</span><span class="p">,</span> <span class="n">indexed</span> <span class="ow">in</span> <span class="n">global</span> <span class="n">Quake</span>
+  <span class="n">palette</span><span class="p">,</span> <span class="n">subject</span> <span class="n">to</span> <span class="n">lighting</span> <span class="ow">and</span> <span class="n">gamma</span> <span class="n">adjustment</span> <span class="k">when</span> <span class="n">rendering</span>
+  <span class="ow">in</span> <span class="n">the</span> <span class="n">game</span> <span class="k">using</span> <span class="n">colormap</span> <span class="n">technique</span><span class="p">.</span>
 <span class="o">*</span> <span class="s">&quot;Texture coordinates&quot;</span> <span class="err">— UV coordinates, mapping 3D vertices to</span>
   <span class="n">skin</span> <span class="n">coordinates</span><span class="p">.</span>
 <span class="o">*</span> <span class="s">&quot;Triangles&quot;</span> <span class="err">— triangular faces connecting 3D vertices.</span>
 <span class="o">*</span> <span class="s">&quot;Frames&quot;</span> <span class="err">— locations of vertices in 3D space; can include more</span>
   <span class="n">than</span> <span class="n">one</span> <span class="n">frame</span><span class="p">,</span> <span class="n">thus</span> <span class="n">allowing</span> <span class="n">representation</span> <span class="k">of</span> <span class="n">different</span> <span class="n">frames</span>
   <span class="k">for</span> <span class="n">animation</span> <span class="n">purposes</span><span class="p">.</span>
+
+<span class="n">Originally</span><span class="p">,</span> <span class="mi">3</span><span class="err">D geometry for models for Quake was designed in [Alias</span>
+<span class="n">PowerAnimator</span><span class="o">]</span><span class="p">(</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">en</span><span class="p">.</span><span class="n">wikipedia</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="n">PowerAnimator</span><span class="p">),</span>
+<span class="n">precursor</span> <span class="k">of</span> <span class="n">modern</span> <span class="n">day</span> <span class="n">Autodesk</span> <span class="n">Maya</span> <span class="ow">and</span> <span class="n">Autodesk</span> <span class="n">Alias</span><span class="p">.</span> <span class="n">Therefore</span><span class="p">,</span>
+<span class="mi">3</span><span class="err">D-related part of Quake model format followed closely Alias TRI</span>
+<span class="n">format</span><span class="p">,</span> <span class="ow">and</span> <span class="n">Quake</span> <span class="n">development</span> <span class="n">utilities</span> <span class="n">included</span> <span class="n">a</span> <span class="k">converter</span> <span class="kn">from</span> <span class="n">Alias</span>
+<span class="n">TRI</span> <span class="p">(`</span><span class="n">modelgen</span><span class="p">`).</span>
+
+<span class="n">Skins</span> <span class="p">(</span><span class="n">textures</span><span class="p">)</span> <span class="n">where</span> <span class="n">prepared</span> <span class="k">as</span> <span class="n">LBM</span> <span class="n">bitmaps</span> <span class="n">with</span> <span class="n">the</span> <span class="n">help</span> <span class="kn">from</span>
+<span class="p">`</span><span class="n">texmap</span><span class="p">`</span> <span class="n">utility</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">same</span> <span class="n">development</span> <span class="n">utilities</span> <span class="n">toolkit</span><span class="p">.</span>
 
 <span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakeMdl =</span>
@@ -430,6 +451,11 @@ for animation purposes.</li>
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlVertex], filename: string): QuakeMdl_MdlVertex =</span>
   <span class="n">QuakeMdl_MdlVertex</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlTexcoord], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTexcoord =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
   <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">QuakeMdl_MdlTexcoord</span><span class="p">)</span>
@@ -448,6 +474,11 @@ for animation purposes.</li>
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlTexcoord], filename: string): QuakeMdl_MdlTexcoord =</span>
   <span class="n">QuakeMdl_MdlTexcoord</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlHeader =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
   <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">QuakeMdl_MdlHeader</span><span class="p">)</span>
@@ -456,10 +487,24 @@ for animation purposes.</li>
   <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
   <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 
+
+  <span class="sd">##[</span>
+  <span class="n">Magic</span> <span class="n">signature</span> <span class="n">bytes</span> <span class="n">that</span> <span class="n">every</span> <span class="n">Quake</span> <span class="n">model</span> <span class="n">must</span>
+<span class="n">have</span><span class="p">.</span> <span class="s">&quot;IDPO&quot;</span> <span class="ow">is</span> <span class="n">short</span> <span class="k">for</span> <span class="s">&quot;IDPOLYHEADER&quot;</span><span class="p">.</span>
+
+  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">identExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">ident</span> <span class="o">=</span> <span class="n">identExpr</span>
-  <span class="k">let</span> <span class="n">versionMustBe6Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">versionMustBe6</span> <span class="o">=</span> <span class="n">versionMustBe6Expr</span>
+  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Global</span> <span class="n">scaling</span> <span class="n">factors</span> <span class="ow">in</span> <span class="mi">3</span> <span class="n">dimensions</span> <span class="k">for</span> <span class="n">whole</span> <span class="n">model</span><span class="p">.</span> <span class="k">When</span>
+<span class="n">represented</span> <span class="ow">in</span> <span class="mi">3</span><span class="err">D world, this model local coordinates will</span>
+<span class="n">be</span> <span class="n">multiplied</span> <span class="n">by</span> <span class="n">these</span> <span class="n">factors</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">scaleExpr</span> <span class="o">=</span> <span class="n">QuakeMdl_Vec3</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scaleExpr</span>
   <span class="k">let</span> <span class="n">originExpr</span> <span class="o">=</span> <span class="n">QuakeMdl_Vec3</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
@@ -468,16 +513,48 @@ for animation purposes.</li>
   <span class="n">this</span><span class="p">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radiusExpr</span>
   <span class="k">let</span> <span class="n">eyePositionExpr</span> <span class="o">=</span> <span class="n">QuakeMdl_Vec3</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">eyePosition</span> <span class="o">=</span> <span class="n">eyePositionExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">skins</span> <span class="p">(</span><span class="o">=</span><span class="n">texture</span> <span class="n">bitmaps</span><span class="p">)</span> <span class="n">included</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">model</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">numSkinsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numSkins</span> <span class="o">=</span> <span class="n">numSkinsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Width</span> <span class="p">(</span><span class="n">U</span> <span class="n">coordinate</span> <span class="n">max</span><span class="p">)</span> <span class="k">of</span> <span class="n">every</span> <span class="n">skin</span> <span class="p">(</span><span class="o">=</span><span class="n">texture</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pixels</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">skinWidthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">skinWidth</span> <span class="o">=</span> <span class="n">skinWidthExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Height</span> <span class="p">(</span><span class="n">V</span> <span class="n">coordinate</span> <span class="n">max</span><span class="p">)</span> <span class="k">of</span> <span class="n">every</span> <span class="n">skin</span> <span class="p">(</span><span class="o">=</span><span class="n">texture</span><span class="p">)</span> <span class="ow">in</span>
+<span class="n">pixels</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">skinHeightExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">skinHeight</span> <span class="o">=</span> <span class="n">skinHeightExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">model</span><span class="p">.</span> <span class="n">Note</span> <span class="n">that</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">constant</span>
+<span class="k">for</span> <span class="n">all</span> <span class="n">the</span> <span class="n">animation</span> <span class="n">frames</span> <span class="ow">and</span> <span class="n">all</span> <span class="n">textures</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">numVertsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numVerts</span> <span class="o">=</span> <span class="n">numVertsExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">triangles</span> <span class="p">(</span><span class="o">=</span><span class="n">triangular</span> <span class="n">faces</span><span class="p">)</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">model</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">numTrisExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numTris</span> <span class="o">=</span> <span class="n">numTrisExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">animation</span> <span class="n">frames</span> <span class="n">included</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">model</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">numFramesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numFrames</span> <span class="o">=</span> <span class="n">numFramesExpr</span>
   <span class="k">let</span> <span class="n">synctypeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">()</span>
@@ -487,15 +564,12 @@ for animation purposes.</li>
   <span class="k">let</span> <span class="n">sizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readF4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizeExpr</span>
 
-<span class="k">proc </span><span class="nf">version</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlHeader</span><span class="p">):</span> <span class="kt">int8</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
-  <span class="k">let</span> <span class="n">versionInstExpr</span> <span class="o">=</span> <span class="kt">int8</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span> <span class="o">=</span> <span class="n">versionInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">versionInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">versionInst</span>
-
 <span class="k">proc </span><span class="nf">skinSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">QuakeMdl_MdlHeader</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Skin</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">pixels</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInstFlag</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">skinSizeInst</span>
   <span class="k">let</span> <span class="n">skinSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">skinWidth</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">skinHeight</span><span class="p">))</span>
@@ -590,6 +664,14 @@ for animation purposes.</li>
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlSimpleFrame], filename: string): QuakeMdl_MdlSimpleFrame =</span>
   <span class="n">QuakeMdl_MdlSimpleFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
+
+<span class="sd">##[</span>
+<span class="n">Represents</span> <span class="n">a</span> <span class="n">triangular</span> <span class="n">face</span><span class="p">,</span> <span class="n">connecting</span> <span class="mi">3</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">referenced</span>
+<span class="n">by</span> <span class="n">their</span> <span class="n">indexes</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlTriangle], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTriangle =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
   <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">QuakeMdl_MdlTriangle</span><span class="p">)</span>
@@ -607,6 +689,13 @@ for animation purposes.</li>
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_MdlTriangle], filename: string): QuakeMdl_MdlTriangle =</span>
   <span class="n">QuakeMdl_MdlTriangle</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
+
+<span class="sd">##[</span>
+<span class="n">Basic</span> <span class="mi">3</span><span class="err">D vector (x, y, z) using single-precision floating point</span>
+<span class="n">coordnates</span><span class="p">.</span> <span class="n">Can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">specify</span> <span class="n">a</span> <span class="n">point</span> <span class="ow">in</span> <span class="mi">3</span><span class="err">D space,</span>
+<span class="n">direction</span><span class="p">,</span> <span class="n">scaling</span> <span class="n">factor</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span>
+
+<span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[QuakeMdl_Vec3], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlHeader): QuakeMdl_Vec3 =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
   <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">QuakeMdl_Vec3</span><span class="p">)</span>

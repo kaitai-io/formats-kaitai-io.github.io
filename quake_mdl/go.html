@@ -117,7 +117,10 @@ locations of all vertices it included in 3D space, frame by frame.</p>
 <ul>
 <li>&quot;Skins&quot; — effectively 2D bitmaps which will be used as a
 texture. Every model can have multiple skins — e.g. these can be
-switched to depict various levels of damage to the monsters.</li>
+switched to depict various levels of damage to the
+monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+palette, subject to lighting and gamma adjustment when rendering
+in the game using colormap technique.</li>
 <li>&quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to
 skin coordinates.</li>
 <li>&quot;Triangles&quot; — triangular faces connecting 3D vertices.</li>
@@ -125,6 +128,14 @@ skin coordinates.</li>
 than one frame, thus allowing representation of different frames
 for animation purposes.</li>
 </ul>
+<p>Originally, 3D geometry for models for Quake was designed in <a href="https://en.wikipedia.org/wiki/PowerAnimator">Alias
+PowerAnimator</a>,
+precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+3D-related part of Quake model format followed closely Alias TRI
+format, and Quake development utilities included a converter from Alias
+TRI (<code>modelgen</code>).</p>
+<p>Skins (textures) where prepared as LBM bitmaps with the help from
+<code>texmap</code> utility in the same development utilities toolkit.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -156,7 +167,7 @@ for animation purposes.</li>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.1
                     </div>
                     
                     
@@ -298,13 +309,26 @@ for animation purposes.</li>
 <span class="cm"> * </span>
 <span class="cm"> * * &quot;Skins&quot; — effectively 2D bitmaps which will be used as a</span>
 <span class="cm"> *   texture. Every model can have multiple skins — e.g. these can be</span>
-<span class="cm"> *   switched to depict various levels of damage to the monsters.</span>
+<span class="cm"> *   switched to depict various levels of damage to the</span>
+<span class="cm"> *   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake</span>
+<span class="cm"> *   palette, subject to lighting and gamma adjustment when rendering</span>
+<span class="cm"> *   in the game using colormap technique.</span>
 <span class="cm"> * * &quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to</span>
 <span class="cm"> *   skin coordinates.</span>
 <span class="cm"> * * &quot;Triangles&quot; — triangular faces connecting 3D vertices.</span>
 <span class="cm"> * * &quot;Frames&quot; — locations of vertices in 3D space; can include more</span>
 <span class="cm"> *   than one frame, thus allowing representation of different frames</span>
 <span class="cm"> *   for animation purposes.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Originally, 3D geometry for models for Quake was designed in [Alias</span>
+<span class="cm"> * PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),</span>
+<span class="cm"> * precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,</span>
+<span class="cm"> * 3D-related part of Quake model format followed closely Alias TRI</span>
+<span class="cm"> * format, and Quake development utilities included a converter from Alias</span>
+<span class="cm"> * TRI (`modelgen`).</span>
+<span class="cm"> * </span>
+<span class="cm"> * Skins (textures) where prepared as LBM bitmaps with the help from</span>
+<span class="cm"> * `texmap` utility in the same development utilities toolkit.</span>
 <span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">QuakeMdl</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Header</span> <span class="o">*</span><span class="nx">QuakeMdl_MdlHeader</span>
@@ -402,6 +426,11 @@ for animation purposes.</li>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">NormalIndex</span> <span class="p">=</span> <span class="nx">tmp7</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">QuakeMdl_MdlTexcoord</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">OnSeam</span> <span class="kt">int32</span>
 	<span class="nx">S</span> <span class="kt">int32</span>
@@ -437,9 +466,14 @@ for animation purposes.</li>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">T</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">QuakeMdl_MdlHeader</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Ident</span> <span class="p">[]</span><span class="kt">byte</span>
-	<span class="nx">VersionMustBe6</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Version</span> <span class="kt">int32</span>
 	<span class="nx">Scale</span> <span class="o">*</span><span class="nx">QuakeMdl_Vec3</span>
 	<span class="nx">Origin</span> <span class="o">*</span><span class="nx">QuakeMdl_Vec3</span>
 	<span class="nx">Radius</span> <span class="kt">float32</span>
@@ -456,8 +490,6 @@ for animation purposes.</li>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">QuakeMdl</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">QuakeMdl</span>
-	<span class="nx">_f_version</span> <span class="kt">bool</span>
-	<span class="nx">version</span> <span class="kt">int8</span>
 	<span class="nx">_f_skinSize</span> <span class="kt">bool</span>
 	<span class="nx">skinSize</span> <span class="kt">int</span>
 <span class="p">}</span>
@@ -480,14 +512,13 @@ for animation purposes.</li>
 	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Ident</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">73</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">79</span><span class="p">}))</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">73</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">79</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Ident</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/mdl_header/seq/0&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp12</span> <span class="p">=</span> <span class="nx">tmp12</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">VersionMustBe6</span> <span class="p">=</span> <span class="nx">tmp12</span>
-	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMustBe6</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">}))</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">VersionMustBe6</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/mdl_header/seq/1&quot;</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="o">==</span> <span class="mi">6</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Version</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/mdl_header/seq/1&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="nx">tmp13</span> <span class="o">:=</span> <span class="nx">NewQuakeMdl_Vec3</span><span class="p">()</span>
 	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp13</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
@@ -559,14 +590,10 @@ for animation purposes.</li>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">Size</span> <span class="p">=</span> <span class="nb">float32</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">QuakeMdl_MdlHeader</span><span class="p">)</span> <span class="nx">Version</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int8</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_version</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">version</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">version</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_version</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">version</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Skin size in pixels.</span>
+<span class="cm"> */</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">QuakeMdl_MdlHeader</span><span class="p">)</span> <span class="nx">SkinSize</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_skinSize</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">skinSize</span><span class="p">,</span> <span class="kc">nil</span>
@@ -575,6 +602,44 @@ for animation purposes.</li>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_skinSize</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">skinSize</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Magic signature bytes that every Quake model must</span>
+<span class="cm"> * have. &quot;IDPO&quot; is short for &quot;IDPOLYHEADER&quot;.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Global scaling factors in 3 dimensions for whole model. When</span>
+<span class="cm"> * represented in 3D world, this model local coordinates will</span>
+<span class="cm"> * be multiplied by these factors.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Number of skins (=texture bitmaps) included in this model.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Width (U coordinate max) of every skin (=texture) in pixels.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Height (V coordinate max) of every skin (=texture) in</span>
+<span class="cm"> * pixels.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Number of vertices in this model. Note that this is constant</span>
+<span class="cm"> * for all the animation frames and all textures.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Number of triangles (=triangular faces) in this model.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Number of animation frames included in this model.</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">QuakeMdl_MdlSkin</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Group</span> <span class="kt">int32</span>
 	<span class="nx">SingleTextureData</span> <span class="p">[]</span><span class="kt">byte</span>
@@ -776,6 +841,13 @@ for animation purposes.</li>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Represents a triangular face, connecting 3 vertices, referenced</span>
+<span class="cm"> * by their indexes.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">QuakeMdl_MdlTriangle</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">FacesFront</span> <span class="kt">int32</span>
 	<span class="nx">Vertices</span> <span class="p">[]</span><span class="kt">int32</span>
@@ -808,6 +880,12 @@ for animation purposes.</li>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Basic 3D vector (x, y, z) using single-precision floating point</span>
+<span class="cm"> * coordnates. Can be used to specify a point in 3D space,</span>
+<span class="cm"> * direction, scaling factor, etc.</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">QuakeMdl_Vec3</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">X</span> <span class="kt">float32</span>
 	<span class="nx">Y</span> <span class="kt">float32</span>

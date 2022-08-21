@@ -117,7 +117,10 @@ locations of all vertices it included in 3D space, frame by frame.</p>
 <ul>
 <li>&quot;Skins&quot; — effectively 2D bitmaps which will be used as a
 texture. Every model can have multiple skins — e.g. these can be
-switched to depict various levels of damage to the monsters.</li>
+switched to depict various levels of damage to the
+monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+palette, subject to lighting and gamma adjustment when rendering
+in the game using colormap technique.</li>
 <li>&quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to
 skin coordinates.</li>
 <li>&quot;Triangles&quot; — triangular faces connecting 3D vertices.</li>
@@ -125,6 +128,14 @@ skin coordinates.</li>
 than one frame, thus allowing representation of different frames
 for animation purposes.</li>
 </ul>
+<p>Originally, 3D geometry for models for Quake was designed in <a href="https://en.wikipedia.org/wiki/PowerAnimator">Alias
+PowerAnimator</a>,
+precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+3D-related part of Quake model format followed closely Alias TRI
+format, and Quake development utilities included a converter from Alias
+TRI (<code>modelgen</code>).</p>
+<p>Skins (textures) where prepared as LBM bitmaps with the help from
+<code>texmap</code> utility in the same development utilities toolkit.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -156,7 +167,7 @@ for animation purposes.</li>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.1
                     </div>
                     
                     
@@ -273,7 +284,7 @@ for animation purposes.</li>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">3d</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">game</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.7</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.10</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
   <span class="no">Quake 1 model format is used to store 3D models completely with</span>
@@ -291,13 +302,26 @@ for animation purposes.</li>
 
   <span class="no">* &quot;Skins&quot; — effectively 2D bitmaps which will be used as a</span>
     <span class="no">texture. Every model can have multiple skins — e.g. these can be</span>
-    <span class="no">switched to depict various levels of damage to the monsters.</span>
+    <span class="no">switched to depict various levels of damage to the</span>
+    <span class="no">monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake</span>
+    <span class="no">palette, subject to lighting and gamma adjustment when rendering</span>
+    <span class="no">in the game using colormap technique.</span>
   <span class="no">* &quot;Texture coordinates&quot; — UV coordinates, mapping 3D vertices to</span>
     <span class="no">skin coordinates.</span>
   <span class="no">* &quot;Triangles&quot; — triangular faces connecting 3D vertices.</span>
   <span class="no">* &quot;Frames&quot; — locations of vertices in 3D space; can include more</span>
     <span class="no">than one frame, thus allowing representation of different frames</span>
     <span class="no">for animation purposes.</span>
+
+  <span class="no">Originally, 3D geometry for models for Quake was designed in [Alias</span>
+  <span class="no">PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),</span>
+  <span class="no">precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,</span>
+  <span class="no">3D-related part of Quake model format followed closely Alias TRI</span>
+  <span class="no">format, and Quake development utilities included a converter from Alias</span>
+  <span class="no">TRI (`modelgen`).</span>
+
+  <span class="no">Skins (textures) where prepared as LBM bitmaps with the help from</span>
+  <span class="no">`texmap` utility in the same development utilities toolkit.</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mdl_header</span>
@@ -319,6 +343,11 @@ for animation purposes.</li>
     <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_frames</span>
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">vec3</span><span class="p">:</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vec3_t</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Basic 3D vector (x, y, z) using single-precision floating point</span>
+      <span class="no">coordnates. Can be used to specify a point in 3D space,</span>
+      <span class="no">direction, scaling factor, etc.</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
@@ -327,13 +356,27 @@ for animation purposes.</li>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">z</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
   <span class="nt">mdl_header</span><span class="p">:</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mdl_t</span>
+    <span class="nt">doc-ref</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ident</span>
         <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;IDPO&#39;</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_must_be_6</span>
-        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">0x06</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span> <span class="p p-Indicator">]</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Magic signature bytes that every Quake model must</span>
+          <span class="no">have. &quot;IDPO&quot; is short for &quot;IDPOLYHEADER&quot;.</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">valid</span><span class="p">:</span>
+          <span class="nt">eq</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scale</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vec3</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Global scaling factors in 3 dimensions for whole model. When</span>
+          <span class="no">represented in 3D world, this model local coordinates will</span>
+          <span class="no">be multiplied by these factors.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">origin</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vec3</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">radius</span>
@@ -342,16 +385,30 @@ for animation purposes.</li>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vec3</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_skins</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of skins (=texture bitmaps) included in this model.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">skin_width</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Width (U coordinate max) of every skin (=texture) in pixels.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">skin_height</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Height (V coordinate max) of every skin (=texture) in</span>
+          <span class="no">pixels.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_verts</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of vertices in this model. Note that this is constant</span>
+          <span class="no">for all the animation frames and all textures.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tris</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of triangles (=triangular faces) in this model.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_frames</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of animation frames included in this model.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">synctype</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
@@ -359,10 +416,10 @@ for animation purposes.</li>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
     <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">version</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
       <span class="nt">skin_size</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">skin_width * skin_height</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Skin size in pixels.</span>
   <span class="nt">mdl_skin</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">group</span>
@@ -384,6 +441,10 @@ for animation purposes.</li>
         <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_frames</span>
         <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">group != 0</span>
   <span class="nt">mdl_texcoord</span><span class="p">:</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stvert_t</span>
+    <span class="nt">doc-ref</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">on_seam</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
@@ -392,6 +453,13 @@ for animation purposes.</li>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
   <span class="nt">mdl_triangle</span><span class="p">:</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dtriangle_t</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Represents a triangular face, connecting 3 vertices, referenced</span>
+      <span class="no">by their indexes.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">faces_front</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>

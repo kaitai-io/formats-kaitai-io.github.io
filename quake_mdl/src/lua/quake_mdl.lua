@@ -23,13 +23,26 @@ local str_decode = require("string_decode")
 -- 
 -- * "Skins" — effectively 2D bitmaps which will be used as a
 --   texture. Every model can have multiple skins — e.g. these can be
---   switched to depict various levels of damage to the monsters.
+--   switched to depict various levels of damage to the
+--   monsters. Bitmaps are 8-bit-per-pixel, indexed in global Quake
+--   palette, subject to lighting and gamma adjustment when rendering
+--   in the game using colormap technique.
 -- * "Texture coordinates" — UV coordinates, mapping 3D vertices to
 --   skin coordinates.
 -- * "Triangles" — triangular faces connecting 3D vertices.
 -- * "Frames" — locations of vertices in 3D space; can include more
 --   than one frame, thus allowing representation of different frames
 --   for animation purposes.
+-- 
+-- Originally, 3D geometry for models for Quake was designed in [Alias
+-- PowerAnimator](https://en.wikipedia.org/wiki/PowerAnimator),
+-- precursor of modern day Autodesk Maya and Autodesk Alias. Therefore,
+-- 3D-related part of Quake model format followed closely Alias TRI
+-- format, and Quake development utilities included a converter from Alias
+-- TRI (`modelgen`).
+-- 
+-- Skins (textures) where prepared as LBM bitmaps with the help from
+-- `texmap` utility in the same development utilities toolkit.
 QuakeMdl = class.class(KaitaiStruct)
 
 function QuakeMdl:_init(io, parent, root)
@@ -78,6 +91,9 @@ function QuakeMdl.MdlVertex:_read()
 end
 
 
+-- 
+-- See also: Source (https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83)
+-- See also: Source (https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2)
 QuakeMdl.MdlTexcoord = class.class(KaitaiStruct)
 
 function QuakeMdl.MdlTexcoord:_init(io, parent, root)
@@ -94,6 +110,9 @@ function QuakeMdl.MdlTexcoord:_read()
 end
 
 
+-- 
+-- See also: Source (https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75)
+-- See also: Source (https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0)
 QuakeMdl.MdlHeader = class.class(KaitaiStruct)
 
 function QuakeMdl.MdlHeader:_init(io, parent, root)
@@ -108,9 +127,9 @@ function QuakeMdl.MdlHeader:_read()
   if not(self.ident == "\073\068\080\079") then
     error("not equal, expected " ..  "\073\068\080\079" .. ", but got " .. self.ident)
   end
-  self.version_must_be_6 = self._io:read_bytes(4)
-  if not(self.version_must_be_6 == "\006\000\000\000") then
-    error("not equal, expected " ..  "\006\000\000\000" .. ", but got " .. self.version_must_be_6)
+  self.version = self._io:read_s4le()
+  if not(self.version == 6) then
+    error("not equal, expected " ..  6 .. ", but got " .. self.version)
   end
   self.scale = QuakeMdl.Vec3(self._io, self, self._root)
   self.origin = QuakeMdl.Vec3(self._io, self, self._root)
@@ -127,16 +146,8 @@ function QuakeMdl.MdlHeader:_read()
   self.size = self._io:read_f4le()
 end
 
-QuakeMdl.MdlHeader.property.version = {}
-function QuakeMdl.MdlHeader.property.version:get()
-  if self._m_version ~= nil then
-    return self._m_version
-  end
-
-  self._m_version = 6
-  return self._m_version
-end
-
+-- 
+-- Skin size in pixels.
 QuakeMdl.MdlHeader.property.skin_size = {}
 function QuakeMdl.MdlHeader.property.skin_size:get()
   if self._m_skin_size ~= nil then
@@ -147,6 +158,28 @@ function QuakeMdl.MdlHeader.property.skin_size:get()
   return self._m_skin_size
 end
 
+-- 
+-- Magic signature bytes that every Quake model must
+-- have. "IDPO" is short for "IDPOLYHEADER".
+-- See also: Source (https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L132-L133)
+-- 
+-- Global scaling factors in 3 dimensions for whole model. When
+-- represented in 3D world, this model local coordinates will
+-- be multiplied by these factors.
+-- 
+-- Number of skins (=texture bitmaps) included in this model.
+-- 
+-- Width (U coordinate max) of every skin (=texture) in pixels.
+-- 
+-- Height (V coordinate max) of every skin (=texture) in
+-- pixels.
+-- 
+-- Number of vertices in this model. Note that this is constant
+-- for all the animation frames and all textures.
+-- 
+-- Number of triangles (=triangular faces) in this model.
+-- 
+-- Number of animation frames included in this model.
 
 QuakeMdl.MdlSkin = class.class(KaitaiStruct)
 
@@ -240,6 +273,11 @@ function QuakeMdl.MdlSimpleFrame:_read()
 end
 
 
+-- 
+-- Represents a triangular face, connecting 3 vertices, referenced
+-- by their indexes.
+-- See also: Source (https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88)
+-- See also: Source (https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3)
 QuakeMdl.MdlTriangle = class.class(KaitaiStruct)
 
 function QuakeMdl.MdlTriangle:_init(io, parent, root)
@@ -258,6 +296,10 @@ function QuakeMdl.MdlTriangle:_read()
 end
 
 
+-- 
+-- Basic 3D vector (x, y, z) using single-precision floating point
+-- coordnates. Can be used to specify a point in 3D space,
+-- direction, scaling factor, etc.
 QuakeMdl.Vec3 = class.class(KaitaiStruct)
 
 function QuakeMdl.Vec3:_init(io, parent, root)
