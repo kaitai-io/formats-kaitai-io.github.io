@@ -211,11 +211,6 @@ specification of fields, and a number of fixed-size records.</p>
                 
                 <li>
                 
-                <a href="graphviz.html" title=".dbf file format of dBASE parsing GraphViz library">GraphViz</a></li>
-                
-                
-                <li>
-                
                 <a href="java.html" title=".dbf file format of dBASE parsing Java library">Java</a></li>
                 
                 
@@ -297,14 +292,22 @@ specification of fields, and a number of fixed-size records.</p>
 <span class="cm"> * specification of fields, and a number of fixed-size records.</span>
 <span class="cm"> * @see &lt;a href=&quot;http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">Dbf_DeleteState</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">Dbf_DeleteState__False</span> <span class="nx">Dbf_DeleteState</span> <span class="p">=</span> <span class="mi">32</span>
+	<span class="nx">Dbf_DeleteState__True</span> <span class="nx">Dbf_DeleteState</span> <span class="p">=</span> <span class="mi">42</span>
+<span class="p">)</span>
 <span class="kd">type</span> <span class="nx">Dbf</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Header1</span> <span class="o">*</span><span class="nx">Dbf_Header1</span>
 	<span class="nx">Header2</span> <span class="o">*</span><span class="nx">Dbf_Header2</span>
-	<span class="nx">Records</span> <span class="p">[][]</span><span class="kt">byte</span>
+	<span class="nx">HeaderTerminator</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Records</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Dbf_Record</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Dbf</span>
 	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
 	<span class="nx">_raw_Header2</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_raw_Records</span> <span class="p">[][]</span><span class="kt">byte</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="nx">NewDbf</span><span class="p">()</span> <span class="o">*</span><span class="nx">Dbf</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Dbf</span><span class="p">{</span>
@@ -322,7 +325,7 @@ specification of fields, and a number of fixed-size records.</p>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span> <span class="p">=</span> <span class="nx">tmp1</span>
-	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LenHeader</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)))</span>
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LenHeader</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
@@ -335,14 +338,30 @@ specification of fields, and a number of fixed-size records.</p>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">Header2</span> <span class="p">=</span> <span class="nx">tmp3</span>
+	<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp4</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderTerminator</span> <span class="p">=</span> <span class="nx">tmp4</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderTerminator</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">13</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">13</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">HeaderTerminator</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/seq/2&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">NumRecords</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
-		<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LenRecord</span><span class="p">))</span>
+		<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LenRecord</span><span class="p">))</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">tmp4</span> <span class="p">=</span> <span class="nx">tmp4</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Records</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Records</span><span class="p">,</span> <span class="nx">tmp4</span><span class="p">)</span>
+		<span class="nx">tmp5</span> <span class="p">=</span> <span class="nx">tmp5</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Records</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Records</span><span class="p">,</span> <span class="nx">tmp5</span><span class="p">)</span>
+		<span class="nx">_io__raw_Records</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Records</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+		<span class="nx">tmp6</span> <span class="o">:=</span> <span class="nx">NewDbf_Record</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp6</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Records</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Records</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Records</span><span class="p">,</span> <span class="nx">tmp6</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -364,38 +383,44 @@ specification of fields, and a number of fixed-size records.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">DbaseLevel</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp5</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp6</span> <span class="o">:=</span> <span class="nx">NewDbf_HeaderDbase3</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp6</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderDbase3</span> <span class="p">=</span> <span class="nx">tmp6</span>
-	<span class="p">}</span>
 	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">DbaseLevel</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp7</span> <span class="o">==</span> <span class="mi">7</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp8</span> <span class="o">:=</span> <span class="nx">NewDbf_HeaderDbase7</span><span class="p">()</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp7</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp8</span> <span class="o">:=</span> <span class="nx">NewDbf_HeaderDbase3</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp8</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderDbase7</span> <span class="p">=</span> <span class="nx">tmp8</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderDbase3</span> <span class="p">=</span> <span class="nx">tmp8</span>
 	<span class="p">}</span>
-	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
-		<span class="nx">tmp9</span> <span class="o">:=</span> <span class="nx">NewDbf_Field</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp9</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">DbaseLevel</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp9</span> <span class="o">==</span> <span class="mi">7</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp10</span> <span class="o">:=</span> <span class="nx">NewDbf_HeaderDbase7</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp10</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Fields</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Fields</span><span class="p">,</span> <span class="nx">tmp9</span><span class="p">)</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">HeaderDbase7</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">tmp11</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+		<span class="nx">tmp12</span> <span class="o">:=</span> <span class="nx">NewDbf_Field</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp12</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Fields</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Fields</span><span class="p">,</span> <span class="nx">tmp12</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -424,60 +449,60 @@ specification of fields, and a number of fixed-size records.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span>
+	<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp10</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
-	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Datatype</span> <span class="p">=</span> <span class="nx">tmp11</span>
-	<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DataAddress</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
-	<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Length</span> <span class="p">=</span> <span class="nx">tmp13</span>
+	<span class="nx">tmp13</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span>
 	<span class="nx">tmp14</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DecimalCount</span> <span class="p">=</span> <span class="nx">tmp14</span>
-	<span class="nx">tmp15</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Datatype</span> <span class="p">=</span> <span class="nx">tmp14</span>
+	<span class="nx">tmp15</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp15</span> <span class="p">=</span> <span class="nx">tmp15</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp15</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DataAddress</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span>
 	<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">WorkAreaId</span> <span class="p">=</span> <span class="nx">tmp16</span>
-	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Length</span> <span class="p">=</span> <span class="nx">tmp16</span>
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp17</span> <span class="p">=</span> <span class="nx">tmp17</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nx">tmp17</span>
-	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DecimalCount</span> <span class="p">=</span> <span class="nx">tmp17</span>
+	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">SetFieldsFlag</span> <span class="p">=</span> <span class="nx">tmp18</span>
-	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+	<span class="nx">tmp18</span> <span class="p">=</span> <span class="nx">tmp18</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp18</span>
+	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp19</span> <span class="p">=</span> <span class="nx">tmp19</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">WorkAreaId</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp20</span> <span class="p">=</span> <span class="nx">tmp20</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nx">tmp20</span>
+	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">SetFieldsFlag</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp22</span> <span class="p">=</span> <span class="nx">tmp22</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span> <span class="p">=</span> <span class="nx">tmp22</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 
@@ -508,41 +533,41 @@ specification of fields, and a number of fixed-size records.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nx">tmp20</span>
-	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LastUpdateY</span> <span class="p">=</span> <span class="nx">tmp21</span>
-	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LastUpdateM</span> <span class="p">=</span> <span class="nx">tmp22</span>
 	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LastUpdateD</span> <span class="p">=</span> <span class="nx">tmp23</span>
-	<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nx">tmp23</span>
+	<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">NumRecords</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">)</span>
-	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LastUpdateY</span> <span class="p">=</span> <span class="nx">tmp24</span>
+	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenHeader</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
-	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LastUpdateM</span> <span class="p">=</span> <span class="nx">tmp25</span>
+	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LenRecord</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LastUpdateD</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumRecords</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenHeader</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
+	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenRecord</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Dbf_Header1</span><span class="p">)</span> <span class="nx">DbaseLevel</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
@@ -571,24 +596,24 @@ specification of fields, and a number of fixed-size records.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp27</span> <span class="p">=</span> <span class="nx">tmp27</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp27</span>
-	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">13</span><span class="p">))</span>
+	<span class="nx">tmp30</span> <span class="p">=</span> <span class="nx">tmp30</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp30</span>
+	<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">13</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp28</span> <span class="p">=</span> <span class="nx">tmp28</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nx">tmp28</span>
-	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="nx">tmp31</span> <span class="p">=</span> <span class="nx">tmp31</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nx">tmp31</span>
+	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp29</span> <span class="p">=</span> <span class="nx">tmp29</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span> <span class="p">=</span> <span class="nx">tmp29</span>
+	<span class="nx">tmp32</span> <span class="p">=</span> <span class="nx">tmp32</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span> <span class="p">=</span> <span class="nx">tmp32</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Dbf_HeaderDbase7</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -615,62 +640,95 @@ specification of fields, and a number of fixed-size records.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">tmp30</span> <span class="p">=</span> <span class="nx">tmp30</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp30</span>
-	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">}))</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/header_dbase_7/seq/0&quot;</span><span class="p">)</span>
-	<span class="p">}</span>
-	<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">HasIncompleteTransaction</span> <span class="p">=</span> <span class="nx">tmp31</span>
-	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DbaseIvEncryption</span> <span class="p">=</span> <span class="nx">tmp32</span>
-	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">tmp33</span> <span class="p">=</span> <span class="nx">tmp33</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nx">tmp33</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span> <span class="p">=</span> <span class="nx">tmp33</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Reserved1</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/header_dbase_7/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
 	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">ProductionMdx</span> <span class="p">=</span> <span class="nx">tmp34</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HasIncompleteTransaction</span> <span class="p">=</span> <span class="nx">tmp34</span>
 	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LanguageDriverId</span> <span class="p">=</span> <span class="nx">tmp35</span>
-	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DbaseIvEncryption</span> <span class="p">=</span> <span class="nx">tmp35</span>
+	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">tmp36</span> <span class="p">=</span> <span class="nx">tmp36</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span> <span class="p">=</span> <span class="nx">tmp36</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved2</span> <span class="p">=</span> <span class="nx">tmp36</span>
+	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ProductionMdx</span> <span class="p">=</span> <span class="nx">tmp37</span>
+	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LanguageDriverId</span> <span class="p">=</span> <span class="nx">tmp38</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp39</span> <span class="p">=</span> <span class="nx">tmp39</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span> <span class="p">=</span> <span class="nx">tmp39</span>
 	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">}))</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Reserved3</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/header_dbase_7/seq/6&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp37</span> <span class="p">=</span> <span class="nx">tmp37</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LanguageDriverName</span> <span class="p">=</span> <span class="nx">tmp37</span>
-	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="nx">tmp40</span> <span class="p">=</span> <span class="nx">tmp40</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LanguageDriverName</span> <span class="p">=</span> <span class="nx">tmp40</span>
+	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp38</span> <span class="p">=</span> <span class="nx">tmp38</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved4</span> <span class="p">=</span> <span class="nx">tmp38</span>
+	<span class="nx">tmp41</span> <span class="p">=</span> <span class="nx">tmp41</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved4</span> <span class="p">=</span> <span class="nx">tmp41</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">Dbf_Record</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Deleted</span> <span class="nx">Dbf_DeleteState</span>
+	<span class="nx">RecordFields</span> <span class="p">[][]</span><span class="kt">byte</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Dbf</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Dbf</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewDbf_Record</span><span class="p">()</span> <span class="o">*</span><span class="nx">Dbf_Record</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Dbf_Record</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Dbf_Record</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Dbf</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Dbf</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Deleted</span> <span class="p">=</span> <span class="nx">Dbf_DeleteState</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Header2</span><span class="p">.</span><span class="nx">Fields</span><span class="p">));</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
+		<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Header2</span><span class="p">.</span><span class="nx">Fields</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">Length</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp43</span> <span class="p">=</span> <span class="nx">tmp43</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">RecordFields</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">RecordFields</span><span class="p">,</span> <span class="nx">tmp43</span><span class="p">)</span>
+	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 </pre></div>

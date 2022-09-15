@@ -28,6 +28,12 @@ public:
     class header1_t;
     class header_dbase_3_t;
     class header_dbase_7_t;
+    class record_t;
+
+    enum delete_state_t {
+        DELETE_STATE_FALSE = 32,
+        DELETE_STATE_TRUE = 42
+    };
 
     dbf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, dbf_t* p__root = nullptr);
 
@@ -235,21 +241,53 @@ public:
         dbf_t::header2_t* _parent() const { return m__parent; }
     };
 
+    class record_t : public kaitai::kstruct {
+
+    public:
+
+        record_t(kaitai::kstream* p__io, dbf_t* p__parent = nullptr, dbf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_t();
+
+    private:
+        delete_state_t m_deleted;
+        std::unique_ptr<std::vector<std::string>> m_record_fields;
+        dbf_t* m__root;
+        dbf_t* m__parent;
+
+    public:
+        delete_state_t deleted() const { return m_deleted; }
+        std::vector<std::string>* record_fields() const { return m_record_fields.get(); }
+        dbf_t* _root() const { return m__root; }
+        dbf_t* _parent() const { return m__parent; }
+    };
+
 private:
     std::unique_ptr<header1_t> m_header1;
     std::unique_ptr<header2_t> m_header2;
-    std::unique_ptr<std::vector<std::string>> m_records;
+    std::string m_header_terminator;
+    std::unique_ptr<std::vector<std::unique_ptr<record_t>>> m_records;
     dbf_t* m__root;
     kaitai::kstruct* m__parent;
     std::string m__raw_header2;
     std::unique_ptr<kaitai::kstream> m__io__raw_header2;
+    std::unique_ptr<std::vector<std::string>> m__raw_records;
+    std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>> m__io__raw_records;
 
 public:
     header1_t* header1() const { return m_header1.get(); }
     header2_t* header2() const { return m_header2.get(); }
-    std::vector<std::string>* records() const { return m_records.get(); }
+    std::string header_terminator() const { return m_header_terminator; }
+    std::vector<std::unique_ptr<record_t>>* records() const { return m_records.get(); }
     dbf_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
     std::string _raw_header2() const { return m__raw_header2; }
     kaitai::kstream* _io__raw_header2() const { return m__io__raw_header2.get(); }
+    std::vector<std::string>* _raw_records() const { return m__raw_records.get(); }
+    std::vector<std::unique_ptr<kaitai::kstream>>* _io__raw_records() const { return m__io__raw_records.get(); }
 };

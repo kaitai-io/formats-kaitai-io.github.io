@@ -211,11 +211,6 @@ specification of fields, and a number of fixed-size records.</p>
                 
                 <li>
                 
-                <a href="graphviz.html" title=".dbf file format of dBASE parsing GraphViz library">GraphViz</a></li>
-                
-                
-                <li>
-                
                 <a href="java.html" title=".dbf file format of dBASE parsing Java library">Java</a></li>
                 
                 
@@ -288,9 +283,14 @@ specification of fields, and a number of fixed-size records.</p>
   <span class="n">Dbf</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">header1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf_Header1</span>
     <span class="p">`</span><span class="n">header2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf_Header2</span>
-    <span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+    <span class="p">`</span><span class="n">headerTerminator</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Dbf_Record</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rawHeader2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">rawRecords</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+  <span class="n">Dbf_DeleteState</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="kp">false</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="kp">true</span> <span class="o">=</span> <span class="mi">42</span>
   <span class="n">Dbf_Header2</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">headerDbase3</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf_HeaderDbase3</span>
     <span class="p">`</span><span class="n">headerDbase7</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf_HeaderDbase7</span>
@@ -335,6 +335,10 @@ specification of fields, and a number of fixed-size records.</p>
     <span class="p">`</span><span class="n">languageDriverName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">reserved4</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf_Header2</span>
+  <span class="n">Dbf_Record</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">deleted</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf_DeleteState</span>
+    <span class="p">`</span><span class="n">recordFields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dbf</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dbf</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_Header2], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Header2</span>
@@ -342,6 +346,7 @@ specification of fields, and a number of fixed-size records.</p>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_Header1], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Header1</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_HeaderDbase3], io: KaitaiStream, root: KaitaiStruct, parent: Dbf_Header2): Dbf_HeaderDbase3</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_HeaderDbase7], io: KaitaiStream, root: KaitaiStruct, parent: Dbf_Header2): Dbf_HeaderDbase7</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_Record], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Record</span>
 
 <span class="k">proc </span><span class="nf">dbaseLevel</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dbf_Header1</span><span class="p">):</span> <span class="kt">int</span>
 
@@ -365,13 +370,18 @@ specification of fields, and a number of fixed-size records.</p>
 
   <span class="k">let</span> <span class="n">header1Expr</span> <span class="o">=</span> <span class="n">Dbf_Header1</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">header1</span> <span class="o">=</span> <span class="n">header1Expr</span>
-  <span class="k">let</span> <span class="n">rawHeader2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header1</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)))</span>
+  <span class="k">let</span> <span class="n">rawHeader2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">header1</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">rawHeader2</span> <span class="o">=</span> <span class="n">rawHeader2Expr</span>
   <span class="k">let</span> <span class="n">rawHeader2Io</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawHeader2Expr</span><span class="p">)</span>
   <span class="k">let</span> <span class="n">header2Expr</span> <span class="o">=</span> <span class="n">Dbf_Header2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawHeader2Io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">header2</span> <span class="o">=</span> <span class="n">header2Expr</span>
+  <span class="k">let</span> <span class="n">headerTerminatorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">headerTerminator</span> <span class="o">=</span> <span class="n">headerTerminatorExpr</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header1</span><span class="p">.</span><span class="n">numRecords</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header1</span><span class="p">.</span><span class="n">lenRecord</span><span class="p">))</span>
+    <span class="k">let</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header1</span><span class="p">.</span><span class="n">lenRecord</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">rawRecords</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">rawRecordsIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Dbf_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawRecordsIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf], filename: string): Dbf =</span>
@@ -391,9 +401,12 @@ specification of fields, and a number of fixed-size records.</p>
   <span class="k">if</span> <span class="n">Dbf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">header1</span><span class="p">.</span><span class="n">dbaseLevel</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">headerDbase7Expr</span> <span class="o">=</span> <span class="n">Dbf_HeaderDbase7</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">headerDbase7</span> <span class="o">=</span> <span class="n">headerDbase7Expr</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Dbf_Field</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">fields</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Dbf_Field</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">fields</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_Header2], filename: string): Dbf_Header2 =</span>
   <span class="n">Dbf_Header2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
@@ -515,6 +528,23 @@ specification of fields, and a number of fixed-size records.</p>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_HeaderDbase7], filename: string): Dbf_HeaderDbase7 =</span>
   <span class="n">Dbf_HeaderDbase7</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_Record], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Record =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dbf_Record</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dbf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dbf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">deletedExpr</span> <span class="o">=</span> <span class="n">Dbf_DeleteState</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">deleted</span> <span class="o">=</span> <span class="n">deletedExpr</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">Dbf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">header2</span><span class="p">.</span><span class="n">fields</span><span class="p">)):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">Dbf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">header2</span><span class="p">.</span><span class="n">fields</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="n">length</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">recordFields</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dbf_Record], filename: string): Dbf_Record =</span>
+  <span class="n">Dbf_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

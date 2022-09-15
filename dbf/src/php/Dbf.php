@@ -18,23 +18,34 @@ namespace {
 
         private function _read() {
             $this->_m_header1 = new \Dbf\Header1($this->_io, $this, $this->_root);
-            $this->_m__raw_header2 = $this->_io->readBytes(($this->header1()->lenHeader() - 12));
+            $this->_m__raw_header2 = $this->_io->readBytes((($this->header1()->lenHeader() - 12) - 1));
             $_io__raw_header2 = new \Kaitai\Struct\Stream($this->_m__raw_header2);
             $this->_m_header2 = new \Dbf\Header2($_io__raw_header2, $this, $this->_root);
+            $this->_m_headerTerminator = $this->_io->readBytes(1);
+            if (!($this->headerTerminator() == "\x0D")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x0D", $this->headerTerminator(), $this->_io(), "/seq/2");
+            }
+            $this->_m__raw_records = [];
             $this->_m_records = [];
             $n = $this->header1()->numRecords();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_records[] = $this->_io->readBytes($this->header1()->lenRecord());
+                $this->_m__raw_records[] = $this->_io->readBytes($this->header1()->lenRecord());
+                $_io__raw_records = new \Kaitai\Struct\Stream(end($this->_m__raw_records));
+                $this->_m_records[] = new \Dbf\Record($_io__raw_records, $this, $this->_root);
             }
         }
         protected $_m_header1;
         protected $_m_header2;
+        protected $_m_headerTerminator;
         protected $_m_records;
         protected $_m__raw_header2;
+        protected $_m__raw_records;
         public function header1() { return $this->_m_header1; }
         public function header2() { return $this->_m_header2; }
+        public function headerTerminator() { return $this->_m_headerTerminator; }
         public function records() { return $this->_m_records; }
         public function _raw_header2() { return $this->_m__raw_header2; }
+        public function _raw_records() { return $this->_m__raw_records; }
     }
 }
 
@@ -53,9 +64,10 @@ namespace Dbf {
                 $this->_m_headerDbase7 = new \Dbf\HeaderDbase7($this->_io, $this, $this->_root);
             }
             $this->_m_fields = [];
-            $n = 11;
-            for ($i = 0; $i < $n; $i++) {
+            $i = 0;
+            while (!$this->_io->isEof()) {
                 $this->_m_fields[] = new \Dbf\Field($this->_io, $this, $this->_root);
+                $i++;
             }
         }
         protected $_m_headerDbase3;
@@ -212,5 +224,34 @@ namespace Dbf {
         public function reserved3() { return $this->_m_reserved3; }
         public function languageDriverName() { return $this->_m_languageDriverName; }
         public function reserved4() { return $this->_m_reserved4; }
+    }
+}
+
+namespace Dbf {
+    class Record extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Dbf $_parent = null, \Dbf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_deleted = $this->_io->readU1();
+            $this->_m_recordFields = [];
+            $n = count($this->_root()->header2()->fields());
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_recordFields[] = $this->_io->readBytes($this->_root()->header2()->fields()[$i]->length());
+            }
+        }
+        protected $_m_deleted;
+        protected $_m_recordFields;
+        public function deleted() { return $this->_m_deleted; }
+        public function recordFields() { return $this->_m_recordFields; }
+    }
+}
+
+namespace Dbf {
+    class DeleteState {
+        const FALSE = 32;
+        const TRUE = 42;
     }
 }

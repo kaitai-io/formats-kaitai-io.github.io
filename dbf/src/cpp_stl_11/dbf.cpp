@@ -10,18 +10,29 @@ dbf_t::dbf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dbf_t* p__root)
     m_header2 = nullptr;
     m__io__raw_header2 = nullptr;
     m_records = nullptr;
+    m__raw_records = nullptr;
+    m__io__raw_records = nullptr;
     _read();
 }
 
 void dbf_t::_read() {
     m_header1 = std::unique_ptr<header1_t>(new header1_t(m__io, this, m__root));
-    m__raw_header2 = m__io->read_bytes((header1()->len_header() - 12));
+    m__raw_header2 = m__io->read_bytes(((header1()->len_header() - 12) - 1));
     m__io__raw_header2 = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_header2));
     m_header2 = std::unique_ptr<header2_t>(new header2_t(m__io__raw_header2.get(), this, m__root));
-    m_records = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
+    m_header_terminator = m__io->read_bytes(1);
+    if (!(header_terminator() == std::string("\x0D", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x0D", 1), header_terminator(), _io(), std::string("/seq/2"));
+    }
+    m__raw_records = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
+    m__io__raw_records = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
+    m_records = std::unique_ptr<std::vector<std::unique_ptr<record_t>>>(new std::vector<std::unique_ptr<record_t>>());
     const int l_records = header1()->num_records();
     for (int i = 0; i < l_records; i++) {
-        m_records->push_back(std::move(m__io->read_bytes(header1()->len_record())));
+        m__raw_records->push_back(std::move(m__io->read_bytes(header1()->len_record())));
+        kaitai::kstream* io__raw_records = new kaitai::kstream(m__raw_records->at(m__raw_records->size() - 1));
+        m__io__raw_records->emplace_back(io__raw_records);
+        m_records->push_back(std::move(std::unique_ptr<record_t>(new record_t(io__raw_records, this, m__root))));
     }
 }
 
@@ -53,9 +64,12 @@ void dbf_t::header2_t::_read() {
         m_header_dbase_7 = std::unique_ptr<header_dbase_7_t>(new header_dbase_7_t(m__io, this, m__root));
     }
     m_fields = std::unique_ptr<std::vector<std::unique_ptr<field_t>>>(new std::vector<std::unique_ptr<field_t>>());
-    const int l_fields = 11;
-    for (int i = 0; i < l_fields; i++) {
-        m_fields->push_back(std::move(std::unique_ptr<field_t>(new field_t(m__io, this, m__root))));
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_fields->push_back(std::move(std::unique_ptr<field_t>(new field_t(m__io, this, m__root))));
+            i++;
+        }
     }
 }
 
@@ -176,4 +190,27 @@ dbf_t::header_dbase_7_t::~header_dbase_7_t() {
 }
 
 void dbf_t::header_dbase_7_t::_clean_up() {
+}
+
+dbf_t::record_t::record_t(kaitai::kstream* p__io, dbf_t* p__parent, dbf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_record_fields = nullptr;
+    _read();
+}
+
+void dbf_t::record_t::_read() {
+    m_deleted = static_cast<dbf_t::delete_state_t>(m__io->read_u1());
+    m_record_fields = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
+    const int l_record_fields = _root()->header2()->fields()->size();
+    for (int i = 0; i < l_record_fields; i++) {
+        m_record_fields->push_back(std::move(m__io->read_bytes(_root()->header2()->fields()->at(i)->length())));
+    }
+}
+
+dbf_t::record_t::~record_t() {
+    _clean_up();
+}
+
+void dbf_t::record_t::_clean_up() {
 }

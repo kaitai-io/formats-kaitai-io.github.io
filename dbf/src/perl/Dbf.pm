@@ -19,6 +19,9 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $DELETE_STATE_FALSE = 32;
+our $DELETE_STATE_TRUE = 42;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
@@ -36,13 +39,17 @@ sub _read {
     my ($self) = @_;
 
     $self->{header1} = Dbf::Header1->new($self->{_io}, $self, $self->{_root});
-    $self->{_raw_header2} = $self->{_io}->read_bytes(($self->header1()->len_header() - 12));
+    $self->{_raw_header2} = $self->{_io}->read_bytes((($self->header1()->len_header() - 12) - 1));
     my $io__raw_header2 = IO::KaitaiStruct::Stream->new($self->{_raw_header2});
     $self->{header2} = Dbf::Header2->new($io__raw_header2, $self, $self->{_root});
+    $self->{header_terminator} = $self->{_io}->read_bytes(1);
+    $self->{_raw_records} = ();
     $self->{records} = ();
     my $n_records = $self->header1()->num_records();
     for (my $i = 0; $i < $n_records; $i++) {
-        push @{$self->{records}}, $self->{_io}->read_bytes($self->header1()->len_record());
+        push @{$self->{_raw_records}}, $self->{_io}->read_bytes($self->header1()->len_record());
+        my $io__raw_records = IO::KaitaiStruct::Stream->new($self->{_raw_records}[$i]);
+        push @{$self->{records}}, Dbf::Record->new($io__raw_records, $self, $self->{_root});
     }
 }
 
@@ -56,6 +63,11 @@ sub header2 {
     return $self->{header2};
 }
 
+sub header_terminator {
+    my ($self) = @_;
+    return $self->{header_terminator};
+}
+
 sub records {
     my ($self) = @_;
     return $self->{records};
@@ -64,6 +76,11 @@ sub records {
 sub _raw_header2 {
     my ($self) = @_;
     return $self->{_raw_header2};
+}
+
+sub _raw_records {
+    my ($self) = @_;
+    return $self->{_raw_records};
 }
 
 ########################################################################
@@ -103,8 +120,7 @@ sub _read {
         $self->{header_dbase_7} = Dbf::HeaderDbase7->new($self->{_io}, $self, $self->{_root});
     }
     $self->{fields} = ();
-    my $n_fields = 11;
-    for (my $i = 0; $i < $n_fields; $i++) {
+    while (!$self->{_io}->is_eof()) {
         push @{$self->{fields}}, Dbf::Field->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -431,6 +447,54 @@ sub language_driver_name {
 sub reserved4 {
     my ($self) = @_;
     return $self->{reserved4};
+}
+
+########################################################################
+package Dbf::Record;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{deleted} = $self->{_io}->read_u1();
+    $self->{record_fields} = ();
+    my $n_record_fields = scalar(@{$self->_root()->header2()->fields()});
+    for (my $i = 0; $i < $n_record_fields; $i++) {
+        push @{$self->{record_fields}}, $self->{_io}->read_bytes(@{$self->_root()->header2()->fields()}[$i]->length());
+    }
+}
+
+sub deleted {
+    my ($self) = @_;
+    return $self->{deleted};
+}
+
+sub record_fields {
+    my ($self) = @_;
+    return $self->{record_fields};
 }
 
 1;

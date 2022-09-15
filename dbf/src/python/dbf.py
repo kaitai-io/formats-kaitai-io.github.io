@@ -2,6 +2,7 @@
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
+from enum import Enum
 
 
 if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
@@ -17,6 +18,10 @@ class Dbf(KaitaiStruct):
     .. seealso::
        Source - http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm
     """
+
+    class DeleteState(Enum):
+        false = 32
+        true = 42
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -25,12 +30,18 @@ class Dbf(KaitaiStruct):
 
     def _read(self):
         self.header1 = Dbf.Header1(self._io, self, self._root)
-        self._raw_header2 = self._io.read_bytes((self.header1.len_header - 12))
+        self._raw_header2 = self._io.read_bytes(((self.header1.len_header - 12) - 1))
         _io__raw_header2 = KaitaiStream(BytesIO(self._raw_header2))
         self.header2 = Dbf.Header2(_io__raw_header2, self, self._root)
+        self.header_terminator = self._io.read_bytes(1)
+        if not self.header_terminator == b"\x0D":
+            raise kaitaistruct.ValidationNotEqualError(b"\x0D", self.header_terminator, self._io, u"/seq/2")
+        self._raw_records = []
         self.records = []
         for i in range(self.header1.num_records):
-            self.records.append(self._io.read_bytes(self.header1.len_record))
+            self._raw_records.append(self._io.read_bytes(self.header1.len_record))
+            _io__raw_records = KaitaiStream(BytesIO(self._raw_records[i]))
+            self.records.append(Dbf.Record(_io__raw_records, self, self._root))
 
 
     class Header2(KaitaiStruct):
@@ -48,8 +59,10 @@ class Dbf(KaitaiStruct):
                 self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
 
             self.fields = []
-            for i in range(11):
+            i = 0
+            while not self._io.is_eof():
                 self.fields.append(Dbf.Field(self._io, self, self._root))
+                i += 1
 
 
 
@@ -136,6 +149,21 @@ class Dbf(KaitaiStruct):
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00", self.reserved3, self._io, u"/types/header_dbase_7/seq/6")
             self.language_driver_name = self._io.read_bytes(32)
             self.reserved4 = self._io.read_bytes(4)
+
+
+    class Record(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.deleted = KaitaiStream.resolve_enum(Dbf.DeleteState, self._io.read_u1())
+            self.record_fields = []
+            for i in range(len(self._root.header2.fields)):
+                self.record_fields.append(self._io.read_bytes(self._root.header2.fields[i].length))
+
 
 
 

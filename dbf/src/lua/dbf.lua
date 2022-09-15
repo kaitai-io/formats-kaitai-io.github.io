@@ -4,6 +4,7 @@
 
 local class = require("class")
 require("kaitaistruct")
+local enum = require("enum")
 local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
@@ -16,6 +17,11 @@ local str_decode = require("string_decode")
 -- See also: Source (http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm)
 Dbf = class.class(KaitaiStruct)
 
+Dbf.DeleteState = enum.Enum {
+  false = 32,
+  true = 42,
+}
+
 function Dbf:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
@@ -25,12 +31,19 @@ end
 
 function Dbf:_read()
   self.header1 = Dbf.Header1(self._io, self, self._root)
-  self._raw_header2 = self._io:read_bytes((self.header1.len_header - 12))
+  self._raw_header2 = self._io:read_bytes(((self.header1.len_header - 12) - 1))
   local _io = KaitaiStream(stringstream(self._raw_header2))
   self.header2 = Dbf.Header2(_io, self, self._root)
+  self.header_terminator = self._io:read_bytes(1)
+  if not(self.header_terminator == "\013") then
+    error("not equal, expected " ..  "\013" .. ", but got " .. self.header_terminator)
+  end
+  self._raw_records = {}
   self.records = {}
   for i = 0, self.header1.num_records - 1 do
-    self.records[i + 1] = self._io:read_bytes(self.header1.len_record)
+    self._raw_records[i + 1] = self._io:read_bytes(self.header1.len_record)
+    local _io = KaitaiStream(stringstream(self._raw_records[i + 1]))
+    self.records[i + 1] = Dbf.Record(_io, self, self._root)
   end
 end
 
@@ -52,8 +65,10 @@ function Dbf.Header2:_read()
     self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
   end
   self.fields = {}
-  for i = 0, 11 - 1 do
+  local i = 0
+  while not self._io:is_eof() do
     self.fields[i + 1] = Dbf.Field(self._io, self, self._root)
+    i = i + 1
   end
 end
 
@@ -154,6 +169,24 @@ function Dbf.HeaderDbase7:_read()
   end
   self.language_driver_name = self._io:read_bytes(32)
   self.reserved4 = self._io:read_bytes(4)
+end
+
+
+Dbf.Record = class.class(KaitaiStruct)
+
+function Dbf.Record:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Dbf.Record:_read()
+  self.deleted = Dbf.DeleteState(self._io:read_u1())
+  self.record_fields = {}
+  for i = 0, #self._root.header2.fields - 1 do
+    self.record_fields[i + 1] = self._io:read_bytes(self._root.header2.fields[i + 1].length)
+  end
 end
 
 

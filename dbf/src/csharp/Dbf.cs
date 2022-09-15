@@ -22,6 +22,12 @@ namespace Kaitai
             return new Dbf(new KaitaiStream(fileName));
         }
 
+
+        public enum DeleteState
+        {
+            False = 32,
+            True = 42,
+        }
         public Dbf(KaitaiStream p__io, KaitaiStruct p__parent = null, Dbf p__root = null) : base(p__io)
         {
             m_parent = p__parent;
@@ -31,13 +37,21 @@ namespace Kaitai
         private void _read()
         {
             _header1 = new Header1(m_io, this, m_root);
-            __raw_header2 = m_io.ReadBytes((Header1.LenHeader - 12));
+            __raw_header2 = m_io.ReadBytes(((Header1.LenHeader - 12) - 1));
             var io___raw_header2 = new KaitaiStream(__raw_header2);
             _header2 = new Header2(io___raw_header2, this, m_root);
-            _records = new List<byte[]>();
+            _headerTerminator = m_io.ReadBytes(1);
+            if (!((KaitaiStream.ByteArrayCompare(HeaderTerminator, new byte[] { 13 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 13 }, HeaderTerminator, M_Io, "/seq/2");
+            }
+            __raw_records = new List<byte[]>();
+            _records = new List<Record>();
             for (var i = 0; i < Header1.NumRecords; i++)
             {
-                _records.Add(m_io.ReadBytes(Header1.LenRecord));
+                __raw_records.Add(m_io.ReadBytes(Header1.LenRecord));
+                var io___raw_records = new KaitaiStream(__raw_records[__raw_records.Count - 1]);
+                _records.Add(new Record(io___raw_records, this, m_root));
             }
         }
         public partial class Header2 : KaitaiStruct
@@ -62,9 +76,12 @@ namespace Kaitai
                     _headerDbase7 = new HeaderDbase7(m_io, this, m_root);
                 }
                 _fields = new List<Field>();
-                for (var i = 0; i < 11; i++)
                 {
-                    _fields.Add(new Field(m_io, this, m_root));
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _fields.Add(new Field(m_io, this, m_root));
+                        i++;
+                    }
                 }
             }
             private HeaderDbase3 _headerDbase3;
@@ -275,17 +292,52 @@ namespace Kaitai
             public Dbf M_Root { get { return m_root; } }
             public Dbf.Header2 M_Parent { get { return m_parent; } }
         }
+        public partial class Record : KaitaiStruct
+        {
+            public static Record FromFile(string fileName)
+            {
+                return new Record(new KaitaiStream(fileName));
+            }
+
+            public Record(KaitaiStream p__io, Dbf p__parent = null, Dbf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _deleted = ((Dbf.DeleteState) m_io.ReadU1());
+                _recordFields = new List<byte[]>();
+                for (var i = 0; i < M_Root.Header2.Fields.Count; i++)
+                {
+                    _recordFields.Add(m_io.ReadBytes(M_Root.Header2.Fields[i].Length));
+                }
+            }
+            private DeleteState _deleted;
+            private List<byte[]> _recordFields;
+            private Dbf m_root;
+            private Dbf m_parent;
+            public DeleteState Deleted { get { return _deleted; } }
+            public List<byte[]> RecordFields { get { return _recordFields; } }
+            public Dbf M_Root { get { return m_root; } }
+            public Dbf M_Parent { get { return m_parent; } }
+        }
         private Header1 _header1;
         private Header2 _header2;
-        private List<byte[]> _records;
+        private byte[] _headerTerminator;
+        private List<Record> _records;
         private Dbf m_root;
         private KaitaiStruct m_parent;
         private byte[] __raw_header2;
+        private List<byte[]> __raw_records;
         public Header1 Header1 { get { return _header1; } }
         public Header2 Header2 { get { return _header2; } }
-        public List<byte[]> Records { get { return _records; } }
+        public byte[] HeaderTerminator { get { return _headerTerminator; } }
+        public List<Record> Records { get { return _records; } }
         public Dbf M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
         public byte[] M_RawHeader2 { get { return __raw_header2; } }
+        public List<byte[]> M_RawRecords { get { return __raw_records; } }
     }
 }

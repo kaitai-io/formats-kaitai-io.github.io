@@ -211,11 +211,6 @@ specification of fields, and a number of fixed-size records.</p>
                 
                 <li>
                 
-                <a href="graphviz.html" title=".dbf file format of dBASE parsing GraphViz library">GraphViz</a></li>
-                
-                
-                <li>
-                
                 <a href="java.html" title=".dbf file format of dBASE parsing Java library">Java</a></li>
                 
                 
@@ -340,6 +335,12 @@ specification of fields, and a number of fixed-size records.</p>
 <span class="c1"># specification of fields, and a number of fixed-size records.</span>
 <span class="c1"># @see http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm Source</span>
 <span class="k">class</span> <span class="nc">Dbf</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+  <span class="no">DELETE_STATE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">32</span> <span class="o">=&gt;</span> <span class="ss">:delete_state_false</span><span class="p">,</span>
+    <span class="mi">42</span> <span class="o">=&gt;</span> <span class="ss">:delete_state_true</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__DELETE_STATE</span> <span class="o">=</span> <span class="no">DELETE_STATE</span><span class="o">.</span><span class="n">invert</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
     <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
     <span class="n">_read</span>
@@ -347,12 +348,17 @@ specification of fields, and a number of fixed-size records.</p>
 
   <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@header1</span> <span class="o">=</span> <span class="no">Header1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@_raw_header2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header1</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="vi">@_raw_header2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">header1</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">_io__raw_header2</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header2</span><span class="p">)</span>
     <span class="vi">@header2</span> <span class="o">=</span> <span class="no">Header2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_header2</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@header_terminator</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">13</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">header_terminator</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">header_terminator</span> <span class="o">==</span> <span class="o">[</span><span class="mi">13</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+    <span class="vi">@_raw_records</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="vi">@records</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">num_records</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@records</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">len_record</span><span class="p">)</span>
+      <span class="vi">@_raw_records</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">len_record</span><span class="p">)</span>
+      <span class="n">_io__raw_records</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_records</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+      <span class="vi">@records</span> <span class="o">&lt;&lt;</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_records</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -370,9 +376,11 @@ specification of fields, and a number of fixed-size records.</p>
         <span class="vi">@header_dbase_7</span> <span class="o">=</span> <span class="no">HeaderDbase7</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">end</span>
       <span class="vi">@fields</span> <span class="o">=</span> <span class="o">[]</span>
-      <span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
         <span class="vi">@fields</span> <span class="o">&lt;&lt;</span> <span class="no">Field</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="p">}</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:header_dbase_3</span>
@@ -487,10 +495,29 @@ specification of fields, and a number of fixed-size records.</p>
     <span class="kp">attr_reader</span> <span class="ss">:language_driver_name</span>
     <span class="kp">attr_reader</span> <span class="ss">:reserved4</span>
   <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Record</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@deleted</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Dbf</span><span class="o">::</span><span class="no">DELETE_STATE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@record_fields</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header2</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">length</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@record_fields</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header2</span><span class="o">.</span><span class="n">fields</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">length</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:deleted</span>
+    <span class="kp">attr_reader</span> <span class="ss">:record_fields</span>
+  <span class="k">end</span>
   <span class="kp">attr_reader</span> <span class="ss">:header1</span>
   <span class="kp">attr_reader</span> <span class="ss">:header2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header_terminator</span>
   <span class="kp">attr_reader</span> <span class="ss">:records</span>
   <span class="kp">attr_reader</span> <span class="ss">:_raw_header2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_records</span>
 <span class="k">end</span>
 </pre></div>
 

@@ -211,11 +211,6 @@ specification of fields, and a number of fixed-size records.</p>
                 
                 <li>
                 
-                <a href="graphviz.html" title=".dbf file format of dBASE parsing GraphViz library">GraphViz</a></li>
-                
-                
-                <li>
-                
                 <a href="java.html" title=".dbf file format of dBASE parsing Java library">Java</a></li>
                 
                 
@@ -302,6 +297,9 @@ specification of fields, and a number of fixed-size records.</p>
     <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
+<span class="k">our</span> <span class="nv">$DELETE_STATE_FALSE</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$DELETE_STATE_TRUE</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+
 <span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
@@ -319,13 +317,17 @@ specification of fields, and a number of fixed-size records.</p>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header1</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Dbf::Header1</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_header2</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_header</span><span class="p">()</span> <span class="o">-</span> <span class="mi">12</span><span class="p">));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_header2</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_header</span><span class="p">()</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
     <span class="k">my</span> <span class="nv">$io__raw_header2</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_header2</span><span class="p">});</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header2</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Dbf::Header2</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_header2</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header_terminator</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_records</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
     <span class="k">my</span> <span class="nv">$n_records</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_records</span><span class="p">();</span>
     <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_records</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">}},</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_record</span><span class="p">());</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_records</span><span class="p">}},</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_record</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_records</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_records</span><span class="p">}[</span><span class="nv">$i</span><span class="p">]);</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">}},</span> <span class="nn">Dbf::Record</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_records</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -339,6 +341,11 @@ specification of fields, and a number of fixed-size records.</p>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header2</span><span class="p">};</span>
 <span class="p">}</span>
 
+<span class="k">sub</span> <span class="nf">header_terminator</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header_terminator</span><span class="p">};</span>
+<span class="p">}</span>
+
 <span class="k">sub</span> <span class="nf">records</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">};</span>
@@ -347,6 +354,11 @@ specification of fields, and a number of fixed-size records.</p>
 <span class="k">sub</span> <span class="nf">_raw_header2</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_header2</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_raw_records</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_records</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
@@ -386,8 +398,7 @@ specification of fields, and a number of fixed-size records.</p>
         <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header_dbase_7</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Dbf::HeaderDbase7</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
     <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">fields</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
-    <span class="k">my</span> <span class="nv">$n_fields</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_fields</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
         <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">fields</span><span class="p">}},</span> <span class="nn">Dbf::Field</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -714,6 +725,54 @@ specification of fields, and a number of fixed-size records.</p>
 <span class="k">sub</span> <span class="nf">reserved4</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved4</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Dbf::Record</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">deleted</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">record_fields</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+    <span class="k">my</span> <span class="nv">$n_record_fields</span> <span class="o">=</span> <span class="nb">scalar</span><span class="p">(</span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">header2</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fields</span><span class="p">()});</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_record_fields</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">record_fields</span><span class="p">}},</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">header2</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fields</span><span class="p">()}[</span><span class="nv">$i</span><span class="p">]</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">deleted</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">deleted</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">record_fields</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">record_fields</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="mi">1</span><span class="p">;</span>

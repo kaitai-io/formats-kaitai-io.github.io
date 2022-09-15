@@ -19,6 +19,14 @@
  */
 
 var Dbf = (function() {
+  Dbf.DeleteState = Object.freeze({
+    FALSE: 32,
+    TRUE: 42,
+
+    32: "FALSE",
+    42: "TRUE",
+  });
+
   function Dbf(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -28,12 +36,19 @@ var Dbf = (function() {
   }
   Dbf.prototype._read = function() {
     this.header1 = new Header1(this._io, this, this._root);
-    this._raw_header2 = this._io.readBytes((this.header1.lenHeader - 12));
+    this._raw_header2 = this._io.readBytes(((this.header1.lenHeader - 12) - 1));
     var _io__raw_header2 = new KaitaiStream(this._raw_header2);
     this.header2 = new Header2(_io__raw_header2, this, this._root);
+    this.headerTerminator = this._io.readBytes(1);
+    if (!((KaitaiStream.byteArrayCompare(this.headerTerminator, [13]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([13], this.headerTerminator, this._io, "/seq/2");
+    }
+    this._raw_records = [];
     this.records = [];
     for (var i = 0; i < this.header1.numRecords; i++) {
-      this.records.push(this._io.readBytes(this.header1.lenRecord));
+      this._raw_records.push(this._io.readBytes(this.header1.lenRecord));
+      var _io__raw_records = new KaitaiStream(this._raw_records[i]);
+      this.records.push(new Record(_io__raw_records, this, this._root));
     }
   }
 
@@ -53,8 +68,10 @@ var Dbf = (function() {
         this.headerDbase7 = new HeaderDbase7(this._io, this, this._root);
       }
       this.fields = [];
-      for (var i = 0; i < 11; i++) {
+      var i = 0;
+      while (!this._io.isEof()) {
         this.fields.push(new Field(this._io, this, this._root));
+        i++;
       }
     }
 
@@ -162,6 +179,25 @@ var Dbf = (function() {
     }
 
     return HeaderDbase7;
+  })();
+
+  var Record = Dbf.Record = (function() {
+    function Record(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    Record.prototype._read = function() {
+      this.deleted = this._io.readU1();
+      this.recordFields = [];
+      for (var i = 0; i < this._root.header2.fields.length; i++) {
+        this.recordFields.push(this._io.readBytes(this._root.header2.fields[i].length));
+      }
+    }
+
+    return Record;
   })();
 
   return Dbf;

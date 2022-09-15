@@ -14,14 +14,22 @@ import (
  * specification of fields, and a number of fixed-size records.
  * @see <a href="http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm">Source</a>
  */
+
+type Dbf_DeleteState int
+const (
+	Dbf_DeleteState__False Dbf_DeleteState = 32
+	Dbf_DeleteState__True Dbf_DeleteState = 42
+)
 type Dbf struct {
 	Header1 *Dbf_Header1
 	Header2 *Dbf_Header2
-	Records [][]byte
+	HeaderTerminator []byte
+	Records []*Dbf_Record
 	_io *kaitai.Stream
 	_root *Dbf
 	_parent interface{}
 	_raw_Header2 []byte
+	_raw_Records [][]byte
 }
 func NewDbf() *Dbf {
 	return &Dbf{
@@ -39,7 +47,7 @@ func (this *Dbf) Read(io *kaitai.Stream, parent interface{}, root *Dbf) (err err
 		return err
 	}
 	this.Header1 = tmp1
-	tmp2, err := this._io.ReadBytes(int((this.Header1.LenHeader - 12)))
+	tmp2, err := this._io.ReadBytes(int(((this.Header1.LenHeader - 12) - 1)))
 	if err != nil {
 		return err
 	}
@@ -52,14 +60,30 @@ func (this *Dbf) Read(io *kaitai.Stream, parent interface{}, root *Dbf) (err err
 		return err
 	}
 	this.Header2 = tmp3
+	tmp4, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp4 = tmp4
+	this.HeaderTerminator = tmp4
+	if !(bytes.Equal(this.HeaderTerminator, []uint8{13})) {
+		return kaitai.NewValidationNotEqualError([]uint8{13}, this.HeaderTerminator, this._io, "/seq/2")
+	}
 	for i := 0; i < int(this.Header1.NumRecords); i++ {
 		_ = i
-		tmp4, err := this._io.ReadBytes(int(this.Header1.LenRecord))
+		tmp5, err := this._io.ReadBytes(int(this.Header1.LenRecord))
 		if err != nil {
 			return err
 		}
-		tmp4 = tmp4
-		this.Records = append(this.Records, tmp4)
+		tmp5 = tmp5
+		this._raw_Records = append(this._raw_Records, tmp5)
+		_io__raw_Records := kaitai.NewStream(bytes.NewReader(this._raw_Records[i]))
+		tmp6 := NewDbf_Record()
+		err = tmp6.Read(_io__raw_Records, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Records = append(this.Records, tmp6)
 	}
 	return err
 }
@@ -81,38 +105,44 @@ func (this *Dbf_Header2) Read(io *kaitai.Stream, parent *Dbf, root *Dbf) (err er
 	this._parent = parent
 	this._root = root
 
-	tmp5, err := this._root.Header1.DbaseLevel()
-	if err != nil {
-		return err
-	}
-	if (tmp5 == 3) {
-		tmp6 := NewDbf_HeaderDbase3()
-		err = tmp6.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.HeaderDbase3 = tmp6
-	}
 	tmp7, err := this._root.Header1.DbaseLevel()
 	if err != nil {
 		return err
 	}
-	if (tmp7 == 7) {
-		tmp8 := NewDbf_HeaderDbase7()
+	if (tmp7 == 3) {
+		tmp8 := NewDbf_HeaderDbase3()
 		err = tmp8.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.HeaderDbase7 = tmp8
+		this.HeaderDbase3 = tmp8
 	}
-	for i := 0; i < int(11); i++ {
-		_ = i
-		tmp9 := NewDbf_Field()
-		err = tmp9.Read(this._io, this, this._root)
+	tmp9, err := this._root.Header1.DbaseLevel()
+	if err != nil {
+		return err
+	}
+	if (tmp9 == 7) {
+		tmp10 := NewDbf_HeaderDbase7()
+		err = tmp10.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Fields = append(this.Fields, tmp9)
+		this.HeaderDbase7 = tmp10
+	}
+	for i := 1;; i++ {
+		tmp11, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp11 {
+			break
+		}
+		tmp12 := NewDbf_Field()
+		err = tmp12.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Fields = append(this.Fields, tmp12)
 	}
 	return err
 }
@@ -141,60 +171,60 @@ func (this *Dbf_Field) Read(io *kaitai.Stream, parent *Dbf_Header2, root *Dbf) (
 	this._parent = parent
 	this._root = root
 
-	tmp10, err := this._io.ReadBytes(int(11))
+	tmp13, err := this._io.ReadBytes(int(11))
 	if err != nil {
 		return err
 	}
-	tmp10 = kaitai.BytesTerminate(tmp10, 0, false)
-	this.Name = string(tmp10)
-	tmp11, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Datatype = tmp11
-	tmp12, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DataAddress = uint32(tmp12)
-	tmp13, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Length = tmp13
+	tmp13 = kaitai.BytesTerminate(tmp13, 0, false)
+	this.Name = string(tmp13)
 	tmp14, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.DecimalCount = tmp14
-	tmp15, err := this._io.ReadBytes(int(2))
+	this.Datatype = tmp14
+	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp15 = tmp15
-	this.Reserved1 = tmp15
+	this.DataAddress = uint32(tmp15)
 	tmp16, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.WorkAreaId = tmp16
-	tmp17, err := this._io.ReadBytes(int(2))
+	this.Length = tmp16
+	tmp17, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	tmp17 = tmp17
-	this.Reserved2 = tmp17
-	tmp18, err := this._io.ReadU1()
+	this.DecimalCount = tmp17
+	tmp18, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	this.SetFieldsFlag = tmp18
-	tmp19, err := this._io.ReadBytes(int(8))
+	tmp18 = tmp18
+	this.Reserved1 = tmp18
+	tmp19, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	tmp19 = tmp19
-	this.Reserved3 = tmp19
+	this.WorkAreaId = tmp19
+	tmp20, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp20 = tmp20
+	this.Reserved2 = tmp20
+	tmp21, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.SetFieldsFlag = tmp21
+	tmp22, err := this._io.ReadBytes(int(8))
+	if err != nil {
+		return err
+	}
+	tmp22 = tmp22
+	this.Reserved3 = tmp22
 	return err
 }
 
@@ -225,41 +255,41 @@ func (this *Dbf_Header1) Read(io *kaitai.Stream, parent *Dbf, root *Dbf) (err er
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Version = tmp20
-	tmp21, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LastUpdateY = tmp21
-	tmp22, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LastUpdateM = tmp22
 	tmp23, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LastUpdateD = tmp23
-	tmp24, err := this._io.ReadU4le()
+	this.Version = tmp23
+	tmp24, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumRecords = uint32(tmp24)
-	tmp25, err := this._io.ReadU2le()
+	this.LastUpdateY = tmp24
+	tmp25, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LenHeader = uint16(tmp25)
-	tmp26, err := this._io.ReadU2le()
+	this.LastUpdateM = tmp25
+	tmp26, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LenRecord = uint16(tmp26)
+	this.LastUpdateD = tmp26
+	tmp27, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumRecords = uint32(tmp27)
+	tmp28, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenHeader = uint16(tmp28)
+	tmp29, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenRecord = uint16(tmp29)
 	return err
 }
 func (this *Dbf_Header1) DbaseLevel() (v int, err error) {
@@ -288,24 +318,24 @@ func (this *Dbf_HeaderDbase3) Read(io *kaitai.Stream, parent *Dbf_Header2, root 
 	this._parent = parent
 	this._root = root
 
-	tmp27, err := this._io.ReadBytes(int(3))
+	tmp30, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp27 = tmp27
-	this.Reserved1 = tmp27
-	tmp28, err := this._io.ReadBytes(int(13))
+	tmp30 = tmp30
+	this.Reserved1 = tmp30
+	tmp31, err := this._io.ReadBytes(int(13))
 	if err != nil {
 		return err
 	}
-	tmp28 = tmp28
-	this.Reserved2 = tmp28
-	tmp29, err := this._io.ReadBytes(int(4))
+	tmp31 = tmp31
+	this.Reserved2 = tmp31
+	tmp32, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp29 = tmp29
-	this.Reserved3 = tmp29
+	tmp32 = tmp32
+	this.Reserved3 = tmp32
 	return err
 }
 type Dbf_HeaderDbase7 struct {
@@ -332,61 +362,94 @@ func (this *Dbf_HeaderDbase7) Read(io *kaitai.Stream, parent *Dbf_Header2, root 
 	this._parent = parent
 	this._root = root
 
-	tmp30, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp30 = tmp30
-	this.Reserved1 = tmp30
-	if !(bytes.Equal(this.Reserved1, []uint8{0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0}, this.Reserved1, this._io, "/types/header_dbase_7/seq/0")
-	}
-	tmp31, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.HasIncompleteTransaction = tmp31
-	tmp32, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.DbaseIvEncryption = tmp32
-	tmp33, err := this._io.ReadBytes(int(12))
+	tmp33, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
 	tmp33 = tmp33
-	this.Reserved2 = tmp33
+	this.Reserved1 = tmp33
+	if !(bytes.Equal(this.Reserved1, []uint8{0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0}, this.Reserved1, this._io, "/types/header_dbase_7/seq/0")
+	}
 	tmp34, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ProductionMdx = tmp34
+	this.HasIncompleteTransaction = tmp34
 	tmp35, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LanguageDriverId = tmp35
-	tmp36, err := this._io.ReadBytes(int(2))
+	this.DbaseIvEncryption = tmp35
+	tmp36, err := this._io.ReadBytes(int(12))
 	if err != nil {
 		return err
 	}
 	tmp36 = tmp36
-	this.Reserved3 = tmp36
+	this.Reserved2 = tmp36
+	tmp37, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.ProductionMdx = tmp37
+	tmp38, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LanguageDriverId = tmp38
+	tmp39, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp39 = tmp39
+	this.Reserved3 = tmp39
 	if !(bytes.Equal(this.Reserved3, []uint8{0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0}, this.Reserved3, this._io, "/types/header_dbase_7/seq/6")
 	}
-	tmp37, err := this._io.ReadBytes(int(32))
+	tmp40, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp37 = tmp37
-	this.LanguageDriverName = tmp37
-	tmp38, err := this._io.ReadBytes(int(4))
+	tmp40 = tmp40
+	this.LanguageDriverName = tmp40
+	tmp41, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp38 = tmp38
-	this.Reserved4 = tmp38
+	tmp41 = tmp41
+	this.Reserved4 = tmp41
+	return err
+}
+type Dbf_Record struct {
+	Deleted Dbf_DeleteState
+	RecordFields [][]byte
+	_io *kaitai.Stream
+	_root *Dbf
+	_parent *Dbf
+}
+func NewDbf_Record() *Dbf_Record {
+	return &Dbf_Record{
+	}
+}
+
+func (this *Dbf_Record) Read(io *kaitai.Stream, parent *Dbf, root *Dbf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp42, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Deleted = Dbf_DeleteState(tmp42)
+	for i := 0; i < int(len(this._root.Header2.Fields)); i++ {
+		_ = i
+		tmp43, err := this._io.ReadBytes(int(this._root.Header2.Fields[i].Length))
+		if err != nil {
+			return err
+		}
+		tmp43 = tmp43
+		this.RecordFields = append(this.RecordFields, tmp43)
+	}
 	return err
 }

@@ -211,11 +211,6 @@ specification of fields, and a number of fixed-size records.</p>
                 
                 <li>
                 
-                <a href="graphviz.html" title=".dbf file format of dBASE parsing GraphViz library">GraphViz</a></li>
-                
-                
-                <li>
-                
                 <a href="java.html" title=".dbf file format of dBASE parsing Java library">Java</a></li>
                 
                 
@@ -347,6 +342,12 @@ can also be found there.</p>
             <span class="k">return</span> <span class="k">new</span> <span class="nf">Dbf</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
         <span class="p">}</span>
 
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">DeleteState</span>
+        <span class="p">{</span>
+            <span class="n">False</span> <span class="p">=</span> <span class="m">32</span><span class="p">,</span>
+            <span class="n">True</span> <span class="p">=</span> <span class="m">42</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="k">public</span> <span class="nf">Dbf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Dbf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
         <span class="p">{</span>
             <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
@@ -356,13 +357,21 @@ can also be found there.</p>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
         <span class="p">{</span>
             <span class="n">_header1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Header1</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="n">__raw_header2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Header1</span><span class="p">.</span><span class="n">LenHeader</span> <span class="p">-</span> <span class="m">12</span><span class="p">));</span>
+            <span class="n">__raw_header2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">Header1</span><span class="p">.</span><span class="n">LenHeader</span> <span class="p">-</span> <span class="m">12</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="p">));</span>
             <span class="kt">var</span> <span class="n">io___raw_header2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header2</span><span class="p">);</span>
             <span class="n">_header2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Header2</span><span class="p">(</span><span class="n">io___raw_header2</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="n">_records</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;();</span>
+            <span class="n">_headerTerminator</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">HeaderTerminator</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">13</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">13</span> <span class="p">},</span> <span class="n">HeaderTerminator</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/2&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">__raw_records</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;();</span>
+            <span class="n">_records</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;();</span>
             <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">Header1</span><span class="p">.</span><span class="n">NumRecords</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
             <span class="p">{</span>
-                <span class="n">_records</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header1</span><span class="p">.</span><span class="n">LenRecord</span><span class="p">));</span>
+                <span class="n">__raw_records</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header1</span><span class="p">.</span><span class="n">LenRecord</span><span class="p">));</span>
+                <span class="kt">var</span> <span class="n">io___raw_records</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_records</span><span class="p">[</span><span class="n">__raw_records</span><span class="p">.</span><span class="n">Count</span> <span class="p">-</span> <span class="m">1</span><span class="p">]);</span>
+                <span class="n">_records</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">io___raw_records</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Header2</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
@@ -387,9 +396,12 @@ can also be found there.</p>
                     <span class="n">_headerDbase7</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HeaderDbase7</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="p">}</span>
                 <span class="n">_fields</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;();</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">11</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
-                    <span class="n">_fields</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_fields</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="n">HeaderDbase3</span> <span class="n">_headerDbase3</span><span class="p">;</span>
@@ -600,18 +612,53 @@ can also be found there.</p>
             <span class="k">public</span> <span class="n">Dbf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">Dbf</span><span class="p">.</span><span class="n">Header2</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Record</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Record</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Record</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Dbf</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Dbf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_deleted</span> <span class="p">=</span> <span class="p">((</span><span class="n">Dbf</span><span class="p">.</span><span class="n">DeleteState</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_recordFields</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;();</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">Header2</span><span class="p">.</span><span class="n">Fields</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_recordFields</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Header2</span><span class="p">.</span><span class="n">Fields</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Length</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">DeleteState</span> <span class="n">_deleted</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">_recordFields</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Dbf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Dbf</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">DeleteState</span> <span class="n">Deleted</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_deleted</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">RecordFields</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_recordFields</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Dbf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Dbf</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
         <span class="k">private</span> <span class="n">Header1</span> <span class="n">_header1</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">Header2</span> <span class="n">_header2</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">_records</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_headerTerminator</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;</span> <span class="n">_records</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">Dbf</span> <span class="n">m_root</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
         <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_header2</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">__raw_records</span><span class="p">;</span>
         <span class="k">public</span> <span class="n">Header1</span> <span class="n">Header1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="n">Header2</span> <span class="n">Header2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">Records</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_records</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">HeaderTerminator</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headerTerminator</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;</span> <span class="n">Records</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_records</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="n">Dbf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawHeader2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_header2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">M_RawRecords</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_records</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
