@@ -9,8 +9,6 @@ end
 class MachO < Kaitai::Struct::Struct
 
   MAGIC_TYPE = {
-    3199925962 => :magic_type_fat_le,
-    3405691582 => :magic_type_fat_be,
     3472551422 => :magic_type_macho_le_x86,
     3489328638 => :magic_type_macho_le_x64,
     4277009102 => :magic_type_macho_be_x86,

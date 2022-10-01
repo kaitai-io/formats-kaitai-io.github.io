@@ -15,8 +15,6 @@ public class MachO extends KaitaiStruct {
     }
 
     public enum MagicType {
-        FAT_LE(3199925962L),
-        FAT_BE(3405691582L),
         MACHO_LE_X86(3472551422L),
         MACHO_LE_X64(3489328638L),
         MACHO_BE_X86(4277009102L),
@@ -25,7 +23,7 @@ public class MachO extends KaitaiStruct {
         private final long id;
         MagicType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, MagicType> byId = new HashMap<Long, MagicType>(6);
+        private static final Map<Long, MagicType> byId = new HashMap<Long, MagicType>(4);
         static {
             for (MagicType e : MagicType.values())
                 byId.put(e.id(), e);

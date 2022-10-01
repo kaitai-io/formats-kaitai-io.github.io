@@ -9,8 +9,6 @@ import (
 
 type MachO_MagicType int
 const (
-	MachO_MagicType__FatLe MachO_MagicType = 3199925962
-	MachO_MagicType__FatBe MachO_MagicType = 3405691582
 	MachO_MagicType__MachoLeX86 MachO_MagicType = 3472551422
 	MachO_MagicType__MachoLeX64 MachO_MagicType = 3489328638
 	MachO_MagicType__MachoBeX86 MachO_MagicType = 4277009102

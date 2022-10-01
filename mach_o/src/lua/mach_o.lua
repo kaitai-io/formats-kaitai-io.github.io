@@ -13,8 +13,6 @@ require("asn1_der")
 MachO = class.class(KaitaiStruct)
 
 MachO.MagicType = enum.Enum {
-  fat_le = 3199925962,
-  fat_be = 3405691582,
   macho_le_x86 = 3472551422,
   macho_le_x64 = 3489328638,
   macho_be_x86 = 4277009102,

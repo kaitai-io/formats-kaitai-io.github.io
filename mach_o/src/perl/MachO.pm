@@ -20,8 +20,6 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-our $MAGIC_TYPE_FAT_LE = 3199925962;
-our $MAGIC_TYPE_FAT_BE = 3405691582;
 our $MAGIC_TYPE_MACHO_LE_X86 = 3472551422;
 our $MAGIC_TYPE_MACHO_LE_X64 = 3489328638;
 our $MAGIC_TYPE_MACHO_BE_X86 = 4277009102;

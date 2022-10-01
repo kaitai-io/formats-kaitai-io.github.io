@@ -47,8 +47,6 @@ public:
     class entry_point_command_t;
 
     enum magic_type_t {
-        MAGIC_TYPE_FAT_LE = 3199925962UL,
-        MAGIC_TYPE_FAT_BE = 3405691582UL,
         MAGIC_TYPE_MACHO_LE_X86 = 3472551422UL,
         MAGIC_TYPE_MACHO_LE_X64 = 3489328638UL,
         MAGIC_TYPE_MACHO_BE_X86 = 4277009102UL,

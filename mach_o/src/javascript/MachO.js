@@ -11,15 +11,11 @@
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Asn1Der) {
 var MachO = (function() {
   MachO.MagicType = Object.freeze({
-    FAT_LE: 3199925962,
-    FAT_BE: 3405691582,
     MACHO_LE_X86: 3472551422,
     MACHO_LE_X64: 3489328638,
     MACHO_BE_X86: 4277009102,
     MACHO_BE_X64: 4277009103,
 
-    3199925962: "FAT_LE",
-    3405691582: "FAT_BE",
     3472551422: "MACHO_LE_X86",
     3489328638: "MACHO_LE_X64",
     4277009102: "MACHO_BE_X86",

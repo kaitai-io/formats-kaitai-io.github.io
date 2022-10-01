@@ -2884,8 +2884,6 @@ namespace MachO {
 
 namespace MachO {
     class MagicType {
-        const FAT_LE = 3199925962;
-        const FAT_BE = 3405691582;
         const MACHO_LE_X86 = 3472551422;
         const MACHO_LE_X64 = 3489328638;
         const MACHO_BE_X86 = 4277009102;

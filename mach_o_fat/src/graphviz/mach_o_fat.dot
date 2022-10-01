@@ -1,0 +1,38 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__mach_o_fat {
+		label="MachOFat";
+		graph[style=dotted];
+
+		mach_o_fat__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="num_fat_arch_pos">4</TD><TD PORT="num_fat_arch_size">4</TD><TD>u4be</TD><TD PORT="num_fat_arch_type">num_fat_arch</TD></TR>
+			<TR><TD PORT="fat_archs_pos">8</TD><TD PORT="fat_archs_size">20</TD><TD>FatArch</TD><TD PORT="fat_archs_type">fat_archs</TD></TR>
+			<TR><TD COLSPAN="4" PORT="fat_archs__repeat">repeat num_fat_arch times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__fat_arch {
+			label="MachOFat::FatArch";
+			graph[style=dotted];
+
+			fat_arch__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="cpu_type_pos">0</TD><TD PORT="cpu_type_size">4</TD><TD>u4be→MachO::CpuType</TD><TD PORT="cpu_type_type">cpu_type</TD></TR>
+				<TR><TD PORT="cpu_subtype_pos">4</TD><TD PORT="cpu_subtype_size">4</TD><TD>u4be</TD><TD PORT="cpu_subtype_type">cpu_subtype</TD></TR>
+				<TR><TD PORT="ofs_object_pos">8</TD><TD PORT="ofs_object_size">4</TD><TD>u4be</TD><TD PORT="ofs_object_type">ofs_object</TD></TR>
+				<TR><TD PORT="len_object_pos">12</TD><TD PORT="len_object_size">4</TD><TD>u4be</TD><TD PORT="len_object_type">len_object</TD></TR>
+				<TR><TD PORT="align_pos">16</TD><TD PORT="align_size">4</TD><TD>u4be</TD><TD PORT="align_type">align</TD></TR>
+			</TABLE>>];
+			fat_arch__inst__object [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="object_pos">ofs_object</TD><TD PORT="object_size">len_object</TD><TD>MachO</TD><TD PORT="object_type">object</TD></TR>
+			</TABLE>>];
+		}
+	}
+	mach_o_fat__seq:fat_archs_type -> fat_arch__seq [style=bold];
+	mach_o_fat__seq:num_fat_arch_type -> mach_o_fat__seq:fat_archs__repeat [color="#404040"];
+	fat_arch__seq:ofs_object_type -> fat_arch__inst__object:object_pos [color="#404040"];
+	fat_arch__seq:len_object_type -> fat_arch__inst__object:object_size [color="#404040"];
+	fat_arch__inst__object:object_type -> mach_o__seq [style=bold];
+}

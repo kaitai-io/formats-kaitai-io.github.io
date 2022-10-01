@@ -10,8 +10,6 @@ type
     `loadCommands`*: seq[MachO_LoadCommand]
     `parent`*: KaitaiStruct
   MachO_MagicType* = enum
-    fat_le = 3199925962
-    fat_be = 3405691582
     macho_le_x86 = 3472551422
     macho_le_x64 = 3489328638
     macho_be_x86 = 4277009102

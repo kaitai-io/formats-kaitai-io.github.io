@@ -14,8 +14,6 @@ namespace Kaitai
 
         public enum MagicType
         {
-            FatLe = 3199925962,
-            FatBe = 3405691582,
             MachoLeX86 = 3472551422,
             MachoLeX64 = 3489328638,
             MachoBeX86 = 4277009102,
