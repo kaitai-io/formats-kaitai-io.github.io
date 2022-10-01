@@ -361,6 +361,8 @@ class MicrosoftPe(KaitaiStruct):
             riscv32 = 20530
             riscv64 = 20580
             riscv128 = 20776
+            loongarch32 = 25138
+            loongarch64 = 25188
             amd64 = 34404
             m32r = 36929
             arm64 = 43620

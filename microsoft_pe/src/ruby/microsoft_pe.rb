@@ -451,6 +451,8 @@ class MicrosoftPe < Kaitai::Struct::Struct
       20530 => :machine_type_riscv32,
       20580 => :machine_type_riscv64,
       20776 => :machine_type_riscv128,
+      25138 => :machine_type_loongarch32,
+      25188 => :machine_type_loongarch64,
       34404 => :machine_type_amd64,
       36929 => :machine_type_m32r,
       43620 => :machine_type_arm64,

@@ -671,6 +671,8 @@ namespace MicrosoftPe\CoffHeader {
         const RISCV32 = 20530;
         const RISCV64 = 20580;
         const RISCV128 = 20776;
+        const LOONGARCH32 = 25138;
+        const LOONGARCH64 = 25188;
         const AMD64 = 34404;
         const M32R = 36929;
         const ARM64 = 43620;

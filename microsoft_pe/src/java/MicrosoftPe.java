@@ -790,6 +790,8 @@ public class MicrosoftPe extends KaitaiStruct {
             RISCV32(20530),
             RISCV64(20580),
             RISCV128(20776),
+            LOONGARCH32(25138),
+            LOONGARCH64(25188),
             AMD64(34404),
             M32R(36929),
             ARM64(43620);
@@ -797,7 +799,7 @@ public class MicrosoftPe extends KaitaiStruct {
             private final long id;
             MachineType(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map<Long, MachineType> byId = new HashMap<Long, MachineType>(26);
+            private static final Map<Long, MachineType> byId = new HashMap<Long, MachineType>(28);
             static {
                 for (MachineType e : MachineType.values())
                     byId.put(e.id(), e);

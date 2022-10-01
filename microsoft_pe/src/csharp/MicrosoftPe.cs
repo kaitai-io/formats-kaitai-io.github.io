@@ -724,6 +724,8 @@ namespace Kaitai
                 Riscv32 = 20530,
                 Riscv64 = 20580,
                 Riscv128 = 20776,
+                Loongarch32 = 25138,
+                Loongarch64 = 25188,
                 Amd64 = 34404,
                 M32r = 36929,
                 Arm64 = 43620,
