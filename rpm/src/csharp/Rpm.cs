@@ -372,6 +372,10 @@ namespace Kaitai
             ModularityLabel = 5096,
             PayloadDigestAlt = 5097,
             ArchSuffix = 5098,
+            Spec = 5099,
+            TranslationUrl = 5100,
+            UpstreamReleases = 5101,
+            SourceLicenseInternal = 5102,
         }
 
         public enum RpmTypes

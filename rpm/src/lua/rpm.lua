@@ -357,6 +357,10 @@ Rpm.HeaderTags = enum.Enum {
   modularity_label = 5096,
   payload_digest_alt = 5097,
   arch_suffix = 5098,
+  spec = 5099,
+  translation_url = 5100,
+  upstream_releases = 5101,
+  source_license_internal = 5102,
 }
 
 Rpm.RpmTypes = enum.Enum {

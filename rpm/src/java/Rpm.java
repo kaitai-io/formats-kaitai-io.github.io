@@ -392,12 +392,16 @@ public class Rpm extends KaitaiStruct {
         IDENTITY_UNIMPLEMENTED(5095),
         MODULARITY_LABEL(5096),
         PAYLOAD_DIGEST_ALT(5097),
-        ARCH_SUFFIX(5098);
+        ARCH_SUFFIX(5098),
+        SPEC(5099),
+        TRANSLATION_URL(5100),
+        UPSTREAM_RELEASES(5101),
+        SOURCE_LICENSE_INTERNAL(5102);
 
         private final long id;
         HeaderTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(289);
+        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(293);
         static {
             for (HeaderTags e : HeaderTags.values())
                 byId.put(e.id(), e);

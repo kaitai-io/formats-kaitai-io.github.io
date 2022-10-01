@@ -358,6 +358,10 @@ class Rpm < Kaitai::Struct::Struct
     5096 => :header_tags_modularity_label,
     5097 => :header_tags_payload_digest_alt,
     5098 => :header_tags_arch_suffix,
+    5099 => :header_tags_spec,
+    5100 => :header_tags_translation_url,
+    5101 => :header_tags_upstream_releases,
+    5102 => :header_tags_source_license_internal,
   }
   I__HEADER_TAGS = HEADER_TAGS.invert
 

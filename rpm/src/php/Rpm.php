@@ -1213,6 +1213,10 @@ namespace Rpm {
         const MODULARITY_LABEL = 5096;
         const PAYLOAD_DIGEST_ALT = 5097;
         const ARCH_SUFFIX = 5098;
+        const SPEC = 5099;
+        const TRANSLATION_URL = 5100;
+        const UPSTREAM_RELEASES = 5101;
+        const SOURCE_LICENSE_INTERNAL = 5102;
     }
 }
 
