@@ -276,5 +276,9 @@ namespace Pcap {
         const ATSC_ALP = 289;
         const ETW = 290;
         const ZBOSS_NCP = 292;
+        const USB_2_0_LOW_SPEED = 293;
+        const USB_2_0_FULL_SPEED = 294;
+        const USB_2_0_HIGH_SPEED = 295;
+        const AUERSWALD_LOG = 296;
     }
 }

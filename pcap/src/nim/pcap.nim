@@ -143,6 +143,10 @@ type
     atsc_alp = 289
     etw = 290
     zboss_ncp = 292
+    usb_2_0_low_speed = 293
+    usb_2_0_full_speed = 294
+    usb_2_0_high_speed = 295
+    auerswald_log = 296
   Pcap_Header* = ref object of KaitaiStruct
     `magicNumber`*: seq[byte]
     `versionMajor`*: uint16

@@ -152,6 +152,10 @@ our $LINKTYPE_USB_2_0 = 288;
 our $LINKTYPE_ATSC_ALP = 289;
 our $LINKTYPE_ETW = 290;
 our $LINKTYPE_ZBOSS_NCP = 292;
+our $LINKTYPE_USB_2_0_LOW_SPEED = 293;
+our $LINKTYPE_USB_2_0_FULL_SPEED = 294;
+our $LINKTYPE_USB_2_0_HIGH_SPEED = 295;
+our $LINKTYPE_AUERSWALD_LOG = 296;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;

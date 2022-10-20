@@ -161,7 +161,11 @@ public:
         LINKTYPE_USB_2_0 = 288,
         LINKTYPE_ATSC_ALP = 289,
         LINKTYPE_ETW = 290,
-        LINKTYPE_ZBOSS_NCP = 292
+        LINKTYPE_ZBOSS_NCP = 292,
+        LINKTYPE_USB_2_0_LOW_SPEED = 293,
+        LINKTYPE_USB_2_0_FULL_SPEED = 294,
+        LINKTYPE_USB_2_0_HIGH_SPEED = 295,
+        LINKTYPE_AUERSWALD_LOG = 296
     };
 
     pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcap_t* p__root = 0);

@@ -156,6 +156,10 @@ namespace Kaitai
             AtscAlp = 289,
             Etw = 290,
             ZbossNcp = 292,
+            Usb20LowSpeed = 293,
+            Usb20FullSpeed = 294,
+            Usb20HighSpeed = 295,
+            AuerswaldLog = 296,
         }
         public Pcap(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcap p__root = null) : base(p__io)
         {

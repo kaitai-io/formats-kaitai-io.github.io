@@ -154,12 +154,16 @@ public class Pcap extends KaitaiStruct {
         USB_2_0(288),
         ATSC_ALP(289),
         ETW(290),
-        ZBOSS_NCP(292);
+        ZBOSS_NCP(292),
+        USB_2_0_LOW_SPEED(293),
+        USB_2_0_FULL_SPEED(294),
+        USB_2_0_HIGH_SPEED(295),
+        AUERSWALD_LOG(296);
 
         private final long id;
         Linktype(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Linktype> byId = new HashMap<Long, Linktype>(132);
+        private static final Map<Long, Linktype> byId = new HashMap<Long, Linktype>(136);
         static {
             for (Linktype e : Linktype.values())
                 byId.put(e.id(), e);

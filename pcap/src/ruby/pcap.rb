@@ -148,6 +148,10 @@ class Pcap < Kaitai::Struct::Struct
     289 => :linktype_atsc_alp,
     290 => :linktype_etw,
     292 => :linktype_zboss_ncp,
+    293 => :linktype_usb_2_0_low_speed,
+    294 => :linktype_usb_2_0_full_speed,
+    295 => :linktype_usb_2_0_high_speed,
+    296 => :linktype_auerswald_log,
   }
   I__LINKTYPE = LINKTYPE.invert
   def initialize(_io, _parent = nil, _root = self)

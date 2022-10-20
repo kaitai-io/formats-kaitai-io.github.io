@@ -148,6 +148,10 @@ const (
 	Pcap_Linktype__AtscAlp Pcap_Linktype = 289
 	Pcap_Linktype__Etw Pcap_Linktype = 290
 	Pcap_Linktype__ZbossNcp Pcap_Linktype = 292
+	Pcap_Linktype__Usb20LowSpeed Pcap_Linktype = 293
+	Pcap_Linktype__Usb20FullSpeed Pcap_Linktype = 294
+	Pcap_Linktype__Usb20HighSpeed Pcap_Linktype = 295
+	Pcap_Linktype__AuerswaldLog Pcap_Linktype = 296
 )
 type Pcap struct {
 	Hdr *Pcap_Header

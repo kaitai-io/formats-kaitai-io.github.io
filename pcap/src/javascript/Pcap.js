@@ -151,6 +151,10 @@ var Pcap = (function() {
     ATSC_ALP: 289,
     ETW: 290,
     ZBOSS_NCP: 292,
+    USB_2_0_LOW_SPEED: 293,
+    USB_2_0_FULL_SPEED: 294,
+    USB_2_0_HIGH_SPEED: 295,
+    AUERSWALD_LOG: 296,
 
     0: "NULL_LINKTYPE",
     1: "ETHERNET",
@@ -284,6 +288,10 @@ var Pcap = (function() {
     289: "ATSC_ALP",
     290: "ETW",
     292: "ZBOSS_NCP",
+    293: "USB_2_0_LOW_SPEED",
+    294: "USB_2_0_FULL_SPEED",
+    295: "USB_2_0_HIGH_SPEED",
+    296: "AUERSWALD_LOG",
   });
 
   function Pcap(_io, _parent, _root) {
