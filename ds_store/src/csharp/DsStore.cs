@@ -644,7 +644,7 @@ namespace Kaitai
                         if (Mode > 0) {
                             KaitaiStream io = M_Root.M_Io;
                             long _pos = io.Pos;
-                            io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[BlockId].Offset);
+                            io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[((uint) (BlockId))].Offset);
                             _block = new Block(io, this, m_root);
                             io.Seek(_pos);
                             f_block = true;

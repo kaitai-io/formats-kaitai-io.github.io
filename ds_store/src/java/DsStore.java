@@ -659,7 +659,7 @@ public class DsStore extends KaitaiStruct {
                 if (mode() > 0) {
                     KaitaiStream io = _root()._io();
                     long _pos = io.pos();
-                    io.seek(_root().buddyAllocatorBody().blockAddresses().get((int) blockId()).offset());
+                    io.seek(_root().buddyAllocatorBody().blockAddresses().get((int) ((long) (blockId()))).offset());
                     this.block = new Block(io, this, _root);
                     io.seek(_pos);
                 }

@@ -501,7 +501,7 @@ proc block(this: DsStore_Block_BlockData): DsStore_Block =
   if this.mode > 0:
     let io = DsStore(this.root).io
     let pos = io.pos()
-    io.seek(int(DsStore(this.root).buddyAllocatorBody.blockAddresses[this.blockId].offset))
+    io.seek(int(DsStore(this.root).buddyAllocatorBody.blockAddresses[(uint32(this.blockId))].offset))
     let blockInstExpr = DsStore_Block.read(io, this.root, this)
     this.blockInst = blockInstExpr
     io.seek(pos)
