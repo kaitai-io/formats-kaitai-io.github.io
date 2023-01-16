@@ -208,7 +208,7 @@ namespace DsStore\BuddyAllocatorBody {
         public function size() {
             if ($this->_m_size !== null)
                 return $this->_m_size;
-            $this->_m_size = ((1 << $this->addressRaw()) & $this->_root()->blockAddressMask());
+            $this->_m_size = (1 << ($this->addressRaw() & $this->_root()->blockAddressMask()));
             return $this->_m_size;
         }
         protected $_m_addressRaw;

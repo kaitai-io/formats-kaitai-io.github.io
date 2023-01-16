@@ -91,7 +91,7 @@ class DsStore(KaitaiStruct):
                 if hasattr(self, '_m_size'):
                     return self._m_size
 
-                self._m_size = ((1 << self.address_raw) & self._root.block_address_mask)
+                self._m_size = (1 << (self.address_raw & self._root.block_address_mask))
                 return getattr(self, '_m_size', None)
 
 

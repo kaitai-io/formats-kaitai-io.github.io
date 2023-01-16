@@ -310,7 +310,7 @@ proc offset(this: DsStore_BuddyAllocatorBody_BlockDescriptor): int =
 proc size(this: DsStore_BuddyAllocatorBody_BlockDescriptor): int = 
   if this.sizeInstFlag:
     return this.sizeInst
-  let sizeInstExpr = int(((1 shl this.addressRaw) and DsStore(this.root).blockAddressMask))
+  let sizeInstExpr = int((1 shl (this.addressRaw and DsStore(this.root).blockAddressMask)))
   this.sizeInst = sizeInstExpr
   this.sizeInstFlag = true
   return this.sizeInst

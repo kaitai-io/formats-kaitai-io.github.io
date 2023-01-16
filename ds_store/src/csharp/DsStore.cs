@@ -168,7 +168,7 @@ namespace Kaitai
                     {
                         if (f_size)
                             return _size;
-                        _size = (int) (((1 << AddressRaw) & M_Root.BlockAddressMask));
+                        _size = (int) ((1 << (AddressRaw & M_Root.BlockAddressMask)));
                         f_size = true;
                         return _size;
                     }

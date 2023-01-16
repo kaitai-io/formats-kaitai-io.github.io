@@ -284,7 +284,7 @@ sub offset {
 sub size {
     my ($self) = @_;
     return $self->{size} if ($self->{size});
-    $self->{size} = ((1 << $self->address_raw()) & $self->_root()->block_address_mask());
+    $self->{size} = (1 << ($self->address_raw() & $self->_root()->block_address_mask()));
     return $self->{size};
 }
 

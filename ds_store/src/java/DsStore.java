@@ -169,7 +169,7 @@ public class DsStore extends KaitaiStruct {
             public Integer size() {
                 if (this.size != null)
                     return this.size;
-                int _tmp = (int) (((1 << addressRaw()) & _root().blockAddressMask()));
+                int _tmp = (int) ((1 << (addressRaw() & _root().blockAddressMask())));
                 this.size = _tmp;
                 return this.size;
             }

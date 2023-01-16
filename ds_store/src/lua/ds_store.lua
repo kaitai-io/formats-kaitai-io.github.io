@@ -190,7 +190,7 @@ function DsStore.BuddyAllocatorBody.BlockDescriptor.property.size:get()
     return self._m_size
   end
 
-  self._m_size = ((1 << self.address_raw) & self._root.block_address_mask)
+  self._m_size = (1 << (self.address_raw & self._root.block_address_mask))
   return self._m_size
 end
 

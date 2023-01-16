@@ -97,7 +97,7 @@ class DsStore < Kaitai::Struct::Struct
       end
       def size
         return @size unless @size.nil?
-        @size = ((1 << address_raw) & _root.block_address_mask)
+        @size = (1 << (address_raw & _root.block_address_mask))
         @size
       end
       attr_reader :address_raw

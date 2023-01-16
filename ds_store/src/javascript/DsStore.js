@@ -117,7 +117,7 @@ var DsStore = (function() {
         get: function() {
           if (this._m_size !== undefined)
             return this._m_size;
-          this._m_size = ((1 << this.addressRaw) & this._root.blockAddressMask);
+          this._m_size = (1 << (this.addressRaw & this._root.blockAddressMask));
           return this._m_size;
         }
       });
