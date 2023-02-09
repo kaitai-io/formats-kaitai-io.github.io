@@ -13,6 +13,16 @@
 #endif
 class asn1_der_t;
 
+/**
+ * \sa https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf Source
+ * \sa https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz Source
+ * \sa https://github.com/comex/cs/blob/07a88f9/macho_cs.py Source
+ * \sa https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html Source
+ * \sa https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h Source
+ * \sa https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html Source
+ * \sa https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html Source
+ */
+
 class mach_o_t : public kaitai::kstruct {
 
 public:
@@ -2270,11 +2280,10 @@ public:
     class dyld_info_command_t : public kaitai::kstruct {
 
     public:
-        class bind_item_t;
         class rebase_data_t;
-        class export_node_t;
+        class bind_item_t;
         class bind_data_t;
-        class lazy_bind_data_t;
+        class export_node_t;
 
         enum bind_opcode_t {
             BIND_OPCODE_DONE = 0,
@@ -2300,68 +2309,6 @@ public:
 
     public:
         ~dyld_info_command_t();
-
-        class bind_item_t : public kaitai::kstruct {
-
-        public:
-
-            bind_item_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, mach_o_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~bind_item_t();
-
-        private:
-            bool f_opcode;
-            bind_opcode_t m_opcode;
-
-        public:
-            bind_opcode_t opcode();
-
-        private:
-            bool f_immediate;
-            int32_t m_immediate;
-
-        public:
-            int32_t immediate();
-
-        private:
-            uint8_t m_opcode_and_immediate;
-            uleb128_t* m_uleb;
-            bool n_uleb;
-
-        public:
-            bool _is_null_uleb() { uleb(); return n_uleb; };
-
-        private:
-            uleb128_t* m_skip;
-            bool n_skip;
-
-        public:
-            bool _is_null_skip() { skip(); return n_skip; };
-
-        private:
-            std::string m_symbol;
-            bool n_symbol;
-
-        public:
-            bool _is_null_symbol() { symbol(); return n_symbol; };
-
-        private:
-            mach_o_t* m__root;
-            kaitai::kstruct* m__parent;
-
-        public:
-            uint8_t opcode_and_immediate() const { return m_opcode_and_immediate; }
-            uleb128_t* uleb() const { return m_uleb; }
-            uleb128_t* skip() const { return m_skip; }
-            std::string symbol() const { return m_symbol; }
-            mach_o_t* _root() const { return m__root; }
-            kaitai::kstruct* _parent() const { return m__parent; }
-        };
 
         class rebase_data_t : public kaitai::kstruct {
 
@@ -2454,6 +2401,92 @@ public:
             mach_o_t::dyld_info_command_t* _parent() const { return m__parent; }
         };
 
+        class bind_item_t : public kaitai::kstruct {
+
+        public:
+
+            bind_item_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t::bind_data_t* p__parent = 0, mach_o_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~bind_item_t();
+
+        private:
+            bool f_opcode;
+            bind_opcode_t m_opcode;
+
+        public:
+            bind_opcode_t opcode();
+
+        private:
+            bool f_immediate;
+            int32_t m_immediate;
+
+        public:
+            int32_t immediate();
+
+        private:
+            uint8_t m_opcode_and_immediate;
+            uleb128_t* m_uleb;
+            bool n_uleb;
+
+        public:
+            bool _is_null_uleb() { uleb(); return n_uleb; };
+
+        private:
+            uleb128_t* m_skip;
+            bool n_skip;
+
+        public:
+            bool _is_null_skip() { skip(); return n_skip; };
+
+        private:
+            std::string m_symbol;
+            bool n_symbol;
+
+        public:
+            bool _is_null_symbol() { symbol(); return n_symbol; };
+
+        private:
+            mach_o_t* m__root;
+            mach_o_t::dyld_info_command_t::bind_data_t* m__parent;
+
+        public:
+            uint8_t opcode_and_immediate() const { return m_opcode_and_immediate; }
+            uleb128_t* uleb() const { return m_uleb; }
+            uleb128_t* skip() const { return m_skip; }
+            std::string symbol() const { return m_symbol; }
+            mach_o_t* _root() const { return m__root; }
+            mach_o_t::dyld_info_command_t::bind_data_t* _parent() const { return m__parent; }
+        };
+
+        class bind_data_t : public kaitai::kstruct {
+
+        public:
+
+            bind_data_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t* p__parent = 0, mach_o_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~bind_data_t();
+
+        private:
+            std::vector<bind_item_t*>* m_items;
+            mach_o_t* m__root;
+            mach_o_t::dyld_info_command_t* m__parent;
+
+        public:
+            std::vector<bind_item_t*>* items() const { return m_items; }
+            mach_o_t* _root() const { return m__root; }
+            mach_o_t::dyld_info_command_t* _parent() const { return m__parent; }
+        };
+
         class export_node_t : public kaitai::kstruct {
 
         public:
@@ -2518,81 +2551,70 @@ public:
             kaitai::kstruct* _parent() const { return m__parent; }
         };
 
-        class bind_data_t : public kaitai::kstruct {
-
-        public:
-
-            bind_data_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t* p__parent = 0, mach_o_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~bind_data_t();
-
-        private:
-            std::vector<bind_item_t*>* m_items;
-            mach_o_t* m__root;
-            mach_o_t::dyld_info_command_t* m__parent;
-
-        public:
-            std::vector<bind_item_t*>* items() const { return m_items; }
-            mach_o_t* _root() const { return m__root; }
-            mach_o_t::dyld_info_command_t* _parent() const { return m__parent; }
-        };
-
-        class lazy_bind_data_t : public kaitai::kstruct {
-
-        public:
-
-            lazy_bind_data_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t* p__parent = 0, mach_o_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~lazy_bind_data_t();
-
-        private:
-            std::vector<bind_item_t*>* m_items;
-            mach_o_t* m__root;
-            mach_o_t::dyld_info_command_t* m__parent;
-
-        public:
-            std::vector<bind_item_t*>* items() const { return m_items; }
-            mach_o_t* _root() const { return m__root; }
-            mach_o_t::dyld_info_command_t* _parent() const { return m__parent; }
-        };
-
-    private:
-        bool f_rebase;
-        rebase_data_t* m_rebase;
-
-    public:
-        rebase_data_t* rebase();
-
     private:
         bool f_bind;
         bind_data_t* m_bind;
+        bool n_bind;
+
+    public:
+        bool _is_null_bind() { bind(); return n_bind; };
+
+    private:
 
     public:
         bind_data_t* bind();
 
     private:
-        bool f_lazy_bind;
-        lazy_bind_data_t* m_lazy_bind;
-
-    public:
-        lazy_bind_data_t* lazy_bind();
-
-    private:
         bool f_exports;
         export_node_t* m_exports;
+        bool n_exports;
+
+    public:
+        bool _is_null_exports() { exports(); return n_exports; };
+
+    private:
 
     public:
         export_node_t* exports();
+
+    private:
+        bool f_weak_bind;
+        bind_data_t* m_weak_bind;
+        bool n_weak_bind;
+
+    public:
+        bool _is_null_weak_bind() { weak_bind(); return n_weak_bind; };
+
+    private:
+
+    public:
+        bind_data_t* weak_bind();
+
+    private:
+        bool f_rebase;
+        rebase_data_t* m_rebase;
+        bool n_rebase;
+
+    public:
+        bool _is_null_rebase() { rebase(); return n_rebase; };
+
+    private:
+
+    public:
+        rebase_data_t* rebase();
+
+    private:
+        bool f_lazy_bind;
+        bind_data_t* m_lazy_bind;
+        bool n_lazy_bind;
+
+    public:
+        bool _is_null_lazy_bind() { lazy_bind(); return n_lazy_bind; };
+
+    private:
+
+    public:
+        bind_data_t* lazy_bind();
 
     private:
         uint32_t m_rebase_off;
@@ -2607,14 +2629,46 @@ public:
         uint32_t m_export_size;
         mach_o_t* m__root;
         mach_o_t::load_command_t* m__parent;
-        std::string m__raw_rebase;
-        kaitai::kstream* m__io__raw_rebase;
         std::string m__raw_bind;
+        bool n__raw_bind;
+
+    public:
+        bool _is_null__raw_bind() { _raw_bind(); return n__raw_bind; };
+
+    private:
         kaitai::kstream* m__io__raw_bind;
-        std::string m__raw_lazy_bind;
-        kaitai::kstream* m__io__raw_lazy_bind;
         std::string m__raw_exports;
+        bool n__raw_exports;
+
+    public:
+        bool _is_null__raw_exports() { _raw_exports(); return n__raw_exports; };
+
+    private:
         kaitai::kstream* m__io__raw_exports;
+        std::string m__raw_weak_bind;
+        bool n__raw_weak_bind;
+
+    public:
+        bool _is_null__raw_weak_bind() { _raw_weak_bind(); return n__raw_weak_bind; };
+
+    private:
+        kaitai::kstream* m__io__raw_weak_bind;
+        std::string m__raw_rebase;
+        bool n__raw_rebase;
+
+    public:
+        bool _is_null__raw_rebase() { _raw_rebase(); return n__raw_rebase; };
+
+    private:
+        kaitai::kstream* m__io__raw_rebase;
+        std::string m__raw_lazy_bind;
+        bool n__raw_lazy_bind;
+
+    public:
+        bool _is_null__raw_lazy_bind() { _raw_lazy_bind(); return n__raw_lazy_bind; };
+
+    private:
+        kaitai::kstream* m__io__raw_lazy_bind;
 
     public:
         uint32_t rebase_off() const { return m_rebase_off; }
@@ -2629,14 +2683,16 @@ public:
         uint32_t export_size() const { return m_export_size; }
         mach_o_t* _root() const { return m__root; }
         mach_o_t::load_command_t* _parent() const { return m__parent; }
-        std::string _raw_rebase() const { return m__raw_rebase; }
-        kaitai::kstream* _io__raw_rebase() const { return m__io__raw_rebase; }
         std::string _raw_bind() const { return m__raw_bind; }
         kaitai::kstream* _io__raw_bind() const { return m__io__raw_bind; }
-        std::string _raw_lazy_bind() const { return m__raw_lazy_bind; }
-        kaitai::kstream* _io__raw_lazy_bind() const { return m__io__raw_lazy_bind; }
         std::string _raw_exports() const { return m__raw_exports; }
         kaitai::kstream* _io__raw_exports() const { return m__io__raw_exports; }
+        std::string _raw_weak_bind() const { return m__raw_weak_bind; }
+        kaitai::kstream* _io__raw_weak_bind() const { return m__io__raw_weak_bind; }
+        std::string _raw_rebase() const { return m__raw_rebase; }
+        kaitai::kstream* _io__raw_rebase() const { return m__io__raw_rebase; }
+        std::string _raw_lazy_bind() const { return m__raw_lazy_bind; }
+        kaitai::kstream* _io__raw_lazy_bind() const { return m__io__raw_lazy_bind; }
     };
 
     class dylinker_command_t : public kaitai::kstruct {

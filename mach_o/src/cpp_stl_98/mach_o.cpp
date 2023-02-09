@@ -393,7 +393,7 @@ mach_o_t::cs_blob_t::data_t::data_t(kaitai::kstream* p__io, kaitai::kstruct* p__
 void mach_o_t::cs_blob_t::data_t::_read() {
     m_length = m__io->read_u4be();
     m_value = m__io->read_bytes(length());
-    m_padding = m__io->read_bytes((4 - (length() & 3)));
+    m_padding = m__io->read_bytes(kaitai::kstream::mod(-(length()), 4));
 }
 
 mach_o_t::cs_blob_t::data_t::~data_t() {
@@ -2360,18 +2360,21 @@ mach_o_t::cs_blob_t* mach_o_t::code_signature_command_t::code_signature() {
 mach_o_t::dyld_info_command_t::dyld_info_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    m_rebase = 0;
-    m__io__raw_rebase = 0;
     m_bind = 0;
     m__io__raw_bind = 0;
-    m_lazy_bind = 0;
-    m__io__raw_lazy_bind = 0;
     m_exports = 0;
     m__io__raw_exports = 0;
-    f_rebase = false;
+    m_weak_bind = 0;
+    m__io__raw_weak_bind = 0;
+    m_rebase = 0;
+    m__io__raw_rebase = 0;
+    m_lazy_bind = 0;
+    m__io__raw_lazy_bind = 0;
     f_bind = false;
-    f_lazy_bind = false;
     f_exports = false;
+    f_weak_bind = false;
+    f_rebase = false;
+    f_lazy_bind = false;
 
     try {
         _read();
@@ -2399,15 +2402,7 @@ mach_o_t::dyld_info_command_t::~dyld_info_command_t() {
 }
 
 void mach_o_t::dyld_info_command_t::_clean_up() {
-    if (f_rebase) {
-        if (m__io__raw_rebase) {
-            delete m__io__raw_rebase; m__io__raw_rebase = 0;
-        }
-        if (m_rebase) {
-            delete m_rebase; m_rebase = 0;
-        }
-    }
-    if (f_bind) {
+    if (f_bind && !n_bind) {
         if (m__io__raw_bind) {
             delete m__io__raw_bind; m__io__raw_bind = 0;
         }
@@ -2415,15 +2410,7 @@ void mach_o_t::dyld_info_command_t::_clean_up() {
             delete m_bind; m_bind = 0;
         }
     }
-    if (f_lazy_bind) {
-        if (m__io__raw_lazy_bind) {
-            delete m__io__raw_lazy_bind; m__io__raw_lazy_bind = 0;
-        }
-        if (m_lazy_bind) {
-            delete m_lazy_bind; m_lazy_bind = 0;
-        }
-    }
-    if (f_exports) {
+    if (f_exports && !n_exports) {
         if (m__io__raw_exports) {
             delete m__io__raw_exports; m__io__raw_exports = 0;
         }
@@ -2431,76 +2418,30 @@ void mach_o_t::dyld_info_command_t::_clean_up() {
             delete m_exports; m_exports = 0;
         }
     }
-}
-
-mach_o_t::dyld_info_command_t::bind_item_t::bind_item_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_uleb = 0;
-    m_skip = 0;
-    f_opcode = false;
-    f_immediate = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void mach_o_t::dyld_info_command_t::bind_item_t::_read() {
-    m_opcode_and_immediate = m__io->read_u1();
-    n_uleb = true;
-    if ( ((opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_APPEND_SLEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_ADD_ADDRESS_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
-        n_uleb = false;
-        m_uleb = new uleb128_t(m__io, this, m__root);
-    }
-    n_skip = true;
-    if (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
-        n_skip = false;
-        m_skip = new uleb128_t(m__io, this, m__root);
-    }
-    n_symbol = true;
-    if (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
-        n_symbol = false;
-        m_symbol = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ascii"));
-    }
-}
-
-mach_o_t::dyld_info_command_t::bind_item_t::~bind_item_t() {
-    _clean_up();
-}
-
-void mach_o_t::dyld_info_command_t::bind_item_t::_clean_up() {
-    if (!n_uleb) {
-        if (m_uleb) {
-            delete m_uleb; m_uleb = 0;
+    if (f_weak_bind && !n_weak_bind) {
+        if (m__io__raw_weak_bind) {
+            delete m__io__raw_weak_bind; m__io__raw_weak_bind = 0;
+        }
+        if (m_weak_bind) {
+            delete m_weak_bind; m_weak_bind = 0;
         }
     }
-    if (!n_skip) {
-        if (m_skip) {
-            delete m_skip; m_skip = 0;
+    if (f_rebase && !n_rebase) {
+        if (m__io__raw_rebase) {
+            delete m__io__raw_rebase; m__io__raw_rebase = 0;
+        }
+        if (m_rebase) {
+            delete m_rebase; m_rebase = 0;
         }
     }
-    if (!n_symbol) {
+    if (f_lazy_bind && !n_lazy_bind) {
+        if (m__io__raw_lazy_bind) {
+            delete m__io__raw_lazy_bind; m__io__raw_lazy_bind = 0;
+        }
+        if (m_lazy_bind) {
+            delete m_lazy_bind; m_lazy_bind = 0;
+        }
     }
-}
-
-mach_o_t::dyld_info_command_t::bind_opcode_t mach_o_t::dyld_info_command_t::bind_item_t::opcode() {
-    if (f_opcode)
-        return m_opcode;
-    m_opcode = static_cast<mach_o_t::dyld_info_command_t::bind_opcode_t>((opcode_and_immediate() & 240));
-    f_opcode = true;
-    return m_opcode;
-}
-
-int32_t mach_o_t::dyld_info_command_t::bind_item_t::immediate() {
-    if (f_immediate)
-        return m_immediate;
-    m_immediate = (opcode_and_immediate() & 15);
-    f_immediate = true;
-    return m_immediate;
 }
 
 mach_o_t::dyld_info_command_t::rebase_data_t::rebase_data_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
@@ -2605,6 +2546,113 @@ int32_t mach_o_t::dyld_info_command_t::rebase_data_t::rebase_item_t::immediate()
     return m_immediate;
 }
 
+mach_o_t::dyld_info_command_t::bind_item_t::bind_item_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t::bind_data_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_uleb = 0;
+    m_skip = 0;
+    f_opcode = false;
+    f_immediate = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void mach_o_t::dyld_info_command_t::bind_item_t::_read() {
+    m_opcode_and_immediate = m__io->read_u1();
+    n_uleb = true;
+    if ( ((opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_APPEND_SLEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_ADD_ADDRESS_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB) || (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
+        n_uleb = false;
+        m_uleb = new uleb128_t(m__io, this, m__root);
+    }
+    n_skip = true;
+    if (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
+        n_skip = false;
+        m_skip = new uleb128_t(m__io, this, m__root);
+    }
+    n_symbol = true;
+    if (opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
+        n_symbol = false;
+        m_symbol = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ascii"));
+    }
+}
+
+mach_o_t::dyld_info_command_t::bind_item_t::~bind_item_t() {
+    _clean_up();
+}
+
+void mach_o_t::dyld_info_command_t::bind_item_t::_clean_up() {
+    if (!n_uleb) {
+        if (m_uleb) {
+            delete m_uleb; m_uleb = 0;
+        }
+    }
+    if (!n_skip) {
+        if (m_skip) {
+            delete m_skip; m_skip = 0;
+        }
+    }
+    if (!n_symbol) {
+    }
+}
+
+mach_o_t::dyld_info_command_t::bind_opcode_t mach_o_t::dyld_info_command_t::bind_item_t::opcode() {
+    if (f_opcode)
+        return m_opcode;
+    m_opcode = static_cast<mach_o_t::dyld_info_command_t::bind_opcode_t>((opcode_and_immediate() & 240));
+    f_opcode = true;
+    return m_opcode;
+}
+
+int32_t mach_o_t::dyld_info_command_t::bind_item_t::immediate() {
+    if (f_immediate)
+        return m_immediate;
+    m_immediate = (opcode_and_immediate() & 15);
+    f_immediate = true;
+    return m_immediate;
+}
+
+mach_o_t::dyld_info_command_t::bind_data_t::bind_data_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_items = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void mach_o_t::dyld_info_command_t::bind_data_t::_read() {
+    m_items = new std::vector<bind_item_t*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_items->push_back(new bind_item_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+mach_o_t::dyld_info_command_t::bind_data_t::~bind_data_t() {
+    _clean_up();
+}
+
+void mach_o_t::dyld_info_command_t::bind_data_t::_clean_up() {
+    if (m_items) {
+        for (std::vector<bind_item_t*>::iterator it = m_items->begin(); it != m_items->end(); ++it) {
+            delete *it;
+        }
+        delete m_items; m_items = 0;
+    }
+}
+
 mach_o_t::dyld_info_command_t::export_node_t::export_node_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -2692,136 +2740,94 @@ mach_o_t::dyld_info_command_t::export_node_t* mach_o_t::dyld_info_command_t::exp
     return m_value;
 }
 
-mach_o_t::dyld_info_command_t::bind_data_t::bind_data_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_items = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void mach_o_t::dyld_info_command_t::bind_data_t::_read() {
-    m_items = new std::vector<bind_item_t*>();
-    {
-        int i = 0;
-        bind_item_t* _;
-        do {
-            _ = new bind_item_t(m__io, this, m__root);
-            m_items->push_back(_);
-            i++;
-        } while (!(_->opcode() == mach_o_t::dyld_info_command_t::BIND_OPCODE_DONE));
-    }
-}
-
-mach_o_t::dyld_info_command_t::bind_data_t::~bind_data_t() {
-    _clean_up();
-}
-
-void mach_o_t::dyld_info_command_t::bind_data_t::_clean_up() {
-    if (m_items) {
-        for (std::vector<bind_item_t*>::iterator it = m_items->begin(); it != m_items->end(); ++it) {
-            delete *it;
-        }
-        delete m_items; m_items = 0;
-    }
-}
-
-mach_o_t::dyld_info_command_t::lazy_bind_data_t::lazy_bind_data_t(kaitai::kstream* p__io, mach_o_t::dyld_info_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_items = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void mach_o_t::dyld_info_command_t::lazy_bind_data_t::_read() {
-    m_items = new std::vector<bind_item_t*>();
-    {
-        int i = 0;
-        while (!m__io->is_eof()) {
-            m_items->push_back(new bind_item_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
-
-mach_o_t::dyld_info_command_t::lazy_bind_data_t::~lazy_bind_data_t() {
-    _clean_up();
-}
-
-void mach_o_t::dyld_info_command_t::lazy_bind_data_t::_clean_up() {
-    if (m_items) {
-        for (std::vector<bind_item_t*>::iterator it = m_items->begin(); it != m_items->end(); ++it) {
-            delete *it;
-        }
-        delete m_items; m_items = 0;
-    }
-}
-
-mach_o_t::dyld_info_command_t::rebase_data_t* mach_o_t::dyld_info_command_t::rebase() {
-    if (f_rebase)
-        return m_rebase;
-    kaitai::kstream *io = _root()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(rebase_off());
-    m__raw_rebase = io->read_bytes(rebase_size());
-    m__io__raw_rebase = new kaitai::kstream(m__raw_rebase);
-    m_rebase = new rebase_data_t(m__io__raw_rebase, this, m__root);
-    io->seek(_pos);
-    f_rebase = true;
-    return m_rebase;
-}
-
 mach_o_t::dyld_info_command_t::bind_data_t* mach_o_t::dyld_info_command_t::bind() {
     if (f_bind)
         return m_bind;
-    kaitai::kstream *io = _root()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(bind_off());
-    m__raw_bind = io->read_bytes(bind_size());
-    m__io__raw_bind = new kaitai::kstream(m__raw_bind);
-    m_bind = new bind_data_t(m__io__raw_bind, this, m__root);
-    io->seek(_pos);
-    f_bind = true;
+    n_bind = true;
+    if (bind_size() != 0) {
+        n_bind = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(bind_off());
+        m__raw_bind = io->read_bytes(bind_size());
+        m__io__raw_bind = new kaitai::kstream(m__raw_bind);
+        m_bind = new bind_data_t(m__io__raw_bind, this, m__root);
+        io->seek(_pos);
+        f_bind = true;
+    }
     return m_bind;
-}
-
-mach_o_t::dyld_info_command_t::lazy_bind_data_t* mach_o_t::dyld_info_command_t::lazy_bind() {
-    if (f_lazy_bind)
-        return m_lazy_bind;
-    kaitai::kstream *io = _root()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(lazy_bind_off());
-    m__raw_lazy_bind = io->read_bytes(lazy_bind_size());
-    m__io__raw_lazy_bind = new kaitai::kstream(m__raw_lazy_bind);
-    m_lazy_bind = new lazy_bind_data_t(m__io__raw_lazy_bind, this, m__root);
-    io->seek(_pos);
-    f_lazy_bind = true;
-    return m_lazy_bind;
 }
 
 mach_o_t::dyld_info_command_t::export_node_t* mach_o_t::dyld_info_command_t::exports() {
     if (f_exports)
         return m_exports;
-    kaitai::kstream *io = _root()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(export_off());
-    m__raw_exports = io->read_bytes(export_size());
-    m__io__raw_exports = new kaitai::kstream(m__raw_exports);
-    m_exports = new export_node_t(m__io__raw_exports, this, m__root);
-    io->seek(_pos);
-    f_exports = true;
+    n_exports = true;
+    if (export_size() != 0) {
+        n_exports = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(export_off());
+        m__raw_exports = io->read_bytes(export_size());
+        m__io__raw_exports = new kaitai::kstream(m__raw_exports);
+        m_exports = new export_node_t(m__io__raw_exports, this, m__root);
+        io->seek(_pos);
+        f_exports = true;
+    }
     return m_exports;
+}
+
+mach_o_t::dyld_info_command_t::bind_data_t* mach_o_t::dyld_info_command_t::weak_bind() {
+    if (f_weak_bind)
+        return m_weak_bind;
+    n_weak_bind = true;
+    if (weak_bind_size() != 0) {
+        n_weak_bind = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(weak_bind_off());
+        m__raw_weak_bind = io->read_bytes(weak_bind_size());
+        m__io__raw_weak_bind = new kaitai::kstream(m__raw_weak_bind);
+        m_weak_bind = new bind_data_t(m__io__raw_weak_bind, this, m__root);
+        io->seek(_pos);
+        f_weak_bind = true;
+    }
+    return m_weak_bind;
+}
+
+mach_o_t::dyld_info_command_t::rebase_data_t* mach_o_t::dyld_info_command_t::rebase() {
+    if (f_rebase)
+        return m_rebase;
+    n_rebase = true;
+    if (rebase_size() != 0) {
+        n_rebase = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(rebase_off());
+        m__raw_rebase = io->read_bytes(rebase_size());
+        m__io__raw_rebase = new kaitai::kstream(m__raw_rebase);
+        m_rebase = new rebase_data_t(m__io__raw_rebase, this, m__root);
+        io->seek(_pos);
+        f_rebase = true;
+    }
+    return m_rebase;
+}
+
+mach_o_t::dyld_info_command_t::bind_data_t* mach_o_t::dyld_info_command_t::lazy_bind() {
+    if (f_lazy_bind)
+        return m_lazy_bind;
+    n_lazy_bind = true;
+    if (lazy_bind_size() != 0) {
+        n_lazy_bind = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(lazy_bind_off());
+        m__raw_lazy_bind = io->read_bytes(lazy_bind_size());
+        m__io__raw_lazy_bind = new kaitai::kstream(m__raw_lazy_bind);
+        m_lazy_bind = new bind_data_t(m__io__raw_lazy_bind, this, m__root);
+        io->seek(_pos);
+        f_lazy_bind = true;
+    }
+    return m_lazy_bind;
 }
 
 mach_o_t::dylinker_command_t::dylinker_command_t(kaitai::kstream* p__io, mach_o_t::load_command_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {

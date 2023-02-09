@@ -120,6 +120,10 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -310,6 +314,16 @@ section#format-index .row {
     <span class="nx">root</span><span class="p">.</span><span class="nx">MachO</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">Asn1Der</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}(</span><span class="ow">typeof</span> <span class="nx">self</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">self</span> <span class="o">:</span> <span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">Asn1Der</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * @see {@link https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf|Source}</span>
+<span class="cm"> * @see {@link https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz|Source}</span>
+<span class="cm"> * @see {@link https://github.com/comex/cs/blob/07a88f9/macho_cs.py|Source}</span>
+<span class="cm"> * @see {@link https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html|Source}</span>
+<span class="cm"> * @see {@link https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h|Source}</span>
+<span class="cm"> * @see {@link https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html|Source}</span>
+<span class="cm"> * @see {@link https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html|Source}</span>
+<span class="cm"> */</span>
+
 <span class="kd">var</span> <span class="nx">MachO</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">MachO</span><span class="p">.</span><span class="nx">MagicType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
     <span class="nx">MACHO_LE_X86</span><span class="o">:</span> <span class="mf">3472551422</span><span class="p">,</span>
@@ -753,7 +767,7 @@ section#format-index .row {
       <span class="nx">Data</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">padding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="mf">4</span> <span class="o">-</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;</span> <span class="mf">3</span><span class="p">)));</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">padding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">mod</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span> <span class="mf">4</span><span class="p">));</span>
       <span class="p">}</span>
 
       <span class="k">return</span> <span class="nx">Data</span><span class="p">;</span>
@@ -2291,46 +2305,6 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">exportSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
     <span class="p">}</span>
 
-    <span class="kd">var</span> <span class="nx">BindItem</span> <span class="o">=</span> <span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindItem</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">function</span> <span class="nx">BindItem</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-
-        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="nx">BindItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">opcodeAndImmediate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_DYLIB_ORDINAL_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_APPEND_SLEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_SEGMENT_AND_OFFSET_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">ADD_ADDRESS_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">DO_BIND_ADD_ADDRESS_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">DO_BIND_ULEB_TIMES_SKIPPING_ULEB</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">uleb</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Uleb128</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">DO_BIND_ULEB_TIMES_SKIPPING_ULEB</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">skip</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Uleb128</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">symbol</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BindItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span><span class="p">;</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcodeAndImmediate</span> <span class="o">&amp;</span> <span class="mf">240</span><span class="p">);</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span><span class="p">;</span>
-        <span class="p">}</span>
-      <span class="p">});</span>
-      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BindItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;immediate&#39;</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span><span class="p">;</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcodeAndImmediate</span> <span class="o">&amp;</span> <span class="mf">15</span><span class="p">);</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span><span class="p">;</span>
-        <span class="p">}</span>
-      <span class="p">});</span>
-
-      <span class="k">return</span> <span class="nx">BindItem</span><span class="p">;</span>
-    <span class="p">})();</span>
-
     <span class="kd">var</span> <span class="nx">RebaseData</span> <span class="o">=</span> <span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">RebaseData</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="nx">RebaseData</span><span class="p">.</span><span class="nx">Opcode</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
         <span class="nx">DONE</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
@@ -2411,6 +2385,66 @@ section#format-index .row {
       <span class="k">return</span> <span class="nx">RebaseData</span><span class="p">;</span>
     <span class="p">})();</span>
 
+    <span class="kd">var</span> <span class="nx">BindItem</span> <span class="o">=</span> <span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindItem</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">BindItem</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">BindItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">opcodeAndImmediate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_DYLIB_ORDINAL_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_APPEND_SLEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_SEGMENT_AND_OFFSET_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">ADD_ADDRESS_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">DO_BIND_ADD_ADDRESS_ULEB</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">DO_BIND_ULEB_TIMES_SKIPPING_ULEB</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">uleb</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Uleb128</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">DO_BIND_ULEB_TIMES_SKIPPING_ULEB</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">skip</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Uleb128</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">symbol</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BindItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;opcode&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcodeAndImmediate</span> <span class="o">&amp;</span> <span class="mf">240</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_opcode</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BindItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;immediate&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opcodeAndImmediate</span> <span class="o">&amp;</span> <span class="mf">15</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_immediate</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="k">return</span> <span class="nx">BindItem</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="kd">var</span> <span class="nx">BindData</span> <span class="o">=</span> <span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindData</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">BindData</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">BindData</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">BindItem</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+          <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">BindData</span><span class="p">;</span>
+    <span class="p">})();</span>
+
     <span class="kd">var</span> <span class="nx">ExportNode</span> <span class="o">=</span> <span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">ExportNode</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="kd">function</span> <span class="nx">ExportNode</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
@@ -2458,101 +2492,84 @@ section#format-index .row {
 
       <span class="k">return</span> <span class="nx">ExportNode</span><span class="p">;</span>
     <span class="p">})();</span>
-
-    <span class="kd">var</span> <span class="nx">BindData</span> <span class="o">=</span> <span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindData</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">function</span> <span class="nx">BindData</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-
-        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="nx">BindData</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">do</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">BindItem</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
-          <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">opcode</span> <span class="o">==</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">BindOpcode</span><span class="p">.</span><span class="nx">DONE</span><span class="p">));</span>
-      <span class="p">}</span>
-
-      <span class="k">return</span> <span class="nx">BindData</span><span class="p">;</span>
-    <span class="p">})();</span>
-
-    <span class="kd">var</span> <span class="nx">LazyBindData</span> <span class="o">=</span> <span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">LazyBindData</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">function</span> <span class="nx">LazyBindData</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-
-        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="nx">LazyBindData</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">BindItem</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
-          <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-
-      <span class="k">return</span> <span class="nx">LazyBindData</span><span class="p">;</span>
-    <span class="p">})();</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;rebase&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rebaseOff</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_rebase</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rebaseSize</span><span class="p">);</span>
-        <span class="kd">var</span> <span class="nx">_io__raw__m_rebase</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_rebase</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">RebaseData</span><span class="p">(</span><span class="nx">_io__raw__m_rebase</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
     <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;bind&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_bind</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bind</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bindOff</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_bind</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bindSize</span><span class="p">);</span>
-        <span class="kd">var</span> <span class="nx">_io__raw__m_bind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_bind</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_bind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">BindData</span><span class="p">(</span><span class="nx">_io__raw__m_bind</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bindSize</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bindOff</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_bind</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bindSize</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_bind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_bind</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_bind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">BindData</span><span class="p">(</span><span class="nx">_io__raw__m_bind</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bind</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lazyBind&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lazyBindOff</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_lazyBind</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lazyBindSize</span><span class="p">);</span>
-        <span class="kd">var</span> <span class="nx">_io__raw__m_lazyBind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_lazyBind</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">LazyBindData</span><span class="p">(</span><span class="nx">_io__raw__m_lazyBind</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
     <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;exports&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_exports</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_exports</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">exportOff</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_exports</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">exportSize</span><span class="p">);</span>
-        <span class="kd">var</span> <span class="nx">_io__raw__m_exports</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_exports</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_exports</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">ExportNode</span><span class="p">(</span><span class="nx">_io__raw__m_exports</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">exportSize</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">exportOff</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_exports</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">exportSize</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_exports</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_exports</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_exports</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">ExportNode</span><span class="p">(</span><span class="nx">_io__raw__m_exports</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_exports</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;weakBind&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_weakBind</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_weakBind</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">weakBindSize</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">weakBindOff</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_weakBind</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">weakBindSize</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_weakBind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_weakBind</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_weakBind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">BindData</span><span class="p">(</span><span class="nx">_io__raw__m_weakBind</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_weakBind</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;rebase&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rebaseSize</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rebaseOff</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_rebase</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rebaseSize</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_rebase</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_rebase</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">RebaseData</span><span class="p">(</span><span class="nx">_io__raw__m_rebase</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rebase</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DyldInfoCommand</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lazyBind&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lazyBindSize</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lazyBindOff</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_lazyBind</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lazyBindSize</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_lazyBind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_lazyBind</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">BindData</span><span class="p">(</span><span class="nx">_io__raw__m_lazyBind</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lazyBind</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
 

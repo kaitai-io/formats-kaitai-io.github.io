@@ -295,7 +295,7 @@ namespace MachO\CsBlob {
         private function _read() {
             $this->_m_length = $this->_io->readU4be();
             $this->_m_value = $this->_io->readBytes($this->length());
-            $this->_m_padding = $this->_io->readBytes((4 - ($this->length() & 3)));
+            $this->_m_padding = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(-($this->length()), 4));
         }
         protected $_m_length;
         protected $_m_value;
@@ -1957,57 +1957,80 @@ namespace MachO {
             $this->_m_exportOff = $this->_io->readU4le();
             $this->_m_exportSize = $this->_io->readU4le();
         }
-        protected $_m_rebase;
-        public function rebase() {
-            if ($this->_m_rebase !== null)
-                return $this->_m_rebase;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->rebaseOff());
-            $this->_m__raw_rebase = $io->readBytes($this->rebaseSize());
-            $_io__raw_rebase = new \Kaitai\Struct\Stream($this->_m__raw_rebase);
-            $this->_m_rebase = new \MachO\DyldInfoCommand\RebaseData($_io__raw_rebase, $this, $this->_root);
-            $io->seek($_pos);
-            return $this->_m_rebase;
-        }
         protected $_m_bind;
         public function bind() {
             if ($this->_m_bind !== null)
                 return $this->_m_bind;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->bindOff());
-            $this->_m__raw_bind = $io->readBytes($this->bindSize());
-            $_io__raw_bind = new \Kaitai\Struct\Stream($this->_m__raw_bind);
-            $this->_m_bind = new \MachO\DyldInfoCommand\BindData($_io__raw_bind, $this, $this->_root);
-            $io->seek($_pos);
+            if ($this->bindSize() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->bindOff());
+                $this->_m__raw_bind = $io->readBytes($this->bindSize());
+                $_io__raw_bind = new \Kaitai\Struct\Stream($this->_m__raw_bind);
+                $this->_m_bind = new \MachO\DyldInfoCommand\BindData($_io__raw_bind, $this, $this->_root);
+                $io->seek($_pos);
+            }
             return $this->_m_bind;
-        }
-        protected $_m_lazyBind;
-        public function lazyBind() {
-            if ($this->_m_lazyBind !== null)
-                return $this->_m_lazyBind;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->lazyBindOff());
-            $this->_m__raw_lazyBind = $io->readBytes($this->lazyBindSize());
-            $_io__raw_lazyBind = new \Kaitai\Struct\Stream($this->_m__raw_lazyBind);
-            $this->_m_lazyBind = new \MachO\DyldInfoCommand\LazyBindData($_io__raw_lazyBind, $this, $this->_root);
-            $io->seek($_pos);
-            return $this->_m_lazyBind;
         }
         protected $_m_exports;
         public function exports() {
             if ($this->_m_exports !== null)
                 return $this->_m_exports;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->exportOff());
-            $this->_m__raw_exports = $io->readBytes($this->exportSize());
-            $_io__raw_exports = new \Kaitai\Struct\Stream($this->_m__raw_exports);
-            $this->_m_exports = new \MachO\DyldInfoCommand\ExportNode($_io__raw_exports, $this, $this->_root);
-            $io->seek($_pos);
+            if ($this->exportSize() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->exportOff());
+                $this->_m__raw_exports = $io->readBytes($this->exportSize());
+                $_io__raw_exports = new \Kaitai\Struct\Stream($this->_m__raw_exports);
+                $this->_m_exports = new \MachO\DyldInfoCommand\ExportNode($_io__raw_exports, $this, $this->_root);
+                $io->seek($_pos);
+            }
             return $this->_m_exports;
+        }
+        protected $_m_weakBind;
+        public function weakBind() {
+            if ($this->_m_weakBind !== null)
+                return $this->_m_weakBind;
+            if ($this->weakBindSize() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->weakBindOff());
+                $this->_m__raw_weakBind = $io->readBytes($this->weakBindSize());
+                $_io__raw_weakBind = new \Kaitai\Struct\Stream($this->_m__raw_weakBind);
+                $this->_m_weakBind = new \MachO\DyldInfoCommand\BindData($_io__raw_weakBind, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_weakBind;
+        }
+        protected $_m_rebase;
+        public function rebase() {
+            if ($this->_m_rebase !== null)
+                return $this->_m_rebase;
+            if ($this->rebaseSize() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->rebaseOff());
+                $this->_m__raw_rebase = $io->readBytes($this->rebaseSize());
+                $_io__raw_rebase = new \Kaitai\Struct\Stream($this->_m__raw_rebase);
+                $this->_m_rebase = new \MachO\DyldInfoCommand\RebaseData($_io__raw_rebase, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_rebase;
+        }
+        protected $_m_lazyBind;
+        public function lazyBind() {
+            if ($this->_m_lazyBind !== null)
+                return $this->_m_lazyBind;
+            if ($this->lazyBindSize() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->lazyBindOff());
+                $this->_m__raw_lazyBind = $io->readBytes($this->lazyBindSize());
+                $_io__raw_lazyBind = new \Kaitai\Struct\Stream($this->_m__raw_lazyBind);
+                $this->_m_lazyBind = new \MachO\DyldInfoCommand\BindData($_io__raw_lazyBind, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_lazyBind;
         }
         protected $_m_rebaseOff;
         protected $_m_rebaseSize;
@@ -2019,10 +2042,11 @@ namespace MachO {
         protected $_m_lazyBindSize;
         protected $_m_exportOff;
         protected $_m_exportSize;
-        protected $_m__raw_rebase;
         protected $_m__raw_bind;
-        protected $_m__raw_lazyBind;
         protected $_m__raw_exports;
+        protected $_m__raw_weakBind;
+        protected $_m__raw_rebase;
+        protected $_m__raw_lazyBind;
         public function rebaseOff() { return $this->_m_rebaseOff; }
         public function rebaseSize() { return $this->_m_rebaseSize; }
         public function bindOff() { return $this->_m_bindOff; }
@@ -2033,54 +2057,11 @@ namespace MachO {
         public function lazyBindSize() { return $this->_m_lazyBindSize; }
         public function exportOff() { return $this->_m_exportOff; }
         public function exportSize() { return $this->_m_exportSize; }
-        public function _raw_rebase() { return $this->_m__raw_rebase; }
         public function _raw_bind() { return $this->_m__raw_bind; }
-        public function _raw_lazyBind() { return $this->_m__raw_lazyBind; }
         public function _raw_exports() { return $this->_m__raw_exports; }
-    }
-}
-
-namespace MachO\DyldInfoCommand {
-    class BindItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_opcodeAndImmediate = $this->_io->readU1();
-            if ( (($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_DYLIB_ORDINAL_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_APPEND_SLEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_SEGMENT_AND_OFFSET_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::ADD_ADDRESS_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::DO_BIND_ADD_ADDRESS_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
-                $this->_m_uleb = new \MachO\Uleb128($this->_io, $this, $this->_root);
-            }
-            if ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
-                $this->_m_skip = new \MachO\Uleb128($this->_io, $this, $this->_root);
-            }
-            if ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
-                $this->_m_symbol = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ascii");
-            }
-        }
-        protected $_m_opcode;
-        public function opcode() {
-            if ($this->_m_opcode !== null)
-                return $this->_m_opcode;
-            $this->_m_opcode = ($this->opcodeAndImmediate() & 240);
-            return $this->_m_opcode;
-        }
-        protected $_m_immediate;
-        public function immediate() {
-            if ($this->_m_immediate !== null)
-                return $this->_m_immediate;
-            $this->_m_immediate = ($this->opcodeAndImmediate() & 15);
-            return $this->_m_immediate;
-        }
-        protected $_m_opcodeAndImmediate;
-        protected $_m_uleb;
-        protected $_m_skip;
-        protected $_m_symbol;
-        public function opcodeAndImmediate() { return $this->_m_opcodeAndImmediate; }
-        public function uleb() { return $this->_m_uleb; }
-        public function skip() { return $this->_m_skip; }
-        public function symbol() { return $this->_m_symbol; }
+        public function _raw_weakBind() { return $this->_m__raw_weakBind; }
+        public function _raw_rebase() { return $this->_m__raw_rebase; }
+        public function _raw_lazyBind() { return $this->_m__raw_lazyBind; }
     }
 }
 
@@ -2159,6 +2140,70 @@ namespace MachO\DyldInfoCommand\RebaseData {
 }
 
 namespace MachO\DyldInfoCommand {
+    class BindItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand\BindData $_parent = null, \MachO $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_opcodeAndImmediate = $this->_io->readU1();
+            if ( (($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_DYLIB_ORDINAL_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_APPEND_SLEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_SEGMENT_AND_OFFSET_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::ADD_ADDRESS_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::DO_BIND_ADD_ADDRESS_ULEB) || ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
+                $this->_m_uleb = new \MachO\Uleb128($this->_io, $this, $this->_root);
+            }
+            if ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
+                $this->_m_skip = new \MachO\Uleb128($this->_io, $this, $this->_root);
+            }
+            if ($this->opcode() == \MachO\DyldInfoCommand\BindOpcode::SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
+                $this->_m_symbol = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ascii");
+            }
+        }
+        protected $_m_opcode;
+        public function opcode() {
+            if ($this->_m_opcode !== null)
+                return $this->_m_opcode;
+            $this->_m_opcode = ($this->opcodeAndImmediate() & 240);
+            return $this->_m_opcode;
+        }
+        protected $_m_immediate;
+        public function immediate() {
+            if ($this->_m_immediate !== null)
+                return $this->_m_immediate;
+            $this->_m_immediate = ($this->opcodeAndImmediate() & 15);
+            return $this->_m_immediate;
+        }
+        protected $_m_opcodeAndImmediate;
+        protected $_m_uleb;
+        protected $_m_skip;
+        protected $_m_symbol;
+        public function opcodeAndImmediate() { return $this->_m_opcodeAndImmediate; }
+        public function uleb() { return $this->_m_uleb; }
+        public function skip() { return $this->_m_skip; }
+        public function symbol() { return $this->_m_symbol; }
+    }
+}
+
+namespace MachO\DyldInfoCommand {
+    class BindData extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand $_parent = null, \MachO $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_items = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_items[] = new \MachO\DyldInfoCommand\BindItem($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_items;
+        public function items() { return $this->_m_items; }
+    }
+}
+
+namespace MachO\DyldInfoCommand {
     class ExportNode extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachO $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -2211,47 +2256,6 @@ namespace MachO\DyldInfoCommand\ExportNode {
         protected $_m_nodeOffset;
         public function name() { return $this->_m_name; }
         public function nodeOffset() { return $this->_m_nodeOffset; }
-    }
-}
-
-namespace MachO\DyldInfoCommand {
-    class BindData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand $_parent = null, \MachO $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_items = [];
-            $i = 0;
-            do {
-                $_ = new \MachO\DyldInfoCommand\BindItem($this->_io, $this, $this->_root);
-                $this->_m_items[] = $_;
-                $i++;
-            } while (!($_->opcode() == \MachO\DyldInfoCommand\BindOpcode::DONE));
-        }
-        protected $_m_items;
-        public function items() { return $this->_m_items; }
-    }
-}
-
-namespace MachO\DyldInfoCommand {
-    class LazyBindData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MachO\DyldInfoCommand $_parent = null, \MachO $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_items = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_items[] = new \MachO\DyldInfoCommand\BindItem($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_items;
-        public function items() { return $this->_m_items; }
     }
 }
 

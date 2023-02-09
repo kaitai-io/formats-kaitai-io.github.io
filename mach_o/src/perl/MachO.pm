@@ -642,7 +642,7 @@ sub _read {
 
     $self->{length} = $self->{_io}->read_u4be();
     $self->{value} = $self->{_io}->read_bytes($self->length());
-    $self->{padding} = $self->{_io}->read_bytes((4 - ($self->length() & 3)));
+    $self->{padding} = $self->{_io}->read_bytes((-($self->length()) % 4));
 }
 
 sub length {
@@ -3520,56 +3520,79 @@ sub _read {
     $self->{export_size} = $self->{_io}->read_u4le();
 }
 
-sub rebase {
-    my ($self) = @_;
-    return $self->{rebase} if ($self->{rebase});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->rebase_off());
-    $self->{_raw_rebase} = $io->read_bytes($self->rebase_size());
-    my $io__raw_rebase = IO::KaitaiStruct::Stream->new($self->{_raw_rebase});
-    $self->{rebase} = MachO::DyldInfoCommand::RebaseData->new($io__raw_rebase, $self, $self->{_root});
-    $io->seek($_pos);
-    return $self->{rebase};
-}
-
 sub bind {
     my ($self) = @_;
     return $self->{bind} if ($self->{bind});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->bind_off());
-    $self->{_raw_bind} = $io->read_bytes($self->bind_size());
-    my $io__raw_bind = IO::KaitaiStruct::Stream->new($self->{_raw_bind});
-    $self->{bind} = MachO::DyldInfoCommand::BindData->new($io__raw_bind, $self, $self->{_root});
-    $io->seek($_pos);
+    if ($self->bind_size() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->bind_off());
+        $self->{_raw_bind} = $io->read_bytes($self->bind_size());
+        my $io__raw_bind = IO::KaitaiStruct::Stream->new($self->{_raw_bind});
+        $self->{bind} = MachO::DyldInfoCommand::BindData->new($io__raw_bind, $self, $self->{_root});
+        $io->seek($_pos);
+    }
     return $self->{bind};
-}
-
-sub lazy_bind {
-    my ($self) = @_;
-    return $self->{lazy_bind} if ($self->{lazy_bind});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->lazy_bind_off());
-    $self->{_raw_lazy_bind} = $io->read_bytes($self->lazy_bind_size());
-    my $io__raw_lazy_bind = IO::KaitaiStruct::Stream->new($self->{_raw_lazy_bind});
-    $self->{lazy_bind} = MachO::DyldInfoCommand::LazyBindData->new($io__raw_lazy_bind, $self, $self->{_root});
-    $io->seek($_pos);
-    return $self->{lazy_bind};
 }
 
 sub exports {
     my ($self) = @_;
     return $self->{exports} if ($self->{exports});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->export_off());
-    $self->{_raw_exports} = $io->read_bytes($self->export_size());
-    my $io__raw_exports = IO::KaitaiStruct::Stream->new($self->{_raw_exports});
-    $self->{exports} = MachO::DyldInfoCommand::ExportNode->new($io__raw_exports, $self, $self->{_root});
-    $io->seek($_pos);
+    if ($self->export_size() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->export_off());
+        $self->{_raw_exports} = $io->read_bytes($self->export_size());
+        my $io__raw_exports = IO::KaitaiStruct::Stream->new($self->{_raw_exports});
+        $self->{exports} = MachO::DyldInfoCommand::ExportNode->new($io__raw_exports, $self, $self->{_root});
+        $io->seek($_pos);
+    }
     return $self->{exports};
+}
+
+sub weak_bind {
+    my ($self) = @_;
+    return $self->{weak_bind} if ($self->{weak_bind});
+    if ($self->weak_bind_size() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->weak_bind_off());
+        $self->{_raw_weak_bind} = $io->read_bytes($self->weak_bind_size());
+        my $io__raw_weak_bind = IO::KaitaiStruct::Stream->new($self->{_raw_weak_bind});
+        $self->{weak_bind} = MachO::DyldInfoCommand::BindData->new($io__raw_weak_bind, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{weak_bind};
+}
+
+sub rebase {
+    my ($self) = @_;
+    return $self->{rebase} if ($self->{rebase});
+    if ($self->rebase_size() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->rebase_off());
+        $self->{_raw_rebase} = $io->read_bytes($self->rebase_size());
+        my $io__raw_rebase = IO::KaitaiStruct::Stream->new($self->{_raw_rebase});
+        $self->{rebase} = MachO::DyldInfoCommand::RebaseData->new($io__raw_rebase, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{rebase};
+}
+
+sub lazy_bind {
+    my ($self) = @_;
+    return $self->{lazy_bind} if ($self->{lazy_bind});
+    if ($self->lazy_bind_size() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->lazy_bind_off());
+        $self->{_raw_lazy_bind} = $io->read_bytes($self->lazy_bind_size());
+        my $io__raw_lazy_bind = IO::KaitaiStruct::Stream->new($self->{_raw_lazy_bind});
+        $self->{lazy_bind} = MachO::DyldInfoCommand::BindData->new($io__raw_lazy_bind, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{lazy_bind};
 }
 
 sub rebase_off {
@@ -3622,19 +3645,9 @@ sub export_size {
     return $self->{export_size};
 }
 
-sub _raw_rebase {
-    my ($self) = @_;
-    return $self->{_raw_rebase};
-}
-
 sub _raw_bind {
     my ($self) = @_;
     return $self->{_raw_bind};
-}
-
-sub _raw_lazy_bind {
-    my ($self) = @_;
-    return $self->{_raw_lazy_bind};
 }
 
 sub _raw_exports {
@@ -3642,80 +3655,19 @@ sub _raw_exports {
     return $self->{_raw_exports};
 }
 
-########################################################################
-package MachO::DyldInfoCommand::BindItem;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub _raw_weak_bind {
     my ($self) = @_;
-
-    $self->{opcode_and_immediate} = $self->{_io}->read_u1();
-    if ( (($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_APPEND_SLEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
-        $self->{uleb} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
-    }
-    if ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
-        $self->{skip} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
-    }
-    if ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
-        $self->{symbol} = Encode::decode("ascii", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    }
+    return $self->{_raw_weak_bind};
 }
 
-sub opcode {
+sub _raw_rebase {
     my ($self) = @_;
-    return $self->{opcode} if ($self->{opcode});
-    $self->{opcode} = ($self->opcode_and_immediate() & 240);
-    return $self->{opcode};
+    return $self->{_raw_rebase};
 }
 
-sub immediate {
+sub _raw_lazy_bind {
     my ($self) = @_;
-    return $self->{immediate} if ($self->{immediate});
-    $self->{immediate} = ($self->opcode_and_immediate() & 15);
-    return $self->{immediate};
-}
-
-sub opcode_and_immediate {
-    my ($self) = @_;
-    return $self->{opcode_and_immediate};
-}
-
-sub uleb {
-    my ($self) = @_;
-    return $self->{uleb};
-}
-
-sub skip {
-    my ($self) = @_;
-    return $self->{skip};
-}
-
-sub symbol {
-    my ($self) = @_;
-    return $self->{symbol};
+    return $self->{_raw_lazy_bind};
 }
 
 ########################################################################
@@ -3839,6 +3791,123 @@ sub skip {
 }
 
 ########################################################################
+package MachO::DyldInfoCommand::BindItem;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{opcode_and_immediate} = $self->{_io}->read_u1();
+    if ( (($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_APPEND_SLEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ADD_ADDRESS_ULEB) || ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
+        $self->{uleb} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
+    }
+    if ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
+        $self->{skip} = MachO::Uleb128->new($self->{_io}, $self, $self->{_root});
+    }
+    if ($self->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
+        $self->{symbol} = Encode::decode("ascii", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    }
+}
+
+sub opcode {
+    my ($self) = @_;
+    return $self->{opcode} if ($self->{opcode});
+    $self->{opcode} = ($self->opcode_and_immediate() & 240);
+    return $self->{opcode};
+}
+
+sub immediate {
+    my ($self) = @_;
+    return $self->{immediate} if ($self->{immediate});
+    $self->{immediate} = ($self->opcode_and_immediate() & 15);
+    return $self->{immediate};
+}
+
+sub opcode_and_immediate {
+    my ($self) = @_;
+    return $self->{opcode_and_immediate};
+}
+
+sub uleb {
+    my ($self) = @_;
+    return $self->{uleb};
+}
+
+sub skip {
+    my ($self) = @_;
+    return $self->{skip};
+}
+
+sub symbol {
+    my ($self) = @_;
+    return $self->{symbol};
+}
+
+########################################################################
+package MachO::DyldInfoCommand::BindData;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{items} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{items}}, MachO::DyldInfoCommand::BindItem->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub items {
+    my ($self) = @_;
+    return $self->{items};
+}
+
+########################################################################
 package MachO::DyldInfoCommand::ExportNode;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -3950,89 +4019,6 @@ sub name {
 sub node_offset {
     my ($self) = @_;
     return $self->{node_offset};
-}
-
-########################################################################
-package MachO::DyldInfoCommand::BindData;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{items} = ();
-    do {
-        $_ = MachO::DyldInfoCommand::BindItem->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{items}}, $_;
-    } until ($_->opcode() == $MachO::DyldInfoCommand::BIND_OPCODE_DONE);
-}
-
-sub items {
-    my ($self) = @_;
-    return $self->{items};
-}
-
-########################################################################
-package MachO::DyldInfoCommand::LazyBindData;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{items} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{items}}, MachO::DyldInfoCommand::BindItem->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub items {
-    my ($self) = @_;
-    return $self->{items};
 }
 
 ########################################################################

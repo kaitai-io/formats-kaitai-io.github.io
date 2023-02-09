@@ -10,6 +10,34 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
 
 import asn1_der
 class MachO(KaitaiStruct):
+    """
+    .. seealso::
+       Source - https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf
+    
+    
+    .. seealso::
+       Source - https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz
+    
+    
+    .. seealso::
+       Source - https://github.com/comex/cs/blob/07a88f9/macho_cs.py
+    
+    
+    .. seealso::
+       Source - https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html
+    
+    
+    .. seealso::
+       Source - https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h
+    
+    
+    .. seealso::
+       Source - https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html
+    
+    
+    .. seealso::
+       Source - https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html
+    """
 
     class MagicType(Enum):
         macho_le_x86 = 3472551422
@@ -317,7 +345,7 @@ class MachO(KaitaiStruct):
             def _read(self):
                 self.length = self._io.read_u4be()
                 self.value = self._io.read_bytes(self.length)
-                self.padding = self._io.read_bytes((4 - (self.length & 3)))
+                self.padding = self._io.read_bytes((-(self.length) % 4))
 
 
         class SuperBlob(KaitaiStruct):
@@ -1466,42 +1494,6 @@ class MachO(KaitaiStruct):
             self.export_off = self._io.read_u4le()
             self.export_size = self._io.read_u4le()
 
-        class BindItem(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.opcode_and_immediate = self._io.read_u1()
-                if  ((self.opcode == MachO.DyldInfoCommand.BindOpcode.set_dylib_ordinal_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_append_sleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_segment_and_offset_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb)) :
-                    self.uleb = MachO.Uleb128(self._io, self, self._root)
-
-                if self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb:
-                    self.skip = MachO.Uleb128(self._io, self, self._root)
-
-                if self.opcode == MachO.DyldInfoCommand.BindOpcode.set_symbol_trailing_flags_immediate:
-                    self.symbol = (self._io.read_bytes_term(0, False, True, True)).decode(u"ascii")
-
-
-            @property
-            def opcode(self):
-                if hasattr(self, '_m_opcode'):
-                    return self._m_opcode
-
-                self._m_opcode = KaitaiStream.resolve_enum(MachO.DyldInfoCommand.BindOpcode, (self.opcode_and_immediate & 240))
-                return getattr(self, '_m_opcode', None)
-
-            @property
-            def immediate(self):
-                if hasattr(self, '_m_immediate'):
-                    return self._m_immediate
-
-                self._m_immediate = (self.opcode_and_immediate & 15)
-                return getattr(self, '_m_immediate', None)
-
-
         class RebaseData(KaitaiStruct):
 
             class Opcode(Enum):
@@ -1564,6 +1556,58 @@ class MachO(KaitaiStruct):
 
 
 
+        class BindItem(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.opcode_and_immediate = self._io.read_u1()
+                if  ((self.opcode == MachO.DyldInfoCommand.BindOpcode.set_dylib_ordinal_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_append_sleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_segment_and_offset_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb)) :
+                    self.uleb = MachO.Uleb128(self._io, self, self._root)
+
+                if self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb:
+                    self.skip = MachO.Uleb128(self._io, self, self._root)
+
+                if self.opcode == MachO.DyldInfoCommand.BindOpcode.set_symbol_trailing_flags_immediate:
+                    self.symbol = (self._io.read_bytes_term(0, False, True, True)).decode(u"ascii")
+
+
+            @property
+            def opcode(self):
+                if hasattr(self, '_m_opcode'):
+                    return self._m_opcode
+
+                self._m_opcode = KaitaiStream.resolve_enum(MachO.DyldInfoCommand.BindOpcode, (self.opcode_and_immediate & 240))
+                return getattr(self, '_m_opcode', None)
+
+            @property
+            def immediate(self):
+                if hasattr(self, '_m_immediate'):
+                    return self._m_immediate
+
+                self._m_immediate = (self.opcode_and_immediate & 15)
+                return getattr(self, '_m_immediate', None)
+
+
+        class BindData(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.items = []
+                i = 0
+                while not self._io.is_eof():
+                    self.items.append(MachO.DyldInfoCommand.BindItem(self._io, self, self._root))
+                    i += 1
+
+
+
         class ExportNode(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
                 self._io = _io
@@ -1604,95 +1648,85 @@ class MachO(KaitaiStruct):
 
 
 
-        class BindData(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.items = []
-                i = 0
-                while True:
-                    _ = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
-                    self.items.append(_)
-                    if _.opcode == MachO.DyldInfoCommand.BindOpcode.done:
-                        break
-                    i += 1
-
-
-        class LazyBindData(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.items = []
-                i = 0
-                while not self._io.is_eof():
-                    self.items.append(MachO.DyldInfoCommand.BindItem(self._io, self, self._root))
-                    i += 1
-
-
-
-        @property
-        def rebase(self):
-            if hasattr(self, '_m_rebase'):
-                return self._m_rebase
-
-            io = self._root._io
-            _pos = io.pos()
-            io.seek(self.rebase_off)
-            self._raw__m_rebase = io.read_bytes(self.rebase_size)
-            _io__raw__m_rebase = KaitaiStream(BytesIO(self._raw__m_rebase))
-            self._m_rebase = MachO.DyldInfoCommand.RebaseData(_io__raw__m_rebase, self, self._root)
-            io.seek(_pos)
-            return getattr(self, '_m_rebase', None)
-
         @property
         def bind(self):
             if hasattr(self, '_m_bind'):
                 return self._m_bind
 
-            io = self._root._io
-            _pos = io.pos()
-            io.seek(self.bind_off)
-            self._raw__m_bind = io.read_bytes(self.bind_size)
-            _io__raw__m_bind = KaitaiStream(BytesIO(self._raw__m_bind))
-            self._m_bind = MachO.DyldInfoCommand.BindData(_io__raw__m_bind, self, self._root)
-            io.seek(_pos)
+            if self.bind_size != 0:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.bind_off)
+                self._raw__m_bind = io.read_bytes(self.bind_size)
+                _io__raw__m_bind = KaitaiStream(BytesIO(self._raw__m_bind))
+                self._m_bind = MachO.DyldInfoCommand.BindData(_io__raw__m_bind, self, self._root)
+                io.seek(_pos)
+
             return getattr(self, '_m_bind', None)
-
-        @property
-        def lazy_bind(self):
-            if hasattr(self, '_m_lazy_bind'):
-                return self._m_lazy_bind
-
-            io = self._root._io
-            _pos = io.pos()
-            io.seek(self.lazy_bind_off)
-            self._raw__m_lazy_bind = io.read_bytes(self.lazy_bind_size)
-            _io__raw__m_lazy_bind = KaitaiStream(BytesIO(self._raw__m_lazy_bind))
-            self._m_lazy_bind = MachO.DyldInfoCommand.LazyBindData(_io__raw__m_lazy_bind, self, self._root)
-            io.seek(_pos)
-            return getattr(self, '_m_lazy_bind', None)
 
         @property
         def exports(self):
             if hasattr(self, '_m_exports'):
                 return self._m_exports
 
-            io = self._root._io
-            _pos = io.pos()
-            io.seek(self.export_off)
-            self._raw__m_exports = io.read_bytes(self.export_size)
-            _io__raw__m_exports = KaitaiStream(BytesIO(self._raw__m_exports))
-            self._m_exports = MachO.DyldInfoCommand.ExportNode(_io__raw__m_exports, self, self._root)
-            io.seek(_pos)
+            if self.export_size != 0:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.export_off)
+                self._raw__m_exports = io.read_bytes(self.export_size)
+                _io__raw__m_exports = KaitaiStream(BytesIO(self._raw__m_exports))
+                self._m_exports = MachO.DyldInfoCommand.ExportNode(_io__raw__m_exports, self, self._root)
+                io.seek(_pos)
+
             return getattr(self, '_m_exports', None)
+
+        @property
+        def weak_bind(self):
+            if hasattr(self, '_m_weak_bind'):
+                return self._m_weak_bind
+
+            if self.weak_bind_size != 0:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.weak_bind_off)
+                self._raw__m_weak_bind = io.read_bytes(self.weak_bind_size)
+                _io__raw__m_weak_bind = KaitaiStream(BytesIO(self._raw__m_weak_bind))
+                self._m_weak_bind = MachO.DyldInfoCommand.BindData(_io__raw__m_weak_bind, self, self._root)
+                io.seek(_pos)
+
+            return getattr(self, '_m_weak_bind', None)
+
+        @property
+        def rebase(self):
+            if hasattr(self, '_m_rebase'):
+                return self._m_rebase
+
+            if self.rebase_size != 0:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.rebase_off)
+                self._raw__m_rebase = io.read_bytes(self.rebase_size)
+                _io__raw__m_rebase = KaitaiStream(BytesIO(self._raw__m_rebase))
+                self._m_rebase = MachO.DyldInfoCommand.RebaseData(_io__raw__m_rebase, self, self._root)
+                io.seek(_pos)
+
+            return getattr(self, '_m_rebase', None)
+
+        @property
+        def lazy_bind(self):
+            if hasattr(self, '_m_lazy_bind'):
+                return self._m_lazy_bind
+
+            if self.lazy_bind_size != 0:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.lazy_bind_off)
+                self._raw__m_lazy_bind = io.read_bytes(self.lazy_bind_size)
+                _io__raw__m_lazy_bind = KaitaiStream(BytesIO(self._raw__m_lazy_bind))
+                self._m_lazy_bind = MachO.DyldInfoCommand.BindData(_io__raw__m_lazy_bind, self, self._root)
+                io.seek(_pos)
+
+            return getattr(self, '_m_lazy_bind', None)
 
 
     class DylinkerCommand(KaitaiStruct):

@@ -4,6 +4,28 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/comex/cs/blob/07a88f9/macho_cs.py">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html">Source</a>
+    /// </remarks>
     public partial class MachO : KaitaiStruct
     {
         public static MachO FromFile(string fileName)
@@ -486,7 +508,7 @@ namespace Kaitai
                 {
                     _length = m_io.ReadU4be();
                     _value = m_io.ReadBytes(Length);
-                    _padding = m_io.ReadBytes((4 - (Length & 3)));
+                    _padding = m_io.ReadBytes(KaitaiStream.Mod(-(Length), 4));
                 }
                 private uint _length;
                 private byte[] _value;
@@ -2826,10 +2848,11 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_rebase = false;
                 f_bind = false;
-                f_lazyBind = false;
                 f_exports = false;
+                f_weakBind = false;
+                f_rebase = false;
+                f_lazyBind = false;
                 _read();
             }
             private void _read()
@@ -2844,73 +2867,6 @@ namespace Kaitai
                 _lazyBindSize = m_io.ReadU4le();
                 _exportOff = m_io.ReadU4le();
                 _exportSize = m_io.ReadU4le();
-            }
-            public partial class BindItem : KaitaiStruct
-            {
-                public static BindItem FromFile(string fileName)
-                {
-                    return new BindItem(new KaitaiStream(fileName));
-                }
-
-                public BindItem(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    f_opcode = false;
-                    f_immediate = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _opcodeAndImmediate = m_io.ReadU1();
-                    if ( ((Opcode == MachO.DyldInfoCommand.BindOpcode.SetDylibOrdinalUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.SetAppendSleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.SetSegmentAndOffsetUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.AddAddressUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindAddAddressUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindUlebTimesSkippingUleb)) ) {
-                        _uleb = new Uleb128(m_io, this, m_root);
-                    }
-                    if (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindUlebTimesSkippingUleb) {
-                        _skip = new Uleb128(m_io, this, m_root);
-                    }
-                    if (Opcode == MachO.DyldInfoCommand.BindOpcode.SetSymbolTrailingFlagsImmediate) {
-                        _symbol = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                    }
-                }
-                private bool f_opcode;
-                private BindOpcode _opcode;
-                public BindOpcode Opcode
-                {
-                    get
-                    {
-                        if (f_opcode)
-                            return _opcode;
-                        _opcode = (BindOpcode) (((MachO.DyldInfoCommand.BindOpcode) (OpcodeAndImmediate & 240)));
-                        f_opcode = true;
-                        return _opcode;
-                    }
-                }
-                private bool f_immediate;
-                private int _immediate;
-                public int Immediate
-                {
-                    get
-                    {
-                        if (f_immediate)
-                            return _immediate;
-                        _immediate = (int) ((OpcodeAndImmediate & 15));
-                        f_immediate = true;
-                        return _immediate;
-                    }
-                }
-                private byte _opcodeAndImmediate;
-                private Uleb128 _uleb;
-                private Uleb128 _skip;
-                private string _symbol;
-                private MachO m_root;
-                private KaitaiStruct m_parent;
-                public byte OpcodeAndImmediate { get { return _opcodeAndImmediate; } }
-                public Uleb128 Uleb { get { return _uleb; } }
-                public Uleb128 Skip { get { return _skip; } }
-                public string Symbol { get { return _symbol; } }
-                public MachO M_Root { get { return m_root; } }
-                public KaitaiStruct M_Parent { get { return m_parent; } }
             }
             public partial class RebaseData : KaitaiStruct
             {
@@ -3020,6 +2976,104 @@ namespace Kaitai
                 public MachO M_Root { get { return m_root; } }
                 public MachO.DyldInfoCommand M_Parent { get { return m_parent; } }
             }
+            public partial class BindItem : KaitaiStruct
+            {
+                public static BindItem FromFile(string fileName)
+                {
+                    return new BindItem(new KaitaiStream(fileName));
+                }
+
+                public BindItem(KaitaiStream p__io, MachO.DyldInfoCommand.BindData p__parent = null, MachO p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_opcode = false;
+                    f_immediate = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _opcodeAndImmediate = m_io.ReadU1();
+                    if ( ((Opcode == MachO.DyldInfoCommand.BindOpcode.SetDylibOrdinalUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.SetAppendSleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.SetSegmentAndOffsetUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.AddAddressUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindAddAddressUleb) || (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindUlebTimesSkippingUleb)) ) {
+                        _uleb = new Uleb128(m_io, this, m_root);
+                    }
+                    if (Opcode == MachO.DyldInfoCommand.BindOpcode.DoBindUlebTimesSkippingUleb) {
+                        _skip = new Uleb128(m_io, this, m_root);
+                    }
+                    if (Opcode == MachO.DyldInfoCommand.BindOpcode.SetSymbolTrailingFlagsImmediate) {
+                        _symbol = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                    }
+                }
+                private bool f_opcode;
+                private BindOpcode _opcode;
+                public BindOpcode Opcode
+                {
+                    get
+                    {
+                        if (f_opcode)
+                            return _opcode;
+                        _opcode = (BindOpcode) (((MachO.DyldInfoCommand.BindOpcode) (OpcodeAndImmediate & 240)));
+                        f_opcode = true;
+                        return _opcode;
+                    }
+                }
+                private bool f_immediate;
+                private int _immediate;
+                public int Immediate
+                {
+                    get
+                    {
+                        if (f_immediate)
+                            return _immediate;
+                        _immediate = (int) ((OpcodeAndImmediate & 15));
+                        f_immediate = true;
+                        return _immediate;
+                    }
+                }
+                private byte _opcodeAndImmediate;
+                private Uleb128 _uleb;
+                private Uleb128 _skip;
+                private string _symbol;
+                private MachO m_root;
+                private MachO.DyldInfoCommand.BindData m_parent;
+                public byte OpcodeAndImmediate { get { return _opcodeAndImmediate; } }
+                public Uleb128 Uleb { get { return _uleb; } }
+                public Uleb128 Skip { get { return _skip; } }
+                public string Symbol { get { return _symbol; } }
+                public MachO M_Root { get { return m_root; } }
+                public MachO.DyldInfoCommand.BindData M_Parent { get { return m_parent; } }
+            }
+            public partial class BindData : KaitaiStruct
+            {
+                public static BindData FromFile(string fileName)
+                {
+                    return new BindData(new KaitaiStream(fileName));
+                }
+
+                public BindData(KaitaiStream p__io, MachO.DyldInfoCommand p__parent = null, MachO p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _items = new List<BindItem>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _items.Add(new BindItem(m_io, this, m_root));
+                            i++;
+                        }
+                    }
+                }
+                private List<BindItem> _items;
+                private MachO m_root;
+                private MachO.DyldInfoCommand m_parent;
+                public List<BindItem> Items { get { return _items; } }
+                public MachO M_Root { get { return m_root; } }
+                public MachO.DyldInfoCommand M_Parent { get { return m_parent; } }
+            }
             public partial class ExportNode : KaitaiStruct
             {
                 public static ExportNode FromFile(string fileName)
@@ -3101,89 +3155,6 @@ namespace Kaitai
                 public MachO M_Root { get { return m_root; } }
                 public KaitaiStruct M_Parent { get { return m_parent; } }
             }
-            public partial class BindData : KaitaiStruct
-            {
-                public static BindData FromFile(string fileName)
-                {
-                    return new BindData(new KaitaiStream(fileName));
-                }
-
-                public BindData(KaitaiStream p__io, MachO.DyldInfoCommand p__parent = null, MachO p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _items = new List<BindItem>();
-                    {
-                        var i = 0;
-                        BindItem M_;
-                        do {
-                            M_ = new BindItem(m_io, this, m_root);
-                            _items.Add(M_);
-                            i++;
-                        } while (!(M_.Opcode == MachO.DyldInfoCommand.BindOpcode.Done));
-                    }
-                }
-                private List<BindItem> _items;
-                private MachO m_root;
-                private MachO.DyldInfoCommand m_parent;
-                public List<BindItem> Items { get { return _items; } }
-                public MachO M_Root { get { return m_root; } }
-                public MachO.DyldInfoCommand M_Parent { get { return m_parent; } }
-            }
-            public partial class LazyBindData : KaitaiStruct
-            {
-                public static LazyBindData FromFile(string fileName)
-                {
-                    return new LazyBindData(new KaitaiStream(fileName));
-                }
-
-                public LazyBindData(KaitaiStream p__io, MachO.DyldInfoCommand p__parent = null, MachO p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _items = new List<BindItem>();
-                    {
-                        var i = 0;
-                        while (!m_io.IsEof) {
-                            _items.Add(new BindItem(m_io, this, m_root));
-                            i++;
-                        }
-                    }
-                }
-                private List<BindItem> _items;
-                private MachO m_root;
-                private MachO.DyldInfoCommand m_parent;
-                public List<BindItem> Items { get { return _items; } }
-                public MachO M_Root { get { return m_root; } }
-                public MachO.DyldInfoCommand M_Parent { get { return m_parent; } }
-            }
-            private bool f_rebase;
-            private RebaseData _rebase;
-            public RebaseData Rebase
-            {
-                get
-                {
-                    if (f_rebase)
-                        return _rebase;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(RebaseOff);
-                    __raw_rebase = io.ReadBytes(RebaseSize);
-                    var io___raw_rebase = new KaitaiStream(__raw_rebase);
-                    _rebase = new RebaseData(io___raw_rebase, this, m_root);
-                    io.Seek(_pos);
-                    f_rebase = true;
-                    return _rebase;
-                }
-            }
             private bool f_bind;
             private BindData _bind;
             public BindData Bind
@@ -3192,34 +3163,17 @@ namespace Kaitai
                 {
                     if (f_bind)
                         return _bind;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(BindOff);
-                    __raw_bind = io.ReadBytes(BindSize);
-                    var io___raw_bind = new KaitaiStream(__raw_bind);
-                    _bind = new BindData(io___raw_bind, this, m_root);
-                    io.Seek(_pos);
-                    f_bind = true;
+                    if (BindSize != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(BindOff);
+                        __raw_bind = io.ReadBytes(BindSize);
+                        var io___raw_bind = new KaitaiStream(__raw_bind);
+                        _bind = new BindData(io___raw_bind, this, m_root);
+                        io.Seek(_pos);
+                        f_bind = true;
+                    }
                     return _bind;
-                }
-            }
-            private bool f_lazyBind;
-            private LazyBindData _lazyBind;
-            public LazyBindData LazyBind
-            {
-                get
-                {
-                    if (f_lazyBind)
-                        return _lazyBind;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(LazyBindOff);
-                    __raw_lazyBind = io.ReadBytes(LazyBindSize);
-                    var io___raw_lazyBind = new KaitaiStream(__raw_lazyBind);
-                    _lazyBind = new LazyBindData(io___raw_lazyBind, this, m_root);
-                    io.Seek(_pos);
-                    f_lazyBind = true;
-                    return _lazyBind;
                 }
             }
             private bool f_exports;
@@ -3230,15 +3184,80 @@ namespace Kaitai
                 {
                     if (f_exports)
                         return _exports;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(ExportOff);
-                    __raw_exports = io.ReadBytes(ExportSize);
-                    var io___raw_exports = new KaitaiStream(__raw_exports);
-                    _exports = new ExportNode(io___raw_exports, this, m_root);
-                    io.Seek(_pos);
-                    f_exports = true;
+                    if (ExportSize != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(ExportOff);
+                        __raw_exports = io.ReadBytes(ExportSize);
+                        var io___raw_exports = new KaitaiStream(__raw_exports);
+                        _exports = new ExportNode(io___raw_exports, this, m_root);
+                        io.Seek(_pos);
+                        f_exports = true;
+                    }
                     return _exports;
+                }
+            }
+            private bool f_weakBind;
+            private BindData _weakBind;
+            public BindData WeakBind
+            {
+                get
+                {
+                    if (f_weakBind)
+                        return _weakBind;
+                    if (WeakBindSize != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(WeakBindOff);
+                        __raw_weakBind = io.ReadBytes(WeakBindSize);
+                        var io___raw_weakBind = new KaitaiStream(__raw_weakBind);
+                        _weakBind = new BindData(io___raw_weakBind, this, m_root);
+                        io.Seek(_pos);
+                        f_weakBind = true;
+                    }
+                    return _weakBind;
+                }
+            }
+            private bool f_rebase;
+            private RebaseData _rebase;
+            public RebaseData Rebase
+            {
+                get
+                {
+                    if (f_rebase)
+                        return _rebase;
+                    if (RebaseSize != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(RebaseOff);
+                        __raw_rebase = io.ReadBytes(RebaseSize);
+                        var io___raw_rebase = new KaitaiStream(__raw_rebase);
+                        _rebase = new RebaseData(io___raw_rebase, this, m_root);
+                        io.Seek(_pos);
+                        f_rebase = true;
+                    }
+                    return _rebase;
+                }
+            }
+            private bool f_lazyBind;
+            private BindData _lazyBind;
+            public BindData LazyBind
+            {
+                get
+                {
+                    if (f_lazyBind)
+                        return _lazyBind;
+                    if (LazyBindSize != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(LazyBindOff);
+                        __raw_lazyBind = io.ReadBytes(LazyBindSize);
+                        var io___raw_lazyBind = new KaitaiStream(__raw_lazyBind);
+                        _lazyBind = new BindData(io___raw_lazyBind, this, m_root);
+                        io.Seek(_pos);
+                        f_lazyBind = true;
+                    }
+                    return _lazyBind;
                 }
             }
             private uint _rebaseOff;
@@ -3253,10 +3272,11 @@ namespace Kaitai
             private uint _exportSize;
             private MachO m_root;
             private MachO.LoadCommand m_parent;
-            private byte[] __raw_rebase;
             private byte[] __raw_bind;
-            private byte[] __raw_lazyBind;
             private byte[] __raw_exports;
+            private byte[] __raw_weakBind;
+            private byte[] __raw_rebase;
+            private byte[] __raw_lazyBind;
             public uint RebaseOff { get { return _rebaseOff; } }
             public uint RebaseSize { get { return _rebaseSize; } }
             public uint BindOff { get { return _bindOff; } }
@@ -3269,10 +3289,11 @@ namespace Kaitai
             public uint ExportSize { get { return _exportSize; } }
             public MachO M_Root { get { return m_root; } }
             public MachO.LoadCommand M_Parent { get { return m_parent; } }
-            public byte[] M_RawRebase { get { return __raw_rebase; } }
             public byte[] M_RawBind { get { return __raw_bind; } }
-            public byte[] M_RawLazyBind { get { return __raw_lazyBind; } }
             public byte[] M_RawExports { get { return __raw_exports; } }
+            public byte[] M_RawWeakBind { get { return __raw_weakBind; } }
+            public byte[] M_RawRebase { get { return __raw_rebase; } }
+            public byte[] M_RawLazyBind { get { return __raw_lazyBind; } }
         }
         public partial class DylinkerCommand : KaitaiStruct
         {

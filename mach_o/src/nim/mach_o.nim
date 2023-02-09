@@ -523,18 +523,21 @@ type
     `exportOff`*: uint32
     `exportSize`*: uint32
     `parent`*: MachO_LoadCommand
-    `rawRebaseInst`*: seq[byte]
     `rawBindInst`*: seq[byte]
-    `rawLazyBindInst`*: seq[byte]
     `rawExportsInst`*: seq[byte]
-    `rebaseInst`: MachO_DyldInfoCommand_RebaseData
-    `rebaseInstFlag`: bool
+    `rawWeakBindInst`*: seq[byte]
+    `rawRebaseInst`*: seq[byte]
+    `rawLazyBindInst`*: seq[byte]
     `bindInst`: MachO_DyldInfoCommand_BindData
     `bindInstFlag`: bool
-    `lazyBindInst`: MachO_DyldInfoCommand_LazyBindData
-    `lazyBindInstFlag`: bool
     `exportsInst`: MachO_DyldInfoCommand_ExportNode
     `exportsInstFlag`: bool
+    `weakBindInst`: MachO_DyldInfoCommand_BindData
+    `weakBindInstFlag`: bool
+    `rebaseInst`: MachO_DyldInfoCommand_RebaseData
+    `rebaseInstFlag`: bool
+    `lazyBindInst`: MachO_DyldInfoCommand_BindData
+    `lazyBindInstFlag`: bool
   MachO_DyldInfoCommand_BindOpcode* = enum
     done = 0
     set_dylib_ordinal_immediate = 16
@@ -549,16 +552,6 @@ type
     do_bind_add_address_uleb = 160
     do_bind_add_address_immediate_scaled = 176
     do_bind_uleb_times_skipping_uleb = 192
-  MachO_DyldInfoCommand_BindItem* = ref object of KaitaiStruct
-    `opcodeAndImmediate`*: uint8
-    `uleb`*: MachO_Uleb128
-    `skip`*: MachO_Uleb128
-    `symbol`*: string
-    `parent`*: KaitaiStruct
-    `opcodeInst`: MachO_DyldInfoCommand_BindOpcode
-    `opcodeInstFlag`: bool
-    `immediateInst`: int
-    `immediateInstFlag`: bool
   MachO_DyldInfoCommand_RebaseData* = ref object of KaitaiStruct
     `items`*: seq[MachO_DyldInfoCommand_RebaseData_RebaseItem]
     `parent`*: MachO_DyldInfoCommand
@@ -581,6 +574,19 @@ type
     `opcodeInstFlag`: bool
     `immediateInst`: int
     `immediateInstFlag`: bool
+  MachO_DyldInfoCommand_BindItem* = ref object of KaitaiStruct
+    `opcodeAndImmediate`*: uint8
+    `uleb`*: MachO_Uleb128
+    `skip`*: MachO_Uleb128
+    `symbol`*: string
+    `parent`*: MachO_DyldInfoCommand_BindData
+    `opcodeInst`: MachO_DyldInfoCommand_BindOpcode
+    `opcodeInstFlag`: bool
+    `immediateInst`: int
+    `immediateInstFlag`: bool
+  MachO_DyldInfoCommand_BindData* = ref object of KaitaiStruct
+    `items`*: seq[MachO_DyldInfoCommand_BindItem]
+    `parent`*: MachO_DyldInfoCommand
   MachO_DyldInfoCommand_ExportNode* = ref object of KaitaiStruct
     `terminalSize`*: MachO_Uleb128
     `childrenCount`*: uint8
@@ -593,12 +599,6 @@ type
     `parent`*: MachO_DyldInfoCommand_ExportNode
     `valueInst`: MachO_DyldInfoCommand_ExportNode
     `valueInstFlag`: bool
-  MachO_DyldInfoCommand_BindData* = ref object of KaitaiStruct
-    `items`*: seq[MachO_DyldInfoCommand_BindItem]
-    `parent`*: MachO_DyldInfoCommand
-  MachO_DyldInfoCommand_LazyBindData* = ref object of KaitaiStruct
-    `items`*: seq[MachO_DyldInfoCommand_BindItem]
-    `parent`*: MachO_DyldInfoCommand
   MachO_DylinkerCommand* = ref object of KaitaiStruct
     `name`*: MachO_LcStr
     `parent`*: MachO_LoadCommand
@@ -744,13 +744,12 @@ proc read*(_: typedesc[MachO_Version], io: KaitaiStream, root: KaitaiStruct, par
 proc read*(_: typedesc[MachO_EncryptionInfoCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_EncryptionInfoCommand
 proc read*(_: typedesc[MachO_CodeSignatureCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_CodeSignatureCommand
 proc read*(_: typedesc[MachO_DyldInfoCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_DyldInfoCommand
-proc read*(_: typedesc[MachO_DyldInfoCommand_BindItem], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO_DyldInfoCommand_BindItem
 proc read*(_: typedesc[MachO_DyldInfoCommand_RebaseData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData
 proc read*(_: typedesc[MachO_DyldInfoCommand_RebaseData_RebaseItem], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand_RebaseData): MachO_DyldInfoCommand_RebaseData_RebaseItem
+proc read*(_: typedesc[MachO_DyldInfoCommand_BindItem], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand_BindData): MachO_DyldInfoCommand_BindItem
+proc read*(_: typedesc[MachO_DyldInfoCommand_BindData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData
 proc read*(_: typedesc[MachO_DyldInfoCommand_ExportNode], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO_DyldInfoCommand_ExportNode
 proc read*(_: typedesc[MachO_DyldInfoCommand_ExportNode_Child], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand_ExportNode): MachO_DyldInfoCommand_ExportNode_Child
-proc read*(_: typedesc[MachO_DyldInfoCommand_BindData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData
-proc read*(_: typedesc[MachO_DyldInfoCommand_LazyBindData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_LazyBindData
 proc read*(_: typedesc[MachO_DylinkerCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_DylinkerCommand
 proc read*(_: typedesc[MachO_DylibCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_DylibCommand
 proc read*(_: typedesc[MachO_SegmentCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_SegmentCommand
@@ -802,14 +801,15 @@ proc data*(this: MachO_SegmentCommand64_Section64): KaitaiStruct
 proc indirectSymbols*(this: MachO_DysymtabCommand): seq[uint32]
 proc flagsObj*(this: MachO_MachHeader): MachO_MachoFlags
 proc codeSignature*(this: MachO_CodeSignatureCommand): MachO_CsBlob
-proc rebase*(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData
 proc bind*(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData
-proc lazyBind*(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_LazyBindData
 proc exports*(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_ExportNode
-proc opcode*(this: MachO_DyldInfoCommand_BindItem): MachO_DyldInfoCommand_BindOpcode
-proc immediate*(this: MachO_DyldInfoCommand_BindItem): int
+proc weakBind*(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData
+proc rebase*(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData
+proc lazyBind*(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData
 proc opcode*(this: MachO_DyldInfoCommand_RebaseData_RebaseItem): MachO_DyldInfoCommand_RebaseData_Opcode
 proc immediate*(this: MachO_DyldInfoCommand_RebaseData_RebaseItem): int
+proc opcode*(this: MachO_DyldInfoCommand_BindItem): MachO_DyldInfoCommand_BindOpcode
+proc immediate*(this: MachO_DyldInfoCommand_BindItem): int
 proc value*(this: MachO_DyldInfoCommand_ExportNode_Child): MachO_DyldInfoCommand_ExportNode
 proc data*(this: MachO_SegmentCommand_Section): seq[byte]
 proc symbols*(this: MachO_SymtabCommand): seq[KaitaiStruct]
@@ -817,6 +817,16 @@ proc strs*(this: MachO_SymtabCommand): MachO_SymtabCommand_StrTable
 proc name*(this: MachO_SymtabCommand_Nlist64): string
 proc name*(this: MachO_SymtabCommand_Nlist): string
 
+
+##[
+@see <a href="https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf">Source</a>
+@see <a href="https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz">Source</a>
+@see <a href="https://github.com/comex/cs/blob/07a88f9/macho_cs.py">Source</a>
+@see <a href="https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html">Source</a>
+@see <a href="https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h">Source</a>
+@see <a href="https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html">Source</a>
+@see <a href="https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html">Source</a>
+]##
 proc read*(_: typedesc[MachO], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO =
   template this: untyped = result
   this = new(MachO)
@@ -1072,7 +1082,7 @@ proc read*(_: typedesc[MachO_CsBlob_Data], io: KaitaiStream, root: KaitaiStruct,
   this.length = lengthExpr
   let valueExpr = this.io.readBytes(int(this.length))
   this.value = valueExpr
-  let paddingExpr = this.io.readBytes(int((4 - (this.length and 3))))
+  let paddingExpr = this.io.readBytes(int((-(this.length) %%% 4)))
   this.padding = paddingExpr
 
 proc fromFile*(_: typedesc[MachO_CsBlob_Data], filename: string): MachO_CsBlob_Data =
@@ -2529,107 +2539,88 @@ proc read*(_: typedesc[MachO_DyldInfoCommand], io: KaitaiStream, root: KaitaiStr
   let exportSizeExpr = this.io.readU4le()
   this.exportSize = exportSizeExpr
 
-proc rebase(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData = 
-  if this.rebaseInstFlag:
-    return this.rebaseInst
-  let io = MachO(this.root).io
-  let pos = io.pos()
-  io.seek(int(this.rebaseOff))
-  let rawRebaseInstExpr = io.readBytes(int(this.rebaseSize))
-  this.rawRebaseInst = rawRebaseInstExpr
-  let rawRebaseInstIo = newKaitaiStream(rawRebaseInstExpr)
-  let rebaseInstExpr = MachO_DyldInfoCommand_RebaseData.read(rawRebaseInstIo, this.root, this)
-  this.rebaseInst = rebaseInstExpr
-  io.seek(pos)
-  this.rebaseInstFlag = true
-  return this.rebaseInst
-
 proc bind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData = 
   if this.bindInstFlag:
     return this.bindInst
-  let io = MachO(this.root).io
-  let pos = io.pos()
-  io.seek(int(this.bindOff))
-  let rawBindInstExpr = io.readBytes(int(this.bindSize))
-  this.rawBindInst = rawBindInstExpr
-  let rawBindInstIo = newKaitaiStream(rawBindInstExpr)
-  let bindInstExpr = MachO_DyldInfoCommand_BindData.read(rawBindInstIo, this.root, this)
-  this.bindInst = bindInstExpr
-  io.seek(pos)
+  if this.bindSize != 0:
+    let io = MachO(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.bindOff))
+    let rawBindInstExpr = io.readBytes(int(this.bindSize))
+    this.rawBindInst = rawBindInstExpr
+    let rawBindInstIo = newKaitaiStream(rawBindInstExpr)
+    let bindInstExpr = MachO_DyldInfoCommand_BindData.read(rawBindInstIo, this.root, this)
+    this.bindInst = bindInstExpr
+    io.seek(pos)
   this.bindInstFlag = true
   return this.bindInst
-
-proc lazyBind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_LazyBindData = 
-  if this.lazyBindInstFlag:
-    return this.lazyBindInst
-  let io = MachO(this.root).io
-  let pos = io.pos()
-  io.seek(int(this.lazyBindOff))
-  let rawLazyBindInstExpr = io.readBytes(int(this.lazyBindSize))
-  this.rawLazyBindInst = rawLazyBindInstExpr
-  let rawLazyBindInstIo = newKaitaiStream(rawLazyBindInstExpr)
-  let lazyBindInstExpr = MachO_DyldInfoCommand_LazyBindData.read(rawLazyBindInstIo, this.root, this)
-  this.lazyBindInst = lazyBindInstExpr
-  io.seek(pos)
-  this.lazyBindInstFlag = true
-  return this.lazyBindInst
 
 proc exports(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_ExportNode = 
   if this.exportsInstFlag:
     return this.exportsInst
-  let io = MachO(this.root).io
-  let pos = io.pos()
-  io.seek(int(this.exportOff))
-  let rawExportsInstExpr = io.readBytes(int(this.exportSize))
-  this.rawExportsInst = rawExportsInstExpr
-  let rawExportsInstIo = newKaitaiStream(rawExportsInstExpr)
-  let exportsInstExpr = MachO_DyldInfoCommand_ExportNode.read(rawExportsInstIo, this.root, this)
-  this.exportsInst = exportsInstExpr
-  io.seek(pos)
+  if this.exportSize != 0:
+    let io = MachO(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.exportOff))
+    let rawExportsInstExpr = io.readBytes(int(this.exportSize))
+    this.rawExportsInst = rawExportsInstExpr
+    let rawExportsInstIo = newKaitaiStream(rawExportsInstExpr)
+    let exportsInstExpr = MachO_DyldInfoCommand_ExportNode.read(rawExportsInstIo, this.root, this)
+    this.exportsInst = exportsInstExpr
+    io.seek(pos)
   this.exportsInstFlag = true
   return this.exportsInst
 
+proc weakBind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData = 
+  if this.weakBindInstFlag:
+    return this.weakBindInst
+  if this.weakBindSize != 0:
+    let io = MachO(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.weakBindOff))
+    let rawWeakBindInstExpr = io.readBytes(int(this.weakBindSize))
+    this.rawWeakBindInst = rawWeakBindInstExpr
+    let rawWeakBindInstIo = newKaitaiStream(rawWeakBindInstExpr)
+    let weakBindInstExpr = MachO_DyldInfoCommand_BindData.read(rawWeakBindInstIo, this.root, this)
+    this.weakBindInst = weakBindInstExpr
+    io.seek(pos)
+  this.weakBindInstFlag = true
+  return this.weakBindInst
+
+proc rebase(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData = 
+  if this.rebaseInstFlag:
+    return this.rebaseInst
+  if this.rebaseSize != 0:
+    let io = MachO(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.rebaseOff))
+    let rawRebaseInstExpr = io.readBytes(int(this.rebaseSize))
+    this.rawRebaseInst = rawRebaseInstExpr
+    let rawRebaseInstIo = newKaitaiStream(rawRebaseInstExpr)
+    let rebaseInstExpr = MachO_DyldInfoCommand_RebaseData.read(rawRebaseInstIo, this.root, this)
+    this.rebaseInst = rebaseInstExpr
+    io.seek(pos)
+  this.rebaseInstFlag = true
+  return this.rebaseInst
+
+proc lazyBind(this: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData = 
+  if this.lazyBindInstFlag:
+    return this.lazyBindInst
+  if this.lazyBindSize != 0:
+    let io = MachO(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.lazyBindOff))
+    let rawLazyBindInstExpr = io.readBytes(int(this.lazyBindSize))
+    this.rawLazyBindInst = rawLazyBindInstExpr
+    let rawLazyBindInstIo = newKaitaiStream(rawLazyBindInstExpr)
+    let lazyBindInstExpr = MachO_DyldInfoCommand_BindData.read(rawLazyBindInstIo, this.root, this)
+    this.lazyBindInst = lazyBindInstExpr
+    io.seek(pos)
+  this.lazyBindInstFlag = true
+  return this.lazyBindInst
+
 proc fromFile*(_: typedesc[MachO_DyldInfoCommand], filename: string): MachO_DyldInfoCommand =
   MachO_DyldInfoCommand.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MachO_DyldInfoCommand_BindItem], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO_DyldInfoCommand_BindItem =
-  template this: untyped = result
-  this = new(MachO_DyldInfoCommand_BindItem)
-  let root = if root == nil: cast[MachO](this) else: cast[MachO](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let opcodeAndImmediateExpr = this.io.readU1()
-  this.opcodeAndImmediate = opcodeAndImmediateExpr
-  if  ((this.opcode == mach_o.set_dylib_ordinal_uleb) or (this.opcode == mach_o.set_append_sleb) or (this.opcode == mach_o.set_segment_and_offset_uleb) or (this.opcode == mach_o.add_address_uleb) or (this.opcode == mach_o.do_bind_add_address_uleb) or (this.opcode == mach_o.do_bind_uleb_times_skipping_uleb)) :
-    let ulebExpr = MachO_Uleb128.read(this.io, this.root, this)
-    this.uleb = ulebExpr
-  if this.opcode == mach_o.do_bind_uleb_times_skipping_uleb:
-    let skipExpr = MachO_Uleb128.read(this.io, this.root, this)
-    this.skip = skipExpr
-  if this.opcode == mach_o.set_symbol_trailing_flags_immediate:
-    let symbolExpr = encode(this.io.readBytesTerm(0, false, true, true), "ascii")
-    this.symbol = symbolExpr
-
-proc opcode(this: MachO_DyldInfoCommand_BindItem): MachO_DyldInfoCommand_BindOpcode = 
-  if this.opcodeInstFlag:
-    return this.opcodeInst
-  let opcodeInstExpr = MachO_DyldInfoCommand_BindOpcode(MachO_DyldInfoCommand_BindOpcode((this.opcodeAndImmediate and 240)))
-  this.opcodeInst = opcodeInstExpr
-  this.opcodeInstFlag = true
-  return this.opcodeInst
-
-proc immediate(this: MachO_DyldInfoCommand_BindItem): int = 
-  if this.immediateInstFlag:
-    return this.immediateInst
-  let immediateInstExpr = int((this.opcodeAndImmediate and 15))
-  this.immediateInst = immediateInstExpr
-  this.immediateInstFlag = true
-  return this.immediateInst
-
-proc fromFile*(_: typedesc[MachO_DyldInfoCommand_BindItem], filename: string): MachO_DyldInfoCommand_BindItem =
-  MachO_DyldInfoCommand_BindItem.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MachO_DyldInfoCommand_RebaseData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_RebaseData =
   template this: untyped = result
@@ -2687,6 +2678,63 @@ proc immediate(this: MachO_DyldInfoCommand_RebaseData_RebaseItem): int =
 proc fromFile*(_: typedesc[MachO_DyldInfoCommand_RebaseData_RebaseItem], filename: string): MachO_DyldInfoCommand_RebaseData_RebaseItem =
   MachO_DyldInfoCommand_RebaseData_RebaseItem.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[MachO_DyldInfoCommand_BindItem], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand_BindData): MachO_DyldInfoCommand_BindItem =
+  template this: untyped = result
+  this = new(MachO_DyldInfoCommand_BindItem)
+  let root = if root == nil: cast[MachO](this) else: cast[MachO](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let opcodeAndImmediateExpr = this.io.readU1()
+  this.opcodeAndImmediate = opcodeAndImmediateExpr
+  if  ((this.opcode == mach_o.set_dylib_ordinal_uleb) or (this.opcode == mach_o.set_append_sleb) or (this.opcode == mach_o.set_segment_and_offset_uleb) or (this.opcode == mach_o.add_address_uleb) or (this.opcode == mach_o.do_bind_add_address_uleb) or (this.opcode == mach_o.do_bind_uleb_times_skipping_uleb)) :
+    let ulebExpr = MachO_Uleb128.read(this.io, this.root, this)
+    this.uleb = ulebExpr
+  if this.opcode == mach_o.do_bind_uleb_times_skipping_uleb:
+    let skipExpr = MachO_Uleb128.read(this.io, this.root, this)
+    this.skip = skipExpr
+  if this.opcode == mach_o.set_symbol_trailing_flags_immediate:
+    let symbolExpr = encode(this.io.readBytesTerm(0, false, true, true), "ascii")
+    this.symbol = symbolExpr
+
+proc opcode(this: MachO_DyldInfoCommand_BindItem): MachO_DyldInfoCommand_BindOpcode = 
+  if this.opcodeInstFlag:
+    return this.opcodeInst
+  let opcodeInstExpr = MachO_DyldInfoCommand_BindOpcode(MachO_DyldInfoCommand_BindOpcode((this.opcodeAndImmediate and 240)))
+  this.opcodeInst = opcodeInstExpr
+  this.opcodeInstFlag = true
+  return this.opcodeInst
+
+proc immediate(this: MachO_DyldInfoCommand_BindItem): int = 
+  if this.immediateInstFlag:
+    return this.immediateInst
+  let immediateInstExpr = int((this.opcodeAndImmediate and 15))
+  this.immediateInst = immediateInstExpr
+  this.immediateInstFlag = true
+  return this.immediateInst
+
+proc fromFile*(_: typedesc[MachO_DyldInfoCommand_BindItem], filename: string): MachO_DyldInfoCommand_BindItem =
+  MachO_DyldInfoCommand_BindItem.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MachO_DyldInfoCommand_BindData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData =
+  template this: untyped = result
+  this = new(MachO_DyldInfoCommand_BindData)
+  let root = if root == nil: cast[MachO](this) else: cast[MachO](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = MachO_DyldInfoCommand_BindItem.read(this.io, this.root, this)
+      this.items.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[MachO_DyldInfoCommand_BindData], filename: string): MachO_DyldInfoCommand_BindData =
+  MachO_DyldInfoCommand_BindData.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[MachO_DyldInfoCommand_ExportNode], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO_DyldInfoCommand_ExportNode =
   template this: untyped = result
   this = new(MachO_DyldInfoCommand_ExportNode)
@@ -2734,44 +2782,6 @@ proc value(this: MachO_DyldInfoCommand_ExportNode_Child): MachO_DyldInfoCommand_
 
 proc fromFile*(_: typedesc[MachO_DyldInfoCommand_ExportNode_Child], filename: string): MachO_DyldInfoCommand_ExportNode_Child =
   MachO_DyldInfoCommand_ExportNode_Child.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MachO_DyldInfoCommand_BindData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_BindData =
-  template this: untyped = result
-  this = new(MachO_DyldInfoCommand_BindData)
-  let root = if root == nil: cast[MachO](this) else: cast[MachO](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while true:
-      let it = MachO_DyldInfoCommand_BindItem.read(this.io, this.root, this)
-      this.items.add(it)
-      if it.opcode == mach_o.done:
-        break
-      inc i
-
-proc fromFile*(_: typedesc[MachO_DyldInfoCommand_BindData], filename: string): MachO_DyldInfoCommand_BindData =
-  MachO_DyldInfoCommand_BindData.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MachO_DyldInfoCommand_LazyBindData], io: KaitaiStream, root: KaitaiStruct, parent: MachO_DyldInfoCommand): MachO_DyldInfoCommand_LazyBindData =
-  template this: untyped = result
-  this = new(MachO_DyldInfoCommand_LazyBindData)
-  let root = if root == nil: cast[MachO](this) else: cast[MachO](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = MachO_DyldInfoCommand_BindItem.read(this.io, this.root, this)
-      this.items.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[MachO_DyldInfoCommand_LazyBindData], filename: string): MachO_DyldInfoCommand_LazyBindData =
-  MachO_DyldInfoCommand_LazyBindData.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MachO_DylinkerCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_DylinkerCommand =
   template this: untyped = result

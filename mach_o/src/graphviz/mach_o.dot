@@ -117,7 +117,7 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
 					<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">length</TD><TD></TD><TD PORT="value_type">value</TD></TR>
-					<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">(4 - (length &amp; 3))</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+					<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">(-(length) % 4)</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__super_blob {
@@ -822,42 +822,26 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 				<TR><TD PORT="export_off_pos">32</TD><TD PORT="export_off_size">4</TD><TD>u4le</TD><TD PORT="export_off_type">export_off</TD></TR>
 				<TR><TD PORT="export_size_pos">36</TD><TD PORT="export_size_size">4</TD><TD>u4le</TD><TD PORT="export_size_type">export_size</TD></TR>
 			</TABLE>>];
-			dyld_info_command__inst__rebase [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="rebase_pos">rebase_off</TD><TD PORT="rebase_size">rebase_size</TD><TD>RebaseData</TD><TD PORT="rebase_type">rebase</TD></TR>
-			</TABLE>>];
 			dyld_info_command__inst__bind [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="bind_pos">bind_off</TD><TD PORT="bind_size">bind_size</TD><TD>BindData</TD><TD PORT="bind_type">bind</TD></TR>
-			</TABLE>>];
-			dyld_info_command__inst__lazy_bind [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="lazy_bind_pos">lazy_bind_off</TD><TD PORT="lazy_bind_size">lazy_bind_size</TD><TD>LazyBindData</TD><TD PORT="lazy_bind_type">lazy_bind</TD></TR>
 			</TABLE>>];
 			dyld_info_command__inst__exports [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="exports_pos">export_off</TD><TD PORT="exports_size">export_size</TD><TD>ExportNode</TD><TD PORT="exports_type">exports</TD></TR>
 			</TABLE>>];
-			subgraph cluster__bind_item {
-				label="MachO::DyldInfoCommand::BindItem";
-				graph[style=dotted];
-
-				bind_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="opcode_and_immediate_pos">0</TD><TD PORT="opcode_and_immediate_size">1</TD><TD>u1</TD><TD PORT="opcode_and_immediate_type">opcode_and_immediate</TD></TR>
-					<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">10</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
-					<TR><TD PORT="skip_pos">11</TD><TD PORT="skip_size">10</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
-					<TR><TD PORT="symbol_pos">21</TD><TD PORT="symbol_size">...</TD><TD>str(ascii)</TD><TD PORT="symbol_type">symbol</TD></TR>
-				</TABLE>>];
-				bind_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::BIND_OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
-				</TABLE>>];
-				bind_item__inst__immediate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>immediate</TD><TD>(opcode_and_immediate &amp; 15)</TD></TR>
-				</TABLE>>];
-			}
+			dyld_info_command__inst__weak_bind [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="weak_bind_pos">weak_bind_off</TD><TD PORT="weak_bind_size">weak_bind_size</TD><TD>BindData</TD><TD PORT="weak_bind_type">weak_bind</TD></TR>
+			</TABLE>>];
+			dyld_info_command__inst__rebase [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="rebase_pos">rebase_off</TD><TD PORT="rebase_size">rebase_size</TD><TD>RebaseData</TD><TD PORT="rebase_type">rebase</TD></TR>
+			</TABLE>>];
+			dyld_info_command__inst__lazy_bind [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="lazy_bind_pos">lazy_bind_off</TD><TD PORT="lazy_bind_size">lazy_bind_size</TD><TD>BindData</TD><TD PORT="lazy_bind_type">lazy_bind</TD></TR>
+			</TABLE>>];
 			subgraph cluster__rebase_data {
 				label="MachO::DyldInfoCommand::RebaseData";
 				graph[style=dotted];
@@ -887,6 +871,36 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 					</TABLE>>];
 				}
 			}
+			subgraph cluster__bind_item {
+				label="MachO::DyldInfoCommand::BindItem";
+				graph[style=dotted];
+
+				bind_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="opcode_and_immediate_pos">0</TD><TD PORT="opcode_and_immediate_size">1</TD><TD>u1</TD><TD PORT="opcode_and_immediate_type">opcode_and_immediate</TD></TR>
+					<TR><TD PORT="uleb_pos">1</TD><TD PORT="uleb_size">10</TD><TD>Uleb128</TD><TD PORT="uleb_type">uleb</TD></TR>
+					<TR><TD PORT="skip_pos">11</TD><TD PORT="skip_size">10</TD><TD>Uleb128</TD><TD PORT="skip_type">skip</TD></TR>
+					<TR><TD PORT="symbol_pos">21</TD><TD PORT="symbol_size">...</TD><TD>str(ascii)</TD><TD PORT="symbol_type">symbol</TD></TR>
+				</TABLE>>];
+				bind_item__inst__opcode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>opcode</TD><TD>Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::BIND_OPCODE, (opcode_and_immediate &amp; 240))</TD></TR>
+				</TABLE>>];
+				bind_item__inst__immediate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>immediate</TD><TD>(opcode_and_immediate &amp; 15)</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__bind_data {
+				label="MachO::DyldInfoCommand::BindData";
+				graph[style=dotted];
+
+				bind_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>BindItem</TD><TD PORT="items_type">items</TD></TR>
+					<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
 			subgraph cluster__export_node {
 				label="MachO::DyldInfoCommand::ExportNode";
 				graph[style=dotted];
@@ -913,26 +927,6 @@ eh_frame_item__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 						<TR><TD PORT="value_pos">node_offset.value</TD><TD PORT="value_size">...</TD><TD>ExportNode</TD><TD PORT="value_type">value</TD></TR>
 					</TABLE>>];
 				}
-			}
-			subgraph cluster__bind_data {
-				label="MachO::DyldInfoCommand::BindData";
-				graph[style=dotted];
-
-				bind_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>BindItem</TD><TD PORT="items_type">items</TD></TR>
-					<TR><TD COLSPAN="4" PORT="items__repeat">repeat until _.opcode == :bind_opcode_done</TD></TR>
-				</TABLE>>];
-			}
-			subgraph cluster__lazy_bind_data {
-				label="MachO::DyldInfoCommand::LazyBindData";
-				graph[style=dotted];
-
-				lazy_bind_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>BindItem</TD><TD PORT="items_type">items</TD></TR>
-					<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
-				</TABLE>>];
 			}
 		}
 		subgraph cluster__dylinker_command {
@@ -1318,28 +1312,32 @@ symtab_command__inst__symbols_symbols_switch [label=<<TABLE BORDER="0" CELLBORDE
 	code_signature_command__seq:data_off_type -> code_signature_command__inst__code_signature:code_signature_pos [color="#404040"];
 	code_signature_command__seq:data_size_type -> code_signature_command__inst__code_signature:code_signature_size [color="#404040"];
 	code_signature_command__inst__code_signature:code_signature_type -> cs_blob__seq [style=bold];
-	dyld_info_command__seq:rebase_off_type -> dyld_info_command__inst__rebase:rebase_pos [color="#404040"];
-	dyld_info_command__seq:rebase_size_type -> dyld_info_command__inst__rebase:rebase_size [color="#404040"];
-	dyld_info_command__inst__rebase:rebase_type -> rebase_data__seq [style=bold];
 	dyld_info_command__seq:bind_off_type -> dyld_info_command__inst__bind:bind_pos [color="#404040"];
 	dyld_info_command__seq:bind_size_type -> dyld_info_command__inst__bind:bind_size [color="#404040"];
 	dyld_info_command__inst__bind:bind_type -> bind_data__seq [style=bold];
-	dyld_info_command__seq:lazy_bind_off_type -> dyld_info_command__inst__lazy_bind:lazy_bind_pos [color="#404040"];
-	dyld_info_command__seq:lazy_bind_size_type -> dyld_info_command__inst__lazy_bind:lazy_bind_size [color="#404040"];
-	dyld_info_command__inst__lazy_bind:lazy_bind_type -> lazy_bind_data__seq [style=bold];
 	dyld_info_command__seq:export_off_type -> dyld_info_command__inst__exports:exports_pos [color="#404040"];
 	dyld_info_command__seq:export_size_type -> dyld_info_command__inst__exports:exports_size [color="#404040"];
 	dyld_info_command__inst__exports:exports_type -> export_node__seq [style=bold];
-	bind_item__seq:uleb_type -> uleb128__seq [style=bold];
-	bind_item__seq:skip_type -> uleb128__seq [style=bold];
-	bind_item__seq:opcode_and_immediate_type -> bind_item__inst__opcode [color="#404040"];
-	bind_item__seq:opcode_and_immediate_type -> bind_item__inst__immediate [color="#404040"];
+	dyld_info_command__seq:weak_bind_off_type -> dyld_info_command__inst__weak_bind:weak_bind_pos [color="#404040"];
+	dyld_info_command__seq:weak_bind_size_type -> dyld_info_command__inst__weak_bind:weak_bind_size [color="#404040"];
+	dyld_info_command__inst__weak_bind:weak_bind_type -> bind_data__seq [style=bold];
+	dyld_info_command__seq:rebase_off_type -> dyld_info_command__inst__rebase:rebase_pos [color="#404040"];
+	dyld_info_command__seq:rebase_size_type -> dyld_info_command__inst__rebase:rebase_size [color="#404040"];
+	dyld_info_command__inst__rebase:rebase_type -> rebase_data__seq [style=bold];
+	dyld_info_command__seq:lazy_bind_off_type -> dyld_info_command__inst__lazy_bind:lazy_bind_pos [color="#404040"];
+	dyld_info_command__seq:lazy_bind_size_type -> dyld_info_command__inst__lazy_bind:lazy_bind_size [color="#404040"];
+	dyld_info_command__inst__lazy_bind:lazy_bind_type -> bind_data__seq [style=bold];
 	rebase_data__seq:items_type -> rebase_item__seq [style=bold];
 	rebase_item__inst__opcode:opcode_type -> rebase_data__seq:items__repeat [color="#404040"];
 	rebase_item__seq:uleb_type -> uleb128__seq [style=bold];
 	rebase_item__seq:skip_type -> uleb128__seq [style=bold];
 	rebase_item__seq:opcode_and_immediate_type -> rebase_item__inst__opcode [color="#404040"];
 	rebase_item__seq:opcode_and_immediate_type -> rebase_item__inst__immediate [color="#404040"];
+	bind_item__seq:uleb_type -> uleb128__seq [style=bold];
+	bind_item__seq:skip_type -> uleb128__seq [style=bold];
+	bind_item__seq:opcode_and_immediate_type -> bind_item__inst__opcode [color="#404040"];
+	bind_item__seq:opcode_and_immediate_type -> bind_item__inst__immediate [color="#404040"];
+	bind_data__seq:items_type -> bind_item__seq [style=bold];
 	export_node__seq:terminal_size_type -> uleb128__seq [style=bold];
 	export_node__seq:children_type -> child__seq [style=bold];
 	export_node__seq:children_count_type -> export_node__seq:children__repeat [color="#404040"];
@@ -1347,9 +1345,6 @@ symtab_command__inst__symbols_symbols_switch [label=<<TABLE BORDER="0" CELLBORDE
 	child__seq:node_offset_type -> uleb128__seq [style=bold];
 	uleb128__inst__value:value_type -> child__inst__value:value_pos [color="#404040"];
 	child__inst__value:value_type -> export_node__seq [style=bold];
-	bind_data__seq:items_type -> bind_item__seq [style=bold];
-	bind_item__inst__opcode:opcode_type -> bind_data__seq:items__repeat [color="#404040"];
-	lazy_bind_data__seq:items_type -> bind_item__seq [style=bold];
 	dylinker_command__seq:name_type -> lc_str__seq [style=bold];
 	segment_command__seq:maxprot_type -> vm_prot__seq [style=bold];
 	segment_command__seq:initprot_type -> vm_prot__seq [style=bold];

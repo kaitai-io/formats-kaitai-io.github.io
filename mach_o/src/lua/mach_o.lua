@@ -10,6 +10,14 @@ local utils = require("utils")
 local stringstream = require("string_stream")
 
 require("asn1_der")
+-- 
+-- See also: Source (https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf)
+-- See also: Source (https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz)
+-- See also: Source (https://github.com/comex/cs/blob/07a88f9/macho_cs.py)
+-- See also: Source (https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html)
+-- See also: Source (https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h)
+-- See also: Source (https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html)
+-- See also: Source (https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html)
 MachO = class.class(KaitaiStruct)
 
 MachO.MagicType = enum.Enum {
@@ -354,7 +362,7 @@ end
 function MachO.CsBlob.Data:_read()
   self.length = self._io:read_u4be()
   self.value = self._io:read_bytes(self.length)
-  self.padding = self._io:read_bytes((4 - (self.length & 3)))
+  self.padding = self._io:read_bytes((-(self.length) % 4))
 end
 
 
@@ -1754,52 +1762,22 @@ function MachO.DyldInfoCommand:_read()
   self.export_size = self._io:read_u4le()
 end
 
-MachO.DyldInfoCommand.property.rebase = {}
-function MachO.DyldInfoCommand.property.rebase:get()
-  if self._m_rebase ~= nil then
-    return self._m_rebase
-  end
-
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.rebase_off)
-  self._raw__m_rebase = _io:read_bytes(self.rebase_size)
-  local _io = KaitaiStream(stringstream(self._raw__m_rebase))
-  self._m_rebase = MachO.DyldInfoCommand.RebaseData(_io, self, self._root)
-  _io:seek(_pos)
-  return self._m_rebase
-end
-
 MachO.DyldInfoCommand.property.bind = {}
 function MachO.DyldInfoCommand.property.bind:get()
   if self._m_bind ~= nil then
     return self._m_bind
   end
 
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.bind_off)
-  self._raw__m_bind = _io:read_bytes(self.bind_size)
-  local _io = KaitaiStream(stringstream(self._raw__m_bind))
-  self._m_bind = MachO.DyldInfoCommand.BindData(_io, self, self._root)
-  _io:seek(_pos)
-  return self._m_bind
-end
-
-MachO.DyldInfoCommand.property.lazy_bind = {}
-function MachO.DyldInfoCommand.property.lazy_bind:get()
-  if self._m_lazy_bind ~= nil then
-    return self._m_lazy_bind
+  if self.bind_size ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.bind_off)
+    self._raw__m_bind = _io:read_bytes(self.bind_size)
+    local _io = KaitaiStream(stringstream(self._raw__m_bind))
+    self._m_bind = MachO.DyldInfoCommand.BindData(_io, self, self._root)
+    _io:seek(_pos)
   end
-
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.lazy_bind_off)
-  self._raw__m_lazy_bind = _io:read_bytes(self.lazy_bind_size)
-  local _io = KaitaiStream(stringstream(self._raw__m_lazy_bind))
-  self._m_lazy_bind = MachO.DyldInfoCommand.LazyBindData(_io, self, self._root)
-  _io:seek(_pos)
-  return self._m_lazy_bind
+  return self._m_bind
 end
 
 MachO.DyldInfoCommand.property.exports = {}
@@ -1808,57 +1786,70 @@ function MachO.DyldInfoCommand.property.exports:get()
     return self._m_exports
   end
 
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.export_off)
-  self._raw__m_exports = _io:read_bytes(self.export_size)
-  local _io = KaitaiStream(stringstream(self._raw__m_exports))
-  self._m_exports = MachO.DyldInfoCommand.ExportNode(_io, self, self._root)
-  _io:seek(_pos)
+  if self.export_size ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.export_off)
+    self._raw__m_exports = _io:read_bytes(self.export_size)
+    local _io = KaitaiStream(stringstream(self._raw__m_exports))
+    self._m_exports = MachO.DyldInfoCommand.ExportNode(_io, self, self._root)
+    _io:seek(_pos)
+  end
   return self._m_exports
 end
 
+MachO.DyldInfoCommand.property.weak_bind = {}
+function MachO.DyldInfoCommand.property.weak_bind:get()
+  if self._m_weak_bind ~= nil then
+    return self._m_weak_bind
+  end
 
-MachO.DyldInfoCommand.BindItem = class.class(KaitaiStruct)
-
-function MachO.DyldInfoCommand.BindItem:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
+  if self.weak_bind_size ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.weak_bind_off)
+    self._raw__m_weak_bind = _io:read_bytes(self.weak_bind_size)
+    local _io = KaitaiStream(stringstream(self._raw__m_weak_bind))
+    self._m_weak_bind = MachO.DyldInfoCommand.BindData(_io, self, self._root)
+    _io:seek(_pos)
+  end
+  return self._m_weak_bind
 end
 
-function MachO.DyldInfoCommand.BindItem:_read()
-  self.opcode_and_immediate = self._io:read_u1()
-  if  ((self.opcode == MachO.DyldInfoCommand.BindOpcode.set_dylib_ordinal_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_append_sleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_segment_and_offset_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb))  then
-    self.uleb = MachO.Uleb128(self._io, self, self._root)
+MachO.DyldInfoCommand.property.rebase = {}
+function MachO.DyldInfoCommand.property.rebase:get()
+  if self._m_rebase ~= nil then
+    return self._m_rebase
   end
-  if self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb then
-    self.skip = MachO.Uleb128(self._io, self, self._root)
+
+  if self.rebase_size ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.rebase_off)
+    self._raw__m_rebase = _io:read_bytes(self.rebase_size)
+    local _io = KaitaiStream(stringstream(self._raw__m_rebase))
+    self._m_rebase = MachO.DyldInfoCommand.RebaseData(_io, self, self._root)
+    _io:seek(_pos)
   end
-  if self.opcode == MachO.DyldInfoCommand.BindOpcode.set_symbol_trailing_flags_immediate then
-    self.symbol = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ascii")
-  end
+  return self._m_rebase
 end
 
-MachO.DyldInfoCommand.BindItem.property.opcode = {}
-function MachO.DyldInfoCommand.BindItem.property.opcode:get()
-  if self._m_opcode ~= nil then
-    return self._m_opcode
+MachO.DyldInfoCommand.property.lazy_bind = {}
+function MachO.DyldInfoCommand.property.lazy_bind:get()
+  if self._m_lazy_bind ~= nil then
+    return self._m_lazy_bind
   end
 
-  self._m_opcode = MachO.DyldInfoCommand.BindOpcode((self.opcode_and_immediate & 240))
-  return self._m_opcode
-end
-
-MachO.DyldInfoCommand.BindItem.property.immediate = {}
-function MachO.DyldInfoCommand.BindItem.property.immediate:get()
-  if self._m_immediate ~= nil then
-    return self._m_immediate
+  if self.lazy_bind_size ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.lazy_bind_off)
+    self._raw__m_lazy_bind = _io:read_bytes(self.lazy_bind_size)
+    local _io = KaitaiStream(stringstream(self._raw__m_lazy_bind))
+    self._m_lazy_bind = MachO.DyldInfoCommand.BindData(_io, self, self._root)
+    _io:seek(_pos)
   end
-
-  self._m_immediate = (self.opcode_and_immediate & 15)
-  return self._m_immediate
+  return self._m_lazy_bind
 end
 
 
@@ -1937,6 +1928,68 @@ function MachO.DyldInfoCommand.RebaseData.RebaseItem.property.immediate:get()
 end
 
 
+MachO.DyldInfoCommand.BindItem = class.class(KaitaiStruct)
+
+function MachO.DyldInfoCommand.BindItem:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function MachO.DyldInfoCommand.BindItem:_read()
+  self.opcode_and_immediate = self._io:read_u1()
+  if  ((self.opcode == MachO.DyldInfoCommand.BindOpcode.set_dylib_ordinal_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_append_sleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.set_segment_and_offset_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_add_address_uleb) or (self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb))  then
+    self.uleb = MachO.Uleb128(self._io, self, self._root)
+  end
+  if self.opcode == MachO.DyldInfoCommand.BindOpcode.do_bind_uleb_times_skipping_uleb then
+    self.skip = MachO.Uleb128(self._io, self, self._root)
+  end
+  if self.opcode == MachO.DyldInfoCommand.BindOpcode.set_symbol_trailing_flags_immediate then
+    self.symbol = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ascii")
+  end
+end
+
+MachO.DyldInfoCommand.BindItem.property.opcode = {}
+function MachO.DyldInfoCommand.BindItem.property.opcode:get()
+  if self._m_opcode ~= nil then
+    return self._m_opcode
+  end
+
+  self._m_opcode = MachO.DyldInfoCommand.BindOpcode((self.opcode_and_immediate & 240))
+  return self._m_opcode
+end
+
+MachO.DyldInfoCommand.BindItem.property.immediate = {}
+function MachO.DyldInfoCommand.BindItem.property.immediate:get()
+  if self._m_immediate ~= nil then
+    return self._m_immediate
+  end
+
+  self._m_immediate = (self.opcode_and_immediate & 15)
+  return self._m_immediate
+end
+
+
+MachO.DyldInfoCommand.BindData = class.class(KaitaiStruct)
+
+function MachO.DyldInfoCommand.BindData:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function MachO.DyldInfoCommand.BindData:_read()
+  self.items = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.items[i + 1] = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
 MachO.DyldInfoCommand.ExportNode = class.class(KaitaiStruct)
 
 function MachO.DyldInfoCommand.ExportNode:_init(io, parent, root)
@@ -1982,48 +2035,6 @@ function MachO.DyldInfoCommand.ExportNode.Child.property.value:get()
   self._m_value = MachO.DyldInfoCommand.ExportNode(self._io, self, self._root)
   self._io:seek(_pos)
   return self._m_value
-end
-
-
-MachO.DyldInfoCommand.BindData = class.class(KaitaiStruct)
-
-function MachO.DyldInfoCommand.BindData:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MachO.DyldInfoCommand.BindData:_read()
-  self.items = {}
-  local i = 0
-  while true do
-    local _ = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
-    self.items[i + 1] = _
-    if _.opcode == MachO.DyldInfoCommand.BindOpcode.done then
-      break
-    end
-    i = i + 1
-  end
-end
-
-
-MachO.DyldInfoCommand.LazyBindData = class.class(KaitaiStruct)
-
-function MachO.DyldInfoCommand.LazyBindData:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MachO.DyldInfoCommand.LazyBindData:_read()
-  self.items = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.items[i + 1] = MachO.DyldInfoCommand.BindItem(self._io, self, self._root)
-    i = i + 1
-  end
 end
 
 

@@ -9,6 +9,16 @@
     root.MachO = factory(root.KaitaiStream, root.Asn1Der);
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Asn1Der) {
+/**
+ * @see {@link https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf|Source}
+ * @see {@link https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz|Source}
+ * @see {@link https://github.com/comex/cs/blob/07a88f9/macho_cs.py|Source}
+ * @see {@link https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html|Source}
+ * @see {@link https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h|Source}
+ * @see {@link https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html|Source}
+ * @see {@link https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html|Source}
+ */
+
 var MachO = (function() {
   MachO.MagicType = Object.freeze({
     MACHO_LE_X86: 3472551422,
@@ -452,7 +462,7 @@ var MachO = (function() {
       Data.prototype._read = function() {
         this.length = this._io.readU4be();
         this.value = this._io.readBytes(this.length);
-        this.padding = this._io.readBytes((4 - (this.length & 3)));
+        this.padding = this._io.readBytes(KaitaiStream.mod(-(this.length), 4));
       }
 
       return Data;
@@ -1990,46 +2000,6 @@ var MachO = (function() {
       this.exportSize = this._io.readU4le();
     }
 
-    var BindItem = DyldInfoCommand.BindItem = (function() {
-      function BindItem(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      BindItem.prototype._read = function() {
-        this.opcodeAndImmediate = this._io.readU1();
-        if ( ((this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_DYLIB_ORDINAL_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_APPEND_SLEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_SEGMENT_AND_OFFSET_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.ADD_ADDRESS_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ADD_ADDRESS_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
-          this.uleb = new Uleb128(this._io, this, this._root);
-        }
-        if (this.opcode == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
-          this.skip = new Uleb128(this._io, this, this._root);
-        }
-        if (this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
-          this.symbol = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ascii");
-        }
-      }
-      Object.defineProperty(BindItem.prototype, 'opcode', {
-        get: function() {
-          if (this._m_opcode !== undefined)
-            return this._m_opcode;
-          this._m_opcode = (this.opcodeAndImmediate & 240);
-          return this._m_opcode;
-        }
-      });
-      Object.defineProperty(BindItem.prototype, 'immediate', {
-        get: function() {
-          if (this._m_immediate !== undefined)
-            return this._m_immediate;
-          this._m_immediate = (this.opcodeAndImmediate & 15);
-          return this._m_immediate;
-        }
-      });
-
-      return BindItem;
-    })();
-
     var RebaseData = DyldInfoCommand.RebaseData = (function() {
       RebaseData.Opcode = Object.freeze({
         DONE: 0,
@@ -2110,6 +2080,66 @@ var MachO = (function() {
       return RebaseData;
     })();
 
+    var BindItem = DyldInfoCommand.BindItem = (function() {
+      function BindItem(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      BindItem.prototype._read = function() {
+        this.opcodeAndImmediate = this._io.readU1();
+        if ( ((this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_DYLIB_ORDINAL_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_APPEND_SLEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_SEGMENT_AND_OFFSET_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.ADD_ADDRESS_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ADD_ADDRESS_ULEB) || (this.opcode == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
+          this.uleb = new Uleb128(this._io, this, this._root);
+        }
+        if (this.opcode == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
+          this.skip = new Uleb128(this._io, this, this._root);
+        }
+        if (this.opcode == MachO.DyldInfoCommand.BindOpcode.SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
+          this.symbol = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ascii");
+        }
+      }
+      Object.defineProperty(BindItem.prototype, 'opcode', {
+        get: function() {
+          if (this._m_opcode !== undefined)
+            return this._m_opcode;
+          this._m_opcode = (this.opcodeAndImmediate & 240);
+          return this._m_opcode;
+        }
+      });
+      Object.defineProperty(BindItem.prototype, 'immediate', {
+        get: function() {
+          if (this._m_immediate !== undefined)
+            return this._m_immediate;
+          this._m_immediate = (this.opcodeAndImmediate & 15);
+          return this._m_immediate;
+        }
+      });
+
+      return BindItem;
+    })();
+
+    var BindData = DyldInfoCommand.BindData = (function() {
+      function BindData(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      BindData.prototype._read = function() {
+        this.items = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.items.push(new BindItem(this._io, this, this._root));
+          i++;
+        }
+      }
+
+      return BindData;
+    })();
+
     var ExportNode = DyldInfoCommand.ExportNode = (function() {
       function ExportNode(_io, _parent, _root) {
         this._io = _io;
@@ -2157,101 +2187,84 @@ var MachO = (function() {
 
       return ExportNode;
     })();
-
-    var BindData = DyldInfoCommand.BindData = (function() {
-      function BindData(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      BindData.prototype._read = function() {
-        this.items = [];
-        var i = 0;
-        do {
-          var _ = new BindItem(this._io, this, this._root);
-          this.items.push(_);
-          i++;
-        } while (!(_.opcode == MachO.DyldInfoCommand.BindOpcode.DONE));
-      }
-
-      return BindData;
-    })();
-
-    var LazyBindData = DyldInfoCommand.LazyBindData = (function() {
-      function LazyBindData(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      LazyBindData.prototype._read = function() {
-        this.items = [];
-        var i = 0;
-        while (!this._io.isEof()) {
-          this.items.push(new BindItem(this._io, this, this._root));
-          i++;
-        }
-      }
-
-      return LazyBindData;
-    })();
-    Object.defineProperty(DyldInfoCommand.prototype, 'rebase', {
-      get: function() {
-        if (this._m_rebase !== undefined)
-          return this._m_rebase;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek(this.rebaseOff);
-        this._raw__m_rebase = io.readBytes(this.rebaseSize);
-        var _io__raw__m_rebase = new KaitaiStream(this._raw__m_rebase);
-        this._m_rebase = new RebaseData(_io__raw__m_rebase, this, this._root);
-        io.seek(_pos);
-        return this._m_rebase;
-      }
-    });
     Object.defineProperty(DyldInfoCommand.prototype, 'bind', {
       get: function() {
         if (this._m_bind !== undefined)
           return this._m_bind;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek(this.bindOff);
-        this._raw__m_bind = io.readBytes(this.bindSize);
-        var _io__raw__m_bind = new KaitaiStream(this._raw__m_bind);
-        this._m_bind = new BindData(_io__raw__m_bind, this, this._root);
-        io.seek(_pos);
+        if (this.bindSize != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.bindOff);
+          this._raw__m_bind = io.readBytes(this.bindSize);
+          var _io__raw__m_bind = new KaitaiStream(this._raw__m_bind);
+          this._m_bind = new BindData(_io__raw__m_bind, this, this._root);
+          io.seek(_pos);
+        }
         return this._m_bind;
-      }
-    });
-    Object.defineProperty(DyldInfoCommand.prototype, 'lazyBind', {
-      get: function() {
-        if (this._m_lazyBind !== undefined)
-          return this._m_lazyBind;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek(this.lazyBindOff);
-        this._raw__m_lazyBind = io.readBytes(this.lazyBindSize);
-        var _io__raw__m_lazyBind = new KaitaiStream(this._raw__m_lazyBind);
-        this._m_lazyBind = new LazyBindData(_io__raw__m_lazyBind, this, this._root);
-        io.seek(_pos);
-        return this._m_lazyBind;
       }
     });
     Object.defineProperty(DyldInfoCommand.prototype, 'exports', {
       get: function() {
         if (this._m_exports !== undefined)
           return this._m_exports;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek(this.exportOff);
-        this._raw__m_exports = io.readBytes(this.exportSize);
-        var _io__raw__m_exports = new KaitaiStream(this._raw__m_exports);
-        this._m_exports = new ExportNode(_io__raw__m_exports, this, this._root);
-        io.seek(_pos);
+        if (this.exportSize != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.exportOff);
+          this._raw__m_exports = io.readBytes(this.exportSize);
+          var _io__raw__m_exports = new KaitaiStream(this._raw__m_exports);
+          this._m_exports = new ExportNode(_io__raw__m_exports, this, this._root);
+          io.seek(_pos);
+        }
         return this._m_exports;
+      }
+    });
+    Object.defineProperty(DyldInfoCommand.prototype, 'weakBind', {
+      get: function() {
+        if (this._m_weakBind !== undefined)
+          return this._m_weakBind;
+        if (this.weakBindSize != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.weakBindOff);
+          this._raw__m_weakBind = io.readBytes(this.weakBindSize);
+          var _io__raw__m_weakBind = new KaitaiStream(this._raw__m_weakBind);
+          this._m_weakBind = new BindData(_io__raw__m_weakBind, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_weakBind;
+      }
+    });
+    Object.defineProperty(DyldInfoCommand.prototype, 'rebase', {
+      get: function() {
+        if (this._m_rebase !== undefined)
+          return this._m_rebase;
+        if (this.rebaseSize != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.rebaseOff);
+          this._raw__m_rebase = io.readBytes(this.rebaseSize);
+          var _io__raw__m_rebase = new KaitaiStream(this._raw__m_rebase);
+          this._m_rebase = new RebaseData(_io__raw__m_rebase, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_rebase;
+      }
+    });
+    Object.defineProperty(DyldInfoCommand.prototype, 'lazyBind', {
+      get: function() {
+        if (this._m_lazyBind !== undefined)
+          return this._m_lazyBind;
+        if (this.lazyBindSize != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.lazyBindOff);
+          this._raw__m_lazyBind = io.readBytes(this.lazyBindSize);
+          var _io__raw__m_lazyBind = new KaitaiStream(this._raw__m_lazyBind);
+          this._m_lazyBind = new BindData(_io__raw__m_lazyBind, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_lazyBind;
       }
     });
 

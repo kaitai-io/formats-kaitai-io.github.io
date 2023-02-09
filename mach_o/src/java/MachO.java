@@ -9,6 +9,16 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * @see <a href="https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf">Source</a>
+ * @see <a href="https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz">Source</a>
+ * @see <a href="https://github.com/comex/cs/blob/07a88f9/macho_cs.py">Source</a>
+ * @see <a href="https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html">Source</a>
+ * @see <a href="https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h">Source</a>
+ * @see <a href="https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html">Source</a>
+ * @see <a href="https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html">Source</a>
+ */
 public class MachO extends KaitaiStruct {
     public static MachO fromFile(String fileName) throws IOException {
         return new MachO(new ByteBufferKaitaiStream(fileName));
@@ -549,7 +559,7 @@ public class MachO extends KaitaiStruct {
             private void _read() {
                 this.length = this._io.readU4be();
                 this.value = this._io.readBytes(length());
-                this.padding = this._io.readBytes((4 - (length() & 3)));
+                this.padding = this._io.readBytes(KaitaiStream.mod(-(length()), 4));
             }
             private long length;
             private byte[] value;
@@ -2984,65 +2994,6 @@ public class MachO extends KaitaiStruct {
             this.exportOff = this._io.readU4le();
             this.exportSize = this._io.readU4le();
         }
-        public static class BindItem extends KaitaiStruct {
-            public static BindItem fromFile(String fileName) throws IOException {
-                return new BindItem(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public BindItem(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public BindItem(KaitaiStream _io, KaitaiStruct _parent) {
-                this(_io, _parent, null);
-            }
-
-            public BindItem(KaitaiStream _io, KaitaiStruct _parent, MachO _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.opcodeAndImmediate = this._io.readU1();
-                if ( ((opcode() == MachO.DyldInfoCommand.BindOpcode.SET_DYLIB_ORDINAL_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.SET_APPEND_SLEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.SET_SEGMENT_AND_OFFSET_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.ADD_ADDRESS_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ADD_ADDRESS_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
-                    this.uleb = new Uleb128(this._io, this, _root);
-                }
-                if (opcode() == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
-                    this.skip = new Uleb128(this._io, this, _root);
-                }
-                if (opcode() == MachO.DyldInfoCommand.BindOpcode.SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
-                    this.symbol = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ascii"));
-                }
-            }
-            private BindOpcode opcode;
-            public BindOpcode opcode() {
-                if (this.opcode != null)
-                    return this.opcode;
-                this.opcode = MachO.DyldInfoCommand.BindOpcode.byId((opcodeAndImmediate() & 240));
-                return this.opcode;
-            }
-            private Integer immediate;
-            public Integer immediate() {
-                if (this.immediate != null)
-                    return this.immediate;
-                int _tmp = (int) ((opcodeAndImmediate() & 15));
-                this.immediate = _tmp;
-                return this.immediate;
-            }
-            private int opcodeAndImmediate;
-            private Uleb128 uleb;
-            private Uleb128 skip;
-            private String symbol;
-            private MachO _root;
-            private KaitaiStruct _parent;
-            public int opcodeAndImmediate() { return opcodeAndImmediate; }
-            public Uleb128 uleb() { return uleb; }
-            public Uleb128 skip() { return skip; }
-            public String symbol() { return symbol; }
-            public MachO _root() { return _root; }
-            public KaitaiStruct _parent() { return _parent; }
-        }
         public static class RebaseData extends KaitaiStruct {
             public static RebaseData fromFile(String fileName) throws IOException {
                 return new RebaseData(new ByteBufferKaitaiStream(fileName));
@@ -3157,6 +3108,101 @@ public class MachO extends KaitaiStruct {
             public MachO _root() { return _root; }
             public MachO.DyldInfoCommand _parent() { return _parent; }
         }
+        public static class BindItem extends KaitaiStruct {
+            public static BindItem fromFile(String fileName) throws IOException {
+                return new BindItem(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public BindItem(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public BindItem(KaitaiStream _io, MachO.DyldInfoCommand.BindData _parent) {
+                this(_io, _parent, null);
+            }
+
+            public BindItem(KaitaiStream _io, MachO.DyldInfoCommand.BindData _parent, MachO _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.opcodeAndImmediate = this._io.readU1();
+                if ( ((opcode() == MachO.DyldInfoCommand.BindOpcode.SET_DYLIB_ORDINAL_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.SET_APPEND_SLEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.SET_SEGMENT_AND_OFFSET_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.ADD_ADDRESS_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ADD_ADDRESS_ULEB) || (opcode() == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB)) ) {
+                    this.uleb = new Uleb128(this._io, this, _root);
+                }
+                if (opcode() == MachO.DyldInfoCommand.BindOpcode.DO_BIND_ULEB_TIMES_SKIPPING_ULEB) {
+                    this.skip = new Uleb128(this._io, this, _root);
+                }
+                if (opcode() == MachO.DyldInfoCommand.BindOpcode.SET_SYMBOL_TRAILING_FLAGS_IMMEDIATE) {
+                    this.symbol = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ascii"));
+                }
+            }
+            private BindOpcode opcode;
+            public BindOpcode opcode() {
+                if (this.opcode != null)
+                    return this.opcode;
+                this.opcode = MachO.DyldInfoCommand.BindOpcode.byId((opcodeAndImmediate() & 240));
+                return this.opcode;
+            }
+            private Integer immediate;
+            public Integer immediate() {
+                if (this.immediate != null)
+                    return this.immediate;
+                int _tmp = (int) ((opcodeAndImmediate() & 15));
+                this.immediate = _tmp;
+                return this.immediate;
+            }
+            private int opcodeAndImmediate;
+            private Uleb128 uleb;
+            private Uleb128 skip;
+            private String symbol;
+            private MachO _root;
+            private MachO.DyldInfoCommand.BindData _parent;
+            public int opcodeAndImmediate() { return opcodeAndImmediate; }
+            public Uleb128 uleb() { return uleb; }
+            public Uleb128 skip() { return skip; }
+            public String symbol() { return symbol; }
+            public MachO _root() { return _root; }
+            public MachO.DyldInfoCommand.BindData _parent() { return _parent; }
+        }
+        public static class BindData extends KaitaiStruct {
+            public static BindData fromFile(String fileName) throws IOException {
+                return new BindData(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public BindData(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public BindData(KaitaiStream _io, MachO.DyldInfoCommand _parent) {
+                this(_io, _parent, null);
+            }
+
+            public BindData(KaitaiStream _io, MachO.DyldInfoCommand _parent, MachO _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.items = new ArrayList<BindItem>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.items.add(new BindItem(this._io, this, _root));
+                        i++;
+                    }
+                }
+            }
+            private ArrayList<BindItem> items;
+            private MachO _root;
+            private MachO.DyldInfoCommand _parent;
+            public ArrayList<BindItem> items() { return items; }
+            public MachO _root() { return _root; }
+            public MachO.DyldInfoCommand _parent() { return _parent; }
+        }
         public static class ExportNode extends KaitaiStruct {
             public static ExportNode fromFile(String fileName) throws IOException {
                 return new ExportNode(new ByteBufferKaitaiStream(fileName));
@@ -3240,131 +3286,80 @@ public class MachO extends KaitaiStruct {
             public MachO _root() { return _root; }
             public KaitaiStruct _parent() { return _parent; }
         }
-        public static class BindData extends KaitaiStruct {
-            public static BindData fromFile(String fileName) throws IOException {
-                return new BindData(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public BindData(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public BindData(KaitaiStream _io, MachO.DyldInfoCommand _parent) {
-                this(_io, _parent, null);
-            }
-
-            public BindData(KaitaiStream _io, MachO.DyldInfoCommand _parent, MachO _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.items = new ArrayList<BindItem>();
-                {
-                    BindItem _it;
-                    int i = 0;
-                    do {
-                        _it = new BindItem(this._io, this, _root);
-                        this.items.add(_it);
-                        i++;
-                    } while (!(_it.opcode() == MachO.DyldInfoCommand.BindOpcode.DONE));
-                }
-            }
-            private ArrayList<BindItem> items;
-            private MachO _root;
-            private MachO.DyldInfoCommand _parent;
-            public ArrayList<BindItem> items() { return items; }
-            public MachO _root() { return _root; }
-            public MachO.DyldInfoCommand _parent() { return _parent; }
-        }
-        public static class LazyBindData extends KaitaiStruct {
-            public static LazyBindData fromFile(String fileName) throws IOException {
-                return new LazyBindData(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public LazyBindData(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public LazyBindData(KaitaiStream _io, MachO.DyldInfoCommand _parent) {
-                this(_io, _parent, null);
-            }
-
-            public LazyBindData(KaitaiStream _io, MachO.DyldInfoCommand _parent, MachO _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.items = new ArrayList<BindItem>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.items.add(new BindItem(this._io, this, _root));
-                        i++;
-                    }
-                }
-            }
-            private ArrayList<BindItem> items;
-            private MachO _root;
-            private MachO.DyldInfoCommand _parent;
-            public ArrayList<BindItem> items() { return items; }
-            public MachO _root() { return _root; }
-            public MachO.DyldInfoCommand _parent() { return _parent; }
-        }
-        private RebaseData rebase;
-        public RebaseData rebase() {
-            if (this.rebase != null)
-                return this.rebase;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(rebaseOff());
-            this._raw_rebase = io.readBytes(rebaseSize());
-            KaitaiStream _io__raw_rebase = new ByteBufferKaitaiStream(_raw_rebase);
-            this.rebase = new RebaseData(_io__raw_rebase, this, _root);
-            io.seek(_pos);
-            return this.rebase;
-        }
         private BindData bind;
         public BindData bind() {
             if (this.bind != null)
                 return this.bind;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(bindOff());
-            this._raw_bind = io.readBytes(bindSize());
-            KaitaiStream _io__raw_bind = new ByteBufferKaitaiStream(_raw_bind);
-            this.bind = new BindData(_io__raw_bind, this, _root);
-            io.seek(_pos);
+            if (bindSize() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(bindOff());
+                this._raw_bind = io.readBytes(bindSize());
+                KaitaiStream _io__raw_bind = new ByteBufferKaitaiStream(_raw_bind);
+                this.bind = new BindData(_io__raw_bind, this, _root);
+                io.seek(_pos);
+            }
             return this.bind;
-        }
-        private LazyBindData lazyBind;
-        public LazyBindData lazyBind() {
-            if (this.lazyBind != null)
-                return this.lazyBind;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(lazyBindOff());
-            this._raw_lazyBind = io.readBytes(lazyBindSize());
-            KaitaiStream _io__raw_lazyBind = new ByteBufferKaitaiStream(_raw_lazyBind);
-            this.lazyBind = new LazyBindData(_io__raw_lazyBind, this, _root);
-            io.seek(_pos);
-            return this.lazyBind;
         }
         private ExportNode exports;
         public ExportNode exports() {
             if (this.exports != null)
                 return this.exports;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(exportOff());
-            this._raw_exports = io.readBytes(exportSize());
-            KaitaiStream _io__raw_exports = new ByteBufferKaitaiStream(_raw_exports);
-            this.exports = new ExportNode(_io__raw_exports, this, _root);
-            io.seek(_pos);
+            if (exportSize() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(exportOff());
+                this._raw_exports = io.readBytes(exportSize());
+                KaitaiStream _io__raw_exports = new ByteBufferKaitaiStream(_raw_exports);
+                this.exports = new ExportNode(_io__raw_exports, this, _root);
+                io.seek(_pos);
+            }
             return this.exports;
+        }
+        private BindData weakBind;
+        public BindData weakBind() {
+            if (this.weakBind != null)
+                return this.weakBind;
+            if (weakBindSize() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(weakBindOff());
+                this._raw_weakBind = io.readBytes(weakBindSize());
+                KaitaiStream _io__raw_weakBind = new ByteBufferKaitaiStream(_raw_weakBind);
+                this.weakBind = new BindData(_io__raw_weakBind, this, _root);
+                io.seek(_pos);
+            }
+            return this.weakBind;
+        }
+        private RebaseData rebase;
+        public RebaseData rebase() {
+            if (this.rebase != null)
+                return this.rebase;
+            if (rebaseSize() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(rebaseOff());
+                this._raw_rebase = io.readBytes(rebaseSize());
+                KaitaiStream _io__raw_rebase = new ByteBufferKaitaiStream(_raw_rebase);
+                this.rebase = new RebaseData(_io__raw_rebase, this, _root);
+                io.seek(_pos);
+            }
+            return this.rebase;
+        }
+        private BindData lazyBind;
+        public BindData lazyBind() {
+            if (this.lazyBind != null)
+                return this.lazyBind;
+            if (lazyBindSize() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(lazyBindOff());
+                this._raw_lazyBind = io.readBytes(lazyBindSize());
+                KaitaiStream _io__raw_lazyBind = new ByteBufferKaitaiStream(_raw_lazyBind);
+                this.lazyBind = new BindData(_io__raw_lazyBind, this, _root);
+                io.seek(_pos);
+            }
+            return this.lazyBind;
         }
         private long rebaseOff;
         private long rebaseSize;
@@ -3378,10 +3373,11 @@ public class MachO extends KaitaiStruct {
         private long exportSize;
         private MachO _root;
         private MachO.LoadCommand _parent;
-        private byte[] _raw_rebase;
         private byte[] _raw_bind;
-        private byte[] _raw_lazyBind;
         private byte[] _raw_exports;
+        private byte[] _raw_weakBind;
+        private byte[] _raw_rebase;
+        private byte[] _raw_lazyBind;
         public long rebaseOff() { return rebaseOff; }
         public long rebaseSize() { return rebaseSize; }
         public long bindOff() { return bindOff; }
@@ -3394,10 +3390,11 @@ public class MachO extends KaitaiStruct {
         public long exportSize() { return exportSize; }
         public MachO _root() { return _root; }
         public MachO.LoadCommand _parent() { return _parent; }
-        public byte[] _raw_rebase() { return _raw_rebase; }
         public byte[] _raw_bind() { return _raw_bind; }
-        public byte[] _raw_lazyBind() { return _raw_lazyBind; }
         public byte[] _raw_exports() { return _raw_exports; }
+        public byte[] _raw_weakBind() { return _raw_weakBind; }
+        public byte[] _raw_rebase() { return _raw_rebase; }
+        public byte[] _raw_lazyBind() { return _raw_lazyBind; }
     }
     public static class DylinkerCommand extends KaitaiStruct {
         public static DylinkerCommand fromFile(String fileName) throws IOException {

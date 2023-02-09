@@ -120,6 +120,10 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -250,12 +254,7 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <div class="highlight"><pre><span></span><span class="c1"># http://www.stonedcoder.org/~kd/lib/MachORuntime.pdf</span>
-<span class="c1"># https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz</span>
-<span class="c1"># https://github.com/comex/cs/blob/master/macho_cs.py</span>
-<span class="c1"># https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html</span>
-<span class="c1"># https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h</span>
-<span class="nt">meta</span><span class="p">:</span>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
   <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mach_o</span>
   <span class="nt">xref</span><span class="p">:</span>
     <span class="nt">pronom</span><span class="p">:</span>
@@ -263,9 +262,18 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fmt/693</span> <span class="c1"># Mach-O 64bit</span>
     <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q2627217</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
   <span class="nt">imports</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/serialization/asn1/asn1_der</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/comex/cs/blob/07a88f9/macho_cs.py</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
@@ -819,21 +827,31 @@ section#format-index .row {
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rebase_off</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rebase_size</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rebase_data</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rebase_size != 0</span>
       <span class="nt">bind</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_off</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_size</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_data</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_size != 0</span>
+      <span class="nt">weak_bind</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">weak_bind_off</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">weak_bind_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_data</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">weak_bind_size != 0</span>
       <span class="nt">lazy_bind</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lazy_bind_off</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lazy_bind_size</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lazy_bind_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_data</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lazy_bind_size != 0</span>
       <span class="nt">exports</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">export_off</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">export_size</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">export_node</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">export_size != 0</span>
     <span class="nt">types</span><span class="p">:</span>
       <span class="nt">rebase_data</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
@@ -907,12 +925,6 @@ section#format-index .row {
             <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;opcode_and_immediate</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0x0f&quot;</span>
             <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
       <span class="nt">bind_data</span><span class="p">:</span>
-        <span class="nt">seq</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_item</span>
-            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
-            <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.opcode == bind_opcode::done</span>
-      <span class="nt">lazy_bind_data</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_item</span>
@@ -1359,7 +1371,7 @@ section#format-index .row {
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
             <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span>
-            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4 - (length &amp; 3)</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-length % 4</span>
       <span class="nt">match</span><span class="p">:</span>
         <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{match_op}</span><span class="nv"> </span><span class="s">{data.value:str}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>

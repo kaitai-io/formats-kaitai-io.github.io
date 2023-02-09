@@ -6,6 +6,15 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf Source
+# @see https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz Source
+# @see https://github.com/comex/cs/blob/07a88f9/macho_cs.py Source
+# @see https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html Source
+# @see https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h Source
+# @see https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html Source
+# @see https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html Source
 class MachO < Kaitai::Struct::Struct
 
   MAGIC_TYPE = {
@@ -339,7 +348,7 @@ class MachO < Kaitai::Struct::Struct
       def _read
         @length = @_io.read_u4be
         @value = @_io.read_bytes(length)
-        @padding = @_io.read_bytes((4 - (length & 3)))
+        @padding = @_io.read_bytes((-(length) % 4))
         self
       end
       attr_reader :length
@@ -1628,40 +1637,6 @@ class MachO < Kaitai::Struct::Struct
       @export_size = @_io.read_u4le
       self
     end
-    class BindItem < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @opcode_and_immediate = @_io.read_u1
-        if  ((opcode == :bind_opcode_set_dylib_ordinal_uleb) || (opcode == :bind_opcode_set_append_sleb) || (opcode == :bind_opcode_set_segment_and_offset_uleb) || (opcode == :bind_opcode_add_address_uleb) || (opcode == :bind_opcode_do_bind_add_address_uleb) || (opcode == :bind_opcode_do_bind_uleb_times_skipping_uleb)) 
-          @uleb = Uleb128.new(@_io, self, @_root)
-        end
-        if opcode == :bind_opcode_do_bind_uleb_times_skipping_uleb
-          @skip = Uleb128.new(@_io, self, @_root)
-        end
-        if opcode == :bind_opcode_set_symbol_trailing_flags_immediate
-          @symbol = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
-        end
-        self
-      end
-      def opcode
-        return @opcode unless @opcode.nil?
-        @opcode = Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::BIND_OPCODE, (opcode_and_immediate & 240))
-        @opcode
-      end
-      def immediate
-        return @immediate unless @immediate.nil?
-        @immediate = (opcode_and_immediate & 15)
-        @immediate
-      end
-      attr_reader :opcode_and_immediate
-      attr_reader :uleb
-      attr_reader :skip
-      attr_reader :symbol
-    end
     class RebaseData < Kaitai::Struct::Struct
 
       OPCODE = {
@@ -1723,6 +1698,57 @@ class MachO < Kaitai::Struct::Struct
       end
       attr_reader :items
     end
+    class BindItem < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @opcode_and_immediate = @_io.read_u1
+        if  ((opcode == :bind_opcode_set_dylib_ordinal_uleb) || (opcode == :bind_opcode_set_append_sleb) || (opcode == :bind_opcode_set_segment_and_offset_uleb) || (opcode == :bind_opcode_add_address_uleb) || (opcode == :bind_opcode_do_bind_add_address_uleb) || (opcode == :bind_opcode_do_bind_uleb_times_skipping_uleb)) 
+          @uleb = Uleb128.new(@_io, self, @_root)
+        end
+        if opcode == :bind_opcode_do_bind_uleb_times_skipping_uleb
+          @skip = Uleb128.new(@_io, self, @_root)
+        end
+        if opcode == :bind_opcode_set_symbol_trailing_flags_immediate
+          @symbol = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ascii")
+        end
+        self
+      end
+      def opcode
+        return @opcode unless @opcode.nil?
+        @opcode = Kaitai::Struct::Stream::resolve_enum(MachO::DyldInfoCommand::BIND_OPCODE, (opcode_and_immediate & 240))
+        @opcode
+      end
+      def immediate
+        return @immediate unless @immediate.nil?
+        @immediate = (opcode_and_immediate & 15)
+        @immediate
+      end
+      attr_reader :opcode_and_immediate
+      attr_reader :uleb
+      attr_reader :skip
+      attr_reader :symbol
+    end
+    class BindData < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @items = []
+        i = 0
+        while not @_io.eof?
+          @items << BindItem.new(@_io, self, @_root)
+          i += 1
+        end
+        self
+      end
+      attr_reader :items
+    end
     class ExportNode < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
@@ -1766,84 +1792,70 @@ class MachO < Kaitai::Struct::Struct
       attr_reader :children
       attr_reader :terminal
     end
-    class BindData < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @items = []
-        i = 0
-        begin
-          _ = BindItem.new(@_io, self, @_root)
-          @items << _
-          i += 1
-        end until _.opcode == :bind_opcode_done
-        self
-      end
-      attr_reader :items
-    end
-    class LazyBindData < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @items = []
-        i = 0
-        while not @_io.eof?
-          @items << BindItem.new(@_io, self, @_root)
-          i += 1
-        end
-        self
-      end
-      attr_reader :items
-    end
-    def rebase
-      return @rebase unless @rebase.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek(rebase_off)
-      @_raw_rebase = io.read_bytes(rebase_size)
-      _io__raw_rebase = Kaitai::Struct::Stream.new(@_raw_rebase)
-      @rebase = RebaseData.new(_io__raw_rebase, self, @_root)
-      io.seek(_pos)
-      @rebase
-    end
     def bind
       return @bind unless @bind.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek(bind_off)
-      @_raw_bind = io.read_bytes(bind_size)
-      _io__raw_bind = Kaitai::Struct::Stream.new(@_raw_bind)
-      @bind = BindData.new(_io__raw_bind, self, @_root)
-      io.seek(_pos)
+      if bind_size != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(bind_off)
+        @_raw_bind = io.read_bytes(bind_size)
+        _io__raw_bind = Kaitai::Struct::Stream.new(@_raw_bind)
+        @bind = BindData.new(_io__raw_bind, self, @_root)
+        io.seek(_pos)
+      end
       @bind
-    end
-    def lazy_bind
-      return @lazy_bind unless @lazy_bind.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek(lazy_bind_off)
-      @_raw_lazy_bind = io.read_bytes(lazy_bind_size)
-      _io__raw_lazy_bind = Kaitai::Struct::Stream.new(@_raw_lazy_bind)
-      @lazy_bind = LazyBindData.new(_io__raw_lazy_bind, self, @_root)
-      io.seek(_pos)
-      @lazy_bind
     end
     def exports
       return @exports unless @exports.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek(export_off)
-      @_raw_exports = io.read_bytes(export_size)
-      _io__raw_exports = Kaitai::Struct::Stream.new(@_raw_exports)
-      @exports = ExportNode.new(_io__raw_exports, self, @_root)
-      io.seek(_pos)
+      if export_size != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(export_off)
+        @_raw_exports = io.read_bytes(export_size)
+        _io__raw_exports = Kaitai::Struct::Stream.new(@_raw_exports)
+        @exports = ExportNode.new(_io__raw_exports, self, @_root)
+        io.seek(_pos)
+      end
       @exports
+    end
+    def weak_bind
+      return @weak_bind unless @weak_bind.nil?
+      if weak_bind_size != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(weak_bind_off)
+        @_raw_weak_bind = io.read_bytes(weak_bind_size)
+        _io__raw_weak_bind = Kaitai::Struct::Stream.new(@_raw_weak_bind)
+        @weak_bind = BindData.new(_io__raw_weak_bind, self, @_root)
+        io.seek(_pos)
+      end
+      @weak_bind
+    end
+    def rebase
+      return @rebase unless @rebase.nil?
+      if rebase_size != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(rebase_off)
+        @_raw_rebase = io.read_bytes(rebase_size)
+        _io__raw_rebase = Kaitai::Struct::Stream.new(@_raw_rebase)
+        @rebase = RebaseData.new(_io__raw_rebase, self, @_root)
+        io.seek(_pos)
+      end
+      @rebase
+    end
+    def lazy_bind
+      return @lazy_bind unless @lazy_bind.nil?
+      if lazy_bind_size != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(lazy_bind_off)
+        @_raw_lazy_bind = io.read_bytes(lazy_bind_size)
+        _io__raw_lazy_bind = Kaitai::Struct::Stream.new(@_raw_lazy_bind)
+        @lazy_bind = BindData.new(_io__raw_lazy_bind, self, @_root)
+        io.seek(_pos)
+      end
+      @lazy_bind
     end
     attr_reader :rebase_off
     attr_reader :rebase_size
@@ -1855,10 +1867,11 @@ class MachO < Kaitai::Struct::Struct
     attr_reader :lazy_bind_size
     attr_reader :export_off
     attr_reader :export_size
-    attr_reader :_raw_rebase
     attr_reader :_raw_bind
-    attr_reader :_raw_lazy_bind
     attr_reader :_raw_exports
+    attr_reader :_raw_weak_bind
+    attr_reader :_raw_rebase
+    attr_reader :_raw_lazy_bind
   end
   class DylinkerCommand < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

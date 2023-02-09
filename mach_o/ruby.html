@@ -120,6 +120,10 @@ section#format-index .row {
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -310,6 +314,15 @@ section#format-index .row {
   <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
+
+<span class="c1">##</span>
+<span class="c1"># @see https://www.stonedcoder.org/~kd/lib/MachORuntime.pdf Source</span>
+<span class="c1"># @see https://opensource.apple.com/source/python_modules/python_modules-43/Modules/macholib-1.5.1/macholib-1.5.1.tar.gz Source</span>
+<span class="c1"># @see https://github.com/comex/cs/blob/07a88f9/macho_cs.py Source</span>
+<span class="c1"># @see https://opensource.apple.com/source/Security/Security-55471/libsecurity_codesigning/requirements.grammar.auto.html Source</span>
+<span class="c1"># @see https://github.com/apple/darwin-xnu/blob/xnu-2782.40.9/bsd/sys/codesign.h Source</span>
+<span class="c1"># @see https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachO.cpp.auto.html Source</span>
+<span class="c1"># @see https://opensource.apple.com/source/dyld/dyld-852/src/ImageLoaderMachOCompressed.cpp.auto.html Source</span>
 <span class="k">class</span> <span class="nc">MachO</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
   <span class="no">MAGIC_TYPE</span> <span class="o">=</span> <span class="p">{</span>
@@ -643,7 +656,7 @@ section#format-index .row {
       <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
-        <span class="vi">@padding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">length</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">)))</span>
+        <span class="vi">@padding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">length</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
         <span class="nb">self</span>
       <span class="k">end</span>
       <span class="kp">attr_reader</span> <span class="ss">:length</span>
@@ -1932,40 +1945,6 @@ section#format-index .row {
       <span class="vi">@export_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="nb">self</span>
     <span class="k">end</span>
-    <span class="k">class</span> <span class="nc">BindItem</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-        <span class="n">_read</span>
-      <span class="k">end</span>
-
-      <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@opcode_and_immediate</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-        <span class="k">if</span>  <span class="p">((</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_dylib_ordinal_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_append_sleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_segment_and_offset_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_add_address_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_do_bind_add_address_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_do_bind_uleb_times_skipping_uleb</span><span class="p">))</span> 
-          <span class="vi">@uleb</span> <span class="o">=</span> <span class="no">Uleb128</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="k">end</span>
-        <span class="k">if</span> <span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_do_bind_uleb_times_skipping_uleb</span>
-          <span class="vi">@skip</span> <span class="o">=</span> <span class="no">Uleb128</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="k">end</span>
-        <span class="k">if</span> <span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_symbol_trailing_flags_immediate</span>
-          <span class="vi">@symbol</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-        <span class="k">end</span>
-        <span class="nb">self</span>
-      <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">opcode</span>
-        <span class="k">return</span> <span class="vi">@opcode</span> <span class="k">unless</span> <span class="vi">@opcode</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="vi">@opcode</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MachO</span><span class="o">::</span><span class="no">DyldInfoCommand</span><span class="o">::</span><span class="no">BIND_OPCODE</span><span class="p">,</span> <span class="p">(</span><span class="n">opcode_and_immediate</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">))</span>
-        <span class="vi">@opcode</span>
-      <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">immediate</span>
-        <span class="k">return</span> <span class="vi">@immediate</span> <span class="k">unless</span> <span class="vi">@immediate</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="vi">@immediate</span> <span class="o">=</span> <span class="p">(</span><span class="n">opcode_and_immediate</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
-        <span class="vi">@immediate</span>
-      <span class="k">end</span>
-      <span class="kp">attr_reader</span> <span class="ss">:opcode_and_immediate</span>
-      <span class="kp">attr_reader</span> <span class="ss">:uleb</span>
-      <span class="kp">attr_reader</span> <span class="ss">:skip</span>
-      <span class="kp">attr_reader</span> <span class="ss">:symbol</span>
-    <span class="k">end</span>
     <span class="k">class</span> <span class="nc">RebaseData</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
       <span class="no">OPCODE</span> <span class="o">=</span> <span class="p">{</span>
@@ -2027,6 +2006,57 @@ section#format-index .row {
       <span class="k">end</span>
       <span class="kp">attr_reader</span> <span class="ss">:items</span>
     <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">BindItem</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="n">_read</span>
+        <span class="vi">@opcode_and_immediate</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="k">if</span>  <span class="p">((</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_dylib_ordinal_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_append_sleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_segment_and_offset_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_add_address_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_do_bind_add_address_uleb</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_do_bind_uleb_times_skipping_uleb</span><span class="p">))</span> 
+          <span class="vi">@uleb</span> <span class="o">=</span> <span class="no">Uleb128</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">end</span>
+        <span class="k">if</span> <span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_do_bind_uleb_times_skipping_uleb</span>
+          <span class="vi">@skip</span> <span class="o">=</span> <span class="no">Uleb128</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">end</span>
+        <span class="k">if</span> <span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_set_symbol_trailing_flags_immediate</span>
+          <span class="vi">@symbol</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+        <span class="k">end</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="k">def</span> <span class="nf">opcode</span>
+        <span class="k">return</span> <span class="vi">@opcode</span> <span class="k">unless</span> <span class="vi">@opcode</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="vi">@opcode</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MachO</span><span class="o">::</span><span class="no">DyldInfoCommand</span><span class="o">::</span><span class="no">BIND_OPCODE</span><span class="p">,</span> <span class="p">(</span><span class="n">opcode_and_immediate</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">))</span>
+        <span class="vi">@opcode</span>
+      <span class="k">end</span>
+      <span class="k">def</span> <span class="nf">immediate</span>
+        <span class="k">return</span> <span class="vi">@immediate</span> <span class="k">unless</span> <span class="vi">@immediate</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="vi">@immediate</span> <span class="o">=</span> <span class="p">(</span><span class="n">opcode_and_immediate</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
+        <span class="vi">@immediate</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:opcode_and_immediate</span>
+      <span class="kp">attr_reader</span> <span class="ss">:uleb</span>
+      <span class="kp">attr_reader</span> <span class="ss">:skip</span>
+      <span class="kp">attr_reader</span> <span class="ss">:symbol</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">BindData</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="n">_read</span>
+        <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+          <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="no">BindItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+          <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">end</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:items</span>
+    <span class="k">end</span>
     <span class="k">class</span> <span class="nc">ExportNode</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
       <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
         <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
@@ -2070,84 +2100,70 @@ section#format-index .row {
       <span class="kp">attr_reader</span> <span class="ss">:children</span>
       <span class="kp">attr_reader</span> <span class="ss">:terminal</span>
     <span class="k">end</span>
-    <span class="k">class</span> <span class="nc">BindData</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-        <span class="n">_read</span>
-      <span class="k">end</span>
-
-      <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">begin</span>
-          <span class="n">_</span> <span class="o">=</span> <span class="no">BindItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-          <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
-          <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">opcode</span> <span class="o">==</span> <span class="ss">:bind_opcode_done</span>
-        <span class="nb">self</span>
-      <span class="k">end</span>
-      <span class="kp">attr_reader</span> <span class="ss">:items</span>
-    <span class="k">end</span>
-    <span class="k">class</span> <span class="nc">LazyBindData</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-        <span class="n">_read</span>
-      <span class="k">end</span>
-
-      <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-          <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="no">BindItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-          <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">end</span>
-        <span class="nb">self</span>
-      <span class="k">end</span>
-      <span class="kp">attr_reader</span> <span class="ss">:items</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">rebase</span>
-      <span class="k">return</span> <span class="vi">@rebase</span> <span class="k">unless</span> <span class="vi">@rebase</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">rebase_off</span><span class="p">)</span>
-      <span class="vi">@_raw_rebase</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rebase_size</span><span class="p">)</span>
-      <span class="n">_io__raw_rebase</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_rebase</span><span class="p">)</span>
-      <span class="vi">@rebase</span> <span class="o">=</span> <span class="no">RebaseData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_rebase</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="vi">@rebase</span>
-    <span class="k">end</span>
     <span class="k">def</span> <span class="nf">bind</span>
       <span class="k">return</span> <span class="vi">@bind</span> <span class="k">unless</span> <span class="vi">@bind</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">bind_off</span><span class="p">)</span>
-      <span class="vi">@_raw_bind</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">bind_size</span><span class="p">)</span>
-      <span class="n">_io__raw_bind</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_bind</span><span class="p">)</span>
-      <span class="vi">@bind</span> <span class="o">=</span> <span class="no">BindData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_bind</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">bind_size</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">bind_off</span><span class="p">)</span>
+        <span class="vi">@_raw_bind</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">bind_size</span><span class="p">)</span>
+        <span class="n">_io__raw_bind</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_bind</span><span class="p">)</span>
+        <span class="vi">@bind</span> <span class="o">=</span> <span class="no">BindData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_bind</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
       <span class="vi">@bind</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">lazy_bind</span>
-      <span class="k">return</span> <span class="vi">@lazy_bind</span> <span class="k">unless</span> <span class="vi">@lazy_bind</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">lazy_bind_off</span><span class="p">)</span>
-      <span class="vi">@_raw_lazy_bind</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">lazy_bind_size</span><span class="p">)</span>
-      <span class="n">_io__raw_lazy_bind</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_lazy_bind</span><span class="p">)</span>
-      <span class="vi">@lazy_bind</span> <span class="o">=</span> <span class="no">LazyBindData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_lazy_bind</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="vi">@lazy_bind</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">exports</span>
       <span class="k">return</span> <span class="vi">@exports</span> <span class="k">unless</span> <span class="vi">@exports</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">export_off</span><span class="p">)</span>
-      <span class="vi">@_raw_exports</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">export_size</span><span class="p">)</span>
-      <span class="n">_io__raw_exports</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_exports</span><span class="p">)</span>
-      <span class="vi">@exports</span> <span class="o">=</span> <span class="no">ExportNode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_exports</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">export_size</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">export_off</span><span class="p">)</span>
+        <span class="vi">@_raw_exports</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">export_size</span><span class="p">)</span>
+        <span class="n">_io__raw_exports</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_exports</span><span class="p">)</span>
+        <span class="vi">@exports</span> <span class="o">=</span> <span class="no">ExportNode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_exports</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
       <span class="vi">@exports</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">weak_bind</span>
+      <span class="k">return</span> <span class="vi">@weak_bind</span> <span class="k">unless</span> <span class="vi">@weak_bind</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">weak_bind_size</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">weak_bind_off</span><span class="p">)</span>
+        <span class="vi">@_raw_weak_bind</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">weak_bind_size</span><span class="p">)</span>
+        <span class="n">_io__raw_weak_bind</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_weak_bind</span><span class="p">)</span>
+        <span class="vi">@weak_bind</span> <span class="o">=</span> <span class="no">BindData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_weak_bind</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@weak_bind</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">rebase</span>
+      <span class="k">return</span> <span class="vi">@rebase</span> <span class="k">unless</span> <span class="vi">@rebase</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">rebase_size</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">rebase_off</span><span class="p">)</span>
+        <span class="vi">@_raw_rebase</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">rebase_size</span><span class="p">)</span>
+        <span class="n">_io__raw_rebase</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_rebase</span><span class="p">)</span>
+        <span class="vi">@rebase</span> <span class="o">=</span> <span class="no">RebaseData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_rebase</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@rebase</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">lazy_bind</span>
+      <span class="k">return</span> <span class="vi">@lazy_bind</span> <span class="k">unless</span> <span class="vi">@lazy_bind</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">lazy_bind_size</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">lazy_bind_off</span><span class="p">)</span>
+        <span class="vi">@_raw_lazy_bind</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">lazy_bind_size</span><span class="p">)</span>
+        <span class="n">_io__raw_lazy_bind</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_lazy_bind</span><span class="p">)</span>
+        <span class="vi">@lazy_bind</span> <span class="o">=</span> <span class="no">BindData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_lazy_bind</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@lazy_bind</span>
     <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:rebase_off</span>
     <span class="kp">attr_reader</span> <span class="ss">:rebase_size</span>
@@ -2159,10 +2175,11 @@ section#format-index .row {
     <span class="kp">attr_reader</span> <span class="ss">:lazy_bind_size</span>
     <span class="kp">attr_reader</span> <span class="ss">:export_off</span>
     <span class="kp">attr_reader</span> <span class="ss">:export_size</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_rebase</span>
     <span class="kp">attr_reader</span> <span class="ss">:_raw_bind</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_lazy_bind</span>
     <span class="kp">attr_reader</span> <span class="ss">:_raw_exports</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_weak_bind</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_rebase</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_lazy_bind</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">DylinkerCommand</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
