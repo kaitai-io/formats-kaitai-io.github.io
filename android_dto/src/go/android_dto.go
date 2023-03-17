@@ -15,7 +15,7 @@ import (
  * of device tree entries and the entries themselves. This format
  * description could be used to extract device tree entries from a
  * partition images and decompile them with dtc (device tree compiler).
- * @see <a href="https://source.android.com/devices/architecture/dto/partitions">Source</a>
+ * @see <a href="https://source.android.com/docs/core/architecture/dto/partitions">Source</a>
  * @see <a href="https://android.googlesource.com/platform/system/libufdt/+/refs/tags/android-10.0.0_r47">Source</a>
  */
 type AndroidDto struct {

@@ -13,7 +13,7 @@ class Luks(KaitaiStruct):
     encryption parameters and up to 8 user keys (which can unlock the master key).
     
     .. seealso::
-       Source - https://gitlab.com/cryptsetup/cryptsetup/wikis/LUKS-standard/on-disk-format.pdf
+       Source - https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

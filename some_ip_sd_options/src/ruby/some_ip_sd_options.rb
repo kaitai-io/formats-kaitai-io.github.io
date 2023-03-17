@@ -11,7 +11,7 @@ end
 # FormatOptions are used to transport additional information to the entries.
 # This includes forinstance the information how a service instance is
 # reachable (IP-Address, TransportProtocol, Port Number).
-# @see https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+# @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
 #   - section 4.1.2.4 Options Format
 class SomeIpSdOptions < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)

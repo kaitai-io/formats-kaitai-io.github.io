@@ -10,7 +10,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header|Source}
+ * @see {@link https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header|Source}
  */
 
 var VmwareVmdk = (function() {
@@ -50,7 +50,7 @@ var VmwareVmdk = (function() {
   }
 
   /**
-   * @see {@link https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags|Source}
+   * @see {@link https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags|Source}
    */
 
   var HeaderFlags = VmwareVmdk.HeaderFlags = (function() {

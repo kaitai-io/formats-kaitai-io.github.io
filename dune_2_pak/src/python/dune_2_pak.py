@@ -10,7 +10,7 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
 class Dune2Pak(KaitaiStruct):
     """
     .. seealso::
-       Source - http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)
+       Source - https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood)
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

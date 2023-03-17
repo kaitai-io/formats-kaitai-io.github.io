@@ -12,7 +12,7 @@
 /**
  * Linux Unified Key Setup (LUKS) is a format specification for storing disk
  * encryption parameters and up to 8 user keys (which can unlock the master key).
- * @see {@link https://gitlab.com/cryptsetup/cryptsetup/wikis/LUKS-standard/on-disk-format.pdf|Source}
+ * @see {@link https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf|Source}
  */
 
 var Luks = (function() {

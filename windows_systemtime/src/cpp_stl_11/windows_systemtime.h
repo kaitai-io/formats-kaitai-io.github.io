@@ -13,7 +13,7 @@
 /**
  * Microsoft Windows SYSTEMTIME structure, stores individual components
  * of date and time as individual fields, up to millisecond precision.
- * \sa https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime Source
+ * \sa https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime Source
  */
 
 class windows_systemtime_t : public kaitai::kstruct {

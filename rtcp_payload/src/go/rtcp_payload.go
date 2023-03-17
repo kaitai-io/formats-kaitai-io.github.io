@@ -8,7 +8,7 @@ import (
 
 /**
  * RTCP is the Real-Time Control Protocol
- * @see <a href="https://tools.ietf.org/html/rfc3550">Source</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc3550">Source</a>
  */
 
 type RtcpPayload_PayloadType int

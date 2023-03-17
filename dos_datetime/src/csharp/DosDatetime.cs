@@ -36,10 +36,10 @@ namespace Kaitai
     ///   - [cab](http://justsolve.archiveteam.org/wiki/Cabinet)
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time">Source</a>
+    /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime">Source</a>
+    /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://github.com/reactos/reactos/blob/c6b6444/dll/win32/kernel32/client/time.c#L82-L87">DosDateTimeToFileTime</a>

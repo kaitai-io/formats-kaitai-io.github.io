@@ -12,7 +12,7 @@ class WindowsSystemtime(KaitaiStruct):
     of date and time as individual fields, up to millisecond precision.
     
     .. seealso::
-       Source - https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime
+       Source - https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

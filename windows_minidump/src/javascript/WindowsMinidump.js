@@ -18,7 +18,7 @@
  * 
  * The file itself is a container, which contains a number of typed
  * "streams", which contain some data according to its type attribute.
- * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header|Source}
+ * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header|Source}
  */
 
 var WindowsMinidump = (function() {
@@ -149,7 +149,7 @@ var WindowsMinidump = (function() {
   }
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list|Source}
    */
 
   var ThreadList = WindowsMinidump.ThreadList = (function() {
@@ -172,7 +172,7 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor|Source}
    */
 
   var LocationDescriptor = WindowsMinidump.LocationDescriptor = (function() {
@@ -206,7 +206,7 @@ var WindowsMinidump = (function() {
   /**
    * Specific string serialization scheme used in MiniDump format is
    * actually a simple 32-bit length-prefixed UTF-16 string.
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string|Source}
    */
 
   var MinidumpString = WindowsMinidump.MinidumpString = (function() {
@@ -228,7 +228,7 @@ var WindowsMinidump = (function() {
   /**
    * "System info" stream provides basic information about the
    * hardware and operating system which produces this dump.
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info|Source}
    */
 
   var SystemInfo = WindowsMinidump.SystemInfo = (function() {
@@ -286,7 +286,7 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception|Source}
    */
 
   var ExceptionRecord = WindowsMinidump.ExceptionRecord = (function() {
@@ -327,7 +327,7 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info|Source}
    */
 
   var MiscInfo = WindowsMinidump.MiscInfo = (function() {
@@ -356,7 +356,7 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory|Source}
    */
 
   var Dir = WindowsMinidump.Dir = (function() {
@@ -414,14 +414,14 @@ var WindowsMinidump = (function() {
     });
 
     /**
-     * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor|Source}
+     * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor|Source}
      */
 
     return Dir;
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread|Source}
    */
 
   var Thread = WindowsMinidump.Thread = (function() {
@@ -450,7 +450,7 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list|Source}
    */
 
   var MemoryList = WindowsMinidump.MemoryList = (function() {
@@ -473,7 +473,7 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor|Source}
    */
 
   var MemoryDescriptor = WindowsMinidump.MemoryDescriptor = (function() {
@@ -493,7 +493,7 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream|Source}
    */
 
   var ExceptionStream = WindowsMinidump.ExceptionStream = (function() {

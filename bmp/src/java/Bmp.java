@@ -64,7 +64,7 @@ import java.util.Arrays;
  * 
  * ## Specs
  *  * [Bitmap Storage (Windows Dev Center)](
- *      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+ *      https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
  *    )
  *     * BITMAPFILEHEADER
  *     * BITMAPINFOHEADER
@@ -224,7 +224,7 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
      */
     public static class CieXyz extends KaitaiStruct {
         public static CieXyz fromFile(String fileName) throws IOException {
@@ -303,7 +303,7 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
      */
     public static class BitmapV5Extension extends KaitaiStruct {
         public static BitmapV5Extension fromFile(String fileName) throws IOException {
@@ -341,7 +341,7 @@ public class Bmp extends KaitaiStruct {
         private Object profileData;
 
         /**
-         * @see <a href="https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
+         * @see <a href="https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
          */
         public Object profileData() {
             if (this.profileData != null)
@@ -422,7 +422,7 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
      */
     public static class BitmapV4Extension extends KaitaiStruct {
         public static BitmapV4Extension fromFile(String fileName) throws IOException {
@@ -473,7 +473,7 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
      */
     public static class BitmapInfoExtension extends KaitaiStruct {
         public static BitmapInfoExtension fromFile(String fileName) throws IOException {
@@ -603,7 +603,7 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader">Source</a>
      * @see <a href="https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1">Source</a>
      */
     public static class BitmapHeader extends KaitaiStruct {
@@ -949,7 +949,7 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
      */
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
@@ -1005,7 +1005,7 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
      */
     public static class BitmapInfo extends KaitaiStruct {
         public static BitmapInfo fromFile(String fileName) throws IOException {

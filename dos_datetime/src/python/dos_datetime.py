@@ -38,11 +38,11 @@ class DosDatetime(KaitaiStruct):
       - [cab](http://justsolve.archiveteam.org/wiki/Cabinet)
     
     .. seealso::
-       Source - https://docs.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time
+       Source - https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time
     
     
     .. seealso::
-       Source - https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime
+       Source - https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime
     
     
     .. seealso::

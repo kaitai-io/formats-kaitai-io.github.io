@@ -27,7 +27,7 @@
  * This Kaitai implementation was written by John Byrd of Gigantic Software
  * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
  * \sa http://soundfile.sapp.org/doc/WaveFormat/ Source
- * \sa http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html Source
+ * \sa https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html Source
  * \sa https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php Source
  */
 
@@ -484,7 +484,7 @@ public:
 
         /**
          * XMP data
-         * \sa https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf Source
+         * \sa https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf Source
          */
         std::string data() const { return m_data; }
         wav_t* _root() const { return m__root; }
@@ -847,7 +847,7 @@ public:
     };
 
     /**
-     * \sa http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source
+     * \sa https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source
      */
 
     class afsp_chunk_type_t : public kaitai::kstruct {
@@ -876,8 +876,8 @@ public:
          * An array of AFsp information records, in the `<field_name>: <value>`
          * format (e.g. "`program: CopyAudio`"). The list of existing information
          * record types are available in the `doc-ref` links.
-         * \sa http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html Source
-         * \sa http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html Source
+         * \sa https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html Source
+         * \sa https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html Source
          */
         std::vector<std::string>* info_records() const { return m_info_records; }
         wav_t* _root() const { return m__root; }

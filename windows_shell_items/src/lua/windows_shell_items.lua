@@ -18,7 +18,7 @@ local stringstream = require("string_stream")
 -- 
 -- The format is mostly undocumented, and is known to vary between
 -- various Windows versions.
--- See also: Source (https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc)
+-- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc)
 WindowsShellItems = class.class(KaitaiStruct)
 
 function WindowsShellItems:_init(io, parent, root)
@@ -90,7 +90,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item)
+-- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item)
 WindowsShellItems.RootFolderBody = class.class(KaitaiStruct)
 
 function WindowsShellItems.RootFolderBody:_init(io, parent, root)
@@ -107,7 +107,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item)
+-- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item)
 WindowsShellItems.VolumeBody = class.class(KaitaiStruct)
 
 function WindowsShellItems.VolumeBody:_init(io, parent, root)
@@ -123,7 +123,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item)
+-- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item)
 WindowsShellItems.FileEntryBody = class.class(KaitaiStruct)
 
 function WindowsShellItems.FileEntryBody:_init(io, parent, root)

@@ -127,7 +127,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier Source
      */
 
     class body_object_id_t : public kaitai::kstruct {

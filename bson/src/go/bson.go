@@ -642,7 +642,7 @@ func (this *Bson_F16) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) 
 }
 
 /**
- * https://docs.mongodb.com/manual/reference/method/ObjectId/
+ * @see <a href="https://www.mongodb.com/docs/manual/reference/method/ObjectId/">Source</a>
  */
 type Bson_ObjectId struct {
 	EpochTime uint32

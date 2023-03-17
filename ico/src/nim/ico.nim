@@ -38,7 +38,7 @@ icons - ICO. This is a container that contains one or more image
 files (effectively, DIB parts of BMP files or full PNG files are
 contained inside).
 
-@see <a href="https://docs.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)">Source</a>
 ]##
 proc read*(_: typedesc[Ico], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ico =
   template this: untyped = result

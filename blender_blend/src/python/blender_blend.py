@@ -118,7 +118,7 @@ class BlenderBlend(KaitaiStruct):
           structure, referring to types and names by index)
         
         .. seealso::
-           Source - https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA
+           Source - https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

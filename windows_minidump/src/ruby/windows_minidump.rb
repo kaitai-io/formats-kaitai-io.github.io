@@ -16,7 +16,7 @@ end
 # 
 # The file itself is a container, which contains a number of typed
 # "streams", which contain some data according to its type attribute.
-# @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header Source
+# @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header Source
 class WindowsMinidump < Kaitai::Struct::Struct
 
   STREAM_TYPES = {
@@ -91,7 +91,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list Source
   class ThreadList < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -111,7 +111,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
   class LocationDescriptor < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -139,7 +139,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   ##
   # Specific string serialization scheme used in MiniDump format is
   # actually a simple 32-bit length-prefixed UTF-16 string.
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string Source
   class MinidumpString < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -158,7 +158,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   ##
   # "System info" stream provides basic information about the
   # hardware and operating system which produces this dump.
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info Source
   class SystemInfo < Kaitai::Struct::Struct
 
     CPU_ARCHS = {
@@ -215,7 +215,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception Source
   class ExceptionRecord < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -256,7 +256,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info Source
   class MiscInfo < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -291,7 +291,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory Source
   class Dir < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -338,14 +338,14 @@ class WindowsMinidump < Kaitai::Struct::Struct
     attr_reader :stream_type
 
     ##
-    # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
+    # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
     attr_reader :len_data
     attr_reader :ofs_data
     attr_reader :_raw_data
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread Source
   class Thread < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -375,7 +375,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
   class MemoryList < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -395,7 +395,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source
   class MemoryDescriptor < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -412,7 +412,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream Source
   class ExceptionStream < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

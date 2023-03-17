@@ -23,7 +23,7 @@ namespace Kaitai
     /// filesystem with a running Windows OS.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc">Source</a>
+    /// Reference: <a href="https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc">Source</a>
     /// </remarks>
     public partial class Regf : KaitaiStruct
     {

@@ -21,7 +21,7 @@
  * 
  * The format is mostly undocumented, and is known to vary between
  * various Windows versions.
- * @see {@link https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc|Source}
+ * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc|Source}
  */
 
 var WindowsShellItems = (function() {
@@ -95,7 +95,7 @@ var WindowsShellItems = (function() {
   })();
 
   /**
-   * @see {@link https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item|Source}
+   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item|Source}
    */
 
   var RootFolderBody = WindowsShellItems.RootFolderBody = (function() {
@@ -115,7 +115,7 @@ var WindowsShellItems = (function() {
   })();
 
   /**
-   * @see {@link https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item|Source}
+   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item|Source}
    */
 
   var VolumeBody = WindowsShellItems.VolumeBody = (function() {
@@ -134,7 +134,7 @@ var WindowsShellItems = (function() {
   })();
 
   /**
-   * @see {@link https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item|Source}
+   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item|Source}
    */
 
   var FileEntryBody = WindowsShellItems.FileEntryBody = (function() {

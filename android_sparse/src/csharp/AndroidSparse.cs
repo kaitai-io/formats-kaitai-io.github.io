@@ -20,7 +20,7 @@ namespace Kaitai
     /// Reference: <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_format.h">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://source.android.com/devices/bootloader/images#sparse-image-format">Source</a>
+    /// Reference: <a href="https://web.archive.org/web/20220322054458/https://source.android.com/devices/bootloader/images#sparse-image-format">Source</a>
     /// </remarks>
     public partial class AndroidSparse : KaitaiStruct
     {

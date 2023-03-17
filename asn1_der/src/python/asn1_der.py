@@ -124,7 +124,7 @@ class Asn1Der(KaitaiStruct):
     class BodyObjectId(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier
+           Source - https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

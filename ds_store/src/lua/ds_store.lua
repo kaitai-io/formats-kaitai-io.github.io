@@ -9,10 +9,9 @@ local str_decode = require("string_decode")
 
 -- 
 -- Apple macOS '.DS_Store' file format.
--- See also: Source (https://en.wikipedia.org/wiki/.DS_Store
--- https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
--- https://0day.work/parsing-the-ds_store-file-format
--- )
+-- See also: Source (https://en.wikipedia.org/wiki/.DS_Store)
+-- See also: Source (https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod)
+-- See also: Source (https://0day.work/parsing-the-ds_store-file-format/)
 DsStore = class.class(KaitaiStruct)
 
 function DsStore:_init(io, parent, root)

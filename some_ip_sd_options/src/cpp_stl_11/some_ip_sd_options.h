@@ -15,7 +15,7 @@
  * FormatOptions are used to transport additional information to the entries.
  * This includes forinstance the information how a service instance is
  * reachable (IP-Address, TransportProtocol, Port Number).
- * \sa https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+ * \sa https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
  * - section 4.1.2.4 Options Format
  */
 

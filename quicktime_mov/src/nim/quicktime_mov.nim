@@ -354,7 +354,7 @@ proc len*(this: QuicktimeMov_Atom): int
 
 
 ##[
-@see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
+@see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
 ]##
 proc read*(_: typedesc[QuicktimeMov], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov =
   template this: untyped = result
@@ -372,7 +372,7 @@ proc fromFile*(_: typedesc[QuicktimeMov], filename: string): QuicktimeMov =
 
 
 ##[
-@see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
+@see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
 ]##
 proc read*(_: typedesc[QuicktimeMov_MvhdBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_MvhdBody =
   template this: untyped = result
@@ -486,7 +486,7 @@ proc fromFile*(_: typedesc[QuicktimeMov_MvhdBody], filename: string): QuicktimeM
 
 
 ##[
-@see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+@see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
 ]##
 proc read*(_: typedesc[QuicktimeMov_FtypBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_FtypBody =
   template this: untyped = result
@@ -650,7 +650,7 @@ proc fromFile*(_: typedesc[QuicktimeMov_Atom], filename: string): QuicktimeMov_A
 
 
 ##[
-@see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
+@see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
 ]##
 proc read*(_: typedesc[QuicktimeMov_TkhdBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_TkhdBody =
   template this: untyped = result

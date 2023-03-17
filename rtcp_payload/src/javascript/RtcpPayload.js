@@ -11,7 +11,7 @@
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * RTCP is the Real-Time Control Protocol
- * @see {@link https://tools.ietf.org/html/rfc3550|Source}
+ * @see {@link https://www.rfc-editor.org/rfc/rfc3550|Source}
  */
 
 var RtcpPayload = (function() {

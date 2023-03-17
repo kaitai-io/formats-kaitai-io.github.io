@@ -19,7 +19,7 @@ end
 # 
 # The format is mostly undocumented, and is known to vary between
 # various Windows versions.
-# @see https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc Source
+# @see https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc Source
 class WindowsShellItems < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -84,7 +84,7 @@ class WindowsShellItems < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item Source
+  # @see https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item Source
   class RootFolderBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -101,7 +101,7 @@ class WindowsShellItems < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item Source
+  # @see https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item Source
   class VolumeBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -116,7 +116,7 @@ class WindowsShellItems < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item Source
+  # @see https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item Source
   class FileEntryBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

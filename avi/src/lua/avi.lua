@@ -8,7 +8,7 @@ local enum = require("enum")
 local stringstream = require("string_stream")
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85))
+-- See also: Source (https://learn.microsoft.com/en-us/previous-versions/ms779636(v=vs.85))
 Avi = class.class(KaitaiStruct)
 
 Avi.ChunkType = enum.Enum {
@@ -116,7 +116,7 @@ end
 
 -- 
 -- Main header of an AVI file, defined as AVIMAINHEADER structure.
--- See also: Source (https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85))
+-- See also: Source (https://learn.microsoft.com/en-us/previous-versions/ms779632(v=vs.85))
 Avi.AvihBody = class.class(KaitaiStruct)
 
 function Avi.AvihBody:_init(io, parent, root)
@@ -174,7 +174,7 @@ end
 
 -- 
 -- Stream header (one header per stream), defined as AVISTREAMHEADER structure.
--- See also: Source (https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85))
+-- See also: Source (https://learn.microsoft.com/en-us/previous-versions/ms779638(v=vs.85))
 Avi.StrhBody = class.class(KaitaiStruct)
 
 function Avi.StrhBody:_init(io, parent, root)

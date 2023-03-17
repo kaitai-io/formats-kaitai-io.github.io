@@ -244,7 +244,7 @@ public:
     };
 
     /**
-     * \sa https://www.w3.org/TR/PNG/#11cHRM Source
+     * \sa https://www.w3.org/TR/png/#11cHRM Source
      */
 
     class chrm_chunk_t : public kaitai::kstruct {
@@ -278,7 +278,7 @@ public:
     };
 
     /**
-     * \sa https://www.w3.org/TR/PNG/#11IHDR Source
+     * \sa https://www.w3.org/TR/png/#11IHDR Source
      */
 
     class ihdr_chunk_t : public kaitai::kstruct {
@@ -318,7 +318,7 @@ public:
     };
 
     /**
-     * \sa https://www.w3.org/TR/PNG/#11PLTE Source
+     * \sa https://www.w3.org/TR/png/#11PLTE Source
      */
 
     class plte_chunk_t : public kaitai::kstruct {
@@ -346,7 +346,7 @@ public:
     };
 
     /**
-     * \sa https://www.w3.org/TR/PNG/#11sRGB Source
+     * \sa https://www.w3.org/TR/png/#11sRGB Source
      */
 
     class srgb_chunk_t : public kaitai::kstruct {
@@ -384,7 +384,7 @@ public:
      * Compressed text chunk effectively allows to store key-value
      * string pairs in PNG container, compressing "value" part (which
      * can be quite lengthy) with zlib compression.
-     * \sa https://www.w3.org/TR/PNG/#11zTXt Source
+     * \sa https://www.w3.org/TR/png/#11zTXt Source
      */
 
     class compressed_text_chunk_t : public kaitai::kstruct {
@@ -500,7 +500,7 @@ public:
     };
 
     /**
-     * \sa https://www.w3.org/TR/PNG/#11gAMA Source
+     * \sa https://www.w3.org/TR/png/#11gAMA Source
      */
 
     class gama_chunk_t : public kaitai::kstruct {
@@ -537,7 +537,7 @@ public:
     /**
      * Background chunk stores default background color to display this
      * image against. Contents depend on `color_type` of the image.
-     * \sa https://www.w3.org/TR/PNG/#11bKGD Source
+     * \sa https://www.w3.org/TR/png/#11bKGD Source
      */
 
     class bkgd_chunk_t : public kaitai::kstruct {
@@ -573,7 +573,7 @@ public:
     /**
      * "Physical size" chunk stores data that allows to translate
      * logical pixels into physical units (meters, etc) and vice-versa.
-     * \sa https://www.w3.org/TR/PNG/#11pHYs Source
+     * \sa https://www.w3.org/TR/png/#11pHYs Source
      */
 
     class phys_chunk_t : public kaitai::kstruct {
@@ -710,7 +710,7 @@ public:
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
      * characters.
-     * \sa https://www.w3.org/TR/PNG/#11iTXt Source
+     * \sa https://www.w3.org/TR/png/#11iTXt Source
      */
 
     class international_text_chunk_t : public kaitai::kstruct {
@@ -778,7 +778,7 @@ public:
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
      * characters.
-     * \sa https://www.w3.org/TR/PNG/#11tEXt Source
+     * \sa https://www.w3.org/TR/png/#11tEXt Source
      */
 
     class text_chunk_t : public kaitai::kstruct {
@@ -852,7 +852,7 @@ public:
     /**
      * Time chunk stores time stamp of last modification of this image,
      * up to 1 second precision in UTC timezone.
-     * \sa https://www.w3.org/TR/PNG/#11tIME Source
+     * \sa https://www.w3.org/TR/png/#11tIME Source
      */
 
     class time_chunk_t : public kaitai::kstruct {

@@ -17,7 +17,7 @@ end
 # for converting one subvolume into another.
 # This spec can be used to disassemble the binary diff created by the `btrfs send` command.
 # If you want a text representation you may want to checkout `btrfs receive --dump` instead.
-# @see https://btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive Source
+# @see https://archive.kernel.org/oldwiki/btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive.html Source
 class BtrfsStream < Kaitai::Struct::Struct
 
   COMMAND = {

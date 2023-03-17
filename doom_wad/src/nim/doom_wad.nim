@@ -241,7 +241,7 @@ provides a very simple form of image compression, allowing
 certain elements ("patches") to be reused / recombined on
 different textures for more variety in the game.
 
-@see <a href="http://doom.wikia.com/wiki/TEXTURE1">Source</a>
+@see <a href="https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2">Source</a>
 ]##
 proc read*(_: typedesc[DoomWad_Texture12], io: KaitaiStream, root: KaitaiStruct, parent: DoomWad_IndexEntry): DoomWad_Texture12 =
   template this: untyped = result
@@ -390,7 +390,7 @@ proc fromFile*(_: typedesc[DoomWad_Linedef], filename: string): DoomWad_Linedef 
 
 
 ##[
-@see <a href="http://doom.wikia.com/wiki/PNAMES">Source</a>
+@see <a href="https://doom.fandom.com/wiki/PNAMES">Source</a>
 ]##
 proc read*(_: typedesc[DoomWad_Pnames], io: KaitaiStream, root: KaitaiStruct, parent: DoomWad_IndexEntry): DoomWad_Pnames =
   template this: untyped = result

@@ -11,7 +11,7 @@
 #endif
 
 /**
- * \sa https://wiki.nesdev.com/w/index.php/INES Source
+ * \sa https://www.nesdev.org/wiki/INES Source
  */
 
 class ines_t : public kaitai::kstruct {
@@ -47,7 +47,7 @@ public:
         ~header_t();
 
         /**
-         * \sa https://wiki.nesdev.com/w/index.php/INES#Flags_6 Source
+         * \sa https://www.nesdev.org/wiki/INES#Flags_6 Source
          */
 
         class f6_t : public kaitai::kstruct {
@@ -108,7 +108,7 @@ public:
         };
 
         /**
-         * \sa https://wiki.nesdev.com/w/index.php/INES#Flags_7 Source
+         * \sa https://www.nesdev.org/wiki/INES#Flags_7 Source
          */
 
         class f7_t : public kaitai::kstruct {
@@ -158,7 +158,7 @@ public:
         };
 
         /**
-         * \sa https://wiki.nesdev.com/w/index.php/INES#Flags_9 Source
+         * \sa https://www.nesdev.org/wiki/INES#Flags_9 Source
          */
 
         class f9_t : public kaitai::kstruct {
@@ -197,7 +197,7 @@ public:
         };
 
         /**
-         * \sa https://wiki.nesdev.com/w/index.php/INES#Flags_10 Source
+         * \sa https://www.nesdev.org/wiki/INES#Flags_10 Source
          */
 
         class f10_t : public kaitai::kstruct {
@@ -258,7 +258,7 @@ public:
     public:
 
         /**
-         * \sa https://wiki.nesdev.com/w/index.php/Mapper Source
+         * \sa https://www.nesdev.org/wiki/Mapper Source
          */
         int32_t mapper();
 
@@ -322,7 +322,7 @@ public:
     };
 
     /**
-     * \sa http://wiki.nesdev.com/w/index.php/PC10_ROM-Images Source
+     * \sa https://www.nesdev.org/wiki/PC10_ROM-Images Source
      */
 
     class playchoice10_t : public kaitai::kstruct {

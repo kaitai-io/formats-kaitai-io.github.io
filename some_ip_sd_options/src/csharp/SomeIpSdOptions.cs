@@ -11,7 +11,7 @@ namespace Kaitai
     /// reachable (IP-Address, TransportProtocol, Port Number).
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+    /// Reference: <a href="https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
     /// -">section 4.1.2.4 Options Format</a>
     /// </remarks>
     public partial class SomeIpSdOptions : KaitaiStruct

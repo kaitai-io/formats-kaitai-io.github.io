@@ -79,7 +79,7 @@ func (this *Iso9660) PrimaryVolDesc() (v *Iso9660_VolDesc, err error) {
 }
 
 /**
- * @see <a href="http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
+ * @see <a href="https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
  */
 type Iso9660_VolDescPrimary struct {
 	Unused1 []byte
@@ -689,7 +689,7 @@ func (this *Iso9660_U2bi) Read(io *kaitai.Stream, parent interface{}, root *Iso9
 }
 
 /**
- * @see <a href="http://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
+ * @see <a href="https://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
  */
 type Iso9660_PathTableLe struct {
 	Entries []*Iso9660_PathTableEntryLe
@@ -726,7 +726,7 @@ func (this *Iso9660_PathTableLe) Read(io *kaitai.Stream, parent *Iso9660_VolDesc
 }
 
 /**
- * @see <a href="http://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
+ * @see <a href="https://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
  */
 type Iso9660_DecDatetime struct {
 	Year string

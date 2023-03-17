@@ -12,7 +12,7 @@
 /**
  * A TrueType font file contains data, in table format, that comprises
  * an outline font.
- * @see {@link https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc|Source}
+ * @see {@link https://web.archive.org/web/20160410081432/https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc|Source}
  */
 
 var Ttf = (function() {

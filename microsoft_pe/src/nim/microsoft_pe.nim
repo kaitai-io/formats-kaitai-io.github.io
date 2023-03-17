@@ -239,7 +239,7 @@ proc nameFromShort*(this: MicrosoftPe_Annoyingstring): string
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
 ]##
 proc read*(_: typedesc[MicrosoftPe], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftPe =
   template this: untyped = result
@@ -268,7 +268,7 @@ proc fromFile*(_: typedesc[MicrosoftPe], filename: string): MicrosoftPe =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
 ]##
 proc read*(_: typedesc[MicrosoftPe_CertificateEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CertificateTable): MicrosoftPe_CertificateEntry =
   template this: untyped = result

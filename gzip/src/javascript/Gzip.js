@@ -18,7 +18,7 @@
  * As of 2019, there is actually only one working solution for
  * compression algorithms, so it's typically raw DEFLATE stream
  * (without zlib header) in all gzipped files.
- * @see {@link https://tools.ietf.org/html/rfc1952|Source}
+ * @see {@link https://www.rfc-editor.org/rfc/rfc1952|Source}
  */
 
 var Gzip = (function() {

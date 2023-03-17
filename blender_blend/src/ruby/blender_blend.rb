@@ -141,7 +141,7 @@ class BlenderBlend < Kaitai::Struct::Struct
   # * a sequence of "type lengths"
   # * a sequence of "structs" (which describe contents of every
   #   structure, referring to types and names by index)
-  # @see https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA Source
+  # @see https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA Source
   class Dna1Body < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

@@ -65,7 +65,7 @@ var DoomWad = (function() {
    * provides a very simple form of image compression, allowing
    * certain elements ("patches") to be reused / recombined on
    * different textures for more variety in the game.
-   * @see {@link http://doom.wikia.com/wiki/TEXTURE1|Source}
+   * @see {@link https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2|Source}
    */
 
   var Texture12 = DoomWad.Texture12 = (function() {
@@ -206,7 +206,7 @@ var DoomWad = (function() {
   })();
 
   /**
-   * @see {@link http://doom.wikia.com/wiki/PNAMES|Source}
+   * @see {@link https://doom.fandom.com/wiki/PNAMES|Source}
    */
 
   var Pnames = DoomWad.Pnames = (function() {

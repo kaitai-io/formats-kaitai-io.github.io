@@ -19,7 +19,7 @@ local utils = require("utils")
 -- top-level parser attempts to autodetect and handle both of them. If
 -- any problems arise, one can use `file_explicit` and `file_implicit`
 -- subtypes to force parsing in particular transfer syntax.
--- See also: Source (http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7)
+-- See also: Source (https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7)
 Dicom = class.class(KaitaiStruct)
 
 Dicom.Tags = enum.Enum {
@@ -4085,7 +4085,7 @@ end
 
 
 -- 
--- See also: Source (http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2)
+-- See also: Source (https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2)
 Dicom.TDataElementExplicit = class.class(KaitaiStruct)
 
 function Dicom.TDataElementExplicit:_init(io, parent, root)
@@ -4177,7 +4177,7 @@ end
 
 
 -- 
--- See also: Source (http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2)
+-- See also: Source (https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2)
 Dicom.TDataElementImplicit = class.class(KaitaiStruct)
 
 function Dicom.TDataElementImplicit:_init(io, parent, root)

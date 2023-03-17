@@ -14,7 +14,7 @@ namespace Kaitai
     /// metainformation prepended as a header.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://faqwiki.zxnet.co.uk/wiki/TAP_format">Source</a>
+    /// Reference: <a href="https://sinclair.wiki.zxnet.co.uk/wiki/TAP_format">Source</a>
     /// </remarks>
     public partial class ZxSpectrumTap : KaitaiStruct
     {

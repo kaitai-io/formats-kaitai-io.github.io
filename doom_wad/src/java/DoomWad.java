@@ -108,7 +108,7 @@ public class DoomWad extends KaitaiStruct {
      * provides a very simple form of image compression, allowing
      * certain elements ("patches") to be reused / recombined on
      * different textures for more variety in the game.
-     * @see <a href="http://doom.wikia.com/wiki/TEXTURE1">Source</a>
+     * @see <a href="https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2">Source</a>
      */
     public static class Texture12 extends KaitaiStruct {
         public static Texture12 fromFile(String fileName) throws IOException {
@@ -352,7 +352,7 @@ public class DoomWad extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://doom.wikia.com/wiki/PNAMES">Source</a>
+     * @see <a href="https://doom.fandom.com/wiki/PNAMES">Source</a>
      */
     public static class Pnames extends KaitaiStruct {
         public static Pnames fromFile(String fileName) throws IOException {

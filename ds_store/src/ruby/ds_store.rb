@@ -9,10 +9,9 @@ end
 
 ##
 # Apple macOS '.DS_Store' file format.
-# @see https://en.wikipedia.org/wiki/.DS_Store
-#   https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
-#   https://0day.work/parsing-the-ds_store-file-format
-#    Source
+# @see https://en.wikipedia.org/wiki/.DS_Store Source
+# @see https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod Source
+# @see https://0day.work/parsing-the-ds_store-file-format/ Source
 class DsStore < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

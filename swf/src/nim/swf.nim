@@ -140,7 +140,7 @@ emerged.
 There are a lot of versions of SWF (~36), format is somewhat
 documented by Adobe.
 
-@see <a href="https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf">Source</a>
+@see <a href="https://open-flash.github.io/mirrors/swf-spec-19.pdf">Source</a>
 ]##
 proc read*(_: typedesc[Swf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Swf =
   template this: untyped = result

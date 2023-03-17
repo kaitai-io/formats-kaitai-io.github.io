@@ -12,7 +12,7 @@ namespace Kaitai
     /// [Wireshark](https://www.wireshark.org/).
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
+    /// Reference: <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
     /// </remarks>
     public partial class Pcap : KaitaiStruct
     {

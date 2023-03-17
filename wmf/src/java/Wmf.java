@@ -18,7 +18,7 @@ import java.util.Arrays;
  * Device Interface) function calls, which, if played back, result in
  * an image being drawn on a given surface (display, off-screen buffer,
  * printer, etc).
- * @see <a href="http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf">Source</a>
+ * @see <a href="https://www.loc.gov/preservation/digital/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf">Source</a>
  */
 public class Wmf extends KaitaiStruct {
     public static Wmf fromFile(String fileName) throws IOException {

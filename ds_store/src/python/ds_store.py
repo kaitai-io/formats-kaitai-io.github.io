@@ -12,8 +12,14 @@ class DsStore(KaitaiStruct):
     
     .. seealso::
        Source - https://en.wikipedia.org/wiki/.DS_Store
-       https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
-       https://0day.work/parsing-the-ds_store-file-format
+    
+    
+    .. seealso::
+       Source - https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod
+    
+    
+    .. seealso::
+       Source - https://0day.work/parsing-the-ds_store-file-format/
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

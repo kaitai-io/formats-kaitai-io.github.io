@@ -30,7 +30,7 @@ class Iso9660(KaitaiStruct):
     class VolDescPrimary(KaitaiStruct):
         """
         .. seealso::
-           Source - http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor
+           Source - https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -220,7 +220,7 @@ class Iso9660(KaitaiStruct):
     class PathTableLe(KaitaiStruct):
         """
         .. seealso::
-           Source - http://wiki.osdev.org/ISO_9660#The_Path_Table
+           Source - https://wiki.osdev.org/ISO_9660#The_Path_Table
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -240,7 +240,7 @@ class Iso9660(KaitaiStruct):
     class DecDatetime(KaitaiStruct):
         """
         .. seealso::
-           Source - http://wiki.osdev.org/ISO_9660#Date.2Ftime_format
+           Source - https://wiki.osdev.org/ISO_9660#Date.2Ftime_format
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

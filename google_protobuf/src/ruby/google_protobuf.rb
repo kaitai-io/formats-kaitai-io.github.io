@@ -35,7 +35,7 @@ end
 #   required, which fields may be repeated or constitute a map, what
 #   restrictions are placed on fields usage in a single message, what
 #   are the fields' default values, etc, etc.
-# @see https://developers.google.com/protocol-buffers/docs/encoding Source
+# @see https://protobuf.dev/programming-guides/encoding/ Source
 class GoogleProtobuf < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

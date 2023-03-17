@@ -49,7 +49,7 @@ public:
     ~iso9660_t();
 
     /**
-     * \sa http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor Source
+     * \sa https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor Source
      */
 
     class vol_desc_primary_t : public kaitai::kstruct {
@@ -412,7 +412,7 @@ public:
     };
 
     /**
-     * \sa http://wiki.osdev.org/ISO_9660#The_Path_Table Source
+     * \sa https://wiki.osdev.org/ISO_9660#The_Path_Table Source
      */
 
     class path_table_le_t : public kaitai::kstruct {
@@ -440,7 +440,7 @@ public:
     };
 
     /**
-     * \sa http://wiki.osdev.org/ISO_9660#Date.2Ftime_format Source
+     * \sa https://wiki.osdev.org/ISO_9660#Date.2Ftime_format Source
      */
 
     class dec_datetime_t : public kaitai::kstruct {

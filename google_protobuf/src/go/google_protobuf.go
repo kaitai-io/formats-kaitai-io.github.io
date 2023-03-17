@@ -31,7 +31,7 @@ import "github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
  *   required, which fields may be repeated or constitute a map, what
  *   restrictions are placed on fields usage in a single message, what
  *   are the fields' default values, etc, etc.
- * @see <a href="https://developers.google.com/protocol-buffers/docs/encoding">Source</a>
+ * @see <a href="https://protobuf.dev/programming-guides/encoding/">Source</a>
  */
 type GoogleProtobuf struct {
 	Pairs []*GoogleProtobuf_Pair

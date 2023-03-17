@@ -109,7 +109,7 @@ for converting one subvolume into another.
 This spec can be used to disassemble the binary diff created by the `btrfs send` command.
 If you want a text representation you may want to checkout `btrfs receive --dump` instead.
 
-@see <a href="https://btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive">Source</a>
+@see <a href="https://archive.kernel.org/oldwiki/btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive.html">Source</a>
 ]##
 proc read*(_: typedesc[BtrfsStream], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BtrfsStream =
   template this: untyped = result

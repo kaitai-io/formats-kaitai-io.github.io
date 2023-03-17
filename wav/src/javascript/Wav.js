@@ -25,7 +25,7 @@
  * This Kaitai implementation was written by John Byrd of Gigantic Software
  * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
  * @see {@link http://soundfile.sapp.org/doc/WaveFormat/|Source}
- * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html|Source}
+ * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html|Source}
  * @see {@link https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php|Source}
  */
 
@@ -707,7 +707,7 @@ var Wav = (function() {
 
     /**
      * XMP data
-     * @see {@link https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf|Source}
+     * @see {@link https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf|Source}
      */
 
     return PmxChunkType;
@@ -963,7 +963,7 @@ var Wav = (function() {
   })();
 
   /**
-   * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/|Source}
+   * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/|Source}
    */
 
   var AfspChunkType = Wav.AfspChunkType = (function() {
@@ -991,8 +991,8 @@ var Wav = (function() {
      * An array of AFsp information records, in the `<field_name>: <value>`
      * format (e.g. "`program: CopyAudio`"). The list of existing information
      * record types are available in the `doc-ref` links.
-     * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html|Source}
-     * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html|Source}
+     * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html|Source}
+     * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html|Source}
      */
 
     return AfspChunkType;

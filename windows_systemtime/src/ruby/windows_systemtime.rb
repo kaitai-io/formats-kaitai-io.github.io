@@ -10,7 +10,7 @@ end
 ##
 # Microsoft Windows SYSTEMTIME structure, stores individual components
 # of date and time as individual fields, up to millisecond precision.
-# @see https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime Source
+# @see https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime Source
 class WindowsSystemtime < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

@@ -9,7 +9,7 @@ import (
 /**
  * This spec can be used to parse sudo time stamp files located in directories
  * such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.
- * @see <a href="https://www.sudo.ws/man/1.8.27/sudoers_timestamp.man.html">Source</a>
+ * @see <a href="https://www.sudo.ws/docs/man/1.8.27/sudoers_timestamp.man/">Source</a>
  */
 
 type SudoersTs_TsType int

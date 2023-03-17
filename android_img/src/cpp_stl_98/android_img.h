@@ -11,7 +11,7 @@
 #endif
 
 /**
- * \sa https://source.android.com/devices/bootloader/boot-image-header Source
+ * \sa https://source.android.com/docs/core/architecture/bootloader/boot-image-header Source
  */
 
 class android_img_t : public kaitai::kstruct {

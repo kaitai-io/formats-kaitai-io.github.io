@@ -7,7 +7,7 @@
  * out-of-band data. Originally it was developed to provide 802.11n
  * radio information, but can be used for other purposes as well.
  * 
- * Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=Http.cap
+ * Sample capture: https://wiki.wireshark.org/uploads/27707187aeb30df68e70c8fb9d614981/http.cap
  */
 
 namespace {

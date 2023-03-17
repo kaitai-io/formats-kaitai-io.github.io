@@ -19,7 +19,7 @@ namespace Kaitai
     /// various Windows versions.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
+    /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
     /// </remarks>
     public partial class WindowsShellItems : KaitaiStruct
     {
@@ -130,7 +130,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
+        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
         /// </remarks>
         public partial class RootFolderBody : KaitaiStruct
         {
@@ -161,7 +161,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
+        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
         /// </remarks>
         public partial class VolumeBody : KaitaiStruct
         {
@@ -189,7 +189,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
+        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
         /// </remarks>
         public partial class FileEntryBody : KaitaiStruct
         {

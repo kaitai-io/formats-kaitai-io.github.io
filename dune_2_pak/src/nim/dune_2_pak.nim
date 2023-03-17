@@ -34,7 +34,7 @@ proc body*(this: Dune2Pak_File): seq[byte]
 
 
 ##[
-@see <a href="http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)">Source</a>
+@see <a href="https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood)">Source</a>
 ]##
 proc read*(_: typedesc[Dune2Pak], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dune2Pak =
   template this: untyped = result

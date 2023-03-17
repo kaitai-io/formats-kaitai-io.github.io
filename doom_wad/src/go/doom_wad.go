@@ -150,7 +150,7 @@ func (this *DoomWad_Vertex) Read(io *kaitai.Stream, parent *DoomWad_Vertexes, ro
  * provides a very simple form of image compression, allowing
  * certain elements ("patches") to be reused / recombined on
  * different textures for more variety in the game.
- * @see <a href="http://doom.wikia.com/wiki/TEXTURE1">Source</a>
+ * @see <a href="https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2">Source</a>
  */
 type DoomWad_Texture12 struct {
 	NumTextures int32
@@ -436,7 +436,7 @@ func (this *DoomWad_Linedef) Read(io *kaitai.Stream, parent *DoomWad_Linedefs, r
 }
 
 /**
- * @see <a href="http://doom.wikia.com/wiki/PNAMES">Source</a>
+ * @see <a href="https://doom.fandom.com/wiki/PNAMES">Source</a>
  */
 type DoomWad_Pnames struct {
 	NumPatches uint32

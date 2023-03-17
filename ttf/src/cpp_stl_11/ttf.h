@@ -14,7 +14,7 @@
 /**
  * A TrueType font file contains data, in table format, that comprises
  * an outline font.
- * \sa https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc Source
+ * \sa https://web.archive.org/web/20160410081432/https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc Source
  */
 
 class ttf_t : public kaitai::kstruct {

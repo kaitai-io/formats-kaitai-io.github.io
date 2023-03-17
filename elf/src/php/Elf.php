@@ -3392,7 +3392,7 @@ namespace Elf {
         const SUNW_RTLDINF = 1610612750;
 
         /**
-         * Note: <https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter6-tbl-52>
+         * Note: <https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER6-TBL-52>
          * states that `DT_SUNW_FILTER` has the value `0x6000000e`, but this is
          * apparently only a human error - that would make the value collide with
          * the previous one (`DT_SUNW_RTLDINF`) and there is not even a single

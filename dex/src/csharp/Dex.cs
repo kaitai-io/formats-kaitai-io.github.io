@@ -15,7 +15,7 @@ namespace Kaitai
     /// fields, annotations, etc.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://source.android.com/devices/tech/dalvik/dex-format">Source</a>
+    /// Reference: <a href="https://source.android.com/docs/core/runtime/dex-format">Source</a>
     /// </remarks>
     public partial class Dex : KaitaiStruct
     {

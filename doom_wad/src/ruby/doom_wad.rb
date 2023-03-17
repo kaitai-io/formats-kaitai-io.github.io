@@ -56,7 +56,7 @@ class DoomWad < Kaitai::Struct::Struct
   # provides a very simple form of image compression, allowing
   # certain elements ("patches") to be reused / recombined on
   # different textures for more variety in the game.
-  # @see http://doom.wikia.com/wiki/TEXTURE1 Source
+  # @see https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2 Source
   class Texture12 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -188,7 +188,7 @@ class DoomWad < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://doom.wikia.com/wiki/PNAMES Source
+  # @see https://doom.fandom.com/wiki/PNAMES Source
   class Pnames < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

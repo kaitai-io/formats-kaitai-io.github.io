@@ -400,7 +400,7 @@ proc fromFile*(_: typedesc[Png_BkgdGreyscale], filename: string): Png_BkgdGreysc
 
 
 ##[
-@see <a href="https://www.w3.org/TR/PNG/#11cHRM">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
 ]##
 proc read*(_: typedesc[Png_ChrmChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_ChrmChunk =
   template this: untyped = result
@@ -424,7 +424,7 @@ proc fromFile*(_: typedesc[Png_ChrmChunk], filename: string): Png_ChrmChunk =
 
 
 ##[
-@see <a href="https://www.w3.org/TR/PNG/#11IHDR">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11IHDR">Source</a>
 ]##
 proc read*(_: typedesc[Png_IhdrChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png): Png_IhdrChunk =
   template this: untyped = result
@@ -454,7 +454,7 @@ proc fromFile*(_: typedesc[Png_IhdrChunk], filename: string): Png_IhdrChunk =
 
 
 ##[
-@see <a href="https://www.w3.org/TR/PNG/#11PLTE">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11PLTE">Source</a>
 ]##
 proc read*(_: typedesc[Png_PlteChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_PlteChunk =
   template this: untyped = result
@@ -476,7 +476,7 @@ proc fromFile*(_: typedesc[Png_PlteChunk], filename: string): Png_PlteChunk =
 
 
 ##[
-@see <a href="https://www.w3.org/TR/PNG/#11sRGB">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
 ]##
 proc read*(_: typedesc[Png_SrgbChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_SrgbChunk =
   template this: untyped = result
@@ -498,7 +498,7 @@ Compressed text chunk effectively allows to store key-value
 string pairs in PNG container, compressing "value" part (which
 can be quite lengthy) with zlib compression.
 
-@see <a href="https://www.w3.org/TR/PNG/#11zTXt">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
 ]##
 proc read*(_: typedesc[Png_CompressedTextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_CompressedTextChunk =
   template this: untyped = result
@@ -584,7 +584,7 @@ proc fromFile*(_: typedesc[Png_BkgdTruecolor], filename: string): Png_BkgdTrueco
 
 
 ##[
-@see <a href="https://www.w3.org/TR/PNG/#11gAMA">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11gAMA">Source</a>
 ]##
 proc read*(_: typedesc[Png_GamaChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_GamaChunk =
   template this: untyped = result
@@ -613,7 +613,7 @@ proc fromFile*(_: typedesc[Png_GamaChunk], filename: string): Png_GamaChunk =
 Background chunk stores default background color to display this
 image against. Contents depend on `color_type` of the image.
 
-@see <a href="https://www.w3.org/TR/PNG/#11bKGD">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11bKGD">Source</a>
 ]##
 proc read*(_: typedesc[Png_BkgdChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_BkgdChunk =
   template this: untyped = result
@@ -649,7 +649,7 @@ proc fromFile*(_: typedesc[Png_BkgdChunk], filename: string): Png_BkgdChunk =
 "Physical size" chunk stores data that allows to translate
 logical pixels into physical units (meters, etc) and vice-versa.
 
-@see <a href="https://www.w3.org/TR/PNG/#11pHYs">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
 ]##
 proc read*(_: typedesc[Png_PhysChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_PhysChunk =
   template this: untyped = result
@@ -770,7 +770,7 @@ PNG container. Both "key" (keyword) and "value" (text) parts are
 given in pre-defined subset of iso8859-1 without control
 characters.
 
-@see <a href="https://www.w3.org/TR/PNG/#11iTXt">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11iTXt">Source</a>
 ]##
 proc read*(_: typedesc[Png_InternationalTextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_InternationalTextChunk =
   template this: untyped = result
@@ -833,7 +833,7 @@ PNG container. Both "key" (keyword) and "value" (text) parts are
 given in pre-defined subset of iso8859-1 without control
 characters.
 
-@see <a href="https://www.w3.org/TR/PNG/#11tEXt">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11tEXt">Source</a>
 ]##
 proc read*(_: typedesc[Png_TextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_TextChunk =
   template this: untyped = result
@@ -888,7 +888,7 @@ proc fromFile*(_: typedesc[Png_AnimationControlChunk], filename: string): Png_An
 Time chunk stores time stamp of last modification of this image,
 up to 1 second precision in UTC timezone.
 
-@see <a href="https://www.w3.org/TR/PNG/#11tIME">Source</a>
+@see <a href="https://www.w3.org/TR/png/#11tIME">Source</a>
 ]##
 proc read*(_: typedesc[Png_TimeChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_TimeChunk =
   template this: untyped = result

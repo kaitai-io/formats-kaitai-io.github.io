@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 
 
 /**
- * @see <a href="http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)">Source</a>
+ * @see <a href="https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood)">Source</a>
  */
 public class Dune2Pak extends KaitaiStruct {
     public static Dune2Pak fromFile(String fileName) throws IOException {

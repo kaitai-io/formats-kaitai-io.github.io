@@ -11,7 +11,7 @@ import (
 /**
  * A TrueType font file contains data, in table format, that comprises
  * an outline font.
- * @see <a href="https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc">Source</a>
+ * @see <a href="https://web.archive.org/web/20160410081432/https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc">Source</a>
  */
 type Ttf struct {
 	OffsetTable *Ttf_OffsetTable

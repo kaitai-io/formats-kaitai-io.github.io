@@ -18,8 +18,8 @@ end
 # * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)
 # * Raptor: Call of the Shadows
 # @see http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip Source
-# @see http://doom.wikia.com/wiki/GENMIDI Source
-# @see http://www.shikadi.net/moddingwiki/OP2_Bank_Format Source
+# @see https://doom.fandom.com/wiki/GENMIDI Source
+# @see https://moddingwiki.shikadi.net/wiki/OP2_Bank_Format Source
 class GenmidiOp2 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

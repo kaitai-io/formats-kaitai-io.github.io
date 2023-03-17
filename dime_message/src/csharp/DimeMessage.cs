@@ -17,10 +17,10 @@ namespace Kaitai
     /// &amp;&amp; gunzip scanner_withoptions.dump.gz`
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://tools.ietf.org/html/draft-nielsen-dime-02">Source</a>
+    /// Reference: <a href="https://datatracker.ietf.org/doc/html/draft-nielsen-dime-02">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://docs.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime">Source</a>
+    /// Reference: <a href="https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="http://imrannazar.com/Parsing-the-DIME-Message-Format">Source</a>

@@ -235,7 +235,7 @@ end
 
 
 -- 
--- See also: Source (https://www.w3.org/TR/PNG/#11cHRM)
+-- See also: Source (https://www.w3.org/TR/png/#11cHRM)
 Png.ChrmChunk = class.class(KaitaiStruct)
 
 function Png.ChrmChunk:_init(io, parent, root)
@@ -254,7 +254,7 @@ end
 
 
 -- 
--- See also: Source (https://www.w3.org/TR/PNG/#11IHDR)
+-- See also: Source (https://www.w3.org/TR/png/#11IHDR)
 Png.IhdrChunk = class.class(KaitaiStruct)
 
 function Png.IhdrChunk:_init(io, parent, root)
@@ -276,7 +276,7 @@ end
 
 
 -- 
--- See also: Source (https://www.w3.org/TR/PNG/#11PLTE)
+-- See also: Source (https://www.w3.org/TR/png/#11PLTE)
 Png.PlteChunk = class.class(KaitaiStruct)
 
 function Png.PlteChunk:_init(io, parent, root)
@@ -297,7 +297,7 @@ end
 
 
 -- 
--- See also: Source (https://www.w3.org/TR/PNG/#11sRGB)
+-- See also: Source (https://www.w3.org/TR/png/#11sRGB)
 Png.SrgbChunk = class.class(KaitaiStruct)
 
 Png.SrgbChunk.Intent = enum.Enum {
@@ -323,7 +323,7 @@ end
 -- Compressed text chunk effectively allows to store key-value
 -- string pairs in PNG container, compressing "value" part (which
 -- can be quite lengthy) with zlib compression.
--- See also: Source (https://www.w3.org/TR/PNG/#11zTXt)
+-- See also: Source (https://www.w3.org/TR/png/#11zTXt)
 Png.CompressedTextChunk = class.class(KaitaiStruct)
 
 function Png.CompressedTextChunk:_init(io, parent, root)
@@ -389,7 +389,7 @@ end
 
 
 -- 
--- See also: Source (https://www.w3.org/TR/PNG/#11gAMA)
+-- See also: Source (https://www.w3.org/TR/png/#11gAMA)
 Png.GamaChunk = class.class(KaitaiStruct)
 
 function Png.GamaChunk:_init(io, parent, root)
@@ -417,7 +417,7 @@ end
 -- 
 -- Background chunk stores default background color to display this
 -- image against. Contents depend on `color_type` of the image.
--- See also: Source (https://www.w3.org/TR/PNG/#11bKGD)
+-- See also: Source (https://www.w3.org/TR/png/#11bKGD)
 Png.BkgdChunk = class.class(KaitaiStruct)
 
 function Png.BkgdChunk:_init(io, parent, root)
@@ -446,7 +446,7 @@ end
 -- 
 -- "Physical size" chunk stores data that allows to translate
 -- logical pixels into physical units (meters, etc) and vice-versa.
--- See also: Source (https://www.w3.org/TR/PNG/#11pHYs)
+-- See also: Source (https://www.w3.org/TR/png/#11pHYs)
 Png.PhysChunk = class.class(KaitaiStruct)
 
 function Png.PhysChunk:_init(io, parent, root)
@@ -546,7 +546,7 @@ end
 -- PNG container. Both "key" (keyword) and "value" (text) parts are
 -- given in pre-defined subset of iso8859-1 without control
 -- characters.
--- See also: Source (https://www.w3.org/TR/PNG/#11iTXt)
+-- See also: Source (https://www.w3.org/TR/png/#11iTXt)
 Png.InternationalTextChunk = class.class(KaitaiStruct)
 
 function Png.InternationalTextChunk:_init(io, parent, root)
@@ -587,7 +587,7 @@ end
 -- PNG container. Both "key" (keyword) and "value" (text) parts are
 -- given in pre-defined subset of iso8859-1 without control
 -- characters.
--- See also: Source (https://www.w3.org/TR/PNG/#11tEXt)
+-- See also: Source (https://www.w3.org/TR/png/#11tEXt)
 Png.TextChunk = class.class(KaitaiStruct)
 
 function Png.TextChunk:_init(io, parent, root)
@@ -629,7 +629,7 @@ end
 -- 
 -- Time chunk stores time stamp of last modification of this image,
 -- up to 1 second precision in UTC timezone.
--- See also: Source (https://www.w3.org/TR/PNG/#11tIME)
+-- See also: Source (https://www.w3.org/TR/png/#11tIME)
 Png.TimeChunk = class.class(KaitaiStruct)
 
 function Png.TimeChunk:_init(io, parent, root)

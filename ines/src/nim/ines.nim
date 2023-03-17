@@ -85,7 +85,7 @@ proc mapper*(this: Ines_Header): int
 
 
 ##[
-@see <a href="https://wiki.nesdev.com/w/index.php/INES">Source</a>
+@see <a href="https://www.nesdev.org/wiki/INES">Source</a>
 ]##
 proc read*(_: typedesc[Ines], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ines =
   template this: untyped = result
@@ -175,7 +175,7 @@ proc read*(_: typedesc[Ines_Header], io: KaitaiStream, root: KaitaiStruct, paren
 proc mapper(this: Ines_Header): int = 
 
   ##[
-  @see <a href="https://wiki.nesdev.com/w/index.php/Mapper">Source</a>
+  @see <a href="https://www.nesdev.org/wiki/Mapper">Source</a>
   ]##
   if this.mapperInstFlag:
     return this.mapperInst
@@ -189,7 +189,7 @@ proc fromFile*(_: typedesc[Ines_Header], filename: string): Ines_Header =
 
 
 ##[
-@see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_6">Source</a>
+@see <a href="https://www.nesdev.org/wiki/INES#Flags_6">Source</a>
 ]##
 proc read*(_: typedesc[Ines_Header_F6], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F6 =
   template this: untyped = result
@@ -235,7 +235,7 @@ proc fromFile*(_: typedesc[Ines_Header_F6], filename: string): Ines_Header_F6 =
 
 
 ##[
-@see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_7">Source</a>
+@see <a href="https://www.nesdev.org/wiki/INES#Flags_7">Source</a>
 ]##
 proc read*(_: typedesc[Ines_Header_F7], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F7 =
   template this: untyped = result
@@ -275,7 +275,7 @@ proc fromFile*(_: typedesc[Ines_Header_F7], filename: string): Ines_Header_F7 =
 
 
 ##[
-@see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_9">Source</a>
+@see <a href="https://www.nesdev.org/wiki/INES#Flags_9">Source</a>
 ]##
 proc read*(_: typedesc[Ines_Header_F9], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F9 =
   template this: untyped = result
@@ -299,7 +299,7 @@ proc fromFile*(_: typedesc[Ines_Header_F9], filename: string): Ines_Header_F9 =
 
 
 ##[
-@see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_10">Source</a>
+@see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
 ]##
 proc read*(_: typedesc[Ines_Header_F10], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F10 =
   template this: untyped = result
@@ -337,7 +337,7 @@ proc fromFile*(_: typedesc[Ines_Header_F10], filename: string): Ines_Header_F10 
 
 
 ##[
-@see <a href="http://wiki.nesdev.com/w/index.php/PC10_ROM-Images">Source</a>
+@see <a href="https://www.nesdev.org/wiki/PC10_ROM-Images">Source</a>
 ]##
 proc read*(_: typedesc[Ines_Playchoice10], io: KaitaiStream, root: KaitaiStruct, parent: Ines): Ines_Playchoice10 =
   template this: untyped = result

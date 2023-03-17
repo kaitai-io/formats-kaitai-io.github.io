@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * @see <a href="http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)">Source</a>
- * @see <a href="http://mrclick.zophar.net/TilEd/download/timgfx.txt">Source</a>
+ * @see <a href="https://mrclick.zophar.net/TilEd/download/timgfx.txt">Source</a>
  * @see <a href="https://www.romhacking.net/documents/31/">Source</a>
  */
 public class PsxTim extends KaitaiStruct {

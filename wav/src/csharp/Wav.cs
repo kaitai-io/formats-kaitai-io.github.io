@@ -25,7 +25,7 @@ namespace Kaitai
     /// Reference: <a href="http://soundfile.sapp.org/doc/WaveFormat/">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">Source</a>
+    /// Reference: <a href="https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php">Source</a>
@@ -504,7 +504,7 @@ namespace Kaitai
             /// XMP data
             /// </summary>
             /// <remarks>
-            /// Reference: <a href="https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf">Source</a>
+            /// Reference: <a href="https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf">Source</a>
             /// </remarks>
             public string Data { get { return _data; } }
             public Wav M_Root { get { return m_root; } }
@@ -942,7 +942,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
+        /// Reference: <a href="https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
         /// </remarks>
         public partial class AfspChunkType : KaitaiStruct
         {
@@ -985,10 +985,10 @@ namespace Kaitai
             /// record types are available in the `doc-ref` links.
             /// </summary>
             /// <remarks>
-            /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html">Source</a>
+            /// Reference: <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html">Source</a>
             /// </remarks>
             /// <remarks>
-            /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html">Source</a>
+            /// Reference: <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html">Source</a>
             /// </remarks>
             public List<string> InfoRecords { get { return _infoRecords; } }
             public Wav M_Root { get { return m_root; } }

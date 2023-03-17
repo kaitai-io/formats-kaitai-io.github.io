@@ -13,7 +13,7 @@ namespace Kaitai
     /// device. This metadata holds that mapping.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://source.android.com/devices/tech/ota/dynamic_partitions">Source</a>
+    /// Reference: <a href="https://source.android.com/docs/core/ota/dynamic_partitions">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://android.googlesource.com/platform/system/core/+/refs/tags/android-11.0.0_r8/fs_mgr/liblp/include/liblp/metadata_format.h">Source</a>

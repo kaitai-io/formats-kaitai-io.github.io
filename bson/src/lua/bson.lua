@@ -317,7 +317,7 @@ end
 
 
 -- 
--- https://docs.mongodb.com/manual/reference/method/ObjectId/.
+-- See also: Source (https://www.mongodb.com/docs/manual/reference/method/ObjectId/)
 Bson.ObjectId = class.class(KaitaiStruct)
 
 function Bson.ObjectId:_init(io, parent, root)

@@ -18,7 +18,7 @@ class SomeIpSd(KaitaiStruct):
     (Scalable service-Oriented MiddlewarE over IP - Service Discovery).
     
     .. seealso::
-       Source - https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+       Source - https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

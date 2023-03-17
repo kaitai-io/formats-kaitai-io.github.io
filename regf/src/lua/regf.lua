@@ -25,7 +25,7 @@ local enum = require("enum")
 -- 
 -- Note that one typically can't access files directly on a mounted
 -- filesystem with a running Windows OS.
--- See also: Source (https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc)
+-- See also: Source (https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc)
 Regf = class.class(KaitaiStruct)
 
 function Regf:_init(io, parent, root)

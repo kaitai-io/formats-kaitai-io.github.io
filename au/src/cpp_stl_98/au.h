@@ -17,8 +17,8 @@
  * 
  * * <https://github.com/python/cpython/tree/b8a7daf077da/Lib/test/sndhdrdata>
  * * <ftp://ftp-ccrma.stanford.edu/pub/Lisp/sf.tar.gz>
- * * <http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
- * \sa http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html Source
+ * * <https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
+ * \sa https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html Source
  * \sa http://soundfile.sapp.org/doc/NextFormat/ Source
  * \sa http://soundfile.sapp.org/doc/NextFormat/soundstruct.h Source
  * \sa https://github.com/andreiw/polaris/blob/deb47cb/usr/src/head/audio/au.h#L87-L112 Source

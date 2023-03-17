@@ -14,7 +14,7 @@ import java.util.HashMap;
 /**
  * Linux Unified Key Setup (LUKS) is a format specification for storing disk
  * encryption parameters and up to 8 user keys (which can unlock the master key).
- * @see <a href="https://gitlab.com/cryptsetup/cryptsetup/wikis/LUKS-standard/on-disk-format.pdf">Source</a>
+ * @see <a href="https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf">Source</a>
  */
 public class Luks extends KaitaiStruct {
     public static Luks fromFile(String fileName) throws IOException {

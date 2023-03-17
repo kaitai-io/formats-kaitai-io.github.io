@@ -8,7 +8,7 @@ require("kaitaistruct")
 -- 
 -- Microsoft Windows SYSTEMTIME structure, stores individual components
 -- of date and time as individual fields, up to millisecond precision.
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
 WindowsSystemtime = class.class(KaitaiStruct)
 
 function WindowsSystemtime:_init(io, parent, root)

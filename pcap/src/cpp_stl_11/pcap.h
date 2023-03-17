@@ -20,7 +20,7 @@ class ethernet_frame_t;
  * network traffic grabbed by network sniffers. It is typically
  * produced by tools like [tcpdump](https://www.tcpdump.org/) or
  * [Wireshark](https://www.wireshark.org/).
- * \sa http://wiki.wireshark.org/Development/LibpcapFileFormat Source
+ * \sa https://wiki.wireshark.org/Development/LibpcapFileFormat Source
  */
 
 class pcap_t : public kaitai::kstruct {

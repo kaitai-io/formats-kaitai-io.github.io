@@ -21,7 +21,7 @@ end
 # 
 # There are a lot of versions of SWF (~36), format is somewhat
 # documented by Adobe.
-# @see https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf Source
+# @see https://open-flash.github.io/mirrors/swf-spec-19.pdf Source
 class Swf < Kaitai::Struct::Struct
 
   COMPRESSIONS = {

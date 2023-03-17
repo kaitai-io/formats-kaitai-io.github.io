@@ -8,7 +8,7 @@
  * 
  * * <https://github.com/python/cpython/tree/b8a7daf077da/Lib/test/sndhdrdata>
  * * <ftp://ftp-ccrma.stanford.edu/pub/Lisp/sf.tar.gz>
- * * <http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
+ * * <https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
  */
 
 namespace {

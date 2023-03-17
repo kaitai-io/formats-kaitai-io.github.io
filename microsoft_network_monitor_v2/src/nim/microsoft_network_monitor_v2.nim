@@ -3,8 +3,8 @@ import options
 import /network/ethernet_frame
 import /windows/windows_systemtime
 
-import "ethernet_frame"
 import "windows_systemtime"
+import "ethernet_frame"
 type
   MicrosoftNetworkMonitorV2* = ref object of KaitaiStruct
     `signature`*: seq[byte]
@@ -168,7 +168,7 @@ statistics, etc.
 There are at least 2 different versions of the format: v1 and
 v2. Netmon v3 seems to use the same file format as v1.
 
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values">Source</a>
 ]##
 proc read*(_: typedesc[MicrosoftNetworkMonitorV2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftNetworkMonitorV2 =
   template this: untyped = result
@@ -314,7 +314,7 @@ A container for actually captured network data. Allow to
 timestamp individual frames and designates how much data from
 the original packet was actually written into the file.
 
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
 ]##
 proc read*(_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame =
   template this: untyped = result

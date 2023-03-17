@@ -10,7 +10,7 @@ namespace Kaitai
     /// such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.sudo.ws/man/1.8.27/sudoers_timestamp.man.html">Source</a>
+    /// Reference: <a href="https://www.sudo.ws/docs/man/1.8.27/sudoers_timestamp.man/">Source</a>
     /// </remarks>
     public partial class SudoersTs : KaitaiStruct
     {

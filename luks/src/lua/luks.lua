@@ -10,7 +10,7 @@ local enum = require("enum")
 -- 
 -- Linux Unified Key Setup (LUKS) is a format specification for storing disk
 -- encryption parameters and up to 8 user keys (which can unlock the master key).
--- See also: Source (https://gitlab.com/cryptsetup/cryptsetup/wikis/LUKS-standard/on-disk-format.pdf)
+-- See also: Source (https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf)
 Luks = class.class(KaitaiStruct)
 
 function Luks:_init(io, parent, root)

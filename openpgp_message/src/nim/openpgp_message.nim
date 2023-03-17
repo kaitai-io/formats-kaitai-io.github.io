@@ -343,7 +343,7 @@ proc len*(this: OpenpgpMessage_LenSubpacket): int
 
 ##[
 The OpenPGP Message Format is a format to store encryption and signature keys for emails.
-@see <a href="https://tools.ietf.org/html/rfc4880">Source</a>
+@see <a href="https://www.rfc-editor.org/rfc/rfc4880">Source</a>
 ]##
 proc read*(_: typedesc[OpenpgpMessage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): OpenpgpMessage =
   template this: untyped = result

@@ -17,7 +17,7 @@ import (
  * top-level parser attempts to autodetect and handle both of them. If
  * any problems arise, one can use `file_explicit` and `file_implicit`
  * subtypes to force parsing in particular transfer syntax.
- * @see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
+ * @see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
  */
 
 type Dicom_Tags int
@@ -4122,7 +4122,7 @@ func (this *Dicom_TFileHeader) Read(io *kaitai.Stream, parent *Dicom, root *Dico
 }
 
 /**
- * @see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+ * @see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
  */
 type Dicom_TDataElementExplicit struct {
 	TagGroup uint16
@@ -4293,7 +4293,7 @@ func (this *Dicom_TDataElementExplicit) Tag() (v Dicom_Tags, err error) {
 }
 
 /**
- * @see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+ * @see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
  */
 type Dicom_TDataElementImplicit struct {
 	TagGroup uint16

@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * 
  * The format is mostly undocumented, and is known to vary between
  * various Windows versions.
- * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
+ * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
  */
 public class WindowsShellItems extends KaitaiStruct {
     public static WindowsShellItems fromFile(String fileName) throws IOException {
@@ -145,7 +145,7 @@ public class WindowsShellItems extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
+     * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
      */
     public static class RootFolderBody extends KaitaiStruct {
         public static RootFolderBody fromFile(String fileName) throws IOException {
@@ -181,7 +181,7 @@ public class WindowsShellItems extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
+     * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
      */
     public static class VolumeBody extends KaitaiStruct {
         public static VolumeBody fromFile(String fileName) throws IOException {
@@ -214,7 +214,7 @@ public class WindowsShellItems extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
+     * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
      */
     public static class FileEntryBody extends KaitaiStruct {
         public static FileEntryBody fromFile(String fileName) throws IOException {

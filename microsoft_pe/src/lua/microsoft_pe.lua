@@ -10,7 +10,7 @@ local str_decode = require("string_decode")
 local utils = require("utils")
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/debug/pe-format)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/debug/pe-format)
 MicrosoftPe = class.class(KaitaiStruct)
 
 MicrosoftPe.PeFormat = enum.Enum {
@@ -45,7 +45,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only)
 MicrosoftPe.CertificateEntry = class.class(KaitaiStruct)
 
 MicrosoftPe.CertificateEntry.CertificateRevision = enum.Enum {

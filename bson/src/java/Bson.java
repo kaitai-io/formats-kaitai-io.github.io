@@ -611,7 +611,7 @@ public class Bson extends KaitaiStruct {
     }
 
     /**
-     * https://docs.mongodb.com/manual/reference/method/ObjectId/
+     * @see <a href="https://www.mongodb.com/docs/manual/reference/method/ObjectId/">Source</a>
      */
     public static class ObjectId extends KaitaiStruct {
         public static ObjectId fromFile(String fileName) throws IOException {

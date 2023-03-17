@@ -20,8 +20,8 @@
  * * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)
  * * Raptor: Call of the Shadows
  * @see {@link http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip|Source}
- * @see {@link http://doom.wikia.com/wiki/GENMIDI|Source}
- * @see {@link http://www.shikadi.net/moddingwiki/OP2_Bank_Format|Source}
+ * @see {@link https://doom.fandom.com/wiki/GENMIDI|Source}
+ * @see {@link https://moddingwiki.shikadi.net/wiki/OP2_Bank_Format|Source}
  */
 
 var GenmidiOp2 = (function() {

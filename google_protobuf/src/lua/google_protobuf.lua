@@ -35,7 +35,7 @@ require("vlq_base128_le")
 --   required, which fields may be repeated or constitute a map, what
 --   restrictions are placed on fields usage in a single message, what
 --   are the fields' default values, etc, etc.
--- See also: Source (https://developers.google.com/protocol-buffers/docs/encoding)
+-- See also: Source (https://protobuf.dev/programming-guides/encoding/)
 GoogleProtobuf = class.class(KaitaiStruct)
 
 function GoogleProtobuf:_init(io, parent, root)

@@ -522,9 +522,9 @@ namespace Kaitai
             public Bson.Element M_Parent { get { return m_parent; } }
         }
 
-        /// <summary>
-        /// https://docs.mongodb.com/manual/reference/method/ObjectId/
-        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.mongodb.com/docs/manual/reference/method/ObjectId/">Source</a>
+        /// </remarks>
         public partial class ObjectId : KaitaiStruct
         {
             public static ObjectId FromFile(string fileName)

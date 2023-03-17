@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="https://wiki.nesdev.com/w/index.php/INES">Source</a>
+    /// Reference: <a href="https://www.nesdev.org/wiki/INES">Source</a>
     /// </remarks>
     public partial class Ines : KaitaiStruct
     {
@@ -82,7 +82,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_6">Source</a>
+            /// Reference: <a href="https://www.nesdev.org/wiki/INES#Flags_6">Source</a>
             /// </remarks>
             public partial class F6 : KaitaiStruct
             {
@@ -148,7 +148,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_7">Source</a>
+            /// Reference: <a href="https://www.nesdev.org/wiki/INES#Flags_7">Source</a>
             /// </remarks>
             public partial class F7 : KaitaiStruct
             {
@@ -201,7 +201,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_9">Source</a>
+            /// Reference: <a href="https://www.nesdev.org/wiki/INES#Flags_9">Source</a>
             /// </remarks>
             public partial class F9 : KaitaiStruct
             {
@@ -242,7 +242,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_10">Source</a>
+            /// Reference: <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
             /// </remarks>
             public partial class F10 : KaitaiStruct
             {
@@ -304,7 +304,7 @@ namespace Kaitai
             private int _mapper;
 
             /// <remarks>
-            /// Reference: <a href="https://wiki.nesdev.com/w/index.php/Mapper">Source</a>
+            /// Reference: <a href="https://www.nesdev.org/wiki/Mapper">Source</a>
             /// </remarks>
             public int Mapper
             {
@@ -366,7 +366,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://wiki.nesdev.com/w/index.php/PC10_ROM-Images">Source</a>
+        /// Reference: <a href="https://www.nesdev.org/wiki/PC10_ROM-Images">Source</a>
         /// </remarks>
         public partial class Playchoice10 : KaitaiStruct
         {

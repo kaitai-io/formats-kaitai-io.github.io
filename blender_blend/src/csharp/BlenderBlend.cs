@@ -213,7 +213,7 @@ namespace Kaitai
         ///   structure, referring to types and names by index)
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA">Source</a>
+        /// Reference: <a href="https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA">Source</a>
         /// </remarks>
         public partial class Dna1Body : KaitaiStruct
         {

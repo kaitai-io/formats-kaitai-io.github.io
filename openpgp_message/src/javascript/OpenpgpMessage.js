@@ -11,7 +11,7 @@
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * The OpenPGP Message Format is a format to store encryption and signature keys for emails.
- * @see {@link https://tools.ietf.org/html/rfc4880|Source}
+ * @see {@link https://www.rfc-editor.org/rfc/rfc4880|Source}
  */
 
 var OpenpgpMessage = (function() {

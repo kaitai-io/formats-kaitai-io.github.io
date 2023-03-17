@@ -8,8 +8,8 @@ from enum import Enum
 if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
-import ethernet_frame
 import windows_systemtime
+import ethernet_frame
 class MicrosoftNetworkMonitorV2(KaitaiStruct):
     """Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
     network packet sniffing and analysis tool. It can save captured
@@ -21,7 +21,7 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
     v2. Netmon v3 seems to use the same file format as v1.
     
     .. seealso::
-       Source - https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values
+       Source - https://learn.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values
     """
 
     class Linktype(Enum):
@@ -205,7 +205,7 @@ class MicrosoftNetworkMonitorV2(KaitaiStruct):
         the original packet was actually written into the file.
         
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/netmon2/frame
+           Source - https://learn.microsoft.com/en-us/windows/win32/netmon2/frame
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

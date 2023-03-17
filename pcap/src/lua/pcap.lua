@@ -14,7 +14,7 @@ require("ethernet_frame")
 -- network traffic grabbed by network sniffers. It is typically
 -- produced by tools like [tcpdump](https://www.tcpdump.org/) or
 -- [Wireshark](https://www.wireshark.org/).
--- See also: Source (http://wiki.wireshark.org/Development/LibpcapFileFormat)
+-- See also: Source (https://wiki.wireshark.org/Development/LibpcapFileFormat)
 Pcap = class.class(KaitaiStruct)
 
 Pcap.Linktype = enum.Enum {

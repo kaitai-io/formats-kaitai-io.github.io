@@ -92,7 +92,7 @@ proc minor*(this: AndroidImg_OsVersion): int
 
 
 ##[
-@see <a href="https://source.android.com/devices/bootloader/boot-image-header">Source</a>
+@see <a href="https://source.android.com/docs/core/architecture/bootloader/boot-image-header">Source</a>
 ]##
 proc read*(_: typedesc[AndroidImg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidImg =
   template this: untyped = result

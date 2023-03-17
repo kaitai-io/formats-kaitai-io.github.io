@@ -183,7 +183,7 @@ proc fromFile*(_: typedesc[Asn1Der_BodyUtf8string], filename: string): Asn1Der_B
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
 ]##
 proc read*(_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyObjectId =
   template this: untyped = result

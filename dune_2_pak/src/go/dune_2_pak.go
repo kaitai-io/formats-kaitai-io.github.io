@@ -8,7 +8,7 @@ import (
 
 
 /**
- * @see <a href="http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)">Source</a>
+ * @see <a href="https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood)">Source</a>
  */
 type Dune2Pak struct {
 	Dir *Dune2Pak_Files

@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.009_000;
-use EthernetFrame;
 use WindowsSystemtime;
+use EthernetFrame;
 
 ########################################################################
 package MicrosoftNetworkMonitorV2;

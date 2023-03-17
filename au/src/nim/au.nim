@@ -60,9 +60,9 @@ Sample files:
 
 * <https://github.com/python/cpython/tree/b8a7daf077da/Lib/test/sndhdrdata>
 * <ftp://ftp-ccrma.stanford.edu/pub/Lisp/sf.tar.gz>
-* <http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
+* <https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
 
-@see <a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html">Source</a>
+@see <a href="https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html">Source</a>
 @see <a href="http://soundfile.sapp.org/doc/NextFormat/">Source</a>
 @see <a href="http://soundfile.sapp.org/doc/NextFormat/soundstruct.h">Source</a>
 @see <a href="https://github.com/andreiw/polaris/blob/deb47cb/usr/src/head/audio/au.h#L87-L112">Source</a>

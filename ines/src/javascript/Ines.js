@@ -10,7 +10,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link https://wiki.nesdev.com/w/index.php/INES|Source}
+ * @see {@link https://www.nesdev.org/wiki/INES|Source}
  */
 
 var Ines = (function() {
@@ -73,7 +73,7 @@ var Ines = (function() {
     }
 
     /**
-     * @see {@link https://wiki.nesdev.com/w/index.php/INES#Flags_6|Source}
+     * @see {@link https://www.nesdev.org/wiki/INES#Flags_6|Source}
      */
 
     var F6 = Header.F6 = (function() {
@@ -124,7 +124,7 @@ var Ines = (function() {
     })();
 
     /**
-     * @see {@link https://wiki.nesdev.com/w/index.php/INES#Flags_7|Source}
+     * @see {@link https://www.nesdev.org/wiki/INES#Flags_7|Source}
      */
 
     var F7 = Header.F7 = (function() {
@@ -162,7 +162,7 @@ var Ines = (function() {
     })();
 
     /**
-     * @see {@link https://wiki.nesdev.com/w/index.php/INES#Flags_9|Source}
+     * @see {@link https://www.nesdev.org/wiki/INES#Flags_9|Source}
      */
 
     var F9 = Header.F9 = (function() {
@@ -194,7 +194,7 @@ var Ines = (function() {
     })();
 
     /**
-     * @see {@link https://wiki.nesdev.com/w/index.php/INES#Flags_10|Source}
+     * @see {@link https://www.nesdev.org/wiki/INES#Flags_10|Source}
      */
 
     var F10 = Header.F10 = (function() {
@@ -241,7 +241,7 @@ var Ines = (function() {
     })();
 
     /**
-     * @see {@link https://wiki.nesdev.com/w/index.php/Mapper|Source}
+     * @see {@link https://www.nesdev.org/wiki/Mapper|Source}
      */
     Object.defineProperty(Header.prototype, 'mapper', {
       get: function() {
@@ -272,7 +272,7 @@ var Ines = (function() {
   })();
 
   /**
-   * @see {@link http://wiki.nesdev.com/w/index.php/PC10_ROM-Images|Source}
+   * @see {@link https://www.nesdev.org/wiki/PC10_ROM-Images|Source}
    */
 
   var Playchoice10 = Ines.Playchoice10 = (function() {

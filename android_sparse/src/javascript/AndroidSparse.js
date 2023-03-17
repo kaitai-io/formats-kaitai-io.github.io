@@ -20,7 +20,7 @@
  * 
  * Note: this is not the same as the Android sparse data image format.
  * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_format.h|Source}
- * @see {@link https://source.android.com/devices/bootloader/images#sparse-image-format|Source}
+ * @see {@link https://web.archive.org/web/20220322054458/https://source.android.com/devices/bootloader/images#sparse-image-format|Source}
  */
 
 var AndroidSparse = (function() {

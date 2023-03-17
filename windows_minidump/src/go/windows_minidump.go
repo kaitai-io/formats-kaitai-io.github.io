@@ -17,7 +17,7 @@ import (
  * 
  * The file itself is a container, which contains a number of typed
  * "streams", which contain some data according to its type attribute.
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header">Source</a>
  */
 
 type WindowsMinidump_StreamTypes int
@@ -178,7 +178,7 @@ func (this *WindowsMinidump) Streams() (v []*WindowsMinidump_Dir, err error) {
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
  */
 type WindowsMinidump_ThreadList struct {
 	NumThreads uint32
@@ -215,7 +215,7 @@ func (this *WindowsMinidump_ThreadList) Read(io *kaitai.Stream, parent *WindowsM
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
  */
 type WindowsMinidump_LocationDescriptor struct {
 	LenData uint32
@@ -279,7 +279,7 @@ func (this *WindowsMinidump_LocationDescriptor) Data() (v []byte, err error) {
 /**
  * Specific string serialization scheme used in MiniDump format is
  * actually a simple 32-bit length-prefixed UTF-16 string.
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string">Source</a>
  */
 type WindowsMinidump_MinidumpString struct {
 	LenStr uint32
@@ -319,7 +319,7 @@ func (this *WindowsMinidump_MinidumpString) Read(io *kaitai.Stream, parent *Wind
 /**
  * "System info" stream provides basic information about the
  * hardware and operating system which produces this dump.
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info">Source</a>
  */
 
 type WindowsMinidump_SystemInfo_CpuArchs int
@@ -452,7 +452,7 @@ func (this *WindowsMinidump_SystemInfo) ServicePack() (v *WindowsMinidump_Minidu
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
  */
 type WindowsMinidump_ExceptionRecord struct {
 	Code uint32
@@ -531,7 +531,7 @@ func (this *WindowsMinidump_ExceptionRecord) Read(io *kaitai.Stream, parent *Win
  */
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
  */
 type WindowsMinidump_MiscInfo struct {
 	LenInfo uint32
@@ -618,7 +618,7 @@ func (this *WindowsMinidump_MiscInfo) Read(io *kaitai.Stream, parent *WindowsMin
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
  */
 type WindowsMinidump_Dir struct {
 	StreamType WindowsMinidump_StreamTypes
@@ -759,11 +759,11 @@ func (this *WindowsMinidump_Dir) Data() (v interface{}, err error) {
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
  */
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread">Source</a>
  */
 type WindowsMinidump_Thread struct {
 	ThreadId uint32
@@ -832,7 +832,7 @@ func (this *WindowsMinidump_Thread) Read(io *kaitai.Stream, parent *WindowsMinid
  */
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
  */
 type WindowsMinidump_MemoryList struct {
 	NumMemRanges uint32
@@ -869,7 +869,7 @@ func (this *WindowsMinidump_MemoryList) Read(io *kaitai.Stream, parent *WindowsM
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
  */
 type WindowsMinidump_MemoryDescriptor struct {
 	AddrMemoryRange uint64
@@ -903,7 +903,7 @@ func (this *WindowsMinidump_MemoryDescriptor) Read(io *kaitai.Stream, parent int
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
  */
 type WindowsMinidump_ExceptionStream struct {
 	ThreadId uint32

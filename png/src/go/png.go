@@ -493,7 +493,7 @@ func (this *Png_BkgdGreyscale) Read(io *kaitai.Stream, parent *Png_BkgdChunk, ro
 }
 
 /**
- * @see <a href="https://www.w3.org/TR/PNG/#11cHRM">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
  */
 type Png_ChrmChunk struct {
 	WhitePoint *Png_Point
@@ -542,7 +542,7 @@ func (this *Png_ChrmChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 }
 
 /**
- * @see <a href="https://www.w3.org/TR/PNG/#11IHDR">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11IHDR">Source</a>
  */
 type Png_IhdrChunk struct {
 	Width uint32
@@ -605,7 +605,7 @@ func (this *Png_IhdrChunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err 
 }
 
 /**
- * @see <a href="https://www.w3.org/TR/PNG/#11PLTE">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11PLTE">Source</a>
  */
 type Png_PlteChunk struct {
 	Entries []*Png_Rgb
@@ -642,7 +642,7 @@ func (this *Png_PlteChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 }
 
 /**
- * @see <a href="https://www.w3.org/TR/PNG/#11sRGB">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
  */
 
 type Png_SrgbChunk_Intent int
@@ -680,7 +680,7 @@ func (this *Png_SrgbChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
  * Compressed text chunk effectively allows to store key-value
  * string pairs in PNG container, compressing "value" part (which
  * can be quite lengthy) with zlib compression.
- * @see <a href="https://www.w3.org/TR/PNG/#11zTXt">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
  */
 type Png_CompressedTextChunk struct {
 	Keyword string
@@ -817,7 +817,7 @@ func (this *Png_BkgdTruecolor) Read(io *kaitai.Stream, parent *Png_BkgdChunk, ro
 }
 
 /**
- * @see <a href="https://www.w3.org/TR/PNG/#11gAMA">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11gAMA">Source</a>
  */
 type Png_GamaChunk struct {
 	GammaInt uint32
@@ -856,7 +856,7 @@ func (this *Png_GamaChunk) GammaRatio() (v float64, err error) {
 /**
  * Background chunk stores default background color to display this
  * image against. Contents depend on `color_type` of the image.
- * @see <a href="https://www.w3.org/TR/PNG/#11bKGD">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11bKGD">Source</a>
  */
 type Png_BkgdChunk struct {
 	Bkgd interface{}
@@ -917,7 +917,7 @@ func (this *Png_BkgdChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 /**
  * "Physical size" chunk stores data that allows to translate
  * logical pixels into physical units (meters, etc) and vice-versa.
- * @see <a href="https://www.w3.org/TR/PNG/#11pHYs">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
  */
 type Png_PhysChunk struct {
 	PixelsPerUnitX uint32
@@ -1119,7 +1119,7 @@ func (this *Png_FrameControlChunk) Delay() (v float64, err error) {
  * PNG container. Both "key" (keyword) and "value" (text) parts are
  * given in pre-defined subset of iso8859-1 without control
  * characters.
- * @see <a href="https://www.w3.org/TR/PNG/#11iTXt">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11iTXt">Source</a>
  */
 type Png_InternationalTextChunk struct {
 	Keyword string
@@ -1207,7 +1207,7 @@ func (this *Png_InternationalTextChunk) Read(io *kaitai.Stream, parent *Png_Chun
  * PNG container. Both "key" (keyword) and "value" (text) parts are
  * given in pre-defined subset of iso8859-1 without control
  * characters.
- * @see <a href="https://www.w3.org/TR/PNG/#11tEXt">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11tEXt">Source</a>
  */
 type Png_TextChunk struct {
 	Keyword string
@@ -1296,7 +1296,7 @@ func (this *Png_AnimationControlChunk) Read(io *kaitai.Stream, parent *Png_Chunk
 /**
  * Time chunk stores time stamp of last modification of this image,
  * up to 1 second precision in UTC timezone.
- * @see <a href="https://www.w3.org/TR/PNG/#11tIME">Source</a>
+ * @see <a href="https://www.w3.org/TR/png/#11tIME">Source</a>
  */
 type Png_TimeChunk struct {
 	Year uint16

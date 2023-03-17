@@ -43,7 +43,7 @@ require("bytes_with_io")
 -- even current macOS systems still use resource forks for certain purposes,
 -- such as custom file icons.
 -- See also: Inside Macintosh, More Macintosh Toolbox, Resource Manager, Resource Manager Reference, Resource File Format (https://developer.apple.com/library/archive/documentation/mac/pdf/MoreMacintoshToolbox.pdf#page=151)
--- See also: Inside Macintosh, Volume I, The Resource Manager, Format of a Resource File (http://www.pagetable.com/?p=50)
+-- See also: Inside Macintosh, Volume I, The Resource Manager, Format of a Resource File (https://www.pagetable.com/?p=50)
 -- See also: Source (https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format)
 -- See also: Source (https://github.com/dgelessus/mac_file_format_docs/blob/master/README.md#resource-forks)
 ResourceFork = class.class(KaitaiStruct)

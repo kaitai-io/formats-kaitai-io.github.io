@@ -8,14 +8,14 @@ namespace Kaitai
     /// <summary>
     /// A structured binary format native to Minecraft for saving game data and transferring
     /// it over the network (in multiplayer), such as player data
-    /// ([`&lt;player&gt;.dat`](https://minecraft.gamepedia.com/Player.dat_format); contains
+    /// ([`&lt;player&gt;.dat`](https://minecraft.fandom.com/wiki/Player.dat_format); contains
     /// e.g. player's inventory and location), saved worlds
     /// ([`level.dat`](
-    ///   https://minecraft.gamepedia.com/Java_Edition_level_format#level.dat_format
-    /// ) and [Chunk format](https://minecraft.gamepedia.com/Chunk_format#NBT_structure)),
+    ///   https://minecraft.fandom.com/wiki/Java_Edition_level_format#level.dat_format
+    /// ) and [Chunk format](https://minecraft.fandom.com/wiki/Chunk_format#NBT_structure)),
     /// list of saved multiplayer servers
-    /// ([`servers.dat`](https://minecraft.gamepedia.com/Servers.dat_format)) and so on -
-    /// see &lt;https://minecraft.gamepedia.com/NBT_format#Uses&gt;.
+    /// ([`servers.dat`](https://minecraft.fandom.com/wiki/Servers.dat_format)) and so on -
+    /// see &lt;https://minecraft.fandom.com/wiki/NBT_format#Uses&gt;.
     /// 
     /// The entire file should be _gzip_-compressed (in accordance with the original
     /// specification [NBT.txt](
@@ -82,7 +82,7 @@ namespace Kaitai
     /// Reference: <a href="https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://minecraft.gamepedia.com/NBT_format">Source</a>
+    /// Reference: <a href="https://minecraft.fandom.com/wiki/NBT_format">Source</a>
     /// </remarks>
     public partial class MinecraftNbt : KaitaiStruct
     {

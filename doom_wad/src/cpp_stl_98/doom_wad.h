@@ -94,7 +94,7 @@ public:
      * provides a very simple form of image compression, allowing
      * certain elements ("patches") to be reused / recombined on
      * different textures for more variety in the game.
-     * \sa http://doom.wikia.com/wiki/TEXTURE1 Source
+     * \sa https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2 Source
      */
 
     class texture12_t : public kaitai::kstruct {
@@ -290,7 +290,7 @@ public:
     };
 
     /**
-     * \sa http://doom.wikia.com/wiki/PNAMES Source
+     * \sa https://doom.fandom.com/wiki/PNAMES Source
      */
 
     class pnames_t : public kaitai::kstruct {

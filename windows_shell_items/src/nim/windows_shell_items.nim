@@ -57,7 +57,7 @@ structures. Some formats embed them, namely:
 The format is mostly undocumented, and is known to vary between
 various Windows versions.
 
-@see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
+@see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
 ]##
 proc read*(_: typedesc[WindowsShellItems], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsShellItems =
   template this: untyped = result
@@ -136,7 +136,7 @@ proc fromFile*(_: typedesc[WindowsShellItems_ShellItem], filename: string): Wind
 
 
 ##[
-@see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
+@see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
 ]##
 proc read*(_: typedesc[WindowsShellItems_RootFolderBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsShellItems_ShellItemData): WindowsShellItems_RootFolderBody =
   template this: untyped = result
@@ -156,7 +156,7 @@ proc fromFile*(_: typedesc[WindowsShellItems_RootFolderBody], filename: string):
 
 
 ##[
-@see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
+@see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
 ]##
 proc read*(_: typedesc[WindowsShellItems_VolumeBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsShellItems_ShellItemData): WindowsShellItems_VolumeBody =
   template this: untyped = result
@@ -174,7 +174,7 @@ proc fromFile*(_: typedesc[WindowsShellItems_VolumeBody], filename: string): Win
 
 
 ##[
-@see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
+@see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
 ]##
 proc read*(_: typedesc[WindowsShellItems_FileEntryBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsShellItems_ShellItemData): WindowsShellItems_FileEntryBody =
   template this: untyped = result

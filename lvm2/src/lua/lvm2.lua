@@ -19,7 +19,7 @@ local enum = require("enum")
 -- sudo lvcreate --name lv_test1 vg_test
 -- sudo losetup -d /dev/loop1
 -- ```
--- See also: Source (https://github.com/libyal/libvslvm/blob/master/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc)
+-- See also: Source (https://github.com/libyal/libvslvm/blob/main/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc)
 Lvm2 = class.class(KaitaiStruct)
 
 function Lvm2:_init(io, parent, root)

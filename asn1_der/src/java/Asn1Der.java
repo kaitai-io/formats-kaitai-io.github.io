@@ -207,7 +207,7 @@ public class Asn1Der extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
      */
     public static class BodyObjectId extends KaitaiStruct {
         public static BodyObjectId fromFile(String fileName) throws IOException {

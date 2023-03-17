@@ -21,7 +21,7 @@ class Dicom(KaitaiStruct):
     subtypes to force parsing in particular transfer syntax.
     
     .. seealso::
-       Source - http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7
+       Source - https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7
     """
 
     class Tags(Enum):
@@ -4080,7 +4080,7 @@ class Dicom(KaitaiStruct):
     class TDataElementExplicit(KaitaiStruct):
         """
         .. seealso::
-           Source - http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
+           Source - https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -4160,7 +4160,7 @@ class Dicom(KaitaiStruct):
     class TDataElementImplicit(KaitaiStruct):
         """
         .. seealso::
-           Source - http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
+           Source - https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

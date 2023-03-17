@@ -19,8 +19,8 @@
  * Sample file: `curl -LO
  * https://github.com/kaitai-io/kaitai_struct_formats/files/5894723/scanner_withoptions.dump.gz
  * && gunzip scanner_withoptions.dump.gz`
- * @see {@link https://tools.ietf.org/html/draft-nielsen-dime-02|Source}
- * @see {@link https://docs.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime|Source}
+ * @see {@link https://datatracker.ietf.org/doc/html/draft-nielsen-dime-02|Source}
+ * @see {@link https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime|Source}
  * @see {@link http://imrannazar.com/Parsing-the-DIME-Message-Format|Source}
  */
 

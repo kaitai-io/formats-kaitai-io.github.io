@@ -275,7 +275,7 @@ All Windows headers at once (including mentioned BITMAPV2INFOHEADER and BITMAPV3
 
 ## Specs
  * [Bitmap Storage (Windows Dev Center)](
-     https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+     https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
    )
     * BITMAPFILEHEADER
     * BITMAPINFOHEADER
@@ -322,7 +322,7 @@ proc fromFile*(_: typedesc[Bmp], filename: string): Bmp =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
 ]##
 proc read*(_: typedesc[Bmp_CieXyz], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_CieXyz =
   template this: untyped = result
@@ -367,7 +367,7 @@ proc fromFile*(_: typedesc[Bmp_RgbRecord], filename: string): Bmp_RgbRecord =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
 ]##
 proc read*(_: typedesc[Bmp_BitmapV5Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV5Extension =
   template this: untyped = result
@@ -401,7 +401,7 @@ proc hasProfile(this: Bmp_BitmapV5Extension): bool =
 proc profileData(this: Bmp_BitmapV5Extension): KaitaiStruct = 
 
   ##[
-  @see <a href="https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
+  @see <a href="https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
   ]##
   if this.profileDataInstFlag:
     return this.profileDataInst
@@ -449,7 +449,7 @@ proc fromFile*(_: typedesc[Bmp_ColorMask], filename: string): Bmp_ColorMask =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
 ]##
 proc read*(_: typedesc[Bmp_BitmapV4Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV4Extension =
   template this: untyped = result
@@ -479,7 +479,7 @@ proc fromFile*(_: typedesc[Bmp_BitmapV4Extension], filename: string): Bmp_Bitmap
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
 ]##
 proc read*(_: typedesc[Bmp_BitmapInfoExtension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapInfoExtension =
   template this: untyped = result
@@ -559,7 +559,7 @@ proc fromFile*(_: typedesc[Bmp_Bitmap], filename: string): Bmp_Bitmap =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader">Source</a>
 @see <a href="https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1">Source</a>
 ]##
 proc read*(_: typedesc[Bmp_BitmapHeader], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapInfo, lenHeader: any): Bmp_BitmapHeader =
@@ -819,7 +819,7 @@ proc fromFile*(_: typedesc[Bmp_ColorTable], filename: string): Bmp_ColorTable =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
 ]##
 proc read*(_: typedesc[Bmp_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_FileHeader =
   template this: untyped = result
@@ -853,7 +853,7 @@ proc fromFile*(_: typedesc[Bmp_FileHeader], filename: string): Bmp_FileHeader =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
 ]##
 proc read*(_: typedesc[Bmp_BitmapInfo], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_BitmapInfo =
   template this: untyped = result

@@ -35,7 +35,7 @@ namespace Kaitai
     ///   are the fields' default values, etc, etc.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://developers.google.com/protocol-buffers/docs/encoding">Source</a>
+    /// Reference: <a href="https://protobuf.dev/programming-guides/encoding/">Source</a>
     /// </remarks>
     public partial class GoogleProtobuf : KaitaiStruct
     {

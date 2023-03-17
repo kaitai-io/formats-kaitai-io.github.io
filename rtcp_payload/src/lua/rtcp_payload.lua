@@ -10,7 +10,7 @@ local utils = require("utils")
 
 -- 
 -- RTCP is the Real-Time Control Protocol.
--- See also: Source (https://tools.ietf.org/html/rfc3550)
+-- See also: Source (https://www.rfc-editor.org/rfc/rfc3550)
 RtcpPayload = class.class(KaitaiStruct)
 
 RtcpPayload.PayloadType = enum.Enum {

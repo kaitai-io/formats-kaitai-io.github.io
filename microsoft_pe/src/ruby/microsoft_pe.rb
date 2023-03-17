@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see https://docs.microsoft.com/en-us/windows/win32/debug/pe-format Source
+# @see https://learn.microsoft.com/en-us/windows/win32/debug/pe-format Source
 class MicrosoftPe < Kaitai::Struct::Struct
 
   PE_FORMAT = {
@@ -28,7 +28,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only Source
   class CertificateEntry < Kaitai::Struct::Struct
 
     CERTIFICATE_REVISION = {

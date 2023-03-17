@@ -93,7 +93,7 @@ Alternatively, one can export any system event log as distinct .evt
 file using relevant option in Event Viewer application.
 
 A Windows application can submit an entry into these logs using
-[ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
+[ReportEventA](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
 function of Windows API.
 
 Internally, EVT files consist of a fixed-size header and event
@@ -101,7 +101,7 @@ records. There are several usage scenarios (non-wrapping vs wrapping
 log files) which result in slightly different organization of
 records.
 
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format">Source</a>
 ]##
 proc read*(_: typedesc[WindowsEvtLog], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsEvtLog =
   template this: untyped = result
@@ -125,7 +125,7 @@ proc fromFile*(_: typedesc[WindowsEvtLog], filename: string): WindowsEvtLog =
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)">Source</a>
 ]##
 proc read*(_: typedesc[WindowsEvtLog_Header], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Header =
   template this: untyped = result
@@ -235,7 +235,7 @@ proc fromFile*(_: typedesc[WindowsEvtLog_Header_Flags], filename: string): Windo
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
 ]##
 proc read*(_: typedesc[WindowsEvtLog_Record], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Record =
   template this: untyped = result
@@ -296,7 +296,7 @@ proc fromFile*(_: typedesc[WindowsEvtLog_Record], filename: string): WindowsEvtL
 
 
 ##[
-@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
 ]##
 proc read*(_: typedesc[WindowsEvtLog_RecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_RecordBody =
   template this: untyped = result
@@ -335,7 +335,7 @@ source of events / event type.
 
   ##[
   Type of event.
-  @see <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-types">Source</a>
+  @see <a href="https://learn.microsoft.com/en-us/windows/win32/eventlog/event-types">Source</a>
   ]##
   let eventTypeExpr = WindowsEvtLog_RecordBody_EventTypes(this.io.readU2le())
   this.eventType = eventTypeExpr
@@ -347,7 +347,7 @@ source of events / event type.
   this.numStrings = numStringsExpr
 
   ##[
-  @see <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-categories">Source</a>
+  @see <a href="https://learn.microsoft.com/en-us/windows/win32/eventlog/event-categories">Source</a>
   ]##
   let eventCategoryExpr = this.io.readU2le()
   this.eventCategory = eventCategoryExpr
@@ -395,7 +395,7 @@ proc fromFile*(_: typedesc[WindowsEvtLog_RecordBody], filename: string): Windows
 
 
 ##[
-@see <a href="http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record">Source</a>
+@see <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
 ]##
 proc read*(_: typedesc[WindowsEvtLog_CursorRecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_CursorRecordBody =
   template this: untyped = result

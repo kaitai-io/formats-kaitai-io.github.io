@@ -18,7 +18,7 @@ end
 # sudo lvcreate --name lv_test1 vg_test
 # sudo losetup -d /dev/loop1
 # ```
-# @see https://github.com/libyal/libvslvm/blob/master/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc Source
+# @see https://github.com/libyal/libvslvm/blob/main/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc Source
 class Lvm2 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

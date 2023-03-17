@@ -12,7 +12,7 @@
 /**
  * Microsoft Windows SYSTEMTIME structure, stores individual components
  * of date and time as individual fields, up to millisecond precision.
- * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime|Source}
+ * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime|Source}
  */
 
 var WindowsSystemtime = (function() {

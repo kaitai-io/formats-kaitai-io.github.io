@@ -15,7 +15,7 @@ end
 # This format is loosely similar to Java .class file format and
 # generally holds the similar set of data: i.e. classes, methods,
 # fields, annotations, etc.
-# @see https://source.android.com/devices/tech/dalvik/dex-format Source
+# @see https://source.android.com/docs/core/runtime/dex-format Source
 class Dex < Kaitai::Struct::Struct
 
   CLASS_ACCESS_FLAGS = {

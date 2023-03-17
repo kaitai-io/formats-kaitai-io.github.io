@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 /**
- * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
+ * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
  */
 public class QuicktimeMov extends KaitaiStruct {
     public static QuicktimeMov fromFile(String fileName) throws IOException {
@@ -334,7 +334,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
+     * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
      */
     public static class MvhdBody extends KaitaiStruct {
         public static MvhdBody fromFile(String fileName) throws IOException {
@@ -476,7 +476,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+     * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
      */
     public static class FtypBody extends KaitaiStruct {
         public static FtypBody fromFile(String fileName) throws IOException {
@@ -722,7 +722,7 @@ public class QuicktimeMov extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
+     * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
      */
     public static class TkhdBody extends KaitaiStruct {
         public static TkhdBody fromFile(String fileName) throws IOException {

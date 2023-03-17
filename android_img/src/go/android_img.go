@@ -8,7 +8,7 @@ import (
 
 
 /**
- * @see <a href="https://source.android.com/devices/bootloader/boot-image-header">Source</a>
+ * @see <a href="https://source.android.com/docs/core/architecture/bootloader/boot-image-header">Source</a>
  */
 type AndroidImg struct {
 	Magic []byte

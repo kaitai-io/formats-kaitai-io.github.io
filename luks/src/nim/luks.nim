@@ -46,7 +46,7 @@ proc keyMaterial*(this: Luks_PartitionHeader_KeySlot): seq[byte]
 Linux Unified Key Setup (LUKS) is a format specification for storing disk
 encryption parameters and up to 8 user keys (which can unlock the master key).
 
-@see <a href="https://gitlab.com/cryptsetup/cryptsetup/wikis/LUKS-standard/on-disk-format.pdf">Source</a>
+@see <a href="https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf">Source</a>
 ]##
 proc read*(_: typedesc[Luks], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Luks =
   template this: untyped = result

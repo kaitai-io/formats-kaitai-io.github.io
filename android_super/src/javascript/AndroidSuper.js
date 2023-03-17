@@ -15,7 +15,7 @@
  * Dynamic Partitions do more or less the same thing that LVM does on Linux,
  * allowing Android to map ranges of non-contiguous extents to a single logical
  * device. This metadata holds that mapping.
- * @see {@link https://source.android.com/devices/tech/ota/dynamic_partitions|Source}
+ * @see {@link https://source.android.com/docs/core/ota/dynamic_partitions|Source}
  * @see {@link https://android.googlesource.com/platform/system/core/+/refs/tags/android-11.0.0_r8/fs_mgr/liblp/include/liblp/metadata_format.h|Source}
  */
 

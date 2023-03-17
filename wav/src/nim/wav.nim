@@ -483,7 +483,7 @@ This Kaitai implementation was written by John Byrd of Gigantic Software
 (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
 
 @see <a href="http://soundfile.sapp.org/doc/WaveFormat/">Source</a>
-@see <a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">Source</a>
+@see <a href="https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">Source</a>
 @see <a href="https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php">Source</a>
 ]##
 proc read*(_: typedesc[Wav], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav =
@@ -652,7 +652,7 @@ proc read*(_: typedesc[Wav_PmxChunkType], io: KaitaiStream, root: KaitaiStruct, 
 
   ##[
   XMP data
-  @see <a href="https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf">Source</a>
+  @see <a href="https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf">Source</a>
   ]##
   let dataExpr = encode(this.io.readBytesFull(), "UTF-8")
   this.data = dataExpr
@@ -927,7 +927,7 @@ proc fromFile*(_: typedesc[Wav_ChannelMaskType], filename: string): Wav_ChannelM
 
 
 ##[
-@see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
+@see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
 ]##
 proc read*(_: typedesc[Wav_AfspChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_AfspChunkType =
   template this: untyped = result
@@ -945,8 +945,8 @@ proc read*(_: typedesc[Wav_AfspChunkType], io: KaitaiStream, root: KaitaiStruct,
 format (e.g. "`program: CopyAudio`"). The list of existing information
 record types are available in the `doc-ref` links.
 
-  @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html">Source</a>
-  @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html">Source</a>
+  @see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html">Source</a>
+  @see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html">Source</a>
   ]##
   block:
     var i: int

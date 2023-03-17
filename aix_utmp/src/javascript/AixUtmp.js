@@ -11,7 +11,7 @@
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
- * @see {@link https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.files/utmp.h.htm|Source}
+ * @see {@link https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file|Source}
  */
 
 var AixUtmp = (function() {

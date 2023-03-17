@@ -13,7 +13,7 @@ import (
  * for ZX Spectrum. Contents of this file can be viewed as a very
  * simple linear filesystem, storing named files with some basic
  * metainformation prepended as a header.
- * @see <a href="https://faqwiki.zxnet.co.uk/wiki/TAP_format">Source</a>
+ * @see <a href="https://sinclair.wiki.zxnet.co.uk/wiki/TAP_format">Source</a>
  */
 
 type ZxSpectrumTap_FlagEnum int

@@ -12,7 +12,7 @@ require("some_ip_sd")
 -- SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
 -- communication protocol which supports remoteprocedure calls, event notifications
 -- and the underlying serialization/wire format.
--- See also: Source (https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf)
+-- See also: Source (https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf)
 SomeIp = class.class(KaitaiStruct)
 
 function SomeIp:_init(io, parent, root)

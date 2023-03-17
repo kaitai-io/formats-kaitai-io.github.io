@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 
 
 /**
- * @see <a href="https://source.android.com/devices/bootloader/boot-image-header">Source</a>
+ * @see <a href="https://source.android.com/docs/core/architecture/bootloader/boot-image-header">Source</a>
  */
 public class AndroidImg extends KaitaiStruct {
     public static AndroidImg fromFile(String fileName) throws IOException {

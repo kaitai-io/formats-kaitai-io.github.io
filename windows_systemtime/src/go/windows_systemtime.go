@@ -6,7 +6,7 @@ import "github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
 /**
  * Microsoft Windows SYSTEMTIME structure, stores individual components
  * of date and time as individual fields, up to millisecond precision.
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime">Source</a>
  */
 type WindowsSystemtime struct {
 	Year uint16

@@ -54,7 +54,7 @@ end
 
 
 -- 
--- See also: Source (http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor)
+-- See also: Source (https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor)
 Iso9660.VolDescPrimary = class.class(KaitaiStruct)
 
 function Iso9660.VolDescPrimary:_init(io, parent, root)
@@ -277,7 +277,7 @@ end
 
 
 -- 
--- See also: Source (http://wiki.osdev.org/ISO_9660#The_Path_Table)
+-- See also: Source (https://wiki.osdev.org/ISO_9660#The_Path_Table)
 Iso9660.PathTableLe = class.class(KaitaiStruct)
 
 function Iso9660.PathTableLe:_init(io, parent, root)
@@ -298,7 +298,7 @@ end
 
 
 -- 
--- See also: Source (http://wiki.osdev.org/ISO_9660#Date.2Ftime_format)
+-- See also: Source (https://wiki.osdev.org/ISO_9660#Date.2Ftime_format)
 Iso9660.DecDatetime = class.class(KaitaiStruct)
 
 function Iso9660.DecDatetime:_init(io, parent, root)

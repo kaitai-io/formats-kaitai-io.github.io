@@ -267,7 +267,7 @@ func (this *Asn1Der_BodyUtf8string) Read(io *kaitai.Stream, parent *Asn1Der, roo
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
  */
 type Asn1Der_BodyObjectId struct {
 	FirstAndSecond uint8

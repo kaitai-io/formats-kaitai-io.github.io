@@ -62,7 +62,7 @@ local utils = require("utils")
 -- 
 -- ## Specs
 --  * [Bitmap Storage (Windows Dev Center)](
---      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+--      https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
 --    )
 --     * BITMAPFILEHEADER
 --     * BITMAPINFOHEADER
@@ -152,7 +152,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz)
 Bmp.CieXyz = class.class(KaitaiStruct)
 
 function Bmp.CieXyz:_init(io, parent, root)
@@ -190,7 +190,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header)
 Bmp.BitmapV5Extension = class.class(KaitaiStruct)
 
 function Bmp.BitmapV5Extension:_init(io, parent, root)
@@ -218,7 +218,7 @@ function Bmp.BitmapV5Extension.property.has_profile:get()
 end
 
 -- 
--- See also: "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)." (https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0)
+-- See also: "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)." (https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0)
 Bmp.BitmapV5Extension.property.profile_data = {}
 function Bmp.BitmapV5Extension.property.profile_data:get()
   if self._m_profile_data ~= nil then
@@ -264,7 +264,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header)
 Bmp.BitmapV4Extension = class.class(KaitaiStruct)
 
 function Bmp.BitmapV4Extension:_init(io, parent, root)
@@ -286,7 +286,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85))
+-- See also: Source (https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85))
 Bmp.BitmapInfoExtension = class.class(KaitaiStruct)
 
 function Bmp.BitmapInfoExtension:_init(io, parent, root)
@@ -357,7 +357,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader)
 -- See also: Source (https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1)
 Bmp.BitmapHeader = class.class(KaitaiStruct)
 
@@ -603,7 +603,7 @@ end
 -- it reads as many colors as it can until EOS is reached (and the image data begin).
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader)
 Bmp.FileHeader = class.class(KaitaiStruct)
 
 function Bmp.FileHeader:_init(io, parent, root)
@@ -630,7 +630,7 @@ end
 -- Offset to actual raw pixel data of the image.
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 Bmp.BitmapInfo = class.class(KaitaiStruct)
 
 function Bmp.BitmapInfo:_init(io, parent, root)

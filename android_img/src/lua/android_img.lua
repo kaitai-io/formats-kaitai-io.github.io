@@ -8,7 +8,7 @@ local str_decode = require("string_decode")
 local utils = require("utils")
 
 -- 
--- See also: Source (https://source.android.com/devices/bootloader/boot-image-header)
+-- See also: Source (https://source.android.com/docs/core/architecture/bootloader/boot-image-header)
 AndroidImg = class.class(KaitaiStruct)
 
 function AndroidImg:_init(io, parent, root)

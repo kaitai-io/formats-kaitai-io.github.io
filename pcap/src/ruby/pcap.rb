@@ -12,7 +12,7 @@ end
 # network traffic grabbed by network sniffers. It is typically
 # produced by tools like [tcpdump](https://www.tcpdump.org/) or
 # [Wireshark](https://www.wireshark.org/).
-# @see http://wiki.wireshark.org/Development/LibpcapFileFormat Source
+# @see https://wiki.wireshark.org/Development/LibpcapFileFormat Source
 class Pcap < Kaitai::Struct::Struct
 
   LINKTYPE = {

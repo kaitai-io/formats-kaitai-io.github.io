@@ -91,7 +91,7 @@ namespace Kaitai
         /// different textures for more variety in the game.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="http://doom.wikia.com/wiki/TEXTURE1">Source</a>
+        /// Reference: <a href="https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2">Source</a>
         /// </remarks>
         public partial class Texture12 : KaitaiStruct
         {
@@ -319,7 +319,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://doom.wikia.com/wiki/PNAMES">Source</a>
+        /// Reference: <a href="https://doom.fandom.com/wiki/PNAMES">Source</a>
         /// </remarks>
         public partial class Pnames : KaitaiStruct
         {

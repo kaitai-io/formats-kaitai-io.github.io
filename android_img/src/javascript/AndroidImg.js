@@ -10,7 +10,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link https://source.android.com/devices/bootloader/boot-image-header|Source}
+ * @see {@link https://source.android.com/docs/core/architecture/bootloader/boot-image-header|Source}
  */
 
 var AndroidImg = (function() {

@@ -19,7 +19,7 @@ class Elf(KaitaiStruct):
     
     
     .. seealso::
-       Source - https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html
+       Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html
     """
 
     class SymbolVisibility(Enum):
@@ -747,7 +747,7 @@ class Elf(KaitaiStruct):
         class DynamicSectionEntry(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html
             
             
             .. seealso::
@@ -1062,7 +1062,7 @@ class Elf(KaitaiStruct):
         class RelocationSection(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/relocation-sections.html
             
             
             .. seealso::
@@ -1241,7 +1241,7 @@ class Elf(KaitaiStruct):
         class DynsymSectionEntry(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html
             
             
             .. seealso::
@@ -1379,7 +1379,7 @@ class Elf(KaitaiStruct):
         class NoteSectionEntry(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html
             
             
             .. seealso::
@@ -1975,7 +1975,7 @@ class Elf(KaitaiStruct):
         
         
         .. seealso::
-           Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5
+           Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5
         """
         def __init__(self, value, _io, _parent=None, _root=None):
             self._io = _io

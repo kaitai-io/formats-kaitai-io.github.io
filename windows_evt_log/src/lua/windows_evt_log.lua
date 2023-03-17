@@ -22,14 +22,14 @@ local enum = require("enum")
 -- file using relevant option in Event Viewer application.
 -- 
 -- A Windows application can submit an entry into these logs using
--- [ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
+-- [ReportEventA](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
 -- function of Windows API.
 -- 
 -- Internally, EVT files consist of a fixed-size header and event
 -- records. There are several usage scenarios (non-wrapping vs wrapping
 -- log files) which result in slightly different organization of
 -- records.
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format)
 WindowsEvtLog = class.class(KaitaiStruct)
 
 function WindowsEvtLog:_init(io, parent, root)
@@ -51,7 +51,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85))
+-- See also: Source (https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85))
 WindowsEvtLog.Header = class.class(KaitaiStruct)
 
 function WindowsEvtLog.Header:_init(io, parent, root)
@@ -123,7 +123,7 @@ end
 -- wasn't properly closed.
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord)
 WindowsEvtLog.Record = class.class(KaitaiStruct)
 
 function WindowsEvtLog.Record:_init(io, parent, root)
@@ -165,7 +165,7 @@ end
 -- Size of whole record again.
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord)
 WindowsEvtLog.RecordBody = class.class(KaitaiStruct)
 
 WindowsEvtLog.RecordBody.EventTypes = enum.Enum {
@@ -236,16 +236,16 @@ end
 -- source of events / event type.
 -- 
 -- Type of event.
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/eventlog/event-types)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/eventlog/event-types)
 -- 
 -- Number of strings present in the log.
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/eventlog/event-categories)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/eventlog/event-categories)
 -- 
 -- Offset of strings present in the log.
 
 -- 
--- See also: Source (http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record)
+-- See also: Source (https://forensics.wiki/windows_event_log_(evt)/#cursor-record)
 WindowsEvtLog.CursorRecordBody = class.class(KaitaiStruct)
 
 function WindowsEvtLog.CursorRecordBody:_init(io, parent, root)

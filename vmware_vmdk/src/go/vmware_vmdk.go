@@ -8,7 +8,7 @@ import (
 
 
 /**
- * @see <a href="https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header">Source</a>
+ * @see <a href="https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header">Source</a>
  */
 
 type VmwareVmdk_CompressionMethods int
@@ -267,7 +267,7 @@ func (this *VmwareVmdk) GrainSecondary() (v []byte, err error) {
  */
 
 /**
- * @see <a href="https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags">Source</a>
+ * @see <a href="https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags">Source</a>
  */
 type VmwareVmdk_HeaderFlags struct {
 	Reserved1 uint64

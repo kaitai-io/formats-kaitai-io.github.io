@@ -162,7 +162,7 @@ var Asn1Der = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier|Source}
    */
 
   var BodyObjectId = Asn1Der.BodyObjectId = (function() {

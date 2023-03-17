@@ -11,7 +11,7 @@ end
 # SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
 # communication protocol which supports remoteprocedure calls, event notifications
 # and the underlying serialization/wire format.
-# @see https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf Source
+# @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf Source
 class SomeIp < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

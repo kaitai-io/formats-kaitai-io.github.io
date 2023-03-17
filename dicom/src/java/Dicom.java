@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
  * top-level parser attempts to autodetect and handle both of them. If
  * any problems arise, one can use `file_explicit` and `file_implicit`
  * subtypes to force parsing in particular transfer syntax.
- * @see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
+ * @see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
  */
 public class Dicom extends KaitaiStruct {
     public static Dicom fromFile(String fileName) throws IOException {
@@ -4127,7 +4127,7 @@ public class Dicom extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+     * @see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
      */
     public static class TDataElementExplicit extends KaitaiStruct {
         public static TDataElementExplicit fromFile(String fileName) throws IOException {
@@ -4246,7 +4246,7 @@ public class Dicom extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+     * @see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
      */
     public static class TDataElementImplicit extends KaitaiStruct {
         public static TDataElementImplicit fromFile(String fileName) throws IOException {

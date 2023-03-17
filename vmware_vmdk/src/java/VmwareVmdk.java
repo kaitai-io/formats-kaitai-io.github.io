@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 
 /**
- * @see <a href="https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header">Source</a>
+ * @see <a href="https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header">Source</a>
  */
 public class VmwareVmdk extends KaitaiStruct {
     public static VmwareVmdk fromFile(String fileName) throws IOException {
@@ -67,7 +67,7 @@ public class VmwareVmdk extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags">Source</a>
+     * @see <a href="https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags">Source</a>
      */
     public static class HeaderFlags extends KaitaiStruct {
         public static HeaderFlags fromFile(String fileName) throws IOException {

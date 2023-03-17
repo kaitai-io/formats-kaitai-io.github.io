@@ -11,7 +11,7 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
 class QuicktimeMov(KaitaiStruct):
     """
     .. seealso::
-       Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF
+       Source - https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF
     """
 
     class AtomType(Enum):
@@ -301,7 +301,7 @@ class QuicktimeMov(KaitaiStruct):
     class MvhdBody(KaitaiStruct):
         """
         .. seealso::
-           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG
+           Source - https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -332,7 +332,7 @@ class QuicktimeMov(KaitaiStruct):
     class FtypBody(KaitaiStruct):
         """
         .. seealso::
-           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF
+           Source - https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -450,7 +450,7 @@ class QuicktimeMov(KaitaiStruct):
     class TkhdBody(KaitaiStruct):
         """
         .. seealso::
-           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550
+           Source - https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

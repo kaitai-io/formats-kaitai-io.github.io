@@ -48,8 +48,8 @@ Major users of DMX sound library include:
 * Raptor: Call of the Shadows
 
 @see <a href="http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip">Source</a>
-@see <a href="http://doom.wikia.com/wiki/GENMIDI">Source</a>
-@see <a href="http://www.shikadi.net/moddingwiki/OP2_Bank_Format">Source</a>
+@see <a href="https://doom.fandom.com/wiki/GENMIDI">Source</a>
+@see <a href="https://moddingwiki.shikadi.net/wiki/OP2_Bank_Format">Source</a>
 ]##
 proc read*(_: typedesc[GenmidiOp2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GenmidiOp2 =
   template this: untyped = result

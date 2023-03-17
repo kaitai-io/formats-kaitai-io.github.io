@@ -306,7 +306,7 @@ class Bson < Kaitai::Struct::Struct
   end
 
   ##
-  # https://docs.mongodb.com/manual/reference/method/ObjectId/
+  # @see https://www.mongodb.com/docs/manual/reference/method/ObjectId/ Source
   class ObjectId < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

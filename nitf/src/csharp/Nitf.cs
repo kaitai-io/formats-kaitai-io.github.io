@@ -16,7 +16,7 @@ namespace Kaitai
     /// &gt; defined by the Executive Order 12333, and other United States Government departments and agencies.&quot;
     /// 
     /// This implementation is set to version format (`file_version`) of 02.10 and `standard_type` of `BF01`.
-    /// It was implemented by [River Loop Security](https://riverloopsecurity.com).
+    /// It was implemented by [River Loop Security](https://www.riverloopsecurity.com/).
     /// </summary>
     /// <remarks>
     /// Reference: <a href="https://web.archive.org/web/20181105050336/https://www.gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf">Source</a>

@@ -186,7 +186,7 @@ proc fromFile*(_: typedesc[Iso9660], filename: string): Iso9660 =
 
 
 ##[
-@see <a href="http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
+@see <a href="https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
 ]##
 proc read*(_: typedesc[Iso9660_VolDescPrimary], io: KaitaiStream, root: KaitaiStruct, parent: Iso9660_VolDesc): Iso9660_VolDescPrimary =
   template this: untyped = result
@@ -440,7 +440,7 @@ proc fromFile*(_: typedesc[Iso9660_U2bi], filename: string): Iso9660_U2bi =
 
 
 ##[
-@see <a href="http://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
+@see <a href="https://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
 ]##
 proc read*(_: typedesc[Iso9660_PathTableLe], io: KaitaiStream, root: KaitaiStruct, parent: Iso9660_VolDescPrimary): Iso9660_PathTableLe =
   template this: untyped = result
@@ -462,7 +462,7 @@ proc fromFile*(_: typedesc[Iso9660_PathTableLe], filename: string): Iso9660_Path
 
 
 ##[
-@see <a href="http://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
+@see <a href="https://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
 ]##
 proc read*(_: typedesc[Iso9660_DecDatetime], io: KaitaiStream, root: KaitaiStruct, parent: Iso9660_VolDescPrimary): Iso9660_DecDatetime =
   template this: untyped = result

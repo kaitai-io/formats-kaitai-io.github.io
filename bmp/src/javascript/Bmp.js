@@ -62,7 +62,7 @@
  * 
  * ## Specs
  *  * [Bitmap Storage (Windows Dev Center)](
- *      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+ *      https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
  *    )
  *     * BITMAPFILEHEADER
  *     * BITMAPINFOHEADER
@@ -190,7 +190,7 @@ var Bmp = (function() {
   }
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz|Source}
    */
 
   var CieXyz = Bmp.CieXyz = (function() {
@@ -232,7 +232,7 @@ var Bmp = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header|Source}
    */
 
   var BitmapV5Extension = Bmp.BitmapV5Extension = (function() {
@@ -259,7 +259,7 @@ var Bmp = (function() {
     });
 
     /**
-     * @see {@link https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0|"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."}
+     * @see {@link https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0|"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."}
      */
     Object.defineProperty(BitmapV5Extension.prototype, 'profileData', {
       get: function() {
@@ -312,7 +312,7 @@ var Bmp = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header|Source}
    */
 
   var BitmapV4Extension = Bmp.BitmapV4Extension = (function() {
@@ -337,7 +337,7 @@ var Bmp = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)|Source}
+   * @see {@link https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)|Source}
    */
 
   var BitmapInfoExtension = Bmp.BitmapInfoExtension = (function() {
@@ -415,7 +415,7 @@ var Bmp = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader|Source}
    * @see {@link https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1|Source}
    */
 
@@ -673,7 +673,7 @@ var Bmp = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader|Source}
    */
 
   var FileHeader = Bmp.FileHeader = (function() {
@@ -707,7 +707,7 @@ var Bmp = (function() {
   })();
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo|Source}
    */
 
   var BitmapInfo = Bmp.BitmapInfo = (function() {

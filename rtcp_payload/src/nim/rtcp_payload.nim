@@ -178,7 +178,7 @@ proc s*(this: RtcpPayload_PacketStatusChunk): int
 
 ##[
 RTCP is the Real-Time Control Protocol
-@see <a href="https://tools.ietf.org/html/rfc3550">Source</a>
+@see <a href="https://www.rfc-editor.org/rfc/rfc3550">Source</a>
 ]##
 proc read*(_: typedesc[RtcpPayload], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RtcpPayload =
   template this: untyped = result

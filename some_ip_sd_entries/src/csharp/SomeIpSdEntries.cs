@@ -10,7 +10,7 @@ namespace Kaitai
     /// Publish/-Subscribe handling.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+    /// Reference: <a href="https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
     /// -">section 4.1.2.3  Entry Format</a>
     /// </remarks>
     public partial class SomeIpSdEntries : KaitaiStruct

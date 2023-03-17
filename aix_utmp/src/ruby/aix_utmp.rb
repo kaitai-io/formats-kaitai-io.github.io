@@ -9,7 +9,7 @@ end
 
 ##
 # This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
-# @see https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.files/utmp.h.htm Source
+# @see https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file Source
 class AixUtmp < Kaitai::Struct::Struct
 
   ENTRY_TYPE = {

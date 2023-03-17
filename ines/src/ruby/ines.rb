@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see https://wiki.nesdev.com/w/index.php/INES Source
+# @see https://www.nesdev.org/wiki/INES Source
 class Ines < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -62,7 +62,7 @@ class Ines < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://wiki.nesdev.com/w/index.php/INES#Flags_6 Source
+    # @see https://www.nesdev.org/wiki/INES#Flags_6 Source
     class F6 < Kaitai::Struct::Struct
 
       MIRRORING = {
@@ -106,7 +106,7 @@ class Ines < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://wiki.nesdev.com/w/index.php/INES#Flags_7 Source
+    # @see https://www.nesdev.org/wiki/INES#Flags_7 Source
     class F7 < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
@@ -139,7 +139,7 @@ class Ines < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://wiki.nesdev.com/w/index.php/INES#Flags_9 Source
+    # @see https://www.nesdev.org/wiki/INES#Flags_9 Source
     class F9 < Kaitai::Struct::Struct
 
       TV_SYSTEM = {
@@ -165,7 +165,7 @@ class Ines < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://wiki.nesdev.com/w/index.php/INES#Flags_10 Source
+    # @see https://www.nesdev.org/wiki/INES#Flags_10 Source
     class F10 < Kaitai::Struct::Struct
 
       TV_SYSTEM = {
@@ -205,7 +205,7 @@ class Ines < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://wiki.nesdev.com/w/index.php/Mapper Source
+    # @see https://www.nesdev.org/wiki/Mapper Source
     def mapper
       return @mapper unless @mapper.nil?
       @mapper = (f6.lower_mapper | (f7.upper_mapper << 4))
@@ -239,7 +239,7 @@ class Ines < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://wiki.nesdev.com/w/index.php/PC10_ROM-Images Source
+  # @see https://www.nesdev.org/wiki/PC10_ROM-Images Source
   class Playchoice10 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

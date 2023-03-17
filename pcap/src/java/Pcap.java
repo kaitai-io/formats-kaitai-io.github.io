@@ -15,7 +15,7 @@ import java.util.Arrays;
  * network traffic grabbed by network sniffers. It is typically
  * produced by tools like [tcpdump](https://www.tcpdump.org/) or
  * [Wireshark](https://www.wireshark.org/).
- * @see <a href="http://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
+ * @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
  */
 public class Pcap extends KaitaiStruct {
     public static Pcap fromFile(String fileName) throws IOException {

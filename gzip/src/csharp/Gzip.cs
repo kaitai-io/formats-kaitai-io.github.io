@@ -16,7 +16,7 @@ namespace Kaitai
     /// (without zlib header) in all gzipped files.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://tools.ietf.org/html/rfc1952">Source</a>
+    /// Reference: <a href="https://www.rfc-editor.org/rfc/rfc1952">Source</a>
     /// </remarks>
     public partial class Gzip : KaitaiStruct
     {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 /**
  * RTCP is the Real-Time Control Protocol
- * @see <a href="https://tools.ietf.org/html/rfc3550">Source</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc3550">Source</a>
  */
 public class RtcpPayload extends KaitaiStruct {
     public static RtcpPayload fromFile(String fileName) throws IOException {

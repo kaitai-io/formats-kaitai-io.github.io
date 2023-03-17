@@ -348,7 +348,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11cHRM">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
         /// </remarks>
         public partial class ChrmChunk : KaitaiStruct
         {
@@ -385,7 +385,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11IHDR">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11IHDR">Source</a>
         /// </remarks>
         public partial class IhdrChunk : KaitaiStruct
         {
@@ -431,7 +431,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11PLTE">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11PLTE">Source</a>
         /// </remarks>
         public partial class PlteChunk : KaitaiStruct
         {
@@ -466,7 +466,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11sRGB">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
         /// </remarks>
         public partial class SrgbChunk : KaitaiStruct
         {
@@ -507,7 +507,7 @@ namespace Kaitai
         /// can be quite lengthy) with zlib compression.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11zTXt">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
         /// </remarks>
         public partial class CompressedTextChunk : KaitaiStruct
         {
@@ -627,7 +627,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11gAMA">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11gAMA">Source</a>
         /// </remarks>
         public partial class GamaChunk : KaitaiStruct
         {
@@ -673,7 +673,7 @@ namespace Kaitai
         /// image against. Contents depend on `color_type` of the image.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11bKGD">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11bKGD">Source</a>
         /// </remarks>
         public partial class BkgdChunk : KaitaiStruct
         {
@@ -726,7 +726,7 @@ namespace Kaitai
         /// logical pixels into physical units (meters, etc) and vice-versa.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11pHYs">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
         /// </remarks>
         public partial class PhysChunk : KaitaiStruct
         {
@@ -906,7 +906,7 @@ namespace Kaitai
         /// characters.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11iTXt">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11iTXt">Source</a>
         /// </remarks>
         public partial class InternationalTextChunk : KaitaiStruct
         {
@@ -981,7 +981,7 @@ namespace Kaitai
         /// characters.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11tEXt">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11tEXt">Source</a>
         /// </remarks>
         public partial class TextChunk : KaitaiStruct
         {
@@ -1059,7 +1059,7 @@ namespace Kaitai
         /// up to 1 second precision in UTC timezone.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://www.w3.org/TR/PNG/#11tIME">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11tIME">Source</a>
         /// </remarks>
         public partial class TimeChunk : KaitaiStruct
         {

@@ -9,7 +9,7 @@ namespace Kaitai
     /// RTCP is the Real-Time Control Protocol
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://tools.ietf.org/html/rfc3550">Source</a>
+    /// Reference: <a href="https://www.rfc-editor.org/rfc/rfc3550">Source</a>
     /// </remarks>
     public partial class RtcpPayload : KaitaiStruct
     {

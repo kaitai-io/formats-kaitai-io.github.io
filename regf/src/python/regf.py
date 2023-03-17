@@ -26,7 +26,7 @@ class Regf(KaitaiStruct):
     filesystem with a running Windows OS.
     
     .. seealso::
-       Source - https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc
+       Source - https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

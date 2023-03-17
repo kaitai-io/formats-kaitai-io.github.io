@@ -11,7 +11,7 @@ import (
  * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
  * communication protocol which supports remoteprocedure calls, event notifications
  * and the underlying serialization/wire format.
- * @see <a href="https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf">Source</a>
+ * @see <a href="https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf">Source</a>
  */
 type SomeIp struct {
 	Header *SomeIp_Header

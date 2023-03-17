@@ -9,7 +9,7 @@ namespace Kaitai
     /// The OpenPGP Message Format is a format to store encryption and signature keys for emails.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://tools.ietf.org/html/rfc4880">Source</a>
+    /// Reference: <a href="https://www.rfc-editor.org/rfc/rfc4880">Source</a>
     /// </remarks>
     public partial class OpenpgpMessage : KaitaiStruct
     {

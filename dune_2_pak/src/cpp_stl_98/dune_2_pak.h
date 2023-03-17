@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood) Source
+ * \sa https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood) Source
  */
 
 class dune_2_pak_t : public kaitai::kstruct {

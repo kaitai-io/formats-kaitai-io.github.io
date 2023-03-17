@@ -20,7 +20,7 @@
  * 
  * The file itself is a container, which contains a number of typed
  * "streams", which contain some data according to its type attribute.
- * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header Source
+ * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header Source
  */
 
 class windows_minidump_t : public kaitai::kstruct {
@@ -100,7 +100,7 @@ public:
     ~windows_minidump_t();
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list Source
      */
 
     class thread_list_t : public kaitai::kstruct {
@@ -130,7 +130,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
      */
 
     class location_descriptor_t : public kaitai::kstruct {
@@ -169,7 +169,7 @@ public:
     /**
      * Specific string serialization scheme used in MiniDump format is
      * actually a simple 32-bit length-prefixed UTF-16 string.
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string Source
      */
 
     class minidump_string_t : public kaitai::kstruct {
@@ -201,7 +201,7 @@ public:
     /**
      * "System info" stream provides basic information about the
      * hardware and operating system which produces this dump.
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info Source
      */
 
     class system_info_t : public kaitai::kstruct {
@@ -272,7 +272,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception Source
      */
 
     class exception_record_t : public kaitai::kstruct {
@@ -325,7 +325,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info Source
      */
 
     class misc_info_t : public kaitai::kstruct {
@@ -373,7 +373,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory Source
      */
 
     class dir_t : public kaitai::kstruct {
@@ -415,7 +415,7 @@ public:
         stream_types_t stream_type() const { return m_stream_type; }
 
         /**
-         * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
+         * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source
          */
         uint32_t len_data() const { return m_len_data; }
         uint32_t ofs_data() const { return m_ofs_data; }
@@ -426,7 +426,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread Source
      */
 
     class thread_t : public kaitai::kstruct {
@@ -470,7 +470,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
      */
 
     class memory_list_t : public kaitai::kstruct {
@@ -500,7 +500,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source
      */
 
     class memory_descriptor_t : public kaitai::kstruct {
@@ -530,7 +530,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream Source
      */
 
     class exception_stream_t : public kaitai::kstruct {

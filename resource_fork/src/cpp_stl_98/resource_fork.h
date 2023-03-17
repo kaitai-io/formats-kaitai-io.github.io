@@ -49,7 +49,7 @@ class bytes_with_io_t;
  * even current macOS systems still use resource forks for certain purposes,
  * such as custom file icons.
  * \sa https://developer.apple.com/library/archive/documentation/mac/pdf/MoreMacintoshToolbox.pdf#page=151 Inside Macintosh, More Macintosh Toolbox, Resource Manager, Resource Manager Reference, Resource File Format
- * \sa http://www.pagetable.com/?p=50 Inside Macintosh, Volume I, The Resource Manager, Format of a Resource File
+ * \sa https://www.pagetable.com/?p=50 Inside Macintosh, Volume I, The Resource Manager, Format of a Resource File
  * \sa https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format Source
  * \sa https://github.com/dgelessus/mac_file_format_docs/blob/master/README.md#resource-forks Source
  */

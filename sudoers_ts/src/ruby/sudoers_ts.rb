@@ -10,7 +10,7 @@ end
 ##
 # This spec can be used to parse sudo time stamp files located in directories
 # such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.
-# @see https://www.sudo.ws/man/1.8.27/sudoers_timestamp.man.html Source
+# @see https://www.sudo.ws/docs/man/1.8.27/sudoers_timestamp.man/ Source
 class SudoersTs < Kaitai::Struct::Struct
 
   TS_TYPE = {

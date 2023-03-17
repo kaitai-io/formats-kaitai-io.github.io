@@ -7,7 +7,7 @@ import (
 
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)">Source</a>
  */
 
 type Avi_ChunkType int
@@ -206,7 +206,7 @@ func (this *Avi_Blocks) Read(io *kaitai.Stream, parent interface{}, root *Avi) (
 
 /**
  * Main header of an AVI file, defined as AVIMAINHEADER structure
- * @see <a href="https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)">Source</a>
  */
 type Avi_AvihBody struct {
 	MicroSecPerFrame uint32
@@ -377,7 +377,7 @@ func (this *Avi_Block) Read(io *kaitai.Stream, parent *Avi_Blocks, root *Avi) (e
 
 /**
  * Stream header (one header per stream), defined as AVISTREAMHEADER structure
- * @see <a href="https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)">Source</a>
  */
 type Avi_StrhBody struct {
 	FccType Avi_StreamType

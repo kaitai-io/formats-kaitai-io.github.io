@@ -11,10 +11,9 @@ import java.nio.charset.Charset;
 
 /**
  * Apple macOS '.DS_Store' file format.
- * @see <a href="https://en.wikipedia.org/wiki/.DS_Store
- * https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
- * https://0day.work/parsing-the-ds_store-file-format
- * ">Source</a>
+ * @see <a href="https://en.wikipedia.org/wiki/.DS_Store">Source</a>
+ * @see <a href="https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod">Source</a>
+ * @see <a href="https://0day.work/parsing-the-ds_store-file-format/">Source</a>
  */
 public class DsStore extends KaitaiStruct {
     public static DsStore fromFile(String fileName) throws IOException {

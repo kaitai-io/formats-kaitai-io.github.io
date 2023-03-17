@@ -54,7 +54,7 @@
  * 
  * ## Specs
  *  * [Bitmap Storage (Windows Dev Center)](
- *      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+ *      https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
  *    )
  *     * BITMAPFILEHEADER
  *     * BITMAPINFOHEADER

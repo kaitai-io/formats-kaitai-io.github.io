@@ -18,7 +18,7 @@ import (
  * 
  * The format is mostly undocumented, and is known to vary between
  * various Windows versions.
- * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
+ * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc">Source</a>
  */
 type WindowsShellItems struct {
 	Items []*WindowsShellItems_ShellItem
@@ -150,7 +150,7 @@ func (this *WindowsShellItems_ShellItem) Read(io *kaitai.Stream, parent *Windows
 }
 
 /**
- * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
+ * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
  */
 type WindowsShellItems_RootFolderBody struct {
 	SortIndex uint8
@@ -184,7 +184,7 @@ func (this *WindowsShellItems_RootFolderBody) Read(io *kaitai.Stream, parent *Wi
 }
 
 /**
- * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
+ * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
  */
 type WindowsShellItems_VolumeBody struct {
 	Flags uint8
@@ -211,7 +211,7 @@ func (this *WindowsShellItems_VolumeBody) Read(io *kaitai.Stream, parent *Window
 }
 
 /**
- * @see <a href="https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
+ * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
  */
 type WindowsShellItems_FileEntryBody struct {
 	_unnamed0 uint8

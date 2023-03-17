@@ -10,7 +10,7 @@ local stringstream = require("string_stream")
 -- 
 -- This spec can be used to parse sudo time stamp files located in directories
 -- such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.
--- See also: Source (https://www.sudo.ws/man/1.8.27/sudoers_timestamp.man.html)
+-- See also: Source (https://www.sudo.ws/docs/man/1.8.27/sudoers_timestamp.man/)
 SudoersTs = class.class(KaitaiStruct)
 
 SudoersTs.TsType = enum.Enum {

@@ -13,7 +13,7 @@
 
 /**
  * This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
- * \sa https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.files/utmp.h.htm Source
+ * \sa https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file Source
  */
 
 class aix_utmp_t : public kaitai::kstruct {

@@ -11,7 +11,7 @@
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * @see {@link http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)|Source}
- * @see {@link http://mrclick.zophar.net/TilEd/download/timgfx.txt|Source}
+ * @see {@link https://mrclick.zophar.net/TilEd/download/timgfx.txt|Source}
  * @see {@link https://www.romhacking.net/documents/31/|Source}
  */
 

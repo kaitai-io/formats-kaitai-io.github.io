@@ -442,7 +442,7 @@ proc fromFile*(_: typedesc[Bson_F16], filename: string): Bson_F16 =
 
 
 ##[
-https://docs.mongodb.com/manual/reference/method/ObjectId/
+@see <a href="https://www.mongodb.com/docs/manual/reference/method/ObjectId/">Source</a>
 ]##
 proc read*(_: typedesc[Bson_ObjectId], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Bson_ObjectId =
   template this: untyped = result

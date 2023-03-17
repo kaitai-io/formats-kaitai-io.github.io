@@ -9,7 +9,7 @@ end
 
 ##
 # RTCP is the Real-Time Control Protocol
-# @see https://tools.ietf.org/html/rfc3550 Source
+# @see https://www.rfc-editor.org/rfc/rfc3550 Source
 class RtcpPayload < Kaitai::Struct::Struct
 
   PAYLOAD_TYPE = {

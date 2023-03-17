@@ -37,7 +37,7 @@
  *   required, which fields may be repeated or constitute a map, what
  *   restrictions are placed on fields usage in a single message, what
  *   are the fields' default values, etc, etc.
- * @see {@link https://developers.google.com/protocol-buffers/docs/encoding|Source}
+ * @see {@link https://protobuf.dev/programming-guides/encoding/|Source}
  */
 
 var GoogleProtobuf = (function() {

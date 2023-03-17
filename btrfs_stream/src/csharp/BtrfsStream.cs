@@ -17,7 +17,7 @@ namespace Kaitai
     /// If you want a text representation you may want to checkout `btrfs receive --dump` instead.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive">Source</a>
+    /// Reference: <a href="https://archive.kernel.org/oldwiki/btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive.html">Source</a>
     /// </remarks>
     public partial class BtrfsStream : KaitaiStruct
     {

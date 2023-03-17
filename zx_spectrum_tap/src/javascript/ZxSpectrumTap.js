@@ -16,7 +16,7 @@
  * for ZX Spectrum. Contents of this file can be viewed as a very
  * simple linear filesystem, storing named files with some basic
  * metainformation prepended as a header.
- * @see {@link https://faqwiki.zxnet.co.uk/wiki/TAP_format|Source}
+ * @see {@link https://sinclair.wiki.zxnet.co.uk/wiki/TAP_format|Source}
  */
 
 var ZxSpectrumTap = (function() {

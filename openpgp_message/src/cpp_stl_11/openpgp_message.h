@@ -13,7 +13,7 @@
 
 /**
  * The OpenPGP Message Format is a format to store encryption and signature keys for emails.
- * \sa https://tools.ietf.org/html/rfc4880 Source
+ * \sa https://www.rfc-editor.org/rfc/rfc4880 Source
  */
 
 class openpgp_message_t : public kaitai::kstruct {

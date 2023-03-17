@@ -182,7 +182,7 @@ Typically, registry files are stored in:
 Note that one typically can't access files directly on a mounted
 filesystem with a running Windows OS.
 
-@see <a href="https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc">Source</a>
+@see <a href="https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc">Source</a>
 ]##
 proc read*(_: typedesc[Regf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Regf =
   template this: untyped = result

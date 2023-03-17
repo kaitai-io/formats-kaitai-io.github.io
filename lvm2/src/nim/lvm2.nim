@@ -96,7 +96,7 @@ sudo lvcreate --name lv_test1 vg_test
 sudo losetup -d /dev/loop1
 ```
 
-@see <a href="https://github.com/libyal/libvslvm/blob/master/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc">Source</a>
+@see <a href="https://github.com/libyal/libvslvm/blob/main/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc">Source</a>
 ]##
 proc read*(_: typedesc[Lvm2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Lvm2 =
   template this: untyped = result

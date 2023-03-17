@@ -60,7 +60,7 @@ end
 # 
 # ## Specs
 #  * [Bitmap Storage (Windows Dev Center)](
-#      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+#      https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
 #    )
 #     * BITMAPFILEHEADER
 #     * BITMAPINFOHEADER
@@ -153,7 +153,7 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
   class CieXyz < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -194,7 +194,7 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
   class BitmapV5Extension < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -215,7 +215,7 @@ class Bmp < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
+    # @see https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
     def profile_data
       return @profile_data unless @profile_data.nil?
       if has_profile
@@ -264,7 +264,7 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
   class BitmapV4Extension < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -291,7 +291,7 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source
+  # @see https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source
   class BitmapInfoExtension < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -359,7 +359,7 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader Source
   # @see https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1 Source
   class BitmapHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self, len_header)
@@ -573,7 +573,7 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader Source
   class FileHeader < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -603,7 +603,7 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
   class BitmapInfo < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

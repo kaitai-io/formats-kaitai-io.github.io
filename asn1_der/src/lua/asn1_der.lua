@@ -133,7 +133,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier)
 Asn1Der.BodyObjectId = class.class(KaitaiStruct)
 
 function Asn1Der.BodyObjectId:_init(io, parent, root)

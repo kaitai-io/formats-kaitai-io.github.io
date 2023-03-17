@@ -38,8 +38,8 @@
  *   - [vfat](/vfat/) (FAT12)
  *   - [lzh](/lzh/)
  *   - [cab](http://justsolve.archiveteam.org/wiki/Cabinet)
- * @see {@link https://docs.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time|Source}
- * @see {@link https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime|Source}
+ * @see {@link https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time|Source}
+ * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime|Source}
  * @see {@link https://github.com/reactos/reactos/blob/c6b6444/dll/win32/kernel32/client/time.c#L82-L87|DosDateTimeToFileTime}
  * @see {@link https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc|page 25/34}
  */

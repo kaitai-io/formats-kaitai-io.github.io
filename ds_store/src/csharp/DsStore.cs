@@ -9,10 +9,13 @@ namespace Kaitai
     /// Apple macOS '.DS_Store' file format.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://en.wikipedia.org/wiki/.DS_Store
-    /// https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
-    /// https://0day.work/parsing-the-ds_store-file-format
-    /// ">Source</a>
+    /// Reference: <a href="https://en.wikipedia.org/wiki/.DS_Store">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://0day.work/parsing-the-ds_store-file-format/">Source</a>
     /// </remarks>
     public partial class DsStore : KaitaiStruct
     {

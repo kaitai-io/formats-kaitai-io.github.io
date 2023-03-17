@@ -7,7 +7,7 @@ require("kaitaistruct")
 local enum = require("enum")
 
 -- 
--- See also: Source (https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header)
+-- See also: Source (https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header)
 VmwareVmdk = class.class(KaitaiStruct)
 
 VmwareVmdk.CompressionMethods = enum.Enum {
@@ -105,7 +105,7 @@ end
 -- Primary grain directory start sector number.
 
 -- 
--- See also: Source (https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags)
+-- See also: Source (https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags)
 VmwareVmdk.HeaderFlags = class.class(KaitaiStruct)
 
 function VmwareVmdk.HeaderFlags:_init(io, parent, root)

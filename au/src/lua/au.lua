@@ -16,8 +16,8 @@ local str_decode = require("string_decode")
 -- 
 -- * <https://github.com/python/cpython/tree/b8a7daf077da/Lib/test/sndhdrdata>
 -- * <ftp://ftp-ccrma.stanford.edu/pub/Lisp/sf.tar.gz>
--- * <http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
--- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html)
+-- * <https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html>
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html)
 -- See also: Source (http://soundfile.sapp.org/doc/NextFormat/)
 -- See also: Source (http://soundfile.sapp.org/doc/NextFormat/soundstruct.h)
 -- See also: Source (https://github.com/andreiw/polaris/blob/deb47cb/usr/src/head/audio/au.h#L87-L112)

@@ -14,7 +14,7 @@ end
 # This allows sending only event messages to receivers requiring them (Publish/Subscribe).
 # The solution described here is also known as SOME/IP-SD
 # (Scalable service-Oriented MiddlewarE over IP - Service Discovery).
-# @see https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf Source
+# @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf Source
 class SomeIpSd < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

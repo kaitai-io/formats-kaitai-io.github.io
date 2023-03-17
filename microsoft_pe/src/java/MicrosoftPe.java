@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
  */
 public class MicrosoftPe extends KaitaiStruct {
     public static MicrosoftPe fromFile(String fileName) throws IOException {
@@ -54,7 +54,7 @@ public class MicrosoftPe extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
      */
     public static class CertificateEntry extends KaitaiStruct {
         public static CertificateEntry fromFile(String fileName) throws IOException {

@@ -12,7 +12,7 @@ local str_decode = require("string_decode")
 -- FormatOptions are used to transport additional information to the entries.
 -- This includes forinstance the information how a service instance is
 -- reachable (IP-Address, TransportProtocol, Port Number).
--- See also: section 4.1.2.4 Options Format (https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+-- See also: section 4.1.2.4 Options Format (https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
 -- -)
 SomeIpSdOptions = class.class(KaitaiStruct)
 

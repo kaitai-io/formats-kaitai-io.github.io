@@ -9,7 +9,7 @@ end
 
 ##
 # @see http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics) Source
-# @see http://mrclick.zophar.net/TilEd/download/timgfx.txt Source
+# @see https://mrclick.zophar.net/TilEd/download/timgfx.txt Source
 # @see https://www.romhacking.net/documents/31/ Source
 class PsxTim < Kaitai::Struct::Struct
 

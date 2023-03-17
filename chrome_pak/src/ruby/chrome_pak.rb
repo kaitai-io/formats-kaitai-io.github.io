@@ -10,7 +10,7 @@ end
 ##
 # Format mostly used by Google Chrome and various Android apps to store
 # resources such as translated strings, help messages and images.
-# @see https://dev.chromium.org/developers/design-documents/linuxresourcesandlocalizedstrings Source
+# @see https://web.archive.org/web/20220126211447/https://dev.chromium.org/developers/design-documents/linuxresourcesandlocalizedstrings Source
 # @see https://chromium.googlesource.com/chromium/src/tools/grit/+/3c36f27/grit/format/data_pack.py Source
 # @see https://chromium.googlesource.com/chromium/src/tools/grit/+/8a23eae/grit/format/data_pack.py Source
 class ChromePak < Kaitai::Struct::Struct

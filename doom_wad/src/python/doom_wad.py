@@ -56,7 +56,7 @@ class DoomWad(KaitaiStruct):
         different textures for more variety in the game.
         
         .. seealso::
-           Source - http://doom.wikia.com/wiki/TEXTURE1
+           Source - https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -149,7 +149,7 @@ class DoomWad(KaitaiStruct):
     class Pnames(KaitaiStruct):
         """
         .. seealso::
-           Source - http://doom.wikia.com/wiki/PNAMES
+           Source - https://doom.fandom.com/wiki/PNAMES
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

@@ -10,7 +10,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link https://docs.microsoft.com/en-us/windows/win32/debug/pe-format|Source}
+ * @see {@link https://learn.microsoft.com/en-us/windows/win32/debug/pe-format|Source}
  */
 
 var MicrosoftPe = (function() {
@@ -36,7 +36,7 @@ var MicrosoftPe = (function() {
   }
 
   /**
-   * @see {@link https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only|Source}
    */
 
   var CertificateEntry = MicrosoftPe.CertificateEntry = (function() {

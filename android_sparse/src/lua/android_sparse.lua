@@ -19,7 +19,7 @@ local utils = require("utils")
 -- 
 -- Note: this is not the same as the Android sparse data image format.
 -- See also: Source (https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_format.h)
--- See also: Source (https://source.android.com/devices/bootloader/images#sparse-image-format)
+-- See also: Source (https://web.archive.org/web/20220322054458/https://source.android.com/devices/bootloader/images#sparse-image-format)
 AndroidSparse = class.class(KaitaiStruct)
 
 AndroidSparse.ChunkTypes = enum.Enum {

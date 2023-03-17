@@ -12,7 +12,7 @@ namespace Kaitai
     /// contained inside).
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://docs.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)">Source</a>
+    /// Reference: <a href="https://learn.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)">Source</a>
     /// </remarks>
     public partial class Ico : KaitaiStruct
     {

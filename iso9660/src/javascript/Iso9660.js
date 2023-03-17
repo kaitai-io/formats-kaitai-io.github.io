@@ -33,7 +33,7 @@ var Iso9660 = (function() {
   }
 
   /**
-   * @see {@link http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor|Source}
+   * @see {@link https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor|Source}
    */
 
   var VolDescPrimary = Iso9660.VolDescPrimary = (function() {
@@ -262,7 +262,7 @@ var Iso9660 = (function() {
   })();
 
   /**
-   * @see {@link http://wiki.osdev.org/ISO_9660#The_Path_Table|Source}
+   * @see {@link https://wiki.osdev.org/ISO_9660#The_Path_Table|Source}
    */
 
   var PathTableLe = Iso9660.PathTableLe = (function() {
@@ -286,7 +286,7 @@ var Iso9660 = (function() {
   })();
 
   /**
-   * @see {@link http://wiki.osdev.org/ISO_9660#Date.2Ftime_format|Source}
+   * @see {@link https://wiki.osdev.org/ISO_9660#Date.2Ftime_format|Source}
    */
 
   var DecDatetime = Iso9660.DecDatetime = (function() {

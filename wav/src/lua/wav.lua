@@ -23,7 +23,7 @@ local str_decode = require("string_decode")
 -- This Kaitai implementation was written by John Byrd of Gigantic Software
 -- (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
 -- See also: Source (http://soundfile.sapp.org/doc/WaveFormat/)
--- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html)
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html)
 -- See also: Source (https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php)
 Wav = class.class(KaitaiStruct)
 
@@ -503,7 +503,7 @@ end
 
 -- 
 -- XMP data.
--- See also: Source (https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf)
+-- See also: Source (https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf)
 
 -- 
 -- required for all non-PCM formats
@@ -745,7 +745,7 @@ end
 
 
 -- 
--- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/)
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/)
 Wav.AfspChunkType = class.class(KaitaiStruct)
 
 function Wav.AfspChunkType:_init(io, parent, root)
@@ -772,8 +772,8 @@ end
 -- An array of AFsp information records, in the `<field_name>: <value>`
 -- format (e.g. "`program: CopyAudio`"). The list of existing information
 -- record types are available in the `doc-ref` links.
--- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html)
--- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html)
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html)
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html)
 
 -- 
 -- See also: Source (https://tech.ebu.ch/docs/tech/tech3285s5.pdf)

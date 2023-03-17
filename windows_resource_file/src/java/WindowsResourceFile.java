@@ -70,7 +70,7 @@ public class WindowsResourceFile extends KaitaiStruct {
      * Each resource has a `type` and a `name`, which can be used to
      * identify it, and a `value`. Both `type` and `name` can be a
      * number or a string.
-     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/menurc/resourceheader">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/resourceheader">Source</a>
      */
     public static class Resource extends KaitaiStruct {
         public static Resource fromFile(String fileName) throws IOException {

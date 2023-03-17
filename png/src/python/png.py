@@ -201,7 +201,7 @@ class Png(KaitaiStruct):
     class ChrmChunk(KaitaiStruct):
         """
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11cHRM
+           Source - https://www.w3.org/TR/png/#11cHRM
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -219,7 +219,7 @@ class Png(KaitaiStruct):
     class IhdrChunk(KaitaiStruct):
         """
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11IHDR
+           Source - https://www.w3.org/TR/png/#11IHDR
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -240,7 +240,7 @@ class Png(KaitaiStruct):
     class PlteChunk(KaitaiStruct):
         """
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11PLTE
+           Source - https://www.w3.org/TR/png/#11PLTE
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -260,7 +260,7 @@ class Png(KaitaiStruct):
     class SrgbChunk(KaitaiStruct):
         """
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11sRGB
+           Source - https://www.w3.org/TR/png/#11sRGB
         """
 
         class Intent(Enum):
@@ -284,7 +284,7 @@ class Png(KaitaiStruct):
         can be quite lengthy) with zlib compression.
         
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11zTXt
+           Source - https://www.w3.org/TR/png/#11zTXt
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -332,7 +332,7 @@ class Png(KaitaiStruct):
     class GamaChunk(KaitaiStruct):
         """
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11gAMA
+           Source - https://www.w3.org/TR/png/#11gAMA
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -357,7 +357,7 @@ class Png(KaitaiStruct):
         image against. Contents depend on `color_type` of the image.
         
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11bKGD
+           Source - https://www.w3.org/TR/png/#11bKGD
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -384,7 +384,7 @@ class Png(KaitaiStruct):
         logical pixels into physical units (meters, etc) and vice-versa.
         
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11pHYs
+           Source - https://www.w3.org/TR/png/#11pHYs
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -449,7 +449,7 @@ class Png(KaitaiStruct):
         characters.
         
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11iTXt
+           Source - https://www.w3.org/TR/png/#11iTXt
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -473,7 +473,7 @@ class Png(KaitaiStruct):
         characters.
         
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11tEXt
+           Source - https://www.w3.org/TR/png/#11tEXt
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -507,7 +507,7 @@ class Png(KaitaiStruct):
         up to 1 second precision in UTC timezone.
         
         .. seealso::
-           Source - https://www.w3.org/TR/PNG/#11tIME
+           Source - https://www.w3.org/TR/png/#11tIME
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

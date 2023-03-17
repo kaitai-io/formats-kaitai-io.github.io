@@ -18,7 +18,7 @@
  * for ZX Spectrum. Contents of this file can be viewed as a very
  * simple linear filesystem, storing named files with some basic
  * metainformation prepended as a header.
- * \sa https://faqwiki.zxnet.co.uk/wiki/TAP_format Source
+ * \sa https://sinclair.wiki.zxnet.co.uk/wiki/TAP_format Source
  */
 
 class zx_spectrum_tap_t : public kaitai::kstruct {

@@ -17,7 +17,7 @@ class Pcap(KaitaiStruct):
     [Wireshark](https://www.wireshark.org/).
     
     .. seealso::
-       Source - http://wiki.wireshark.org/Development/LibpcapFileFormat
+       Source - https://wiki.wireshark.org/Development/LibpcapFileFormat
     """
 
     class Linktype(Enum):

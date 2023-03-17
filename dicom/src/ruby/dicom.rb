@@ -18,7 +18,7 @@ end
 # top-level parser attempts to autodetect and handle both of them. If
 # any problems arise, one can use `file_explicit` and `file_implicit`
 # subtypes to force parsing in particular transfer syntax.
-# @see http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7 Source
+# @see https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7 Source
 class Dicom < Kaitai::Struct::Struct
 
   TAGS = {
@@ -4079,7 +4079,7 @@ class Dicom < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
+  # @see https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
   class TDataElementExplicit < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -4154,7 +4154,7 @@ class Dicom < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
+  # @see https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
   class TDataElementImplicit < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

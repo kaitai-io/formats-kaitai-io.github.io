@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 
 /**
- * @see <a href="https://wiki.nesdev.com/w/index.php/INES">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/INES">Source</a>
  */
 public class Ines extends KaitaiStruct {
     public static Ines fromFile(String fileName) throws IOException {
@@ -94,7 +94,7 @@ public class Ines extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_6">Source</a>
+         * @see <a href="https://www.nesdev.org/wiki/INES#Flags_6">Source</a>
          */
         public static class F6 extends KaitaiStruct {
             public static F6 fromFile(String fileName) throws IOException {
@@ -174,7 +174,7 @@ public class Ines extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_7">Source</a>
+         * @see <a href="https://www.nesdev.org/wiki/INES#Flags_7">Source</a>
          */
         public static class F7 extends KaitaiStruct {
             public static F7 fromFile(String fileName) throws IOException {
@@ -232,7 +232,7 @@ public class Ines extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_9">Source</a>
+         * @see <a href="https://www.nesdev.org/wiki/INES#Flags_9">Source</a>
          */
         public static class F9 extends KaitaiStruct {
             public static F9 fromFile(String fileName) throws IOException {
@@ -287,7 +287,7 @@ public class Ines extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_10">Source</a>
+         * @see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
          */
         public static class F10 extends KaitaiStruct {
             public static F10 fromFile(String fileName) throws IOException {
@@ -362,7 +362,7 @@ public class Ines extends KaitaiStruct {
         private Integer mapper;
 
         /**
-         * @see <a href="https://wiki.nesdev.com/w/index.php/Mapper">Source</a>
+         * @see <a href="https://www.nesdev.org/wiki/Mapper">Source</a>
          */
         public Integer mapper() {
             if (this.mapper != null)
@@ -420,7 +420,7 @@ public class Ines extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://wiki.nesdev.com/w/index.php/PC10_ROM-Images">Source</a>
+     * @see <a href="https://www.nesdev.org/wiki/PC10_ROM-Images">Source</a>
      */
     public static class Playchoice10 extends KaitaiStruct {
         public static Playchoice10 fromFile(String fileName) throws IOException {

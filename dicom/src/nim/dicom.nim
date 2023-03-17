@@ -4109,7 +4109,7 @@ top-level parser attempts to autodetect and handle both of them. If
 any problems arise, one can use `file_explicit` and `file_implicit`
 subtypes to force parsing in particular transfer syntax.
 
-@see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
+@see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
 ]##
 proc read*(_: typedesc[Dicom], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom =
   template this: untyped = result
@@ -4149,7 +4149,7 @@ proc fromFile*(_: typedesc[Dicom_TFileHeader], filename: string): Dicom_TFileHea
 
 
 ##[
-@see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+@see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
 ]##
 proc read*(_: typedesc[Dicom_TDataElementExplicit], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_TDataElementExplicit =
   template this: untyped = result
@@ -4234,7 +4234,7 @@ proc fromFile*(_: typedesc[Dicom_TDataElementExplicit], filename: string): Dicom
 
 
 ##[
-@see <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+@see <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
 ]##
 proc read*(_: typedesc[Dicom_TDataElementImplicit], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_TDataElementImplicit =
   template this: untyped = result

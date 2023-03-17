@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF Source
+ * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF Source
  */
 
 class quicktime_mov_t : public kaitai::kstruct {
@@ -314,7 +314,7 @@ public:
     ~quicktime_mov_t();
 
     /**
-     * \sa https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG Source
+     * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG Source
      */
 
     class mvhd_body_t : public kaitai::kstruct {
@@ -435,7 +435,7 @@ public:
     };
 
     /**
-     * \sa https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
+     * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
      */
 
     class ftyp_body_t : public kaitai::kstruct {
@@ -580,7 +580,7 @@ public:
     };
 
     /**
-     * \sa https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550 Source
+     * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550 Source
      */
 
     class tkhd_body_t : public kaitai::kstruct {

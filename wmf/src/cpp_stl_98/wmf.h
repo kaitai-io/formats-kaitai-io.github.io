@@ -19,7 +19,7 @@
  * Device Interface) function calls, which, if played back, result in
  * an image being drawn on a given surface (display, off-screen buffer,
  * printer, etc).
- * \sa http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf Source
+ * \sa https://www.loc.gov/preservation/digital/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf Source
  */
 
 class wmf_t : public kaitai::kstruct {

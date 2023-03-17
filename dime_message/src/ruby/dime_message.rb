@@ -17,8 +17,8 @@ end
 # Sample file: `curl -LO
 # https://github.com/kaitai-io/kaitai_struct_formats/files/5894723/scanner_withoptions.dump.gz
 # && gunzip scanner_withoptions.dump.gz`
-# @see https://tools.ietf.org/html/draft-nielsen-dime-02 Source
-# @see https://docs.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime Source
+# @see https://datatracker.ietf.org/doc/html/draft-nielsen-dime-02 Source
+# @see https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime Source
 # @see http://imrannazar.com/Parsing-the-DIME-Message-Format Source
 class DimeMessage < Kaitai::Struct::Struct
 

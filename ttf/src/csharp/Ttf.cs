@@ -11,7 +11,7 @@ namespace Kaitai
     /// an outline font.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc">Source</a>
+    /// Reference: <a href="https://web.archive.org/web/20160410081432/https://www.microsoft.com/typography/tt/ttf_spec/ttch02.doc">Source</a>
     /// </remarks>
     public partial class Ttf : KaitaiStruct
     {

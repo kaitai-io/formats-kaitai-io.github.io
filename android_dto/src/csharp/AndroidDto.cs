@@ -15,7 +15,7 @@ namespace Kaitai
     /// partition images and decompile them with dtc (device tree compiler).
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://source.android.com/devices/architecture/dto/partitions">Source</a>
+    /// Reference: <a href="https://source.android.com/docs/core/architecture/dto/partitions">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://android.googlesource.com/platform/system/libufdt/+/refs/tags/android-10.0.0_r47">Source</a>

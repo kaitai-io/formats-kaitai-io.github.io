@@ -12,7 +12,7 @@ local utils = require("utils")
 -- 
 -- See also: Source (https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532)
 -- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html)
--- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html)
+-- See also: Source (https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html)
 Elf = class.class(KaitaiStruct)
 
 Elf.SymbolVisibility = enum.Enum {
@@ -960,7 +960,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html)
+-- See also: Source (https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html)
 -- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section)
 Elf.EndianElf.DynamicSectionEntry = class.class(KaitaiStruct)
 
@@ -1324,7 +1324,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html)
+-- See also: Source (https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/relocation-sections.html)
 -- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html)
 Elf.EndianElf.RelocationSection = class.class(KaitaiStruct)
 
@@ -1536,7 +1536,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html)
+-- See also: Source (https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html)
 -- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html)
 Elf.EndianElf.DynsymSectionEntry = class.class(KaitaiStruct)
 
@@ -1697,7 +1697,7 @@ end
 -- section header index.
 
 -- 
--- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html)
+-- See also: Source (https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html)
 -- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section)
 Elf.EndianElf.NoteSectionEntry = class.class(KaitaiStruct)
 
@@ -2361,7 +2361,7 @@ end
 -- 
 -- See also: Figure 5-11: DT_FLAGS values (https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html)
 -- See also: Source (https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095)
--- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5)
+-- See also: Source (https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5)
 Elf.DtFlagValues = class.class(KaitaiStruct)
 
 function Elf.DtFlagValues:_init(value, io, parent, root)

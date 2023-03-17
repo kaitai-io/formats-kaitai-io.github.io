@@ -154,7 +154,7 @@ end
 -- * a sequence of "type lengths"
 -- * a sequence of "structs" (which describe contents of every
 --   structure, referring to types and names by index)
--- See also: Source (https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA)
+-- See also: Source (https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA)
 BlenderBlend.Dna1Body = class.class(KaitaiStruct)
 
 function BlenderBlend.Dna1Body:_init(io, parent, root)

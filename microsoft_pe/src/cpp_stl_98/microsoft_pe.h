@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa https://docs.microsoft.com/en-us/windows/win32/debug/pe-format Source
+ * \sa https://learn.microsoft.com/en-us/windows/win32/debug/pe-format Source
  */
 
 class microsoft_pe_t : public kaitai::kstruct {
@@ -48,7 +48,7 @@ public:
     ~microsoft_pe_t();
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only Source
      */
 
     class certificate_entry_t : public kaitai::kstruct {

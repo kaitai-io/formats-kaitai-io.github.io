@@ -10,7 +10,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF|Source}
+ * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF|Source}
  */
 
 var QuicktimeMov = (function() {
@@ -578,7 +578,7 @@ var QuicktimeMov = (function() {
   }
 
   /**
-   * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG|Source}
+   * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG|Source}
    */
 
   var MvhdBody = QuicktimeMov.MvhdBody = (function() {
@@ -674,7 +674,7 @@ var QuicktimeMov = (function() {
   })();
 
   /**
-   * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF|Source}
+   * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF|Source}
    */
 
   var FtypBody = QuicktimeMov.FtypBody = (function() {
@@ -827,7 +827,7 @@ var QuicktimeMov = (function() {
   })();
 
   /**
-   * @see {@link https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550|Source}
+   * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550|Source}
    */
 
   var TkhdBody = QuicktimeMov.TkhdBody = (function() {

@@ -16,7 +16,7 @@
  * file using relevant option in Event Viewer application.
  * 
  * A Windows application can submit an entry into these logs using
- * [ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
+ * [ReportEventA](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
  * function of Windows API.
  * 
  * Internally, EVT files consist of a fixed-size header and event

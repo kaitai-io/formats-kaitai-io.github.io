@@ -62,7 +62,7 @@ namespace Kaitai
         /// number or a string.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/menurc/resourceheader">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/menurc/resourceheader">Source</a>
         /// </remarks>
         public partial class Resource : KaitaiStruct
         {

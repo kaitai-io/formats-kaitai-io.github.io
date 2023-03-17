@@ -36,7 +36,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
+        /// Reference: <a href="https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
         /// </remarks>
         public partial class VolDescPrimary : KaitaiStruct
         {
@@ -459,7 +459,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
+        /// Reference: <a href="https://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
         /// </remarks>
         public partial class PathTableLe : KaitaiStruct
         {
@@ -494,7 +494,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
+        /// Reference: <a href="https://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
         /// </remarks>
         public partial class DecDatetime : KaitaiStruct
         {

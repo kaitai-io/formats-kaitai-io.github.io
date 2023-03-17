@@ -16,7 +16,7 @@ import (
  * 
  * There are at least 2 different versions of the format: v1 and
  * v2. Netmon v3 seems to use the same file format as v1.
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values">Source</a>
  */
 
 type MicrosoftNetworkMonitorV2_Linktype int
@@ -409,7 +409,7 @@ func (this *MicrosoftNetworkMonitorV2_FrameIndexEntry) Body() (v *MicrosoftNetwo
  * A container for actually captured network data. Allow to
  * timestamp individual frames and designates how much data from
  * the original packet was actually written into the file.
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
  */
 type MicrosoftNetworkMonitorV2_Frame struct {
 	TsDelta uint64

@@ -183,7 +183,7 @@ public:
      * * a sequence of "type lengths"
      * * a sequence of "structs" (which describe contents of every
      *   structure, referring to types and names by index)
-     * \sa https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA Source
+     * \sa https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA Source
      */
 
     class dna1_body_t : public kaitai::kstruct {

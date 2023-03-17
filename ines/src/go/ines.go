@@ -7,7 +7,7 @@ import (
 
 
 /**
- * @see <a href="https://wiki.nesdev.com/w/index.php/INES">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/INES">Source</a>
  */
 type Ines struct {
 	Header *Ines_Header
@@ -205,7 +205,7 @@ func (this *Ines_Header) Read(io *kaitai.Stream, parent *Ines, root *Ines) (err 
 }
 
 /**
- * @see <a href="https://wiki.nesdev.com/w/index.php/Mapper">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/Mapper">Source</a>
  */
 func (this *Ines_Header) Mapper() (v int, err error) {
 	if (this._f_mapper) {
@@ -233,7 +233,7 @@ func (this *Ines_Header) Mapper() (v int, err error) {
  */
 
 /**
- * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_6">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/INES#Flags_6">Source</a>
  */
 
 type Ines_Header_F6_Mirroring int
@@ -310,7 +310,7 @@ func (this *Ines_Header_F6) Read(io *kaitai.Stream, parent *Ines_Header, root *I
  */
 
 /**
- * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_7">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/INES#Flags_7">Source</a>
  */
 type Ines_Header_F7 struct {
 	UpperMapper uint64
@@ -371,7 +371,7 @@ func (this *Ines_Header_F7) Read(io *kaitai.Stream, parent *Ines_Header, root *I
  */
 
 /**
- * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_9">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/INES#Flags_9">Source</a>
  */
 
 type Ines_Header_F9_TvSystem int
@@ -414,7 +414,7 @@ func (this *Ines_Header_F9) Read(io *kaitai.Stream, parent *Ines_Header, root *I
  */
 
 /**
- * @see <a href="https://wiki.nesdev.com/w/index.php/INES#Flags_10">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
  */
 
 type Ines_Header_F10_TvSystem int
@@ -485,7 +485,7 @@ func (this *Ines_Header_F10) Read(io *kaitai.Stream, parent *Ines_Header, root *
  */
 
 /**
- * @see <a href="http://wiki.nesdev.com/w/index.php/PC10_ROM-Images">Source</a>
+ * @see <a href="https://www.nesdev.org/wiki/PC10_ROM-Images">Source</a>
  */
 type Ines_Playchoice10 struct {
 	InstRom []byte

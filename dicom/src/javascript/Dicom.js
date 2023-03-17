@@ -20,7 +20,7 @@
  * top-level parser attempts to autodetect and handle both of them. If
  * any problems arise, one can use `file_explicit` and `file_implicit`
  * subtypes to force parsing in particular transfer syntax.
- * @see {@link http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7|Source}
+ * @see {@link https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7|Source}
  */
 
 var Dicom = (function() {
@@ -8111,7 +8111,7 @@ var Dicom = (function() {
   })();
 
   /**
-   * @see {@link http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2|Source}
+   * @see {@link https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2|Source}
    */
 
   var TDataElementExplicit = Dicom.TDataElementExplicit = (function() {
@@ -8197,7 +8197,7 @@ var Dicom = (function() {
   })();
 
   /**
-   * @see {@link http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2|Source}
+   * @see {@link https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2|Source}
    */
 
   var TDataElementImplicit = Dicom.TDataElementImplicit = (function() {

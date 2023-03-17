@@ -20,10 +20,10 @@ namespace Kaitai
     /// Reference: <a href="http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="http://doom.wikia.com/wiki/GENMIDI">Source</a>
+    /// Reference: <a href="https://doom.fandom.com/wiki/GENMIDI">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="http://www.shikadi.net/moddingwiki/OP2_Bank_Format">Source</a>
+    /// Reference: <a href="https://moddingwiki.shikadi.net/wiki/OP2_Bank_Format">Source</a>
     /// </remarks>
     public partial class GenmidiOp2 : KaitaiStruct
     {

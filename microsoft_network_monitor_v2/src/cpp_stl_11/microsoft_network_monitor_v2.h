@@ -5,15 +5,15 @@
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
-#include "ethernet_frame.h"
 #include "windows_systemtime.h"
+#include "ethernet_frame.h"
 #include <vector>
 
 #if KAITAI_STRUCT_VERSION < 9000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
-class ethernet_frame_t;
 class windows_systemtime_t;
+class ethernet_frame_t;
 
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
@@ -24,7 +24,7 @@ class windows_systemtime_t;
  * 
  * There are at least 2 different versions of the format: v1 and
  * v2. Netmon v3 seems to use the same file format as v1.
- * \sa https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values Source
+ * \sa https://learn.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values Source
  */
 
 class microsoft_network_monitor_v2_t : public kaitai::kstruct {
@@ -222,7 +222,7 @@ public:
      * A container for actually captured network data. Allow to
      * timestamp individual frames and designates how much data from
      * the original packet was actually written into the file.
-     * \sa https://docs.microsoft.com/en-us/windows/win32/netmon2/frame Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/netmon2/frame Source
      */
 
     class frame_t : public kaitai::kstruct {

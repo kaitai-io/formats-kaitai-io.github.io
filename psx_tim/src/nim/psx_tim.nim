@@ -35,7 +35,7 @@ proc bpp*(this: PsxTim): int
 
 ##[
 @see <a href="http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)">Source</a>
-@see <a href="http://mrclick.zophar.net/TilEd/download/timgfx.txt">Source</a>
+@see <a href="https://mrclick.zophar.net/TilEd/download/timgfx.txt">Source</a>
 @see <a href="https://www.romhacking.net/documents/31/">Source</a>
 ]##
 proc read*(_: typedesc[PsxTim], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PsxTim =

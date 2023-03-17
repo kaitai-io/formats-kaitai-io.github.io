@@ -289,7 +289,7 @@ This format is loosely similar to Java .class file format and
 generally holds the similar set of data: i.e. classes, methods,
 fields, annotations, etc.
 
-@see <a href="https://source.android.com/devices/tech/dalvik/dex-format">Source</a>
+@see <a href="https://source.android.com/docs/core/runtime/dex-format">Source</a>
 ]##
 proc read*(_: typedesc[Dex], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dex =
   template this: untyped = result

@@ -234,7 +234,7 @@ public class BlenderBlend extends KaitaiStruct {
      * * a sequence of "type lengths"
      * * a sequence of "structs" (which describe contents of every
      *   structure, referring to types and names by index)
-     * @see <a href="https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA">Source</a>
+     * @see <a href="https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA">Source</a>
      */
     public static class Dna1Body extends KaitaiStruct {
         public static Dna1Body fromFile(String fileName) throws IOException {

@@ -14,7 +14,7 @@
  * icons - ICO. This is a container that contains one or more image
  * files (effectively, DIB parts of BMP files or full PNG files are
  * contained inside).
- * @see {@link https://docs.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)|Source}
+ * @see {@link https://learn.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)|Source}
  */
 
 var Ico = (function() {

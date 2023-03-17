@@ -249,7 +249,7 @@ network traffic grabbed by network sniffers. It is typically
 produced by tools like [tcpdump](https://www.tcpdump.org/) or
 [Wireshark](https://www.wireshark.org/).
 
-@see <a href="http://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
+@see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
 ]##
 proc read*(_: typedesc[Pcap], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Pcap =
   template this: untyped = result

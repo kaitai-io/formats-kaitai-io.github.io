@@ -12,7 +12,7 @@
 /**
  * The entries are used to synchronize the state of services instances and the
  * Publish/-Subscribe handling.
- * @see {@link https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
+ * @see {@link https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
  * -|section 4.1.2.3  Entry Format}
  */
 

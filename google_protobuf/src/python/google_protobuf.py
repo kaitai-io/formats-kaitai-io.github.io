@@ -39,7 +39,7 @@ class GoogleProtobuf(KaitaiStruct):
       are the fields' default values, etc, etc.
     
     .. seealso::
-       Source - https://developers.google.com/protocol-buffers/docs/encoding
+       Source - https://protobuf.dev/programming-guides/encoding/
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

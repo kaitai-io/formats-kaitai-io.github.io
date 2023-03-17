@@ -10,7 +10,7 @@ require("kaitaistruct")
 -- icons - ICO. This is a container that contains one or more image
 -- files (effectively, DIB parts of BMP files or full PNG files are
 -- contained inside).
--- See also: Source (https://docs.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10))
+-- See also: Source (https://learn.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10))
 Ico = class.class(KaitaiStruct)
 
 function Ico:_init(io, parent, root)

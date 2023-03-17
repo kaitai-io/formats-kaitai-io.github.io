@@ -64,7 +64,7 @@
  * 
  * ## Specs
  *  * [Bitmap Storage (Windows Dev Center)](
- *      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+ *      https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
  *    )
  *     * BITMAPFILEHEADER
  *     * BITMAPINFOHEADER
@@ -163,7 +163,7 @@ public:
     ~bmp_t();
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
      */
 
     class cie_xyz_t : public kaitai::kstruct {
@@ -233,7 +233,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
      */
 
     class bitmap_v5_extension_t : public kaitai::kstruct {
@@ -269,7 +269,7 @@ public:
     public:
 
         /**
-         * \sa https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
+         * \sa https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
          */
         std::string profile_data();
 
@@ -333,7 +333,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
      */
 
     class bitmap_v4_extension_t : public kaitai::kstruct {
@@ -373,7 +373,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source
+     * \sa https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source
      */
 
     class bitmap_info_extension_t : public kaitai::kstruct {
@@ -490,7 +490,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader Source
      * \sa https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1 Source
      */
 
@@ -806,7 +806,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader Source
      */
 
     class file_header_t : public kaitai::kstruct {
@@ -850,7 +850,7 @@ public:
     };
 
     /**
-     * \sa https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
      */
 
     class bitmap_info_t : public kaitai::kstruct {

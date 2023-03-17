@@ -11,7 +11,7 @@ local utils = require("utils")
 
 -- 
 -- The OpenPGP Message Format is a format to store encryption and signature keys for emails.
--- See also: Source (https://tools.ietf.org/html/rfc4880)
+-- See also: Source (https://www.rfc-editor.org/rfc/rfc4880)
 OpenpgpMessage = class.class(KaitaiStruct)
 
 OpenpgpMessage.PublicKeyAlgorithms = enum.Enum {

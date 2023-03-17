@@ -11,7 +11,7 @@ namespace Kaitai
     /// and the underlying serialization/wire format.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf">Source</a>
+    /// Reference: <a href="https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf">Source</a>
     /// </remarks>
     public partial class SomeIp : KaitaiStruct
     {

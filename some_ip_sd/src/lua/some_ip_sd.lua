@@ -15,7 +15,7 @@ require("some_ip_sd_options")
 -- This allows sending only event messages to receivers requiring them (Publish/Subscribe).
 -- The solution described here is also known as SOME/IP-SD
 -- (Scalable service-Oriented MiddlewarE over IP - Service Discovery).
--- See also: Source (https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf)
+-- See also: Source (https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf)
 SomeIpSd = class.class(KaitaiStruct)
 
 function SomeIpSd:_init(io, parent, root)

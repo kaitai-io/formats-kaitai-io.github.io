@@ -16,7 +16,7 @@ require("vlq_base128_le")
 -- This format is loosely similar to Java .class file format and
 -- generally holds the similar set of data: i.e. classes, methods,
 -- fields, annotations, etc.
--- See also: Source (https://source.android.com/devices/tech/dalvik/dex-format)
+-- See also: Source (https://source.android.com/docs/core/runtime/dex-format)
 Dex = class.class(KaitaiStruct)
 
 Dex.ClassAccessFlags = enum.Enum {

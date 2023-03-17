@@ -19,7 +19,7 @@ class WindowsMinidump(KaitaiStruct):
     "streams", which contain some data according to its type attribute.
     
     .. seealso::
-       Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header
+       Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header
     """
 
     class StreamTypes(Enum):
@@ -95,7 +95,7 @@ class WindowsMinidump(KaitaiStruct):
     class ThreadList(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -114,7 +114,7 @@ class WindowsMinidump(KaitaiStruct):
     class LocationDescriptor(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -144,7 +144,7 @@ class WindowsMinidump(KaitaiStruct):
         actually a simple 32-bit length-prefixed UTF-16 string.
         
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -162,7 +162,7 @@ class WindowsMinidump(KaitaiStruct):
         hardware and operating system which produces this dump.
         
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info
         """
 
         class CpuArchs(Enum):
@@ -209,7 +209,7 @@ class WindowsMinidump(KaitaiStruct):
     class ExceptionRecord(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -233,7 +233,7 @@ class WindowsMinidump(KaitaiStruct):
     class MiscInfo(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -258,7 +258,7 @@ class WindowsMinidump(KaitaiStruct):
     class Dir(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -308,7 +308,7 @@ class WindowsMinidump(KaitaiStruct):
     class Thread(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -329,7 +329,7 @@ class WindowsMinidump(KaitaiStruct):
     class MemoryList(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -348,7 +348,7 @@ class WindowsMinidump(KaitaiStruct):
     class MemoryDescriptor(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -364,7 +364,7 @@ class WindowsMinidump(KaitaiStruct):
     class ExceptionStream(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

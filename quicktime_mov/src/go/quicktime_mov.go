@@ -7,7 +7,7 @@ import (
 
 
 /**
- * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
+ * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF">Source</a>
  */
 
 type QuicktimeMov_AtomType int
@@ -315,7 +315,7 @@ func (this *QuicktimeMov) Read(io *kaitai.Stream, parent interface{}, root *Quic
 }
 
 /**
- * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
+ * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
  */
 type QuicktimeMov_MvhdBody struct {
 	Version uint8
@@ -504,7 +504,7 @@ func (this *QuicktimeMov_MvhdBody) Read(io *kaitai.Stream, parent *QuicktimeMov_
  */
 
 /**
- * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+ * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
  */
 type QuicktimeMov_FtypBody struct {
 	MajorBrand QuicktimeMov_Brand
@@ -895,7 +895,7 @@ func (this *QuicktimeMov_Atom) Len() (v int, err error) {
 }
 
 /**
- * @see <a href="https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
+ * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
  */
 type QuicktimeMov_TkhdBody struct {
 	Version uint8

@@ -9,7 +9,7 @@ local str_decode = require("string_decode")
 local enum = require("enum")
 
 -- 
--- See also: Source (https://wiki.nesdev.com/w/index.php/INES)
+-- See also: Source (https://www.nesdev.org/wiki/INES)
 Ines = class.class(KaitaiStruct)
 
 function Ines:_init(io, parent, root)
@@ -73,7 +73,7 @@ function Ines.Header:_read()
 end
 
 -- 
--- See also: Source (https://wiki.nesdev.com/w/index.php/Mapper)
+-- See also: Source (https://www.nesdev.org/wiki/Mapper)
 Ines.Header.property.mapper = {}
 function Ines.Header.property.mapper:get()
   if self._m_mapper ~= nil then
@@ -94,7 +94,7 @@ end
 -- this one is unofficial.
 
 -- 
--- See also: Source (https://wiki.nesdev.com/w/index.php/INES#Flags_6)
+-- See also: Source (https://www.nesdev.org/wiki/INES#Flags_6)
 Ines.Header.F6 = class.class(KaitaiStruct)
 
 Ines.Header.F6.Mirroring = enum.Enum {
@@ -129,7 +129,7 @@ end
 -- if 0, horizontal arrangement. if 1, vertical arrangement.
 
 -- 
--- See also: Source (https://wiki.nesdev.com/w/index.php/INES#Flags_7)
+-- See also: Source (https://www.nesdev.org/wiki/INES#Flags_7)
 Ines.Header.F7 = class.class(KaitaiStruct)
 
 function Ines.Header.F7:_init(io, parent, root)
@@ -156,7 +156,7 @@ end
 -- Determines if it is made for a Nintendo VS Unisystem or not.
 
 -- 
--- See also: Source (https://wiki.nesdev.com/w/index.php/INES#Flags_9)
+-- See also: Source (https://www.nesdev.org/wiki/INES#Flags_9)
 Ines.Header.F9 = class.class(KaitaiStruct)
 
 Ines.Header.F9.TvSystem = enum.Enum {
@@ -180,7 +180,7 @@ end
 -- if 0, NTSC. If 1, PAL.
 
 -- 
--- See also: Source (https://wiki.nesdev.com/w/index.php/INES#Flags_10)
+-- See also: Source (https://www.nesdev.org/wiki/INES#Flags_10)
 Ines.Header.F10 = class.class(KaitaiStruct)
 
 Ines.Header.F10.TvSystem = enum.Enum {
@@ -213,7 +213,7 @@ end
 -- if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
 
 -- 
--- See also: Source (http://wiki.nesdev.com/w/index.php/PC10_ROM-Images)
+-- See also: Source (https://www.nesdev.org/wiki/PC10_ROM-Images)
 Ines.Playchoice10 = class.class(KaitaiStruct)
 
 function Ines.Playchoice10:_init(io, parent, root)

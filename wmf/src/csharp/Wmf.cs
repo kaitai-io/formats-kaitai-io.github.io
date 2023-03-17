@@ -15,7 +15,7 @@ namespace Kaitai
     /// printer, etc).
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf">Source</a>
+    /// Reference: <a href="https://www.loc.gov/preservation/digital/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf">Source</a>
     /// </remarks>
     public partial class Wmf : KaitaiStruct
     {

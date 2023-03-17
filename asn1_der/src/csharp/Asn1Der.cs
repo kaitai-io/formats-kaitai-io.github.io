@@ -173,7 +173,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
         /// </remarks>
         public partial class BodyObjectId : KaitaiStruct
         {

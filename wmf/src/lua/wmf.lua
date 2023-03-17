@@ -15,7 +15,7 @@ local stringstream = require("string_stream")
 -- Device Interface) function calls, which, if played back, result in
 -- an image being drawn on a given surface (display, off-screen buffer,
 -- printer, etc).
--- See also: Source (http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf)
+-- See also: Source (https://www.loc.gov/preservation/digital/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf)
 Wmf = class.class(KaitaiStruct)
 
 Wmf.Func = enum.Enum {

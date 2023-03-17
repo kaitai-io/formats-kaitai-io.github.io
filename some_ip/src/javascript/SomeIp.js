@@ -13,7 +13,7 @@
  * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
  * communication protocol which supports remoteprocedure calls, event notifications
  * and the underlying serialization/wire format.
- * @see {@link https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf|Source}
+ * @see {@link https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf|Source}
  */
 
 var SomeIp = (function() {

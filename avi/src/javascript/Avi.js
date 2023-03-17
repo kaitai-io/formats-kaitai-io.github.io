@@ -10,7 +10,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)|Source}
+ * @see {@link https://learn.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)|Source}
  */
 
 var Avi = (function() {
@@ -144,7 +144,7 @@ var Avi = (function() {
 
   /**
    * Main header of an AVI file, defined as AVIMAINHEADER structure
-   * @see {@link https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)|Source}
+   * @see {@link https://learn.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)|Source}
    */
 
   var AvihBody = Avi.AvihBody = (function() {
@@ -210,7 +210,7 @@ var Avi = (function() {
 
   /**
    * Stream header (one header per stream), defined as AVISTREAMHEADER structure
-   * @see {@link https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)|Source}
+   * @see {@link https://learn.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)|Source}
    */
 
   var StrhBody = Avi.StrhBody = (function() {

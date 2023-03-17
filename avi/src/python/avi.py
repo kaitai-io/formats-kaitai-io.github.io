@@ -11,7 +11,7 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
 class Avi(KaitaiStruct):
     """
     .. seealso::
-       Source - https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)
+       Source - https://learn.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)
     """
 
     class ChunkType(Enum):
@@ -103,7 +103,7 @@ class Avi(KaitaiStruct):
         """Main header of an AVI file, defined as AVIMAINHEADER structure.
         
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)
+           Source - https://learn.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -156,7 +156,7 @@ class Avi(KaitaiStruct):
         """Stream header (one header per stream), defined as AVISTREAMHEADER structure.
         
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)
+           Source - https://learn.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

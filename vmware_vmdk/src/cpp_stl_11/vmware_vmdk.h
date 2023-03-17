@@ -11,7 +11,7 @@
 #endif
 
 /**
- * \sa https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header Source
+ * \sa https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header Source
  */
 
 class vmware_vmdk_t : public kaitai::kstruct {
@@ -34,7 +34,7 @@ public:
     ~vmware_vmdk_t();
 
     /**
-     * \sa https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags Source
+     * \sa https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags Source
      */
 
     class header_flags_t : public kaitai::kstruct {

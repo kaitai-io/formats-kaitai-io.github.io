@@ -18,8 +18,8 @@ local str_decode = require("string_decode")
 -- Sample file: `curl -LO
 -- https://github.com/kaitai-io/kaitai_struct_formats/files/5894723/scanner_withoptions.dump.gz
 -- && gunzip scanner_withoptions.dump.gz`
--- See also: Source (https://tools.ietf.org/html/draft-nielsen-dime-02)
--- See also: Source (https://docs.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime)
+-- See also: Source (https://datatracker.ietf.org/doc/html/draft-nielsen-dime-02)
+-- See also: Source (https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime)
 -- See also: Source (http://imrannazar.com/Parsing-the-DIME-Message-Format)
 DimeMessage = class.class(KaitaiStruct)
 

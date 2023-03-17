@@ -125,7 +125,7 @@ class Asn1Der < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-object-identifier Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier Source
   class BodyObjectId < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

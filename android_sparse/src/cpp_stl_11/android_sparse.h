@@ -22,7 +22,7 @@
  * 
  * Note: this is not the same as the Android sparse data image format.
  * \sa https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_format.h Source
- * \sa https://source.android.com/devices/bootloader/images#sparse-image-format Source
+ * \sa https://web.archive.org/web/20220322054458/https://source.android.com/devices/bootloader/images#sparse-image-format Source
  */
 
 class android_sparse_t : public kaitai::kstruct {

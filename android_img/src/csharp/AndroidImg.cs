@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="https://source.android.com/devices/bootloader/boot-image-header">Source</a>
+    /// Reference: <a href="https://source.android.com/docs/core/architecture/bootloader/boot-image-header">Source</a>
     /// </remarks>
     public partial class AndroidImg : KaitaiStruct
     {

@@ -20,7 +20,7 @@ namespace Kaitai
     /// documented by Adobe.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf">Source</a>
+    /// Reference: <a href="https://open-flash.github.io/mirrors/swf-spec-19.pdf">Source</a>
     /// </remarks>
     public partial class Swf : KaitaiStruct
     {

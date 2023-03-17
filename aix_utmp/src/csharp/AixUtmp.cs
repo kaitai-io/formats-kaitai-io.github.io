@@ -9,7 +9,7 @@ namespace Kaitai
     /// This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.files/utmp.h.htm">Source</a>
+    /// Reference: <a href="https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file">Source</a>
     /// </remarks>
     public partial class AixUtmp : KaitaiStruct
     {

@@ -22,7 +22,7 @@
  * top-level parser attempts to autodetect and handle both of them. If
  * any problems arise, one can use `file_explicit` and `file_implicit`
  * subtypes to force parsing in particular transfer syntax.
- * \sa http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7 Source
+ * \sa https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7 Source
  */
 
 class dicom_t : public kaitai::kstruct {
@@ -4095,7 +4095,7 @@ public:
     };
 
     /**
-     * \sa http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
+     * \sa https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
      */
 
     class t_data_element_explicit_t : public kaitai::kstruct {
@@ -4201,7 +4201,7 @@ public:
     };
 
     /**
-     * \sa http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
+     * \sa https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
      */
 
     class t_data_element_implicit_t : public kaitai::kstruct {

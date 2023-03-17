@@ -18,7 +18,7 @@ namespace Kaitai
     /// subtypes to force parsing in particular transfer syntax.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
+    /// Reference: <a href="https://dicom.nema.org/medical/dicom/current/output/html/part10.html#chapter_7">Source</a>
     /// </remarks>
     public partial class Dicom : KaitaiStruct
     {
@@ -4105,7 +4105,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+        /// Reference: <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
         /// </remarks>
         public partial class TDataElementExplicit : KaitaiStruct
         {
@@ -4246,7 +4246,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
+        /// Reference: <a href="https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2">Source</a>
         /// </remarks>
         public partial class TDataElementImplicit : KaitaiStruct
         {

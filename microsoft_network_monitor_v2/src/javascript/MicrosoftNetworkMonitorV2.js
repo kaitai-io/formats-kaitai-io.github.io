@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './EthernetFrame', './WindowsSystemtime'], factory);
+    define(['kaitai-struct/KaitaiStream', './WindowsSystemtime', './EthernetFrame'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'), require('./WindowsSystemtime'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./WindowsSystemtime'), require('./EthernetFrame'));
   } else {
-    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.EthernetFrame, root.WindowsSystemtime);
+    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.WindowsSystemtime, root.EthernetFrame);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, EthernetFrame, WindowsSystemtime) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, WindowsSystemtime, EthernetFrame) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
  * network packet sniffing and analysis tool. It can save captured
@@ -18,7 +18,7 @@
  * 
  * There are at least 2 different versions of the format: v1 and
  * v2. Netmon v3 seems to use the same file format as v1.
- * @see {@link https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values|Source}
+ * @see {@link https://learn.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values|Source}
  */
 
 var MicrosoftNetworkMonitorV2 = (function() {
@@ -328,7 +328,7 @@ var MicrosoftNetworkMonitorV2 = (function() {
    * A container for actually captured network data. Allow to
    * timestamp individual frames and designates how much data from
    * the original packet was actually written into the file.
-   * @see {@link https://docs.microsoft.com/en-us/windows/win32/netmon2/frame|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/netmon2/frame|Source}
    */
 
   var Frame = MicrosoftNetworkMonitorV2.Frame = (function() {

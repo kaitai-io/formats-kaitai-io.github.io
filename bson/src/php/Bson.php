@@ -399,10 +399,6 @@ namespace Bson {
     }
 }
 
-/**
- * https://docs.mongodb.com/manual/reference/method/ObjectId/
- */
-
 namespace Bson {
     class ObjectId extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {

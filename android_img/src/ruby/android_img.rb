@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see https://source.android.com/devices/bootloader/boot-image-header Source
+# @see https://source.android.com/docs/core/architecture/bootloader/boot-image-header Source
 class AndroidImg < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

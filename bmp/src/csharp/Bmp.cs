@@ -58,7 +58,7 @@ namespace Kaitai
     /// 
     /// ## Specs
     ///  * [Bitmap Storage (Windows Dev Center)](
-    ///      https://docs.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
+    ///      https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage
     ///    )
     ///     * BITMAPFILEHEADER
     ///     * BITMAPINFOHEADER
@@ -159,7 +159,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
         /// </remarks>
         public partial class CieXyz : KaitaiStruct
         {
@@ -226,7 +226,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
         /// </remarks>
         public partial class BitmapV5Extension : KaitaiStruct
         {
@@ -267,7 +267,7 @@ namespace Kaitai
             private object _profileData;
 
             /// <remarks>
-            /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
+            /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
             /// </remarks>
             public object ProfileData
             {
@@ -348,7 +348,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
         /// </remarks>
         public partial class BitmapV4Extension : KaitaiStruct
         {
@@ -394,7 +394,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
         /// </remarks>
         public partial class BitmapInfoExtension : KaitaiStruct
         {
@@ -515,7 +515,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader">Source</a>
         /// </remarks>
         /// <remarks>
         /// Reference: <a href="https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1">Source</a>
@@ -910,7 +910,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
         /// </remarks>
         public partial class FileHeader : KaitaiStruct
         {
@@ -962,7 +962,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
         /// </remarks>
         public partial class BitmapInfo : KaitaiStruct
         {

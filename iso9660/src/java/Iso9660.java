@@ -43,7 +43,7 @@ public class Iso9660 extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
+     * @see <a href="https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor">Source</a>
      */
     public static class VolDescPrimary extends KaitaiStruct {
         public static VolDescPrimary fromFile(String fileName) throws IOException {
@@ -500,7 +500,7 @@ public class Iso9660 extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
+     * @see <a href="https://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
      */
     public static class PathTableLe extends KaitaiStruct {
         public static PathTableLe fromFile(String fileName) throws IOException {
@@ -540,7 +540,7 @@ public class Iso9660 extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
+     * @see <a href="https://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
      */
     public static class DecDatetime extends KaitaiStruct {
         public static DecDatetime fromFile(String fileName) throws IOException {

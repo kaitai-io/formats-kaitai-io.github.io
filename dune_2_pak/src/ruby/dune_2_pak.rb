@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood) Source
+# @see https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood) Source
 class Dune2Pak < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

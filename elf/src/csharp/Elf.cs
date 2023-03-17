@@ -13,7 +13,7 @@ namespace Kaitai
     /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html">Source</a>
+    /// Reference: <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html">Source</a>
     /// </remarks>
     public partial class Elf : KaitaiStruct
     {
@@ -967,7 +967,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
@@ -1515,7 +1515,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/relocation-sections.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
@@ -1820,7 +1820,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html">Source</a>
@@ -2048,7 +2048,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
@@ -3162,7 +3162,7 @@ namespace Kaitai
         /// Reference: <a href="https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095">Source</a>
         /// </remarks>
         /// <remarks>
-        /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5">Source</a>
+        /// Reference: <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5">Source</a>
         /// </remarks>
         public partial class DtFlagValues : KaitaiStruct
         {

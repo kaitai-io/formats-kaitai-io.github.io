@@ -10,7 +10,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood)|Source}
+ * @see {@link https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood)|Source}
  */
 
 var Dune2Pak = (function() {

@@ -9,7 +9,7 @@ local str_decode = require("string_decode")
 
 -- 
 -- This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
--- See also: Source (https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.files/utmp.h.htm)
+-- See also: Source (https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file)
 AixUtmp = class.class(KaitaiStruct)
 
 AixUtmp.EntryType = enum.Enum {

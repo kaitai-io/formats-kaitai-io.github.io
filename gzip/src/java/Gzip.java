@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * As of 2019, there is actually only one working solution for
  * compression algorithms, so it's typically raw DEFLATE stream
  * (without zlib header) in all gzipped files.
- * @see <a href="https://tools.ietf.org/html/rfc1952">Source</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc1952">Source</a>
  */
 public class Gzip extends KaitaiStruct {
     public static Gzip fromFile(String fileName) throws IOException {

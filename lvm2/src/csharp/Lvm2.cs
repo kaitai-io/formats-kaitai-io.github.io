@@ -18,7 +18,7 @@ namespace Kaitai
     /// ```
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/libyal/libvslvm/blob/master/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc">Source</a>
+    /// Reference: <a href="https://github.com/libyal/libvslvm/blob/main/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc">Source</a>
     /// </remarks>
     public partial class Lvm2 : KaitaiStruct
     {

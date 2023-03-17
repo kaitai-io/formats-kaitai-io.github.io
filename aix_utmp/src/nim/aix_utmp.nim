@@ -42,7 +42,7 @@ proc read*(_: typedesc[AixUtmp_ExitStatus], io: KaitaiStream, root: KaitaiStruct
 
 ##[
 This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
-@see <a href="https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.files/utmp.h.htm">Source</a>
+@see <a href="https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file">Source</a>
 ]##
 proc read*(_: typedesc[AixUtmp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AixUtmp =
   template this: untyped = result

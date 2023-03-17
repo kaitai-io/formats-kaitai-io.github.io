@@ -84,7 +84,7 @@ end
 -- provides a very simple form of image compression, allowing
 -- certain elements ("patches") to be reused / recombined on
 -- different textures for more variety in the game.
--- See also: Source (http://doom.wikia.com/wiki/TEXTURE1)
+-- See also: Source (https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2)
 DoomWad.Texture12 = class.class(KaitaiStruct)
 
 function DoomWad.Texture12:_init(io, parent, root)
@@ -206,7 +206,7 @@ end
 
 
 -- 
--- See also: Source (http://doom.wikia.com/wiki/PNAMES)
+-- See also: Source (https://doom.fandom.com/wiki/PNAMES)
 DoomWad.Pnames = class.class(KaitaiStruct)
 
 function DoomWad.Pnames:_init(io, parent, root)

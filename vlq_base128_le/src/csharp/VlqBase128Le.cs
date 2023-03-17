@@ -13,9 +13,9 @@ namespace Kaitai
     /// This particular encoding is specified and used in:
     /// 
     /// * DWARF debug file format, where it's dubbed &quot;unsigned LEB128&quot; or &quot;ULEB128&quot;.
-    ///   http://dwarfstd.org/doc/dwarf-2.0.0.pdf - page 139
+    ///   https://dwarfstd.org/doc/dwarf-2.0.0.pdf - page 139
     /// * Google Protocol Buffers, where it's called &quot;Base 128 Varints&quot;.
-    ///   https://developers.google.com/protocol-buffers/docs/encoding?csw=1#varints
+    ///   https://protobuf.dev/programming-guides/encoding/#varints
     /// * Apache Lucene, where it's called &quot;VInt&quot;
     ///   https://lucene.apache.org/core/3_5_0/fileformats.html#VInt
     /// * Apache Avro uses this as a basis for integer encoding, adding ZigZag on

@@ -414,7 +414,7 @@ public class Png extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.w3.org/TR/PNG/#11cHRM">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
      */
     public static class ChrmChunk extends KaitaiStruct {
         public static ChrmChunk fromFile(String fileName) throws IOException {
@@ -456,7 +456,7 @@ public class Png extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.w3.org/TR/PNG/#11IHDR">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11IHDR">Source</a>
      */
     public static class IhdrChunk extends KaitaiStruct {
         public static IhdrChunk fromFile(String fileName) throws IOException {
@@ -507,7 +507,7 @@ public class Png extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.w3.org/TR/PNG/#11PLTE">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11PLTE">Source</a>
      */
     public static class PlteChunk extends KaitaiStruct {
         public static PlteChunk fromFile(String fileName) throws IOException {
@@ -547,7 +547,7 @@ public class Png extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.w3.org/TR/PNG/#11sRGB">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
      */
     public static class SrgbChunk extends KaitaiStruct {
         public static SrgbChunk fromFile(String fileName) throws IOException {
@@ -600,7 +600,7 @@ public class Png extends KaitaiStruct {
      * Compressed text chunk effectively allows to store key-value
      * string pairs in PNG container, compressing "value" part (which
      * can be quite lengthy) with zlib compression.
-     * @see <a href="https://www.w3.org/TR/PNG/#11zTXt">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
      */
     public static class CompressedTextChunk extends KaitaiStruct {
         public static CompressedTextChunk fromFile(String fileName) throws IOException {
@@ -735,7 +735,7 @@ public class Png extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.w3.org/TR/PNG/#11gAMA">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11gAMA">Source</a>
      */
     public static class GamaChunk extends KaitaiStruct {
         public static GamaChunk fromFile(String fileName) throws IOException {
@@ -778,7 +778,7 @@ public class Png extends KaitaiStruct {
     /**
      * Background chunk stores default background color to display this
      * image against. Contents depend on `color_type` of the image.
-     * @see <a href="https://www.w3.org/TR/PNG/#11bKGD">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11bKGD">Source</a>
      */
     public static class BkgdChunk extends KaitaiStruct {
         public static BkgdChunk fromFile(String fileName) throws IOException {
@@ -839,7 +839,7 @@ public class Png extends KaitaiStruct {
     /**
      * "Physical size" chunk stores data that allows to translate
      * logical pixels into physical units (meters, etc) and vice-versa.
-     * @see <a href="https://www.w3.org/TR/PNG/#11pHYs">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
      */
     public static class PhysChunk extends KaitaiStruct {
         public static PhysChunk fromFile(String fileName) throws IOException {
@@ -1015,7 +1015,7 @@ public class Png extends KaitaiStruct {
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
      * characters.
-     * @see <a href="https://www.w3.org/TR/PNG/#11iTXt">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11iTXt">Source</a>
      */
     public static class InternationalTextChunk extends KaitaiStruct {
         public static InternationalTextChunk fromFile(String fileName) throws IOException {
@@ -1093,7 +1093,7 @@ public class Png extends KaitaiStruct {
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
      * characters.
-     * @see <a href="https://www.w3.org/TR/PNG/#11tEXt">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11tEXt">Source</a>
      */
     public static class TextChunk extends KaitaiStruct {
         public static TextChunk fromFile(String fileName) throws IOException {
@@ -1179,7 +1179,7 @@ public class Png extends KaitaiStruct {
     /**
      * Time chunk stores time stamp of last modification of this image,
      * up to 1 second precision in UTC timezone.
-     * @see <a href="https://www.w3.org/TR/PNG/#11tIME">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#11tIME">Source</a>
      */
     public static class TimeChunk extends KaitaiStruct {
         public static TimeChunk fromFile(String fileName) throws IOException {

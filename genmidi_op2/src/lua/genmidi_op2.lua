@@ -17,8 +17,8 @@ local str_decode = require("string_decode")
 -- * Original Doom game engine (and games based on it: Heretic, Hexen, Strife, Chex Quest)
 -- * Raptor: Call of the Shadows
 -- See also: Source (http://www.fit.vutbr.cz/~arnost/muslib/op2_form.zip)
--- See also: Source (http://doom.wikia.com/wiki/GENMIDI)
--- See also: Source (http://www.shikadi.net/moddingwiki/OP2_Bank_Format)
+-- See also: Source (https://doom.fandom.com/wiki/GENMIDI)
+-- See also: Source (https://moddingwiki.shikadi.net/wiki/OP2_Bank_Format)
 GenmidiOp2 = class.class(KaitaiStruct)
 
 function GenmidiOp2:_init(io, parent, root)

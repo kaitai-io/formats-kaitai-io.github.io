@@ -17,7 +17,7 @@ local stringstream = require("string_stream")
 -- 
 -- The file itself is a container, which contains a number of typed
 -- "streams", which contain some data according to its type attribute.
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header)
 WindowsMinidump = class.class(KaitaiStruct)
 
 WindowsMinidump.StreamTypes = enum.Enum {
@@ -114,7 +114,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list)
 WindowsMinidump.ThreadList = class.class(KaitaiStruct)
 
 function WindowsMinidump.ThreadList:_init(io, parent, root)
@@ -134,7 +134,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor)
 WindowsMinidump.LocationDescriptor = class.class(KaitaiStruct)
 
 function WindowsMinidump.LocationDescriptor:_init(io, parent, root)
@@ -167,7 +167,7 @@ end
 -- 
 -- Specific string serialization scheme used in MiniDump format is
 -- actually a simple 32-bit length-prefixed UTF-16 string.
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string)
 WindowsMinidump.MinidumpString = class.class(KaitaiStruct)
 
 function WindowsMinidump.MinidumpString:_init(io, parent, root)
@@ -186,7 +186,7 @@ end
 -- 
 -- "System info" stream provides basic information about the
 -- hardware and operating system which produces this dump.
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info)
 WindowsMinidump.SystemInfo = class.class(KaitaiStruct)
 
 WindowsMinidump.SystemInfo.CpuArchs = enum.Enum {
@@ -237,7 +237,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception)
 WindowsMinidump.ExceptionRecord = class.class(KaitaiStruct)
 
 function WindowsMinidump.ExceptionRecord:_init(io, parent, root)
@@ -271,7 +271,7 @@ end
 -- 15), but in reality only first `num_params` would be used.
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info)
 WindowsMinidump.MiscInfo = class.class(KaitaiStruct)
 
 function WindowsMinidump.MiscInfo:_init(io, parent, root)
@@ -297,7 +297,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory)
 WindowsMinidump.Dir = class.class(KaitaiStruct)
 
 function WindowsMinidump.Dir:_init(io, parent, root)
@@ -350,10 +350,10 @@ function WindowsMinidump.Dir.property.data:get()
 end
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor)
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread)
 WindowsMinidump.Thread = class.class(KaitaiStruct)
 
 function WindowsMinidump.Thread:_init(io, parent, root)
@@ -377,7 +377,7 @@ end
 -- Thread Environment Block.
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list)
 WindowsMinidump.MemoryList = class.class(KaitaiStruct)
 
 function WindowsMinidump.MemoryList:_init(io, parent, root)
@@ -397,7 +397,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor)
 WindowsMinidump.MemoryDescriptor = class.class(KaitaiStruct)
 
 function WindowsMinidump.MemoryDescriptor:_init(io, parent, root)
@@ -414,7 +414,7 @@ end
 
 
 -- 
--- See also: Source (https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream)
 WindowsMinidump.ExceptionStream = class.class(KaitaiStruct)
 
 function WindowsMinidump.ExceptionStream:_init(io, parent, root)

@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header Source
+# @see https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header Source
 class VmwareVmdk < Kaitai::Struct::Struct
 
   COMPRESSION_METHODS = {
@@ -41,7 +41,7 @@ class VmwareVmdk < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags Source
+  # @see https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags Source
   class HeaderFlags < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

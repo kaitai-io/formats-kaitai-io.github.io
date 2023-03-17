@@ -13,7 +13,7 @@ local enum = require("enum")
 -- for ZX Spectrum. Contents of this file can be viewed as a very
 -- simple linear filesystem, storing named files with some basic
 -- metainformation prepended as a header.
--- See also: Source (https://faqwiki.zxnet.co.uk/wiki/TAP_format)
+-- See also: Source (https://sinclair.wiki.zxnet.co.uk/wiki/TAP_format)
 ZxSpectrumTap = class.class(KaitaiStruct)
 
 ZxSpectrumTap.FlagEnum = enum.Enum {

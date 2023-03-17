@@ -262,7 +262,10 @@ class Bson(KaitaiStruct):
 
 
     class ObjectId(KaitaiStruct):
-        """https://docs.mongodb.com/manual/reference/method/ObjectId/."""
+        """
+        .. seealso::
+           Source - https://www.mongodb.com/docs/manual/reference/method/ObjectId/
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

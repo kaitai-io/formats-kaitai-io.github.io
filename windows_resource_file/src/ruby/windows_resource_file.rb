@@ -52,7 +52,7 @@ class WindowsResourceFile < Kaitai::Struct::Struct
   # Each resource has a `type` and a `name`, which can be used to
   # identify it, and a `value`. Both `type` and `name` can be a
   # number or a string.
-  # @see https://docs.microsoft.com/en-us/windows/win32/menurc/resourceheader Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/menurc/resourceheader Source
   class Resource < Kaitai::Struct::Struct
 
     PREDEF_TYPES = {

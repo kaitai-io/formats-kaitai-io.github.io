@@ -233,7 +233,7 @@ Effectively, this block contains:
 * a sequence of "structs" (which describe contents of every
   structure, referring to types and names by index)
 
-@see <a href="https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA">Source</a>
+@see <a href="https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA">Source</a>
 ]##
 proc read*(_: typedesc[BlenderBlend_Dna1Body], io: KaitaiStream, root: KaitaiStruct, parent: BlenderBlend_FileBlock): BlenderBlend_Dna1Body =
   template this: untyped = result

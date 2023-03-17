@@ -8,7 +8,7 @@ import (
 
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
  */
 
 type MicrosoftPe_PeFormat int
@@ -71,7 +71,7 @@ func (this *MicrosoftPe) Pe() (v *MicrosoftPe_PeHeader, err error) {
 }
 
 /**
- * @see <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
  */
 
 type MicrosoftPe_CertificateEntry_CertificateRevision int

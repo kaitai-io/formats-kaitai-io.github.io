@@ -389,7 +389,7 @@ var Bson = (function() {
   })();
 
   /**
-   * https://docs.mongodb.com/manual/reference/method/ObjectId/
+   * @see {@link https://www.mongodb.com/docs/manual/reference/method/ObjectId/|Source}
    */
 
   var ObjectId = Bson.ObjectId = (function() {

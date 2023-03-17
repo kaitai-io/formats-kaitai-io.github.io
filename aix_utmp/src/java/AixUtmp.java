@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 
 /**
  * This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
- * @see <a href="https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.files/utmp.h.htm">Source</a>
+ * @see <a href="https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file">Source</a>
  */
 public class AixUtmp extends KaitaiStruct {
     public static AixUtmp fromFile(String fileName) throws IOException {

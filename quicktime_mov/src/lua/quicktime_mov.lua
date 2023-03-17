@@ -9,7 +9,7 @@ local stringstream = require("string_stream")
 local utils = require("utils")
 
 -- 
--- See also: Source (https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF)
+-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF)
 QuicktimeMov = class.class(KaitaiStruct)
 
 QuicktimeMov.AtomType = enum.Enum {
@@ -303,7 +303,7 @@ end
 
 
 -- 
--- See also: Source (https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG)
+-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG)
 QuicktimeMov.MvhdBody = class.class(KaitaiStruct)
 
 function QuicktimeMov.MvhdBody:_init(io, parent, root)
@@ -370,7 +370,7 @@ end
 -- ID value.
 
 -- 
--- See also: Source (https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF)
+-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF)
 QuicktimeMov.FtypBody = class.class(KaitaiStruct)
 
 function QuicktimeMov.FtypBody:_init(io, parent, root)
@@ -503,7 +503,7 @@ end
 
 
 -- 
--- See also: Source (https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550)
+-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550)
 QuicktimeMov.TkhdBody = class.class(KaitaiStruct)
 
 function QuicktimeMov.TkhdBody:_init(io, parent, root)

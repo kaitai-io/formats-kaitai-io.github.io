@@ -10,7 +10,7 @@ end
 ##
 # Linux Unified Key Setup (LUKS) is a format specification for storing disk
 # encryption parameters and up to 8 user keys (which can unlock the master key).
-# @see https://gitlab.com/cryptsetup/cryptsetup/wikis/LUKS-standard/on-disk-format.pdf Source
+# @see https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf Source
 class Luks < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

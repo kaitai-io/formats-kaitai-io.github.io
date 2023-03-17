@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
+    /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format">Source</a>
     /// </remarks>
     public partial class MicrosoftPe : KaitaiStruct
     {
@@ -35,7 +35,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only">Source</a>
         /// </remarks>
         public partial class CertificateEntry : KaitaiStruct
         {

@@ -9,7 +9,7 @@ local str_decode = require("string_decode")
 local utils = require("utils")
 
 -- 
--- See also: Source (http://www.shikadi.net/moddingwiki/PAK_Format_(Westwood))
+-- See also: Source (https://moddingwiki.shikadi.net/wiki/PAK_Format_(Westwood))
 Dune2Pak = class.class(KaitaiStruct)
 
 function Dune2Pak:_init(io, parent, root)

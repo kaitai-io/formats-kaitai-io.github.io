@@ -12,7 +12,7 @@
 
 /**
  * \sa http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics) Source
- * \sa http://mrclick.zophar.net/TilEd/download/timgfx.txt Source
+ * \sa https://mrclick.zophar.net/TilEd/download/timgfx.txt Source
  * \sa https://www.romhacking.net/documents/31/ Source
  */
 

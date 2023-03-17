@@ -28,7 +28,7 @@ class Iso9660 < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor Source
+  # @see https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor Source
   class VolDescPrimary < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -268,7 +268,7 @@ class Iso9660 < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://wiki.osdev.org/ISO_9660#The_Path_Table Source
+  # @see https://wiki.osdev.org/ISO_9660#The_Path_Table Source
   class PathTableLe < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -288,7 +288,7 @@ class Iso9660 < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://wiki.osdev.org/ISO_9660#Date.2Ftime_format Source
+  # @see https://wiki.osdev.org/ISO_9660#Date.2Ftime_format Source
   class DecDatetime < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

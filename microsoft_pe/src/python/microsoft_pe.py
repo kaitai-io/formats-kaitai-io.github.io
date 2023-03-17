@@ -11,7 +11,7 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
 class MicrosoftPe(KaitaiStruct):
     """
     .. seealso::
-       Source - https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
+       Source - https://learn.microsoft.com/en-us/windows/win32/debug/pe-format
     """
 
     class PeFormat(Enum):
@@ -30,7 +30,7 @@ class MicrosoftPe(KaitaiStruct):
     class CertificateEntry(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only
+           Source - https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only
         """
 
         class CertificateRevision(Enum):

@@ -14,7 +14,7 @@
 /**
  * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532 Source
  * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
- * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html Source
  */
 
 class elf_t : public kaitai::kstruct {
@@ -698,7 +698,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html Source
+         * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
          */
 
@@ -941,7 +941,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html Source
+         * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/relocation-sections.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source
          */
 
@@ -1108,7 +1108,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html Source
+         * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
          */
 
@@ -1254,7 +1254,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html Source
+         * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source
          */
 
@@ -1974,7 +1974,7 @@ public:
     /**
      * \sa https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html Figure 5-11: DT_FLAGS values
      * \sa https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095 Source
-     * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5 Source
+     * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5 Source
      */
 
     class dt_flag_values_t : public kaitai::kstruct {

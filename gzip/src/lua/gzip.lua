@@ -16,7 +16,7 @@ local stringstream = require("string_stream")
 -- As of 2019, there is actually only one working solution for
 -- compression algorithms, so it's typically raw DEFLATE stream
 -- (without zlib header) in all gzipped files.
--- See also: Source (https://tools.ietf.org/html/rfc1952)
+-- See also: Source (https://www.rfc-editor.org/rfc/rfc1952)
 Gzip = class.class(KaitaiStruct)
 
 Gzip.CompressionMethods = enum.Enum {

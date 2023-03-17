@@ -22,7 +22,7 @@ import java.util.HashMap;
  * sudo lvcreate --name lv_test1 vg_test
  * sudo losetup -d /dev/loop1
  * ```
- * @see <a href="https://github.com/libyal/libvslvm/blob/master/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc">Source</a>
+ * @see <a href="https://github.com/libyal/libvslvm/blob/main/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc">Source</a>
  */
 public class Lvm2 extends KaitaiStruct {
     public static Lvm2 fromFile(String fileName) throws IOException {

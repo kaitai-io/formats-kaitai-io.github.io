@@ -23,7 +23,7 @@
  * 
  * The format is mostly undocumented, and is known to vary between
  * various Windows versions.
- * \sa https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc Source
+ * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc Source
  */
 
 class windows_shell_items_t : public kaitai::kstruct {
@@ -131,7 +131,7 @@ public:
     };
 
     /**
-     * \sa https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item Source
+     * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item Source
      */
 
     class root_folder_body_t : public kaitai::kstruct {
@@ -161,7 +161,7 @@ public:
     };
 
     /**
-     * \sa https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item Source
+     * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item Source
      */
 
     class volume_body_t : public kaitai::kstruct {
@@ -189,7 +189,7 @@ public:
     };
 
     /**
-     * \sa https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item Source
+     * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item Source
      */
 
     class file_entry_body_t : public kaitai::kstruct {

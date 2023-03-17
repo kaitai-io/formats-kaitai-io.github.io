@@ -59,7 +59,7 @@ proc read*(_: typedesc[SudoersTs_Record], io: KaitaiStream, root: KaitaiStruct, 
 This spec can be used to parse sudo time stamp files located in directories
 such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.
 
-@see <a href="https://www.sudo.ws/man/1.8.27/sudoers_timestamp.man.html">Source</a>
+@see <a href="https://www.sudo.ws/docs/man/1.8.27/sudoers_timestamp.man/">Source</a>
 ]##
 proc read*(_: typedesc[SudoersTs], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SudoersTs =
   template this: untyped = result

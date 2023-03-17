@@ -269,7 +269,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://www.w3.org/TR/PNG/#11cHRM|Source}
+   * @see {@link https://www.w3.org/TR/png/#11cHRM|Source}
    */
 
   var ChrmChunk = Png.ChrmChunk = (function() {
@@ -291,7 +291,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://www.w3.org/TR/PNG/#11IHDR|Source}
+   * @see {@link https://www.w3.org/TR/png/#11IHDR|Source}
    */
 
   var IhdrChunk = Png.IhdrChunk = (function() {
@@ -316,7 +316,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://www.w3.org/TR/PNG/#11PLTE|Source}
+   * @see {@link https://www.w3.org/TR/png/#11PLTE|Source}
    */
 
   var PlteChunk = Png.PlteChunk = (function() {
@@ -340,7 +340,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://www.w3.org/TR/PNG/#11sRGB|Source}
+   * @see {@link https://www.w3.org/TR/png/#11sRGB|Source}
    */
 
   var SrgbChunk = Png.SrgbChunk = (function() {
@@ -374,7 +374,7 @@ var Png = (function() {
    * Compressed text chunk effectively allows to store key-value
    * string pairs in PNG container, compressing "value" part (which
    * can be quite lengthy) with zlib compression.
-   * @see {@link https://www.w3.org/TR/PNG/#11zTXt|Source}
+   * @see {@link https://www.w3.org/TR/png/#11zTXt|Source}
    */
 
   var CompressedTextChunk = Png.CompressedTextChunk = (function() {
@@ -455,7 +455,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://www.w3.org/TR/PNG/#11gAMA|Source}
+   * @see {@link https://www.w3.org/TR/png/#11gAMA|Source}
    */
 
   var GamaChunk = Png.GamaChunk = (function() {
@@ -484,7 +484,7 @@ var Png = (function() {
   /**
    * Background chunk stores default background color to display this
    * image against. Contents depend on `color_type` of the image.
-   * @see {@link https://www.w3.org/TR/PNG/#11bKGD|Source}
+   * @see {@link https://www.w3.org/TR/png/#11bKGD|Source}
    */
 
   var BkgdChunk = Png.BkgdChunk = (function() {
@@ -521,7 +521,7 @@ var Png = (function() {
   /**
    * "Physical size" chunk stores data that allows to translate
    * logical pixels into physical units (meters, etc) and vice-versa.
-   * @see {@link https://www.w3.org/TR/PNG/#11pHYs|Source}
+   * @see {@link https://www.w3.org/TR/png/#11pHYs|Source}
    */
 
   var PhysChunk = Png.PhysChunk = (function() {
@@ -649,7 +649,7 @@ var Png = (function() {
    * PNG container. Both "key" (keyword) and "value" (text) parts are
    * given in pre-defined subset of iso8859-1 without control
    * characters.
-   * @see {@link https://www.w3.org/TR/PNG/#11iTXt|Source}
+   * @see {@link https://www.w3.org/TR/png/#11iTXt|Source}
    */
 
   var InternationalTextChunk = Png.InternationalTextChunk = (function() {
@@ -703,7 +703,7 @@ var Png = (function() {
    * PNG container. Both "key" (keyword) and "value" (text) parts are
    * given in pre-defined subset of iso8859-1 without control
    * characters.
-   * @see {@link https://www.w3.org/TR/PNG/#11tEXt|Source}
+   * @see {@link https://www.w3.org/TR/png/#11tEXt|Source}
    */
 
   var TextChunk = Png.TextChunk = (function() {
@@ -757,7 +757,7 @@ var Png = (function() {
   /**
    * Time chunk stores time stamp of last modification of this image,
    * up to 1 second precision in UTC timezone.
-   * @see {@link https://www.w3.org/TR/PNG/#11tIME|Source}
+   * @see {@link https://www.w3.org/TR/png/#11tIME|Source}
    */
 
   var TimeChunk = Png.TimeChunk = (function() {

@@ -11,10 +11,9 @@
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
  * Apple macOS '.DS_Store' file format.
- * @see {@link https://en.wikipedia.org/wiki/.DS_Store
- * https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
- * https://0day.work/parsing-the-ds_store-file-format
- * |Source}
+ * @see {@link https://en.wikipedia.org/wiki/.DS_Store|Source}
+ * @see {@link https://metacpan.org/dist/Mac-Finder-DSStore/view/DSStoreFormat.pod|Source}
+ * @see {@link https://0day.work/parsing-the-ds_store-file-format/|Source}
  */
 
 var DsStore = (function() {

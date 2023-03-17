@@ -37,7 +37,7 @@ import java.util.HashMap;
  *   required, which fields may be repeated or constitute a map, what
  *   restrictions are placed on fields usage in a single message, what
  *   are the fields' default values, etc, etc.
- * @see <a href="https://developers.google.com/protocol-buffers/docs/encoding">Source</a>
+ * @see <a href="https://protobuf.dev/programming-guides/encoding/">Source</a>
  */
 public class GoogleProtobuf extends KaitaiStruct {
     public static GoogleProtobuf fromFile(String fileName) throws IOException {

@@ -216,7 +216,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.w3.org/TR/PNG/#11cHRM Source
+  # @see https://www.w3.org/TR/png/#11cHRM Source
   class ChrmChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -237,7 +237,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.w3.org/TR/PNG/#11IHDR Source
+  # @see https://www.w3.org/TR/png/#11IHDR Source
   class IhdrChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -264,7 +264,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.w3.org/TR/PNG/#11PLTE Source
+  # @see https://www.w3.org/TR/png/#11PLTE Source
   class PlteChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -284,7 +284,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.w3.org/TR/PNG/#11sRGB Source
+  # @see https://www.w3.org/TR/png/#11sRGB Source
   class SrgbChunk < Kaitai::Struct::Struct
 
     INTENT = {
@@ -310,7 +310,7 @@ class Png < Kaitai::Struct::Struct
   # Compressed text chunk effectively allows to store key-value
   # string pairs in PNG container, compressing "value" part (which
   # can be quite lengthy) with zlib compression.
-  # @see https://www.w3.org/TR/PNG/#11zTXt Source
+  # @see https://www.w3.org/TR/png/#11zTXt Source
   class CompressedTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -382,7 +382,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.w3.org/TR/PNG/#11gAMA Source
+  # @see https://www.w3.org/TR/png/#11gAMA Source
   class GamaChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -404,7 +404,7 @@ class Png < Kaitai::Struct::Struct
   ##
   # Background chunk stores default background color to display this
   # image against. Contents depend on `color_type` of the image.
-  # @see https://www.w3.org/TR/PNG/#11bKGD Source
+  # @see https://www.w3.org/TR/png/#11bKGD Source
   class BkgdChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -432,7 +432,7 @@ class Png < Kaitai::Struct::Struct
   ##
   # "Physical size" chunk stores data that allows to translate
   # logical pixels into physical units (meters, etc) and vice-versa.
-  # @see https://www.w3.org/TR/PNG/#11pHYs Source
+  # @see https://www.w3.org/TR/png/#11pHYs Source
   class PhysChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -535,7 +535,7 @@ class Png < Kaitai::Struct::Struct
   # PNG container. Both "key" (keyword) and "value" (text) parts are
   # given in pre-defined subset of iso8859-1 without control
   # characters.
-  # @see https://www.w3.org/TR/PNG/#11iTXt Source
+  # @see https://www.w3.org/TR/png/#11iTXt Source
   class InternationalTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -585,7 +585,7 @@ class Png < Kaitai::Struct::Struct
   # PNG container. Both "key" (keyword) and "value" (text) parts are
   # given in pre-defined subset of iso8859-1 without control
   # characters.
-  # @see https://www.w3.org/TR/PNG/#11tEXt Source
+  # @see https://www.w3.org/TR/png/#11tEXt Source
   class TextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -630,7 +630,7 @@ class Png < Kaitai::Struct::Struct
   ##
   # Time chunk stores time stamp of last modification of this image,
   # up to 1 second precision in UTC timezone.
-  # @see https://www.w3.org/TR/PNG/#11tIME Source
+  # @see https://www.w3.org/TR/png/#11tIME Source
   class TimeChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

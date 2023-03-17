@@ -57,7 +57,7 @@ public:
      * Each resource has a `type` and a `name`, which can be used to
      * identify it, and a `value`. Both `type` and `name` can be a
      * number or a string.
-     * \sa https://docs.microsoft.com/en-us/windows/win32/menurc/resourceheader Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/menurc/resourceheader Source
      */
 
     class resource_t : public kaitai::kstruct {

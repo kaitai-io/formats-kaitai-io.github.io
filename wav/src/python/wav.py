@@ -29,7 +29,7 @@ class Wav(KaitaiStruct):
     
     
     .. seealso::
-       Source - http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+       Source - https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
     
     
     .. seealso::
@@ -615,7 +615,7 @@ class Wav(KaitaiStruct):
     class AfspChunkType(KaitaiStruct):
         """
         .. seealso::
-           Source - http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/
+           Source - https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

@@ -13,7 +13,7 @@
 
 /**
  * RTCP is the Real-Time Control Protocol
- * \sa https://tools.ietf.org/html/rfc3550 Source
+ * \sa https://www.rfc-editor.org/rfc/rfc3550 Source
  */
 
 class rtcp_payload_t : public kaitai::kstruct {

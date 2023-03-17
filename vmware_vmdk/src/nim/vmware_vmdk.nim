@@ -51,7 +51,7 @@ proc grainSecondary*(this: VmwareVmdk): seq[byte]
 
 
 ##[
-@see <a href="https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header">Source</a>
+@see <a href="https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header">Source</a>
 ]##
 proc read*(_: typedesc[VmwareVmdk], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VmwareVmdk =
   template this: untyped = result
@@ -160,7 +160,7 @@ proc fromFile*(_: typedesc[VmwareVmdk], filename: string): VmwareVmdk =
 
 
 ##[
-@see <a href="https://github.com/libyal/libvmdk/blob/master/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags">Source</a>
+@see <a href="https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags">Source</a>
 ]##
 proc read*(_: typedesc[VmwareVmdk_HeaderFlags], io: KaitaiStream, root: KaitaiStruct, parent: VmwareVmdk): VmwareVmdk_HeaderFlags =
   template this: untyped = result

@@ -10,7 +10,7 @@ namespace Kaitai
     /// encryption parameters and up to 8 user keys (which can unlock the master key).
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://gitlab.com/cryptsetup/cryptsetup/wikis/LUKS-standard/on-disk-format.pdf">Source</a>
+    /// Reference: <a href="https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf">Source</a>
     /// </remarks>
     public partial class Luks : KaitaiStruct
     {
