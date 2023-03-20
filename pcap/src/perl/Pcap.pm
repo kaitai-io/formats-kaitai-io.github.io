@@ -228,6 +228,7 @@ our $LINKTYPE_USB_2_0_HIGH_SPEED = 295;
 our $LINKTYPE_AUERSWALD_LOG = 296;
 our $LINKTYPE_ZWAVE_TAP = 297;
 our $LINKTYPE_SILABS_DEBUG_CHANNEL = 298;
+our $LINKTYPE_FIRA_UCI = 299;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;

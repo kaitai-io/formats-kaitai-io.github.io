@@ -230,12 +230,13 @@ public class Pcap extends KaitaiStruct {
         USB_2_0_HIGH_SPEED(295),
         AUERSWALD_LOG(296),
         ZWAVE_TAP(297),
-        SILABS_DEBUG_CHANNEL(298);
+        SILABS_DEBUG_CHANNEL(298),
+        FIRA_UCI(299);
 
         private final long id;
         Linktype(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Linktype> byId = new HashMap<Long, Linktype>(208);
+        private static final Map<Long, Linktype> byId = new HashMap<Long, Linktype>(209);
         static {
             for (Linktype e : Linktype.values())
                 byId.put(e.id(), e);

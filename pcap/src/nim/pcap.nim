@@ -219,6 +219,7 @@ type
     auerswald_log = 296
     zwave_tap = 297
     silabs_debug_channel = 298
+    fira_uci = 299
   Pcap_Header* = ref object of KaitaiStruct
     `magicNumber`*: seq[byte]
     `versionMajor`*: uint16

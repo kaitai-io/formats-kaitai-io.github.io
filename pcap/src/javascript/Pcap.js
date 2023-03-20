@@ -227,6 +227,7 @@ var Pcap = (function() {
     AUERSWALD_LOG: 296,
     ZWAVE_TAP: 297,
     SILABS_DEBUG_CHANNEL: 298,
+    FIRA_UCI: 299,
 
     0: "NULL_LINKTYPE",
     1: "ETHERNET",
@@ -436,6 +437,7 @@ var Pcap = (function() {
     296: "AUERSWALD_LOG",
     297: "ZWAVE_TAP",
     298: "SILABS_DEBUG_CHANNEL",
+    299: "FIRA_UCI",
   });
 
   function Pcap(_io, _parent, _root) {

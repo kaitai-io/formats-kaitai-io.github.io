@@ -237,7 +237,8 @@ public:
         LINKTYPE_USB_2_0_HIGH_SPEED = 295,
         LINKTYPE_AUERSWALD_LOG = 296,
         LINKTYPE_ZWAVE_TAP = 297,
-        LINKTYPE_SILABS_DEBUG_CHANNEL = 298
+        LINKTYPE_SILABS_DEBUG_CHANNEL = 298,
+        LINKTYPE_FIRA_UCI = 299
     };
 
     pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcap_t* p__root = 0);

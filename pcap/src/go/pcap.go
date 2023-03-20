@@ -224,6 +224,7 @@ const (
 	Pcap_Linktype__AuerswaldLog Pcap_Linktype = 296
 	Pcap_Linktype__ZwaveTap Pcap_Linktype = 297
 	Pcap_Linktype__SilabsDebugChannel Pcap_Linktype = 298
+	Pcap_Linktype__FiraUci Pcap_Linktype = 299
 )
 type Pcap struct {
 	Hdr *Pcap_Header

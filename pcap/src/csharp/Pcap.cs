@@ -232,6 +232,7 @@ namespace Kaitai
             AuerswaldLog = 296,
             ZwaveTap = 297,
             SilabsDebugChannel = 298,
+            FiraUci = 299,
         }
         public Pcap(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcap p__root = null) : base(p__io)
         {

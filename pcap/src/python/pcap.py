@@ -229,6 +229,7 @@ class Pcap(KaitaiStruct):
         auerswald_log = 296
         zwave_tap = 297
         silabs_debug_channel = 298
+        fira_uci = 299
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent

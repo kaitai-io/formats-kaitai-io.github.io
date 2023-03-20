@@ -224,6 +224,7 @@ class Pcap < Kaitai::Struct::Struct
     296 => :linktype_auerswald_log,
     297 => :linktype_zwave_tap,
     298 => :linktype_silabs_debug_channel,
+    299 => :linktype_fira_uci,
   }
   I__LINKTYPE = LINKTYPE.invert
   def initialize(_io, _parent = nil, _root = self)

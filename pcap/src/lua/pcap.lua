@@ -226,6 +226,7 @@ Pcap.Linktype = enum.Enum {
   auerswald_log = 296,
   zwave_tap = 297,
   silabs_debug_channel = 298,
+  fira_uci = 299,
 }
 
 function Pcap:_init(io, parent, root)

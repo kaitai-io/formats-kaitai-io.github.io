@@ -352,5 +352,6 @@ namespace Pcap {
         const AUERSWALD_LOG = 296;
         const ZWAVE_TAP = 297;
         const SILABS_DEBUG_CHANNEL = 298;
+        const FIRA_UCI = 299;
     }
 }
