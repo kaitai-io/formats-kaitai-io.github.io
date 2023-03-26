@@ -259,7 +259,7 @@ function MinecraftNbt.TagString:_read()
 end
 
 -- 
--- unsigned according to https://wiki.vg/NBT#Specification.
+-- unsigned according to <https://wiki.vg/NBT#Specification>.
 
 MinecraftNbt.TagCompound = class.class(KaitaiStruct)
 

@@ -26,9 +26,9 @@ namespace Kaitai
     /// so typically it's simpler to use a pre-compiled list of them, such
     /// as:
     /// 
-    /// * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
-    /// * http://oid-info.com/
-    /// * https://www.alvestrand.no/objectid/top.html
+    /// * &lt;https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg&gt;
+    /// * &lt;http://oid-info.com/&gt;
+    /// * &lt;https://www.alvestrand.no/objectid/top.html&gt;
     /// </summary>
     /// <remarks>
     /// Reference: <a href="https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&amp;lang=en">Source</a>

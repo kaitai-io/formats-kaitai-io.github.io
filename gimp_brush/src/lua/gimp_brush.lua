@@ -19,7 +19,7 @@ local str_decode = require("string_decode")
 -- into GIMP for use in the paint tools by copying them into one of the Brush Folders -
 -- select **Edit** > **Preferences** in the menu bar, expand the **Folders** section
 -- and choose **Brushes** to see the recognized Brush Folders or to add new ones.
--- See also: Source (https://gitlab.gnome.org/GNOME/gimp/-/raw/4416313/devel-docs/gbr.txt)
+-- See also: Source (https://github.com/GNOME/gimp/blob/441631322b/devel-docs/gbr.txt)
 GimpBrush = class.class(KaitaiStruct)
 
 GimpBrush.ColorDepth = enum.Enum {
@@ -103,11 +103,11 @@ function GimpBrush.Header:_read()
 end
 
 -- 
--- See also: Source (https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L170)
--- See also: Source (https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24)
+-- See also: Source (https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L170)
+-- See also: Source (https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24)
 -- 
--- See also: Source (https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L177)
--- See also: Source (https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24)
+-- See also: Source (https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L177)
+-- See also: Source (https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24)
 -- 
 -- Default spacing to be used for brush. Percentage of brush width.
 

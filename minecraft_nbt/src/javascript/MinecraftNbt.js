@@ -269,7 +269,7 @@ var MinecraftNbt = (function() {
     }
 
     /**
-     * unsigned according to https://wiki.vg/NBT#Specification
+     * unsigned according to <https://wiki.vg/NBT#Specification>
      */
 
     return TagString;

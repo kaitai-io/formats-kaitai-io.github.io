@@ -529,6 +529,7 @@ namespace QuicktimeMov {
         const CUD9 = 1668637753;
         const CUVD = 1668642404;
         const CVID = 1668704612;
+        const CVVC = 1668707939;
         const CWVT = 1668773492;
         const DA0A = 1684090977;
         const DA0B = 1684090978;
@@ -571,6 +572,11 @@ namespace QuicktimeMov {
         const HVCX = 1752589176;
         const HVTI = 1752593513;
         const IFAA = 1768317281;
+        const IFAH = 1768317288;
+        const IFAI = 1768317289;
+        const IFAS = 1768317299;
+        const IFAU = 1768317301;
+        const IFAV = 1768317302;
         const IFHD = 1768319076;
         const IFHH = 1768319080;
         const IFHR = 1768319090;
@@ -653,6 +659,7 @@ namespace QuicktimeMov {
         const SIMS = 1936289139;
         const SISX = 1936290680;
         const SITI = 1936290921;
+        const SITV = 1936290934;
         const SLH1 = 1936484401;
         const SLH2 = 1936484402;
         const SLH3 = 1936484403;
@@ -662,6 +669,12 @@ namespace QuicktimeMov {
         const UHVI = 1969780329;
         const UNIF = 1970170214;
         const UVVU = 1970697845;
+        const V3MP = 1983081840;
+        const V3MT = 1983081844;
+        const V3NT = 1983082100;
+        const V3ST = 1983083380;
+        const VVCI = 1987470185;
+        const VVOI = 1987473257;
         const VWPT = 1987539060;
         const YT4 = 2037658656;
     }

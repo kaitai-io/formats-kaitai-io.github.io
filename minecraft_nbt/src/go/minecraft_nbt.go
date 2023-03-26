@@ -430,7 +430,7 @@ func (this *MinecraftNbt_TagString) Read(io *kaitai.Stream, parent interface{}, 
 }
 
 /**
- * unsigned according to https://wiki.vg/NBT#Specification
+ * unsigned according to <https://wiki.vg/NBT#Specification>
  */
 type MinecraftNbt_TagCompound struct {
 	Tags []*MinecraftNbt_NamedTag

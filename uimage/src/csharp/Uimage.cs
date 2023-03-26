@@ -11,7 +11,7 @@ namespace Kaitai
     /// with sha1 and md5 checksums.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h">Source</a>
+    /// Reference: <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h">Source</a>
     /// </remarks>
     public partial class Uimage : KaitaiStruct
     {

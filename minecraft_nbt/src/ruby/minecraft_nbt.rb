@@ -224,7 +224,7 @@ class MinecraftNbt < Kaitai::Struct::Struct
     end
 
     ##
-    # unsigned according to https://wiki.vg/NBT#Specification
+    # unsigned according to <https://wiki.vg/NBT#Specification>
     attr_reader :len_data
     attr_reader :data
   end

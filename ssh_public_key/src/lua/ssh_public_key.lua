@@ -16,7 +16,7 @@ local str_decode = require("string_decode")
 -- This format spec deals with this internal binary format (called "blob" in
 -- openssh sources) only. Buffer is expected to be raw binary and not base64-d.
 -- Implementation closely follows code in OpenSSH.
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970)
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970)
 SshPublicKey = class.class(KaitaiStruct)
 
 function SshPublicKey:_init(io, parent, root)
@@ -42,7 +42,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028)
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028)
 SshPublicKey.KeyRsa = class.class(KaitaiStruct)
 
 function SshPublicKey.KeyRsa:_init(io, parent, root)
@@ -76,7 +76,7 @@ end
 -- documentation. Its length in bits is designated as "key length".
 
 -- 
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124)
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124)
 SshPublicKey.KeyEd25519 = class.class(KaitaiStruct)
 
 function SshPublicKey.KeyEd25519:_init(io, parent, root)
@@ -93,7 +93,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103)
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103)
 SshPublicKey.KeyEcdsa = class.class(KaitaiStruct)
 
 function SshPublicKey.KeyEcdsa:_init(io, parent, root)
@@ -113,7 +113,7 @@ end
 -- A integer-prefixed string designed to be read using `sshbuf_get_cstring`
 -- and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
 -- obscure misnomer, as typically "C string" means a null-terminated string.
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181)
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181)
 SshPublicKey.Cstring = class.class(KaitaiStruct)
 
 function SshPublicKey.Cstring:_init(io, parent, root)
@@ -130,7 +130,7 @@ end
 
 
 -- 
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051)
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051)
 SshPublicKey.KeyDsa = class.class(KaitaiStruct)
 
 function SshPublicKey.KeyDsa:_init(io, parent, root)
@@ -154,8 +154,8 @@ end
 -- 
 -- * sshbuf_get_ec
 -- * get_ec
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
--- https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
 -- )
 SshPublicKey.EllipticCurve = class.class(KaitaiStruct)
 
@@ -180,8 +180,8 @@ end
 -- * sshbuf_get_bignum2_bytes_direct
 -- * sshbuf_put_bignum2
 -- * sshbuf_get_bignum2_bytes_direct
--- See also: Source (https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
--- https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
 -- )
 SshPublicKey.Bignum2 = class.class(KaitaiStruct)
 

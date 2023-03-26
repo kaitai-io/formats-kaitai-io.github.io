@@ -74,7 +74,7 @@ into GIMP for use in the paint tools by copying them into one of the Brush Folde
 select **Edit** > **Preferences** in the menu bar, expand the **Folders** section
 and choose **Brushes** to see the recognized Brush Folders or to add new ones.
 
-@see <a href="https://gitlab.gnome.org/GNOME/gimp/-/raw/4416313/devel-docs/gbr.txt">Source</a>
+@see <a href="https://github.com/GNOME/gimp/blob/441631322b/devel-docs/gbr.txt">Source</a>
 ]##
 proc read*(_: typedesc[GimpBrush], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GimpBrush =
   template this: untyped = result
@@ -126,15 +126,15 @@ proc read*(_: typedesc[GimpBrush_Header], io: KaitaiStream, root: KaitaiStruct, 
   this.version = versionExpr
 
   ##[
-  @see <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L170">Source</a>
-  @see <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24">Source</a>
+  @see <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L170">Source</a>
+  @see <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24">Source</a>
   ]##
   let widthExpr = this.io.readU4be()
   this.width = widthExpr
 
   ##[
-  @see <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L177">Source</a>
-  @see <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24">Source</a>
+  @see <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L177">Source</a>
+  @see <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24">Source</a>
   ]##
   let heightExpr = this.io.readU4be()
   this.height = heightExpr

@@ -2,7 +2,8 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * You can get a dump for testing by the link: https://github.com/zhovner/mfdread/raw/master/dump.mfd
+ * You can get a dump for testing from this link:
+ * <https://github.com/zhovner/mfdread/raw/master/dump.mfd>
  */
 
 namespace {

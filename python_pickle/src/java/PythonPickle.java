@@ -29,13 +29,13 @@ import java.nio.charset.Charset;
  * 
  * * Protocol 0: ASCII clean, no explicit version, fields are '\n' terminated.
  * * Protocol 1: Binary, no explicit version, first length prefixed types.
- * * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
- *   https://peps.python.org/pep-0307/
+ * * Protocol 2 ([PEP 307](https://peps.python.org/pep-0307/)): Python 2.3+.
+ *   Explicit versioning, more length prefixed types.
  * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
- * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
- *   https://peps.python.org/pep-3154/
- * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
- *   https://peps.python.org/pep-0574/
+ * * Protocol 4 ([PEP 3154](https://peps.python.org/pep-3154/)): Python 3.4+.
+ *   Opcodes for 64 bit strings, framing, `set`.
+ * * Protocol 5 ([PEP 574](https://peps.python.org/pep-0574/)): Python 3.8+:
+ * Opcodes for `bytearray` and out of band data
  * @see <a href="https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py">Source</a>
  */
 public class PythonPickle extends KaitaiStruct {
@@ -558,7 +558,7 @@ public class PythonPickle extends KaitaiStruct {
      * 
      * - `pickle.Unpickler` objects default to ASCII, which can be overriden
      * - `pickletools.dis` uses latin1, and cannot be overriden
-     * @see <a href="https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495">Source</a>
+     * @see <a href="https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495">Source</a>
      */
     public static class String1 extends KaitaiStruct {
         public static String1 fromFile(String fileName) throws IOException {
@@ -780,7 +780,7 @@ public class PythonPickle extends KaitaiStruct {
      * during unpickling.
      * 
      * See the documentation for `string1` for further detail about encodings.
-     * @see <a href="https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495">Source</a>
+     * @see <a href="https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495">Source</a>
      */
     public static class String4 extends KaitaiStruct {
         public static String4 fromFile(String fileName) throws IOException {

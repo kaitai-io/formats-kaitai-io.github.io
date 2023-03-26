@@ -570,10 +570,12 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
-     * Replace with an opaque type if you care about the pixels.
-     * You can look at an example of a JavaScript implementation: https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js
+     * Replace with an opaque type if you care about the pixels. You can look at
+     * an example of a JavaScript implementation:
+     * <https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js>
      * 
-     * There is a proposal for adding bitmap data type to Kaitai Struct: https://github.com/kaitai-io/kaitai_struct/issues/188
+     * There is a proposal for adding bitmap data type to Kaitai Struct:
+     * <https://github.com/kaitai-io/kaitai_struct/issues/188>
      */
     public static class Bitmap extends KaitaiStruct {
         public static Bitmap fromFile(String fileName) throws IOException {

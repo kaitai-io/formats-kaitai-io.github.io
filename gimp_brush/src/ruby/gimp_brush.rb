@@ -18,7 +18,7 @@ end
 # into GIMP for use in the paint tools by copying them into one of the Brush Folders -
 # select **Edit** > **Preferences** in the menu bar, expand the **Folders** section
 # and choose **Brushes** to see the recognized Brush Folders or to add new ones.
-# @see https://gitlab.gnome.org/GNOME/gimp/-/raw/4416313/devel-docs/gbr.txt Source
+# @see https://github.com/GNOME/gimp/blob/441631322b/devel-docs/gbr.txt Source
 class GimpBrush < Kaitai::Struct::Struct
 
   COLOR_DEPTH = {
@@ -63,13 +63,13 @@ class GimpBrush < Kaitai::Struct::Struct
     attr_reader :version
 
     ##
-    # @see https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L170 Source
-    # @see https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24 Source
+    # @see https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L170 Source
+    # @see https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24 Source
     attr_reader :width
 
     ##
-    # @see https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L177 Source
-    # @see https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24 Source
+    # @see https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L177 Source
+    # @see https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24 Source
     attr_reader :height
     attr_reader :bytes_per_pixel
     attr_reader :magic

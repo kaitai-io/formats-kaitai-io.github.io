@@ -207,16 +207,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="nim.html" title=".class file format parsing Nim library">Nim</a></li>
-                
-                
-                <li>
-                
-                <a href="perl.html" title=".class file format parsing Perl library">Perl</a></li>
-                
-                
-                <li>
-                
                 <a href="php.html" title=".class file format parsing PHP library">PHP</a></li>
                 
                 
@@ -269,7 +259,11 @@ section#format-index .row {
 <span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1)</span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html)</span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf)</span>
+<span class="c1">-- See also: Source (https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java)</span>
+<span class="c1">-- See also: Source (https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template)</span>
+<span class="c1">-- See also: Source (https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp)</span>
 <span class="n">JavaClass</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
@@ -316,6 +310,34 @@ section#format-index .row {
   <span class="n">self</span><span class="p">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">attributes_count</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
     <span class="n">self</span><span class="p">.</span><span class="n">attributes</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">AttributeInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- `class` file format version 45.3 (appeared in the very first publicly</span>
+<span class="c1">-- known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so</span>
+<span class="c1">-- ancient that it&#39;s taken for granted. Earlier formats seem to be</span>
+<span class="c1">-- undocumented. Changes of `version_minor` don&#39;t change `class` format.</span>
+<span class="c1">-- Earlier `version_major`s likely belong to Oak programming language, the</span>
+<span class="c1">-- proprietary predecessor of Java.</span>
+<span class="c1">-- See also: James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.</span>
+<span class="c1">-- See also: Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.</span>
+<span class="n">JavaClass</span><span class="p">.</span><span class="n">VersionGuard</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">VersionGuard</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="n">major</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">VersionGuard</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed0</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">_</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_unnamed0</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">version_major</span> <span class="o">&gt;=</span> <span class="n">self</span><span class="p">.</span><span class="n">major</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationExprError&quot;</span><span class="p">)</span>
   <span class="kr">end</span>
 <span class="kr">end</span>
 
@@ -657,6 +679,24 @@ section#format-index .row {
 
 
 <span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10)</span>
+<span class="n">JavaClass</span><span class="p">.</span><span class="n">DynamicCpInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">DynamicCpInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">DynamicCpInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed0</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">VersionGuard</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">bootstrap_method_attr_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name_and_type_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5)</span>
 <span class="n">JavaClass</span><span class="p">.</span><span class="n">LongCpInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
@@ -684,6 +724,7 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">InvokeDynamicCpInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed0</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">VersionGuard</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="n">self</span><span class="p">.</span><span class="n">bootstrap_method_attr_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">name_and_type_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
 <span class="kr">end</span>
@@ -713,8 +754,49 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">MethodHandleCpInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed0</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">VersionGuard</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="n">self</span><span class="p">.</span><span class="n">reference_kind</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">MethodHandleCpInfo</span><span class="p">.</span><span class="n">ReferenceKindEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">())</span>
   <span class="n">self</span><span class="p">.</span><span class="n">reference_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Project Jigsaw modules introduced in Java 9</span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16)</span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11)</span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12)</span>
+<span class="n">JavaClass</span><span class="p">.</span><span class="n">ModulePackageCpInfo</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">ModulePackageCpInfo</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">ModulePackageCpInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed0</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">VersionGuard</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">JavaClass</span><span class="p">.</span><span class="n">ModulePackageCpInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">name_as_info</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">ModulePackageCpInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">name_as_info</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_info</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_info</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_info</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">constant_pool</span><span class="p">[(</span><span class="n">self</span><span class="p">.</span><span class="n">name_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">].</span><span class="n">cp_info</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_info</span>
+<span class="kr">end</span>
+
+<span class="n">JavaClass</span><span class="p">.</span><span class="n">ModulePackageCpInfo</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">name_as_str</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">ModulePackageCpInfo</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">name_as_str</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_str</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_str</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_str</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">name_as_info</span><span class="p">.</span><span class="n">value</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_name_as_str</span>
 <span class="kr">end</span>
 
 
@@ -820,6 +902,7 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">MethodTypeCpInfo</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_unnamed0</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">VersionGuard</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="n">self</span><span class="p">.</span><span class="n">descriptor_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -915,7 +998,10 @@ section#format-index .row {
   <span class="n">name_and_type</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
   <span class="n">method_handle</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
   <span class="n">method_type</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+  <span class="n">dynamic</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
   <span class="n">invoke_dynamic</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+  <span class="n">module</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+  <span class="n">package</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="kr">function</span> <span class="nc">JavaClass</span><span class="p">.</span><span class="nc">ConstantPoolEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">is_prev_two_entries</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
@@ -936,6 +1022,8 @@ section#format-index .row {
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">InterfaceMethodRefCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">class_type</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ClassCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">dynamic</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">DynamicCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">utf8</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">Utf8CpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">method_type</span> <span class="kr">then</span>
@@ -946,6 +1034,8 @@ section#format-index .row {
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">StringCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">float</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">FloatCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">module</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ModulePackageCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">long</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">LongCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">method_ref</span> <span class="kr">then</span>
@@ -958,6 +1048,8 @@ section#format-index .row {
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">FieldRefCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">method_handle</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">package</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ModulePackageCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">ConstantPoolEntry</span><span class="p">.</span><span class="n">TagEnum</span><span class="p">.</span><span class="n">name_and_type</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">cp_info</span> <span class="o">=</span> <span class="n">JavaClass</span><span class="p">.</span><span class="n">NameAndTypeCpInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">end</span>

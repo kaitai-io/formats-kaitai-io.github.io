@@ -346,7 +346,7 @@ namespace Kaitai
             private KaitaiStruct m_parent;
 
             /// <summary>
-            /// unsigned according to https://wiki.vg/NBT#Specification
+            /// unsigned according to &lt;https://wiki.vg/NBT#Specification&gt;
             /// </summary>
             public ushort LenData { get { return _lenData; } }
             public string Data { get { return _data; } }

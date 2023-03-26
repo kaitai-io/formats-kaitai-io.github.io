@@ -168,6 +168,7 @@ public class QuicktimeMov extends KaitaiStruct {
         CUD9(1668637753),
         CUVD(1668642404),
         CVID(1668704612),
+        CVVC(1668707939),
         CWVT(1668773492),
         DA0A(1684090977),
         DA0B(1684090978),
@@ -210,6 +211,11 @@ public class QuicktimeMov extends KaitaiStruct {
         HVCX(1752589176),
         HVTI(1752593513),
         IFAA(1768317281),
+        IFAH(1768317288),
+        IFAI(1768317289),
+        IFAS(1768317299),
+        IFAU(1768317301),
+        IFAV(1768317302),
         IFHD(1768319076),
         IFHH(1768319080),
         IFHR(1768319090),
@@ -292,6 +298,7 @@ public class QuicktimeMov extends KaitaiStruct {
         SIMS(1936289139),
         SISX(1936290680),
         SITI(1936290921),
+        SITV(1936290934),
         SLH1(1936484401),
         SLH2(1936484402),
         SLH3(1936484403),
@@ -301,13 +308,19 @@ public class QuicktimeMov extends KaitaiStruct {
         UHVI(1969780329),
         UNIF(1970170214),
         UVVU(1970697845),
+        V3MP(1983081840),
+        V3MT(1983081844),
+        V3NT(1983082100),
+        V3ST(1983083380),
+        VVCI(1987470185),
+        VVOI(1987473257),
         VWPT(1987539060),
         YT4(2037658656);
 
         private final long id;
         Brand(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Brand> byId = new HashMap<Long, Brand>(242);
+        private static final Map<Long, Brand> byId = new HashMap<Long, Brand>(255);
         static {
             for (Brand e : Brand.values())
                 byId.put(e.id(), e);

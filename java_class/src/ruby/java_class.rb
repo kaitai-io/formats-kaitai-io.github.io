@@ -8,7 +8,11 @@ end
 
 
 ##
-# @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1 Source
+# @see https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html Source
+# @see https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf Source
+# @see https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java Source
+# @see https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template Source
+# @see https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp Source
 class JavaClass < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -50,6 +54,32 @@ class JavaClass < Kaitai::Struct::Struct
       @attributes << AttributeInfo.new(@_io, self, @_root)
     }
     self
+  end
+
+  ##
+  # `class` file format version 45.3 (appeared in the very first publicly
+  # known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+  # ancient that it's taken for granted. Earlier formats seem to be
+  # undocumented. Changes of `version_minor` don't change `class` format.
+  # Earlier `version_major`s likely belong to Oak programming language, the
+  # proprietary predecessor of Java.
+  # @see '' James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.
+  # @see '' Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.
+  class VersionGuard < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self, major)
+      super(_io, _parent, _root)
+      @major = major
+      _read
+    end
+
+    def _read
+      @_unnamed0 = @_io.read_bytes(0)
+      _ = _unnamed0
+      raise Kaitai::Struct::ValidationExprError.new(_unnamed0, _io, "/types/version_guard/seq/0") if not _root.version_major >= major
+      self
+    end
+    attr_reader :_unnamed0
+    attr_reader :major
   end
 
   ##
@@ -360,6 +390,25 @@ class JavaClass < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10 Source
+  class DynamicCpInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @_unnamed0 = VersionGuard.new(@_io, self, @_root, 55)
+      @bootstrap_method_attr_index = @_io.read_u2be
+      @name_and_type_index = @_io.read_u2be
+      self
+    end
+    attr_reader :_unnamed0
+    attr_reader :bootstrap_method_attr_index
+    attr_reader :name_and_type_index
+  end
+
+  ##
   # @see https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5 Source
   class LongCpInfo < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -383,10 +432,12 @@ class JavaClass < Kaitai::Struct::Struct
     end
 
     def _read
+      @_unnamed0 = VersionGuard.new(@_io, self, @_root, 51)
       @bootstrap_method_attr_index = @_io.read_u2be
       @name_and_type_index = @_io.read_u2be
       self
     end
+    attr_reader :_unnamed0
     attr_reader :bootstrap_method_attr_index
     attr_reader :name_and_type_index
   end
@@ -413,12 +464,44 @@ class JavaClass < Kaitai::Struct::Struct
     end
 
     def _read
+      @_unnamed0 = VersionGuard.new(@_io, self, @_root, 51)
       @reference_kind = Kaitai::Struct::Stream::resolve_enum(REFERENCE_KIND_ENUM, @_io.read_u1)
       @reference_index = @_io.read_u2be
       self
     end
+    attr_reader :_unnamed0
     attr_reader :reference_kind
     attr_reader :reference_index
+  end
+
+  ##
+  # Project Jigsaw modules introduced in Java 9
+  # @see https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16 Source
+  # @see https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11 Source
+  # @see https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12 Source
+  class ModulePackageCpInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @_unnamed0 = VersionGuard.new(@_io, self, @_root, 53)
+      @name_index = @_io.read_u2be
+      self
+    end
+    def name_as_info
+      return @name_as_info unless @name_as_info.nil?
+      @name_as_info = _root.constant_pool[(name_index - 1)].cp_info
+      @name_as_info
+    end
+    def name_as_str
+      return @name_as_str unless @name_as_str.nil?
+      @name_as_str = name_as_info.value
+      @name_as_str
+    end
+    attr_reader :_unnamed0
+    attr_reader :name_index
   end
 
   ##
@@ -499,9 +582,11 @@ class JavaClass < Kaitai::Struct::Struct
     end
 
     def _read
+      @_unnamed0 = VersionGuard.new(@_io, self, @_root, 51)
       @descriptor_index = @_io.read_u2be
       self
     end
+    attr_reader :_unnamed0
     attr_reader :descriptor_index
   end
 
@@ -575,7 +660,10 @@ class JavaClass < Kaitai::Struct::Struct
       12 => :tag_enum_name_and_type,
       15 => :tag_enum_method_handle,
       16 => :tag_enum_method_type,
+      17 => :tag_enum_dynamic,
       18 => :tag_enum_invoke_dynamic,
+      19 => :tag_enum_module,
+      20 => :tag_enum_package,
     }
     I__TAG_ENUM = TAG_ENUM.invert
     def initialize(_io, _parent = nil, _root = self, is_prev_two_entries)
@@ -594,6 +682,8 @@ class JavaClass < Kaitai::Struct::Struct
           @cp_info = InterfaceMethodRefCpInfo.new(@_io, self, @_root)
         when :tag_enum_class_type
           @cp_info = ClassCpInfo.new(@_io, self, @_root)
+        when :tag_enum_dynamic
+          @cp_info = DynamicCpInfo.new(@_io, self, @_root)
         when :tag_enum_utf8
           @cp_info = Utf8CpInfo.new(@_io, self, @_root)
         when :tag_enum_method_type
@@ -604,6 +694,8 @@ class JavaClass < Kaitai::Struct::Struct
           @cp_info = StringCpInfo.new(@_io, self, @_root)
         when :tag_enum_float
           @cp_info = FloatCpInfo.new(@_io, self, @_root)
+        when :tag_enum_module
+          @cp_info = ModulePackageCpInfo.new(@_io, self, @_root)
         when :tag_enum_long
           @cp_info = LongCpInfo.new(@_io, self, @_root)
         when :tag_enum_method_ref
@@ -616,6 +708,8 @@ class JavaClass < Kaitai::Struct::Struct
           @cp_info = FieldRefCpInfo.new(@_io, self, @_root)
         when :tag_enum_method_handle
           @cp_info = MethodHandleCpInfo.new(@_io, self, @_root)
+        when :tag_enum_package
+          @cp_info = ModulePackageCpInfo.new(@_io, self, @_root)
         when :tag_enum_name_and_type
           @cp_info = NameAndTypeCpInfo.new(@_io, self, @_root)
         end

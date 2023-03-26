@@ -10,7 +10,8 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * You can get a dump for testing by the link: https://github.com/zhovner/mfdread/raw/master/dump.mfd
+ * You can get a dump for testing from this link:
+ * <https://github.com/zhovner/mfdread/raw/master/dump.mfd>
  * @see {@link https://github.com/nfc-tools/libnfc
  * https://www.nxp.com/docs/en/data-sheet/MF1S70YYX_V1.pdf
  * |Source}

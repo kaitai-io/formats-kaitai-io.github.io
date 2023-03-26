@@ -309,7 +309,7 @@ proc read*(_: typedesc[MinecraftNbt_TagString], io: KaitaiStream, root: KaitaiSt
 
 
   ##[
-  unsigned according to https://wiki.vg/NBT#Specification
+  unsigned according to <https://wiki.vg/NBT#Specification>
   ]##
   let lenDataExpr = this.io.readU2be()
   this.lenData = lenDataExpr

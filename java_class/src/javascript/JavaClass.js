@@ -10,7 +10,11 @@
   }
 }(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
 /**
- * @see {@link https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1|Source}
+ * @see {@link https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html|Source}
+ * @see {@link https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf|Source}
+ * @see {@link https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java|Source}
+ * @see {@link https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template|Source}
+ * @see {@link https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp|Source}
  */
 
 var JavaClass = (function() {
@@ -60,6 +64,37 @@ var JavaClass = (function() {
       this.attributes.push(new AttributeInfo(this._io, this, this._root));
     }
   }
+
+  /**
+   * `class` file format version 45.3 (appeared in the very first publicly
+   * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+   * ancient that it's taken for granted. Earlier formats seem to be
+   * undocumented. Changes of `version_minor` don't change `class` format.
+   * Earlier `version_major`s likely belong to Oak programming language, the
+   * proprietary predecessor of Java.
+   * @see James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.
+   * @see Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.
+   */
+
+  var VersionGuard = JavaClass.VersionGuard = (function() {
+    function VersionGuard(_io, _parent, _root, major) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+      this.major = major;
+
+      this._read();
+    }
+    VersionGuard.prototype._read = function() {
+      this._unnamed0 = this._io.readBytes(0);
+      var _ = this._unnamed0;
+      if (!(this._root.versionMajor >= this.major)) {
+        throw new KaitaiStream.ValidationExprError(this._unnamed0, this._io, "/types/version_guard/seq/0");
+      }
+    }
+
+    return VersionGuard;
+  })();
 
   /**
    * @see {@link https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5|Source}
@@ -427,6 +462,27 @@ var JavaClass = (function() {
   })();
 
   /**
+   * @see {@link https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10|Source}
+   */
+
+  var DynamicCpInfo = JavaClass.DynamicCpInfo = (function() {
+    function DynamicCpInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    DynamicCpInfo.prototype._read = function() {
+      this._unnamed0 = new VersionGuard(this._io, this, this._root, 55);
+      this.bootstrapMethodAttrIndex = this._io.readU2be();
+      this.nameAndTypeIndex = this._io.readU2be();
+    }
+
+    return DynamicCpInfo;
+  })();
+
+  /**
    * @see {@link https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5|Source}
    */
 
@@ -458,6 +514,7 @@ var JavaClass = (function() {
       this._read();
     }
     InvokeDynamicCpInfo.prototype._read = function() {
+      this._unnamed0 = new VersionGuard(this._io, this, this._root, 51);
       this.bootstrapMethodAttrIndex = this._io.readU2be();
       this.nameAndTypeIndex = this._io.readU2be();
     }
@@ -500,11 +557,51 @@ var JavaClass = (function() {
       this._read();
     }
     MethodHandleCpInfo.prototype._read = function() {
+      this._unnamed0 = new VersionGuard(this._io, this, this._root, 51);
       this.referenceKind = this._io.readU1();
       this.referenceIndex = this._io.readU2be();
     }
 
     return MethodHandleCpInfo;
+  })();
+
+  /**
+   * Project Jigsaw modules introduced in Java 9
+   * @see {@link https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16|Source}
+   * @see {@link https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11|Source}
+   * @see {@link https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12|Source}
+   */
+
+  var ModulePackageCpInfo = JavaClass.ModulePackageCpInfo = (function() {
+    function ModulePackageCpInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ModulePackageCpInfo.prototype._read = function() {
+      this._unnamed0 = new VersionGuard(this._io, this, this._root, 53);
+      this.nameIndex = this._io.readU2be();
+    }
+    Object.defineProperty(ModulePackageCpInfo.prototype, 'nameAsInfo', {
+      get: function() {
+        if (this._m_nameAsInfo !== undefined)
+          return this._m_nameAsInfo;
+        this._m_nameAsInfo = this._root.constantPool[(this.nameIndex - 1)].cpInfo;
+        return this._m_nameAsInfo;
+      }
+    });
+    Object.defineProperty(ModulePackageCpInfo.prototype, 'nameAsStr', {
+      get: function() {
+        if (this._m_nameAsStr !== undefined)
+          return this._m_nameAsStr;
+        this._m_nameAsStr = this.nameAsInfo.value;
+        return this._m_nameAsStr;
+      }
+    });
+
+    return ModulePackageCpInfo;
   })();
 
   /**
@@ -611,6 +708,7 @@ var JavaClass = (function() {
       this._read();
     }
     MethodTypeCpInfo.prototype._read = function() {
+      this._unnamed0 = new VersionGuard(this._io, this, this._root, 51);
       this.descriptorIndex = this._io.readU2be();
     }
 
@@ -707,7 +805,10 @@ var JavaClass = (function() {
       NAME_AND_TYPE: 12,
       METHOD_HANDLE: 15,
       METHOD_TYPE: 16,
+      DYNAMIC: 17,
       INVOKE_DYNAMIC: 18,
+      MODULE: 19,
+      PACKAGE: 20,
 
       1: "UTF8",
       3: "INTEGER",
@@ -722,7 +823,10 @@ var JavaClass = (function() {
       12: "NAME_AND_TYPE",
       15: "METHOD_HANDLE",
       16: "METHOD_TYPE",
+      17: "DYNAMIC",
       18: "INVOKE_DYNAMIC",
+      19: "MODULE",
+      20: "PACKAGE",
     });
 
     function ConstantPoolEntry(_io, _parent, _root, isPrevTwoEntries) {
@@ -745,6 +849,9 @@ var JavaClass = (function() {
         case JavaClass.ConstantPoolEntry.TagEnum.CLASS_TYPE:
           this.cpInfo = new ClassCpInfo(this._io, this, this._root);
           break;
+        case JavaClass.ConstantPoolEntry.TagEnum.DYNAMIC:
+          this.cpInfo = new DynamicCpInfo(this._io, this, this._root);
+          break;
         case JavaClass.ConstantPoolEntry.TagEnum.UTF8:
           this.cpInfo = new Utf8CpInfo(this._io, this, this._root);
           break;
@@ -759,6 +866,9 @@ var JavaClass = (function() {
           break;
         case JavaClass.ConstantPoolEntry.TagEnum.FLOAT:
           this.cpInfo = new FloatCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.MODULE:
+          this.cpInfo = new ModulePackageCpInfo(this._io, this, this._root);
           break;
         case JavaClass.ConstantPoolEntry.TagEnum.LONG:
           this.cpInfo = new LongCpInfo(this._io, this, this._root);
@@ -777,6 +887,9 @@ var JavaClass = (function() {
           break;
         case JavaClass.ConstantPoolEntry.TagEnum.METHOD_HANDLE:
           this.cpInfo = new MethodHandleCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.PACKAGE:
+          this.cpInfo = new ModulePackageCpInfo(this._io, this, this._root);
           break;
         case JavaClass.ConstantPoolEntry.TagEnum.NAME_AND_TYPE:
           this.cpInfo = new NameAndTypeCpInfo(this._io, this, this._root);

@@ -20,7 +20,7 @@
  * This format spec deals with this internal binary format (called "blob" in
  * openssh sources) only. Buffer is expected to be raw binary and not base64-d.
  * Implementation closely follows code in OpenSSH.
- * \sa https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970 Source
+ * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970 Source
  */
 
 class ssh_public_key_t : public kaitai::kstruct {
@@ -44,7 +44,7 @@ public:
     ~ssh_public_key_t();
 
     /**
-     * \sa https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028 Source
+     * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028 Source
      */
 
     class key_rsa_t : public kaitai::kstruct {
@@ -94,7 +94,7 @@ public:
     };
 
     /**
-     * \sa https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124 Source
+     * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124 Source
      */
 
     class key_ed25519_t : public kaitai::kstruct {
@@ -124,7 +124,7 @@ public:
     };
 
     /**
-     * \sa https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103 Source
+     * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103 Source
      */
 
     class key_ecdsa_t : public kaitai::kstruct {
@@ -157,7 +157,7 @@ public:
      * A integer-prefixed string designed to be read using `sshbuf_get_cstring`
      * and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
      * obscure misnomer, as typically "C string" means a null-terminated string.
-     * \sa https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181 Source
+     * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181 Source
      */
 
     class cstring_t : public kaitai::kstruct {
@@ -187,7 +187,7 @@ public:
     };
 
     /**
-     * \sa https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051 Source
+     * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051 Source
      */
 
     class key_dsa_t : public kaitai::kstruct {
@@ -226,8 +226,8 @@ public:
      * 
      * * sshbuf_get_ec
      * * get_ec
-     * \sa https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-     * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+     * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+     * https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
      *  Source
      */
 
@@ -265,8 +265,8 @@ public:
      * * sshbuf_get_bignum2_bytes_direct
      * * sshbuf_put_bignum2
      * * sshbuf_get_bignum2_bytes_direct
-     * \sa https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-     * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+     * \sa https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+     * https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
      *  Source
      */
 

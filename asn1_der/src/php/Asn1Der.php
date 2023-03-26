@@ -22,9 +22,9 @@
  * so typically it's simpler to use a pre-compiled list of them, such
  * as:
  * 
- * * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
- * * http://oid-info.com/
- * * https://www.alvestrand.no/objectid/top.html
+ * * <https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg>
+ * * <http://oid-info.com/>
+ * * <https://www.alvestrand.no/objectid/top.html>
  */
 
 namespace {

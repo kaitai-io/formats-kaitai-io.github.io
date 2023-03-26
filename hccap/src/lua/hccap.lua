@@ -9,7 +9,8 @@ local stringstream = require("string_stream")
 -- 
 -- Native format of Hashcat password "recovery" utility.
 -- 
--- A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap
+-- A sample of file for testing can be downloaded from
+-- <https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap>
 -- See also: Source (https://hashcat.net/wiki/doku.php?id=hccap)
 Hccap = class.class(KaitaiStruct)
 

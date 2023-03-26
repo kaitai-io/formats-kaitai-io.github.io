@@ -371,7 +371,7 @@ public class MinecraftNbt extends KaitaiStruct {
         private KaitaiStruct _parent;
 
         /**
-         * unsigned according to https://wiki.vg/NBT#Specification
+         * unsigned according to <https://wiki.vg/NBT#Specification>
          */
         public int lenData() { return lenData; }
         public String data() { return data; }

@@ -65,7 +65,7 @@ This format spec deals with this internal binary format (called "blob" in
 openssh sources) only. Buffer is expected to be raw binary and not base64-d.
 Implementation closely follows code in OpenSSH.
 
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970">Source</a>
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SshPublicKey =
   template this: untyped = result
@@ -97,7 +97,7 @@ proc fromFile*(_: typedesc[SshPublicKey], filename: string): SshPublicKey =
 
 
 ##[
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028">Source</a>
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey_KeyRsa], io: KaitaiStream, root: KaitaiStruct, parent: SshPublicKey): SshPublicKey_KeyRsa =
   template this: untyped = result
@@ -139,7 +139,7 @@ proc fromFile*(_: typedesc[SshPublicKey_KeyRsa], filename: string): SshPublicKey
 
 
 ##[
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124">Source</a>
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey_KeyEd25519], io: KaitaiStream, root: KaitaiStruct, parent: SshPublicKey): SshPublicKey_KeyEd25519 =
   template this: untyped = result
@@ -159,7 +159,7 @@ proc fromFile*(_: typedesc[SshPublicKey_KeyEd25519], filename: string): SshPubli
 
 
 ##[
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103">Source</a>
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey_KeyEcdsa], io: KaitaiStream, root: KaitaiStruct, parent: SshPublicKey): SshPublicKey_KeyEcdsa =
   template this: untyped = result
@@ -183,7 +183,7 @@ A integer-prefixed string designed to be read using `sshbuf_get_cstring`
 and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
 obscure misnomer, as typically "C string" means a null-terminated string.
 
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181">Source</a>
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey_Cstring], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SshPublicKey_Cstring =
   template this: untyped = result
@@ -203,7 +203,7 @@ proc fromFile*(_: typedesc[SshPublicKey_Cstring], filename: string): SshPublicKe
 
 
 ##[
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051">Source</a>
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey_KeyDsa], io: KaitaiStream, root: KaitaiStruct, parent: SshPublicKey): SshPublicKey_KeyDsa =
   template this: untyped = result
@@ -233,8 +233,8 @@ routines are used to read/write it:
 * sshbuf_get_ec
 * get_ec
 
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
 ">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey_EllipticCurve], io: KaitaiStream, root: KaitaiStruct, parent: SshPublicKey_KeyEcdsa): SshPublicKey_EllipticCurve =
@@ -263,8 +263,8 @@ routines are used to read/write it:
 * sshbuf_put_bignum2
 * sshbuf_get_bignum2_bytes_direct
 
-@see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+@see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
 ">Source</a>
 ]##
 proc read*(_: typedesc[SshPublicKey_Bignum2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SshPublicKey_Bignum2 =

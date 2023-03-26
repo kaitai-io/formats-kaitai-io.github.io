@@ -6,7 +6,19 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1">Source</a>
+    /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp">Source</a>
     /// </remarks>
     public partial class JavaClass : KaitaiStruct
     {
@@ -67,6 +79,50 @@ namespace Kaitai
             {
                 _attributes.Add(new AttributeInfo(m_io, this, m_root));
             }
+        }
+
+        /// <summary>
+        /// `class` file format version 45.3 (appeared in the very first publicly
+        /// known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+        /// ancient that it's taken for granted. Earlier formats seem to be
+        /// undocumented. Changes of `version_minor` don't change `class` format.
+        /// Earlier `version_major`s likely belong to Oak programming language, the
+        /// proprietary predecessor of Java.
+        /// </summary>
+        /// <remarks>
+        /// Reference: James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.
+        /// </remarks>
+        /// <remarks>
+        /// Reference: Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.
+        /// </remarks>
+        public partial class VersionGuard : KaitaiStruct
+        {
+            public VersionGuard(ushort p_major, KaitaiStream p__io, KaitaiStruct p__parent = null, JavaClass p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _major = p_major;
+                _read();
+            }
+            private void _read()
+            {
+                __unnamed0 = m_io.ReadBytes(0);
+                {
+                    byte[] M_ = Unnamed_0;
+                    if (!(M_Root.VersionMajor >= Major))
+                    {
+                        throw new ValidationExprError(Unnamed_0, M_Io, "/types/version_guard/seq/0");
+                    }
+                }
+            }
+            private byte[] __unnamed0;
+            private ushort _major;
+            private JavaClass m_root;
+            private KaitaiStruct m_parent;
+            public byte[] Unnamed_0 { get { return __unnamed0; } }
+            public ushort Major { get { return _major; } }
+            public JavaClass M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>
@@ -643,6 +699,40 @@ namespace Kaitai
         }
 
         /// <remarks>
+        /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10">Source</a>
+        /// </remarks>
+        public partial class DynamicCpInfo : KaitaiStruct
+        {
+            public static DynamicCpInfo FromFile(string fileName)
+            {
+                return new DynamicCpInfo(new KaitaiStream(fileName));
+            }
+
+            public DynamicCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                __unnamed0 = new VersionGuard(55, m_io, this, m_root);
+                _bootstrapMethodAttrIndex = m_io.ReadU2be();
+                _nameAndTypeIndex = m_io.ReadU2be();
+            }
+            private VersionGuard __unnamed0;
+            private ushort _bootstrapMethodAttrIndex;
+            private ushort _nameAndTypeIndex;
+            private JavaClass m_root;
+            private JavaClass.ConstantPoolEntry m_parent;
+            public VersionGuard Unnamed_0 { get { return __unnamed0; } }
+            public ushort BootstrapMethodAttrIndex { get { return _bootstrapMethodAttrIndex; } }
+            public ushort NameAndTypeIndex { get { return _nameAndTypeIndex; } }
+            public JavaClass M_Root { get { return m_root; } }
+            public JavaClass.ConstantPoolEntry M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
         /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5">Source</a>
         /// </remarks>
         public partial class LongCpInfo : KaitaiStruct
@@ -688,13 +778,16 @@ namespace Kaitai
             }
             private void _read()
             {
+                __unnamed0 = new VersionGuard(51, m_io, this, m_root);
                 _bootstrapMethodAttrIndex = m_io.ReadU2be();
                 _nameAndTypeIndex = m_io.ReadU2be();
             }
+            private VersionGuard __unnamed0;
             private ushort _bootstrapMethodAttrIndex;
             private ushort _nameAndTypeIndex;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
+            public VersionGuard Unnamed_0 { get { return __unnamed0; } }
             public ushort BootstrapMethodAttrIndex { get { return _bootstrapMethodAttrIndex; } }
             public ushort NameAndTypeIndex { get { return _nameAndTypeIndex; } }
             public JavaClass M_Root { get { return m_root; } }
@@ -732,15 +825,86 @@ namespace Kaitai
             }
             private void _read()
             {
+                __unnamed0 = new VersionGuard(51, m_io, this, m_root);
                 _referenceKind = ((ReferenceKindEnum) m_io.ReadU1());
                 _referenceIndex = m_io.ReadU2be();
             }
+            private VersionGuard __unnamed0;
             private ReferenceKindEnum _referenceKind;
             private ushort _referenceIndex;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
+            public VersionGuard Unnamed_0 { get { return __unnamed0; } }
             public ReferenceKindEnum ReferenceKind { get { return _referenceKind; } }
             public ushort ReferenceIndex { get { return _referenceIndex; } }
+            public JavaClass M_Root { get { return m_root; } }
+            public JavaClass.ConstantPoolEntry M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Project Jigsaw modules introduced in Java 9
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12">Source</a>
+        /// </remarks>
+        public partial class ModulePackageCpInfo : KaitaiStruct
+        {
+            public static ModulePackageCpInfo FromFile(string fileName)
+            {
+                return new ModulePackageCpInfo(new KaitaiStream(fileName));
+            }
+
+            public ModulePackageCpInfo(KaitaiStream p__io, JavaClass.ConstantPoolEntry p__parent = null, JavaClass p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_nameAsInfo = false;
+                f_nameAsStr = false;
+                _read();
+            }
+            private void _read()
+            {
+                __unnamed0 = new VersionGuard(53, m_io, this, m_root);
+                _nameIndex = m_io.ReadU2be();
+            }
+            private bool f_nameAsInfo;
+            private JavaClass.Utf8CpInfo _nameAsInfo;
+            public JavaClass.Utf8CpInfo NameAsInfo
+            {
+                get
+                {
+                    if (f_nameAsInfo)
+                        return _nameAsInfo;
+                    _nameAsInfo = (JavaClass.Utf8CpInfo) (((JavaClass.Utf8CpInfo) (M_Root.ConstantPool[(NameIndex - 1)].CpInfo)));
+                    f_nameAsInfo = true;
+                    return _nameAsInfo;
+                }
+            }
+            private bool f_nameAsStr;
+            private string _nameAsStr;
+            public string NameAsStr
+            {
+                get
+                {
+                    if (f_nameAsStr)
+                        return _nameAsStr;
+                    _nameAsStr = (string) (NameAsInfo.Value);
+                    f_nameAsStr = true;
+                    return _nameAsStr;
+                }
+            }
+            private VersionGuard __unnamed0;
+            private ushort _nameIndex;
+            private JavaClass m_root;
+            private JavaClass.ConstantPoolEntry m_parent;
+            public VersionGuard Unnamed_0 { get { return __unnamed0; } }
+            public ushort NameIndex { get { return _nameIndex; } }
             public JavaClass M_Root { get { return m_root; } }
             public JavaClass.ConstantPoolEntry M_Parent { get { return m_parent; } }
         }
@@ -909,11 +1073,14 @@ namespace Kaitai
             }
             private void _read()
             {
+                __unnamed0 = new VersionGuard(51, m_io, this, m_root);
                 _descriptorIndex = m_io.ReadU2be();
             }
+            private VersionGuard __unnamed0;
             private ushort _descriptorIndex;
             private JavaClass m_root;
             private JavaClass.ConstantPoolEntry m_parent;
+            public VersionGuard Unnamed_0 { get { return __unnamed0; } }
             public ushort DescriptorIndex { get { return _descriptorIndex; } }
             public JavaClass M_Root { get { return m_root; } }
             public JavaClass.ConstantPoolEntry M_Parent { get { return m_parent; } }
@@ -1055,7 +1222,10 @@ namespace Kaitai
                 NameAndType = 12,
                 MethodHandle = 15,
                 MethodType = 16,
+                Dynamic = 17,
                 InvokeDynamic = 18,
+                Module = 19,
+                Package = 20,
             }
             public ConstantPoolEntry(bool p_isPrevTwoEntries, KaitaiStream p__io, JavaClass p__parent = null, JavaClass p__root = null) : base(p__io)
             {
@@ -1080,6 +1250,10 @@ namespace Kaitai
                         _cpInfo = new ClassCpInfo(m_io, this, m_root);
                         break;
                     }
+                    case TagEnum.Dynamic: {
+                        _cpInfo = new DynamicCpInfo(m_io, this, m_root);
+                        break;
+                    }
                     case TagEnum.Utf8: {
                         _cpInfo = new Utf8CpInfo(m_io, this, m_root);
                         break;
@@ -1098,6 +1272,10 @@ namespace Kaitai
                     }
                     case TagEnum.Float: {
                         _cpInfo = new FloatCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.Module: {
+                        _cpInfo = new ModulePackageCpInfo(m_io, this, m_root);
                         break;
                     }
                     case TagEnum.Long: {
@@ -1122,6 +1300,10 @@ namespace Kaitai
                     }
                     case TagEnum.MethodHandle: {
                         _cpInfo = new MethodHandleCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.Package: {
+                        _cpInfo = new ModulePackageCpInfo(m_io, this, m_root);
                         break;
                     }
                     case TagEnum.NameAndType: {

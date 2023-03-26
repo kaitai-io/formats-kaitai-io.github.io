@@ -99,6 +99,36 @@ void java_class_t::_clean_up() {
     }
 }
 
+java_class_t::version_guard_t::version_guard_t(uint16_t p_major, kaitai::kstream* p__io, kaitai::kstruct* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_major = p_major;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void java_class_t::version_guard_t::_read() {
+    m__unnamed0 = m__io->read_bytes(0);
+    {
+        std::string _ = _unnamed0();
+        if (!(_root()->version_major() >= major())) {
+            throw kaitai::validation_expr_error<std::string>(_unnamed0(), _io(), std::string("/types/version_guard/seq/0"));
+        }
+    }
+}
+
+java_class_t::version_guard_t::~version_guard_t() {
+    _clean_up();
+}
+
+void java_class_t::version_guard_t::_clean_up() {
+}
+
 java_class_t::float_cp_info_t::float_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -565,6 +595,35 @@ java_class_t::double_cp_info_t::~double_cp_info_t() {
 void java_class_t::double_cp_info_t::_clean_up() {
 }
 
+java_class_t::dynamic_cp_info_t::dynamic_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__unnamed0 = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void java_class_t::dynamic_cp_info_t::_read() {
+    m__unnamed0 = new version_guard_t(55, m__io, this, m__root);
+    m_bootstrap_method_attr_index = m__io->read_u2be();
+    m_name_and_type_index = m__io->read_u2be();
+}
+
+java_class_t::dynamic_cp_info_t::~dynamic_cp_info_t() {
+    _clean_up();
+}
+
+void java_class_t::dynamic_cp_info_t::_clean_up() {
+    if (m__unnamed0) {
+        delete m__unnamed0; m__unnamed0 = 0;
+    }
+}
+
 java_class_t::long_cp_info_t::long_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -591,6 +650,7 @@ void java_class_t::long_cp_info_t::_clean_up() {
 java_class_t::invoke_dynamic_cp_info_t::invoke_dynamic_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m__unnamed0 = 0;
 
     try {
         _read();
@@ -601,6 +661,7 @@ java_class_t::invoke_dynamic_cp_info_t::invoke_dynamic_cp_info_t(kaitai::kstream
 }
 
 void java_class_t::invoke_dynamic_cp_info_t::_read() {
+    m__unnamed0 = new version_guard_t(51, m__io, this, m__root);
     m_bootstrap_method_attr_index = m__io->read_u2be();
     m_name_and_type_index = m__io->read_u2be();
 }
@@ -610,11 +671,15 @@ java_class_t::invoke_dynamic_cp_info_t::~invoke_dynamic_cp_info_t() {
 }
 
 void java_class_t::invoke_dynamic_cp_info_t::_clean_up() {
+    if (m__unnamed0) {
+        delete m__unnamed0; m__unnamed0 = 0;
+    }
 }
 
 java_class_t::method_handle_cp_info_t::method_handle_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m__unnamed0 = 0;
 
     try {
         _read();
@@ -625,6 +690,7 @@ java_class_t::method_handle_cp_info_t::method_handle_cp_info_t(kaitai::kstream* 
 }
 
 void java_class_t::method_handle_cp_info_t::_read() {
+    m__unnamed0 = new version_guard_t(51, m__io, this, m__root);
     m_reference_kind = static_cast<java_class_t::method_handle_cp_info_t::reference_kind_enum_t>(m__io->read_u1());
     m_reference_index = m__io->read_u2be();
 }
@@ -634,6 +700,55 @@ java_class_t::method_handle_cp_info_t::~method_handle_cp_info_t() {
 }
 
 void java_class_t::method_handle_cp_info_t::_clean_up() {
+    if (m__unnamed0) {
+        delete m__unnamed0; m__unnamed0 = 0;
+    }
+}
+
+java_class_t::module_package_cp_info_t::module_package_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__unnamed0 = 0;
+    f_name_as_info = false;
+    f_name_as_str = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void java_class_t::module_package_cp_info_t::_read() {
+    m__unnamed0 = new version_guard_t(53, m__io, this, m__root);
+    m_name_index = m__io->read_u2be();
+}
+
+java_class_t::module_package_cp_info_t::~module_package_cp_info_t() {
+    _clean_up();
+}
+
+void java_class_t::module_package_cp_info_t::_clean_up() {
+    if (m__unnamed0) {
+        delete m__unnamed0; m__unnamed0 = 0;
+    }
+}
+
+java_class_t::utf8_cp_info_t* java_class_t::module_package_cp_info_t::name_as_info() {
+    if (f_name_as_info)
+        return m_name_as_info;
+    m_name_as_info = static_cast<java_class_t::utf8_cp_info_t*>(_root()->constant_pool()->at((name_index() - 1))->cp_info());
+    f_name_as_info = true;
+    return m_name_as_info;
+}
+
+std::string java_class_t::module_package_cp_info_t::name_as_str() {
+    if (f_name_as_str)
+        return m_name_as_str;
+    m_name_as_str = name_as_info()->value();
+    f_name_as_str = true;
+    return m_name_as_str;
 }
 
 java_class_t::name_and_type_cp_info_t::name_and_type_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
@@ -746,6 +861,7 @@ void java_class_t::string_cp_info_t::_clean_up() {
 java_class_t::method_type_cp_info_t::method_type_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m__unnamed0 = 0;
 
     try {
         _read();
@@ -756,6 +872,7 @@ java_class_t::method_type_cp_info_t::method_type_cp_info_t(kaitai::kstream* p__i
 }
 
 void java_class_t::method_type_cp_info_t::_read() {
+    m__unnamed0 = new version_guard_t(51, m__io, this, m__root);
     m_descriptor_index = m__io->read_u2be();
 }
 
@@ -764,6 +881,9 @@ java_class_t::method_type_cp_info_t::~method_type_cp_info_t() {
 }
 
 void java_class_t::method_type_cp_info_t::_clean_up() {
+    if (m__unnamed0) {
+        delete m__unnamed0; m__unnamed0 = 0;
+    }
 }
 
 java_class_t::interface_method_ref_cp_info_t::interface_method_ref_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent, java_class_t* p__root) : kaitai::kstruct(p__io) {
@@ -884,6 +1004,11 @@ void java_class_t::constant_pool_entry_t::_read() {
             m_cp_info = new class_cp_info_t(m__io, this, m__root);
             break;
         }
+        case java_class_t::constant_pool_entry_t::TAG_ENUM_DYNAMIC: {
+            n_cp_info = false;
+            m_cp_info = new dynamic_cp_info_t(m__io, this, m__root);
+            break;
+        }
         case java_class_t::constant_pool_entry_t::TAG_ENUM_UTF8: {
             n_cp_info = false;
             m_cp_info = new utf8_cp_info_t(m__io, this, m__root);
@@ -907,6 +1032,11 @@ void java_class_t::constant_pool_entry_t::_read() {
         case java_class_t::constant_pool_entry_t::TAG_ENUM_FLOAT: {
             n_cp_info = false;
             m_cp_info = new float_cp_info_t(m__io, this, m__root);
+            break;
+        }
+        case java_class_t::constant_pool_entry_t::TAG_ENUM_MODULE: {
+            n_cp_info = false;
+            m_cp_info = new module_package_cp_info_t(m__io, this, m__root);
             break;
         }
         case java_class_t::constant_pool_entry_t::TAG_ENUM_LONG: {
@@ -937,6 +1067,11 @@ void java_class_t::constant_pool_entry_t::_read() {
         case java_class_t::constant_pool_entry_t::TAG_ENUM_METHOD_HANDLE: {
             n_cp_info = false;
             m_cp_info = new method_handle_cp_info_t(m__io, this, m__root);
+            break;
+        }
+        case java_class_t::constant_pool_entry_t::TAG_ENUM_PACKAGE: {
+            n_cp_info = false;
+            m_cp_info = new module_package_cp_info_t(m__io, this, m__root);
             break;
         }
         case java_class_t::constant_pool_entry_t::TAG_ENUM_NAME_AND_TYPE: {

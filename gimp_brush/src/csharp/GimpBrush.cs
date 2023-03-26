@@ -18,7 +18,7 @@ namespace Kaitai
     /// and choose **Brushes** to see the recognized Brush Folders or to add new ones.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://gitlab.gnome.org/GNOME/gimp/-/raw/4416313/devel-docs/gbr.txt">Source</a>
+    /// Reference: <a href="https://github.com/GNOME/gimp/blob/441631322b/devel-docs/gbr.txt">Source</a>
     /// </remarks>
     public partial class GimpBrush : KaitaiStruct
     {
@@ -107,18 +107,18 @@ namespace Kaitai
             public uint Version { get { return _version; } }
 
             /// <remarks>
-            /// Reference: <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L170">Source</a>
+            /// Reference: <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L170">Source</a>
             /// </remarks>
             /// <remarks>
-            /// Reference: <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24">Source</a>
+            /// Reference: <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24">Source</a>
             /// </remarks>
             public uint Width { get { return _width; } }
 
             /// <remarks>
-            /// Reference: <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L177">Source</a>
+            /// Reference: <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L177">Source</a>
             /// </remarks>
             /// <remarks>
-            /// Reference: <a href="https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24">Source</a>
+            /// Reference: <a href="https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24">Source</a>
             /// </remarks>
             public uint Height { get { return _height; } }
             public ColorDepth BytesPerPixel { get { return _bytesPerPixel; } }

@@ -17,7 +17,7 @@ end
 # This format spec deals with this internal binary format (called "blob" in
 # openssh sources) only. Buffer is expected to be raw binary and not base64-d.
 # Implementation closely follows code in OpenSSH.
-# @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970 Source
+# @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970 Source
 class SshPublicKey < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -40,7 +40,7 @@ class SshPublicKey < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028 Source
+  # @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028 Source
   class KeyRsa < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -72,7 +72,7 @@ class SshPublicKey < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124 Source
+  # @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124 Source
   class KeyEd25519 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -89,7 +89,7 @@ class SshPublicKey < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103 Source
+  # @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103 Source
   class KeyEcdsa < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -109,7 +109,7 @@ class SshPublicKey < Kaitai::Struct::Struct
   # A integer-prefixed string designed to be read using `sshbuf_get_cstring`
   # and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
   # obscure misnomer, as typically "C string" means a null-terminated string.
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181 Source
+  # @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181 Source
   class Cstring < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -126,7 +126,7 @@ class SshPublicKey < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051 Source
+  # @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051 Source
   class KeyDsa < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -152,8 +152,8 @@ class SshPublicKey < Kaitai::Struct::Struct
   # 
   # * sshbuf_get_ec
   # * get_ec
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-  #   https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+  # @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+  #   https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
   #    Source
   class EllipticCurve < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -178,8 +178,8 @@ class SshPublicKey < Kaitai::Struct::Struct
   # * sshbuf_get_bignum2_bytes_direct
   # * sshbuf_put_bignum2
   # * sshbuf_get_bignum2_bytes_direct
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-  #   https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+  # @see https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+  #   https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
   #    Source
   class Bignum2 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

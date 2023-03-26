@@ -19,7 +19,7 @@ class SshPublicKey(KaitaiStruct):
     Implementation closely follows code in OpenSSH.
     
     .. seealso::
-       Source - https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970
+       Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -42,7 +42,7 @@ class SshPublicKey(KaitaiStruct):
     class KeyRsa(KaitaiStruct):
         """
         .. seealso::
-           Source - https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028
+           Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -67,7 +67,7 @@ class SshPublicKey(KaitaiStruct):
     class KeyEd25519(KaitaiStruct):
         """
         .. seealso::
-           Source - https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124
+           Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -83,7 +83,7 @@ class SshPublicKey(KaitaiStruct):
     class KeyEcdsa(KaitaiStruct):
         """
         .. seealso::
-           Source - https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103
+           Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -102,7 +102,7 @@ class SshPublicKey(KaitaiStruct):
         obscure misnomer, as typically "C string" means a null-terminated string.
         
         .. seealso::
-           Source - https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181
+           Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -118,7 +118,7 @@ class SshPublicKey(KaitaiStruct):
     class KeyDsa(KaitaiStruct):
         """
         .. seealso::
-           Source - https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051
+           Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -141,8 +141,8 @@ class SshPublicKey(KaitaiStruct):
         * get_ec
         
         .. seealso::
-           Source - https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-           https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+           Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+           https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -165,8 +165,8 @@ class SshPublicKey(KaitaiStruct):
         * sshbuf_get_bignum2_bytes_direct
         
         .. seealso::
-           Source - https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-           https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+           Source - https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+           https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io

@@ -13,7 +13,7 @@ import "github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
  * This format spec deals with this internal binary format (called "blob" in
  * openssh sources) only. Buffer is expected to be raw binary and not base64-d.
  * Implementation closely follows code in OpenSSH.
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970">Source</a>
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970">Source</a>
  */
 type SshPublicKey struct {
 	KeyName *SshPublicKey_Cstring
@@ -72,7 +72,7 @@ func (this *SshPublicKey) Read(io *kaitai.Stream, parent interface{}, root *SshP
 }
 
 /**
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028">Source</a>
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028">Source</a>
  */
 type SshPublicKey_KeyRsa struct {
 	RsaE *SshPublicKey_Bignum2
@@ -134,7 +134,7 @@ func (this *SshPublicKey_KeyRsa) KeyLength() (v int, err error) {
  */
 
 /**
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124">Source</a>
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124">Source</a>
  */
 type SshPublicKey_KeyEd25519 struct {
 	LenPk uint32
@@ -168,7 +168,7 @@ func (this *SshPublicKey_KeyEd25519) Read(io *kaitai.Stream, parent *SshPublicKe
 }
 
 /**
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103">Source</a>
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103">Source</a>
  */
 type SshPublicKey_KeyEcdsa struct {
 	CurveName *SshPublicKey_Cstring
@@ -206,7 +206,7 @@ func (this *SshPublicKey_KeyEcdsa) Read(io *kaitai.Stream, parent *SshPublicKey,
  * A integer-prefixed string designed to be read using `sshbuf_get_cstring`
  * and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
  * obscure misnomer, as typically "C string" means a null-terminated string.
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181">Source</a>
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181">Source</a>
  */
 type SshPublicKey_Cstring struct {
 	Len uint32
@@ -240,7 +240,7 @@ func (this *SshPublicKey_Cstring) Read(io *kaitai.Stream, parent interface{}, ro
 }
 
 /**
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051">Source</a>
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051">Source</a>
  */
 type SshPublicKey_KeyDsa struct {
 	DsaP *SshPublicKey_Bignum2
@@ -294,8 +294,8 @@ func (this *SshPublicKey_KeyDsa) Read(io *kaitai.Stream, parent *SshPublicKey, r
  * 
  * * sshbuf_get_ec
  * * get_ec
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
- * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+ * https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
  * ">Source</a>
  */
 type SshPublicKey_EllipticCurve struct {
@@ -337,8 +337,8 @@ func (this *SshPublicKey_EllipticCurve) Read(io *kaitai.Stream, parent *SshPubli
  * * sshbuf_get_bignum2_bytes_direct
  * * sshbuf_put_bignum2
  * * sshbuf_get_bignum2_bytes_direct
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
- * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+ * https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
  * ">Source</a>
  */
 type SshPublicKey_Bignum2 struct {

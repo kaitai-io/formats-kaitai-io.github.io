@@ -7,9 +7,12 @@ namespace Kaitai
 
     /// <summary>
     /// A native VirtualBox file format
+    /// 
     /// Images for testing can be downloaded from
-    ///  * https://www.osboxes.org/virtualbox-images/
-    ///  * https://virtualboxes.org/images/
+    /// 
+    ///  * &lt;https://www.osboxes.org/virtualbox-images/&gt;
+    ///  * &lt;https://virtualboxes.org/images/&gt;
+    /// 
     /// or you can convert images of other formats.
     /// </summary>
     /// <remarks>

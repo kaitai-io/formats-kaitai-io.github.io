@@ -258,7 +258,7 @@ namespace MinecraftNbt {
         protected $_m_data;
 
         /**
-         * unsigned according to https://wiki.vg/NBT#Specification
+         * unsigned according to <https://wiki.vg/NBT#Specification>
          */
         public function lenData() { return $this->_m_lenData; }
         public function data() { return $this->_m_data; }
@@ -366,8 +366,8 @@ namespace MinecraftNbt {
     class Tag {
 
         /**
-         * As of KSC 0.9, this enum key causes a syntax error in Lua.
-         * See https://github.com/kaitai-io/kaitai_struct/issues/90#issuecomment-766440975
+         * As of KSC 0.9, this enum key causes a syntax error in Lua. See
+         * <https://github.com/kaitai-io/kaitai_struct/issues/90#issuecomment-766440975>
          * for more info.
          */
         const END = 0;

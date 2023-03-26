@@ -11,8 +11,8 @@
  * 
  * Some examples of mdt files can be downloaded at:
  * 
- * * https://www.ntmdt-si.ru/resources/scan-gallery
- * * http://callistosoft.narod.ru/Resources/Mdt.zip
+ * * <https://www.ntmdt-si.ru/resources/scan-gallery>
+ * * <http://callistosoft.narod.ru/Resources/Mdt.zip>
  */
 
 namespace {

@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * @see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h">Source</a>
+ * @see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h">Source</a>
  */
 public class Uimage extends KaitaiStruct {
     public static Uimage fromFile(String fileName) throws IOException {

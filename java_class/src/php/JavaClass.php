@@ -87,6 +87,37 @@ namespace {
     }
 }
 
+/**
+ * `class` file format version 45.3 (appeared in the very first publicly
+ * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+ * ancient that it's taken for granted. Earlier formats seem to be
+ * undocumented. Changes of `version_minor` don't change `class` format.
+ * Earlier `version_major`s likely belong to Oak programming language, the
+ * proprietary predecessor of Java.
+ */
+
+namespace JavaClass {
+    class VersionGuard extends \Kaitai\Struct\Struct {
+        public function __construct(int $major, \Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \JavaClass $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_major = $major;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__unnamed0 = $this->_io->readBytes(0);
+            $_ = $this->_unnamed0();
+            if (!($this->_root()->versionMajor() >= $this->major())) {
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_unnamed0(), $this->_io(), "/types/version_guard/seq/0");
+            }
+        }
+        protected $_m__unnamed0;
+        protected $_m_major;
+        public function _unnamed0() { return $this->_m__unnamed0; }
+        public function major() { return $this->_m_major; }
+    }
+}
+
 namespace JavaClass {
     class FloatCpInfo extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
@@ -452,6 +483,27 @@ namespace JavaClass {
 }
 
 namespace JavaClass {
+    class DynamicCpInfo extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__unnamed0 = new \JavaClass\VersionGuard(55, $this->_io, $this, $this->_root);
+            $this->_m_bootstrapMethodAttrIndex = $this->_io->readU2be();
+            $this->_m_nameAndTypeIndex = $this->_io->readU2be();
+        }
+        protected $_m__unnamed0;
+        protected $_m_bootstrapMethodAttrIndex;
+        protected $_m_nameAndTypeIndex;
+        public function _unnamed0() { return $this->_m__unnamed0; }
+        public function bootstrapMethodAttrIndex() { return $this->_m_bootstrapMethodAttrIndex; }
+        public function nameAndTypeIndex() { return $this->_m_nameAndTypeIndex; }
+    }
+}
+
+namespace JavaClass {
     class LongCpInfo extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -474,11 +526,14 @@ namespace JavaClass {
         }
 
         private function _read() {
+            $this->_m__unnamed0 = new \JavaClass\VersionGuard(51, $this->_io, $this, $this->_root);
             $this->_m_bootstrapMethodAttrIndex = $this->_io->readU2be();
             $this->_m_nameAndTypeIndex = $this->_io->readU2be();
         }
+        protected $_m__unnamed0;
         protected $_m_bootstrapMethodAttrIndex;
         protected $_m_nameAndTypeIndex;
+        public function _unnamed0() { return $this->_m__unnamed0; }
         public function bootstrapMethodAttrIndex() { return $this->_m_bootstrapMethodAttrIndex; }
         public function nameAndTypeIndex() { return $this->_m_nameAndTypeIndex; }
     }
@@ -492,11 +547,14 @@ namespace JavaClass {
         }
 
         private function _read() {
+            $this->_m__unnamed0 = new \JavaClass\VersionGuard(51, $this->_io, $this, $this->_root);
             $this->_m_referenceKind = $this->_io->readU1();
             $this->_m_referenceIndex = $this->_io->readU2be();
         }
+        protected $_m__unnamed0;
         protected $_m_referenceKind;
         protected $_m_referenceIndex;
+        public function _unnamed0() { return $this->_m__unnamed0; }
         public function referenceKind() { return $this->_m_referenceKind; }
         public function referenceIndex() { return $this->_m_referenceIndex; }
     }
@@ -513,6 +571,42 @@ namespace JavaClass\MethodHandleCpInfo {
         const INVOKE_SPECIAL = 7;
         const NEW_INVOKE_SPECIAL = 8;
         const INVOKE_INTERFACE = 9;
+    }
+}
+
+/**
+ * Project Jigsaw modules introduced in Java 9
+ */
+
+namespace JavaClass {
+    class ModulePackageCpInfo extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass\ConstantPoolEntry $_parent = null, \JavaClass $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__unnamed0 = new \JavaClass\VersionGuard(53, $this->_io, $this, $this->_root);
+            $this->_m_nameIndex = $this->_io->readU2be();
+        }
+        protected $_m_nameAsInfo;
+        public function nameAsInfo() {
+            if ($this->_m_nameAsInfo !== null)
+                return $this->_m_nameAsInfo;
+            $this->_m_nameAsInfo = $this->_root()->constantPool()[($this->nameIndex() - 1)]->cpInfo();
+            return $this->_m_nameAsInfo;
+        }
+        protected $_m_nameAsStr;
+        public function nameAsStr() {
+            if ($this->_m_nameAsStr !== null)
+                return $this->_m_nameAsStr;
+            $this->_m_nameAsStr = $this->nameAsInfo()->value();
+            return $this->_m_nameAsStr;
+        }
+        protected $_m__unnamed0;
+        protected $_m_nameIndex;
+        public function _unnamed0() { return $this->_m__unnamed0; }
+        public function nameIndex() { return $this->_m_nameIndex; }
     }
 }
 
@@ -603,9 +697,12 @@ namespace JavaClass {
         }
 
         private function _read() {
+            $this->_m__unnamed0 = new \JavaClass\VersionGuard(51, $this->_io, $this, $this->_root);
             $this->_m_descriptorIndex = $this->_io->readU2be();
         }
+        protected $_m__unnamed0;
         protected $_m_descriptorIndex;
+        public function _unnamed0() { return $this->_m__unnamed0; }
         public function descriptorIndex() { return $this->_m_descriptorIndex; }
     }
 }
@@ -691,6 +788,9 @@ namespace JavaClass {
                     case \JavaClass\ConstantPoolEntry\TagEnum::CLASS_TYPE:
                         $this->_m_cpInfo = new \JavaClass\ClassCpInfo($this->_io, $this, $this->_root);
                         break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::DYNAMIC:
+                        $this->_m_cpInfo = new \JavaClass\DynamicCpInfo($this->_io, $this, $this->_root);
+                        break;
                     case \JavaClass\ConstantPoolEntry\TagEnum::UTF8:
                         $this->_m_cpInfo = new \JavaClass\Utf8CpInfo($this->_io, $this, $this->_root);
                         break;
@@ -705,6 +805,9 @@ namespace JavaClass {
                         break;
                     case \JavaClass\ConstantPoolEntry\TagEnum::FLOAT:
                         $this->_m_cpInfo = new \JavaClass\FloatCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::MODULE:
+                        $this->_m_cpInfo = new \JavaClass\ModulePackageCpInfo($this->_io, $this, $this->_root);
                         break;
                     case \JavaClass\ConstantPoolEntry\TagEnum::LONG:
                         $this->_m_cpInfo = new \JavaClass\LongCpInfo($this->_io, $this, $this->_root);
@@ -723,6 +826,9 @@ namespace JavaClass {
                         break;
                     case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_HANDLE:
                         $this->_m_cpInfo = new \JavaClass\MethodHandleCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::PACKAGE:
+                        $this->_m_cpInfo = new \JavaClass\ModulePackageCpInfo($this->_io, $this, $this->_root);
                         break;
                     case \JavaClass\ConstantPoolEntry\TagEnum::NAME_AND_TYPE:
                         $this->_m_cpInfo = new \JavaClass\NameAndTypeCpInfo($this->_io, $this, $this->_root);
@@ -761,7 +867,10 @@ namespace JavaClass\ConstantPoolEntry {
         const NAME_AND_TYPE = 12;
         const METHOD_HANDLE = 15;
         const METHOD_TYPE = 16;
+        const DYNAMIC = 17;
         const INVOKE_DYNAMIC = 18;
+        const MODULE = 19;
+        const PACKAGE = 20;
     }
 }
 

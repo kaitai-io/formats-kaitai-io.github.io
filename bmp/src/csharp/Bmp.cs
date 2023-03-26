@@ -487,10 +487,12 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// Replace with an opaque type if you care about the pixels.
-        /// You can look at an example of a JavaScript implementation: https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js
+        /// Replace with an opaque type if you care about the pixels. You can look at
+        /// an example of a JavaScript implementation:
+        /// &lt;https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js&gt;
         /// 
-        /// There is a proposal for adding bitmap data type to Kaitai Struct: https://github.com/kaitai-io/kaitai_struct/issues/188
+        /// There is a proposal for adding bitmap data type to Kaitai Struct:
+        /// &lt;https://github.com/kaitai-io/kaitai_struct/issues/188&gt;
         /// </summary>
         public partial class Bitmap : KaitaiStruct
         {

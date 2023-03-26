@@ -32,7 +32,8 @@ proc eapol*(this: Hccap_HccapRecord): seq[byte]
 ##[
 Native format of Hashcat password "recovery" utility.
 
-A sample of file for testing can be downloaded from https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap
+A sample of file for testing can be downloaded from
+<https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap>
 
 @see <a href="https://hashcat.net/wiki/doku.php?id=hccap">Source</a>
 ]##

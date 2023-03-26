@@ -46,7 +46,7 @@ class DosDatetime(KaitaiStruct):
     
     
     .. seealso::
-       DosDateTimeToFileTime - https://github.com/reactos/reactos/blob/c6b6444/dll/win32/kernel32/client/time.c#L82-L87
+       DosDateTimeToFileTime - https://github.com/reactos/reactos/blob/c6b64448ce4/dll/win32/kernel32/client/time.c#L82-L87
     
     
     .. seealso::

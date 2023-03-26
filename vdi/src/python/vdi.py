@@ -10,9 +10,12 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
 
 class Vdi(KaitaiStruct):
     """A native VirtualBox file format
+    
     Images for testing can be downloaded from
-     * https://www.osboxes.org/virtualbox-images/
-     * https://virtualboxes.org/images/
+    
+     * <https://www.osboxes.org/virtualbox-images/>
+     * <https://virtualboxes.org/images/>
+    
     or you can convert images of other formats.
     
     .. seealso::

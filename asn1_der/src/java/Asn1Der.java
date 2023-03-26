@@ -31,9 +31,9 @@ import java.nio.charset.Charset;
  * so typically it's simpler to use a pre-compiled list of them, such
  * as:
  * 
- * * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
- * * http://oid-info.com/
- * * https://www.alvestrand.no/objectid/top.html
+ * * <https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg>
+ * * <http://oid-info.com/>
+ * * <https://www.alvestrand.no/objectid/top.html>
  * @see <a href="https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&amp;lang=en">Source</a>
  */
 public class Asn1Der extends KaitaiStruct {

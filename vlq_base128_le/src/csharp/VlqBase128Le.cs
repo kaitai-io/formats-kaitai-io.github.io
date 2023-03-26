@@ -13,16 +13,16 @@ namespace Kaitai
     /// This particular encoding is specified and used in:
     /// 
     /// * DWARF debug file format, where it's dubbed &quot;unsigned LEB128&quot; or &quot;ULEB128&quot;.
-    ///   https://dwarfstd.org/doc/dwarf-2.0.0.pdf - page 139
+    ///   &lt;https://dwarfstd.org/doc/dwarf-2.0.0.pdf&gt; - page 139
     /// * Google Protocol Buffers, where it's called &quot;Base 128 Varints&quot;.
-    ///   https://protobuf.dev/programming-guides/encoding/#varints
+    ///   &lt;https://protobuf.dev/programming-guides/encoding/#varints&gt;
     /// * Apache Lucene, where it's called &quot;VInt&quot;
-    ///   https://lucene.apache.org/core/3_5_0/fileformats.html#VInt
+    ///   &lt;https://lucene.apache.org/core/3_5_0/fileformats.html#VInt&gt;
     /// * Apache Avro uses this as a basis for integer encoding, adding ZigZag on
     ///   top of it for signed ints
-    ///   https://avro.apache.org/docs/current/spec.html#binary_encode_primitive
+    ///   &lt;https://avro.apache.org/docs/current/spec.html#binary_encode_primitive&gt;
     /// 
-    /// More information on this encoding is available at https://en.wikipedia.org/wiki/LEB128
+    /// More information on this encoding is available at &lt;https://en.wikipedia.org/wiki/LEB128&gt;
     /// 
     /// This particular implementation supports serialized values to up 8 bytes long.
     /// </summary>

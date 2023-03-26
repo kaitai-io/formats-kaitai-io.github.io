@@ -17,7 +17,7 @@ namespace Kaitai
     /// Implementation closely follows code in OpenSSH.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970">Source</a>
+    /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970">Source</a>
     /// </remarks>
     public partial class SshPublicKey : KaitaiStruct
     {
@@ -56,7 +56,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028">Source</a>
+        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028">Source</a>
         /// </remarks>
         public partial class KeyRsa : KaitaiStruct
         {
@@ -114,7 +114,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124">Source</a>
+        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124">Source</a>
         /// </remarks>
         public partial class KeyEd25519 : KaitaiStruct
         {
@@ -145,7 +145,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103">Source</a>
+        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103">Source</a>
         /// </remarks>
         public partial class KeyEcdsa : KaitaiStruct
         {
@@ -181,7 +181,7 @@ namespace Kaitai
         /// obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181">Source</a>
+        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181">Source</a>
         /// </remarks>
         public partial class Cstring : KaitaiStruct
         {
@@ -212,7 +212,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051">Source</a>
+        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051">Source</a>
         /// </remarks>
         public partial class KeyDsa : KaitaiStruct
         {
@@ -256,8 +256,8 @@ namespace Kaitai
         /// * get_ec
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-        /// https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+        /// https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
         /// ">Source</a>
         /// </remarks>
         public partial class EllipticCurve : KaitaiStruct
@@ -298,8 +298,8 @@ namespace Kaitai
         /// * sshbuf_get_bignum2_bytes_direct
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-        /// https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+        /// Reference: <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+        /// https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
         /// ">Source</a>
         /// </remarks>
         public partial class Bignum2 : KaitaiStruct

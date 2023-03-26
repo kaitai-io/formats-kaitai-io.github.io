@@ -6,7 +6,8 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// You can get a dump for testing by the link: https://github.com/zhovner/mfdread/raw/master/dump.mfd
+    /// You can get a dump for testing from this link:
+    /// &lt;https://github.com/zhovner/mfdread/raw/master/dump.mfd&gt;
     /// </summary>
     /// <remarks>
     /// Reference: <a href="https://github.com/nfc-tools/libnfc

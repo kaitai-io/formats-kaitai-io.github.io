@@ -207,16 +207,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="nim.html" title=".class file format parsing Nim library">Nim</a></li>
-                
-                
-                <li>
-                
-                <a href="perl.html" title=".class file format parsing Perl library">Perl</a></li>
-                
-                
-                <li>
-                
                 <a href="php.html" title=".class file format parsing PHP library">PHP</a></li>
                 
                 
@@ -315,7 +305,11 @@ for instructions how to add it into your project with the build tool that you us
 
 
 <span class="cm">/**</span>
-<span class="cm"> * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">JavaClass</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="n">JavaClass</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -374,6 +368,52 @@ for instructions how to add it into your project with the build tool that you us
         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">attributesCount</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">attributes</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">AttributeInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
         <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * `class` file format version 45.3 (appeared in the very first publicly</span>
+<span class="cm">     * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so</span>
+<span class="cm">     * ancient that it&#39;s taken for granted. Earlier formats seem to be</span>
+<span class="cm">     * undocumented. Changes of `version_minor` don&#39;t change `class` format.</span>
+<span class="cm">     * Earlier `version_major`s likely belong to Oak programming language, the</span>
+<span class="cm">     * proprietary predecessor of Java.</span>
+<span class="cm">     * @see &quot;James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.&quot;</span>
+<span class="cm">     * @see &quot;Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.&quot;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">VersionGuard</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+        <span class="kd">public</span> <span class="nf">VersionGuard</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">int</span> <span class="n">major</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">major</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">VersionGuard</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">int</span> <span class="n">major</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">major</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">VersionGuard</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">major</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">major</span> <span class="o">=</span> <span class="n">major</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed0</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="p">{</span>
+                <span class="kt">byte</span><span class="o">[]</span> <span class="n">_it</span> <span class="o">=</span> <span class="n">_unnamed0</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_root</span><span class="p">().</span><span class="na">versionMajor</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">major</span><span class="p">()))</span> <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationExprError</span><span class="p">(</span><span class="n">_unnamed0</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/types/version_guard/seq/0&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_unnamed0</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">major</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_unnamed0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed0</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">major</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">major</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 
     <span class="cm">/**</span>
@@ -949,6 +989,45 @@ for instructions how to add it into your project with the build tool that you us
     <span class="p">}</span>
 
     <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DynamicCpInfo</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DynamicCpInfo</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DynamicCpInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DynamicCpInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DynamicCpInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DynamicCpInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VersionGuard</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="mi">55</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">bootstrapMethodAttrIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nameAndTypeIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">VersionGuard</span> <span class="n">_unnamed0</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">bootstrapMethodAttrIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">nameAndTypeIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">VersionGuard</span> <span class="nf">_unnamed0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed0</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">bootstrapMethodAttrIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bootstrapMethodAttrIndex</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">nameAndTypeIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nameAndTypeIndex</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
 <span class="cm">     * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm">     */</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LongCpInfo</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
@@ -1004,13 +1083,16 @@ for instructions how to add it into your project with the build tool that you us
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VersionGuard</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="mi">51</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">bootstrapMethodAttrIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">nameAndTypeIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">VersionGuard</span> <span class="n">_unnamed0</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">bootstrapMethodAttrIndex</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">nameAndTypeIndex</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">VersionGuard</span> <span class="nf">_unnamed0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed0</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">bootstrapMethodAttrIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bootstrapMethodAttrIndex</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">nameAndTypeIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nameAndTypeIndex</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
@@ -1062,15 +1144,71 @@ for instructions how to add it into your project with the build tool that you us
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VersionGuard</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="mi">51</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">referenceKind</span> <span class="o">=</span> <span class="n">ReferenceKindEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
             <span class="k">this</span><span class="p">.</span><span class="na">referenceIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">VersionGuard</span> <span class="n">_unnamed0</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">ReferenceKindEnum</span> <span class="n">referenceKind</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">referenceIndex</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">VersionGuard</span> <span class="nf">_unnamed0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed0</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">ReferenceKindEnum</span> <span class="nf">referenceKind</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">referenceKind</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">referenceIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">referenceIndex</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Project Jigsaw modules introduced in Java 9</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ModulePackageCpInfo</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ModulePackageCpInfo</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ModulePackageCpInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">ModulePackageCpInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">ModulePackageCpInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">ModulePackageCpInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VersionGuard</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="mi">53</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nameIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">Utf8CpInfo</span> <span class="n">nameAsInfo</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">Utf8CpInfo</span> <span class="nf">nameAsInfo</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nameAsInfo</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nameAsInfo</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nameAsInfo</span> <span class="o">=</span> <span class="p">((</span><span class="n">JavaClass</span><span class="p">.</span><span class="na">Utf8CpInfo</span><span class="p">)</span> <span class="p">(</span><span class="n">_root</span><span class="p">().</span><span class="na">constantPool</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">nameIndex</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)).</span><span class="na">cpInfo</span><span class="p">()));</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nameAsInfo</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">nameAsStr</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">nameAsStr</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nameAsStr</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nameAsStr</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nameAsStr</span> <span class="o">=</span> <span class="n">nameAsInfo</span><span class="p">().</span><span class="na">value</span><span class="p">();</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nameAsStr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">VersionGuard</span> <span class="n">_unnamed0</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">nameIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">VersionGuard</span> <span class="nf">_unnamed0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed0</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">nameIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nameIndex</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
@@ -1231,11 +1369,14 @@ for instructions how to add it into your project with the build tool that you us
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VersionGuard</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="mi">51</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">descriptorIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">VersionGuard</span> <span class="n">_unnamed0</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">descriptorIndex</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">VersionGuard</span> <span class="nf">_unnamed0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed0</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">descriptorIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">descriptorIndex</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">JavaClass</span><span class="p">.</span><span class="na">ConstantPoolEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
@@ -1357,12 +1498,15 @@ for instructions how to add it into your project with the build tool that you us
             <span class="n">NAME_AND_TYPE</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span>
             <span class="n">METHOD_HANDLE</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
             <span class="n">METHOD_TYPE</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
-            <span class="n">INVOKE_DYNAMIC</span><span class="p">(</span><span class="mi">18</span><span class="p">);</span>
+            <span class="n">DYNAMIC</span><span class="p">(</span><span class="mi">17</span><span class="p">),</span>
+            <span class="n">INVOKE_DYNAMIC</span><span class="p">(</span><span class="mi">18</span><span class="p">),</span>
+            <span class="n">MODULE</span><span class="p">(</span><span class="mi">19</span><span class="p">),</span>
+            <span class="n">PACKAGE</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
 
             <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
             <span class="n">TagEnum</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
             <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TagEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TagEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">14</span><span class="p">);</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TagEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">TagEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">17</span><span class="p">);</span>
             <span class="kd">static</span> <span class="p">{</span>
                 <span class="k">for</span> <span class="p">(</span><span class="n">TagEnum</span> <span class="n">e</span> <span class="p">:</span> <span class="n">TagEnum</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
                     <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
@@ -1402,6 +1546,10 @@ for instructions how to add it into your project with the build tool that you us
                             <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                             <span class="k">break</span><span class="p">;</span>
                         <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">DYNAMIC</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DynamicCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
                         <span class="k">case</span> <span class="n">UTF8</span><span class="p">:</span> <span class="p">{</span>
                             <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Utf8CpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                             <span class="k">break</span><span class="p">;</span>
@@ -1420,6 +1568,10 @@ for instructions how to add it into your project with the build tool that you us
                         <span class="p">}</span>
                         <span class="k">case</span> <span class="n">FLOAT</span><span class="p">:</span> <span class="p">{</span>
                             <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FloatCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">MODULE</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ModulePackageCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                             <span class="k">break</span><span class="p">;</span>
                         <span class="p">}</span>
                         <span class="k">case</span> <span class="n">LONG</span><span class="p">:</span> <span class="p">{</span>
@@ -1444,6 +1596,10 @@ for instructions how to add it into your project with the build tool that you us
                         <span class="p">}</span>
                         <span class="k">case</span> <span class="n">METHOD_HANDLE</span><span class="p">:</span> <span class="p">{</span>
                             <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">PACKAGE</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ModulePackageCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                             <span class="k">break</span><span class="p">;</span>
                         <span class="p">}</span>
                         <span class="k">case</span> <span class="n">NAME_AND_TYPE</span><span class="p">:</span> <span class="p">{</span>

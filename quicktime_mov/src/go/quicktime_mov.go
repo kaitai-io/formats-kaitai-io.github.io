@@ -153,6 +153,7 @@ const (
 	QuicktimeMov_Brand__Cud9 QuicktimeMov_Brand = 1668637753
 	QuicktimeMov_Brand__Cuvd QuicktimeMov_Brand = 1668642404
 	QuicktimeMov_Brand__Cvid QuicktimeMov_Brand = 1668704612
+	QuicktimeMov_Brand__Cvvc QuicktimeMov_Brand = 1668707939
 	QuicktimeMov_Brand__Cwvt QuicktimeMov_Brand = 1668773492
 	QuicktimeMov_Brand__Da0a QuicktimeMov_Brand = 1684090977
 	QuicktimeMov_Brand__Da0b QuicktimeMov_Brand = 1684090978
@@ -195,6 +196,11 @@ const (
 	QuicktimeMov_Brand__Hvcx QuicktimeMov_Brand = 1752589176
 	QuicktimeMov_Brand__Hvti QuicktimeMov_Brand = 1752593513
 	QuicktimeMov_Brand__Ifaa QuicktimeMov_Brand = 1768317281
+	QuicktimeMov_Brand__Ifah QuicktimeMov_Brand = 1768317288
+	QuicktimeMov_Brand__Ifai QuicktimeMov_Brand = 1768317289
+	QuicktimeMov_Brand__Ifas QuicktimeMov_Brand = 1768317299
+	QuicktimeMov_Brand__Ifau QuicktimeMov_Brand = 1768317301
+	QuicktimeMov_Brand__Ifav QuicktimeMov_Brand = 1768317302
 	QuicktimeMov_Brand__Ifhd QuicktimeMov_Brand = 1768319076
 	QuicktimeMov_Brand__Ifhh QuicktimeMov_Brand = 1768319080
 	QuicktimeMov_Brand__Ifhr QuicktimeMov_Brand = 1768319090
@@ -277,6 +283,7 @@ const (
 	QuicktimeMov_Brand__Sims QuicktimeMov_Brand = 1936289139
 	QuicktimeMov_Brand__Sisx QuicktimeMov_Brand = 1936290680
 	QuicktimeMov_Brand__Siti QuicktimeMov_Brand = 1936290921
+	QuicktimeMov_Brand__Sitv QuicktimeMov_Brand = 1936290934
 	QuicktimeMov_Brand__Slh1 QuicktimeMov_Brand = 1936484401
 	QuicktimeMov_Brand__Slh2 QuicktimeMov_Brand = 1936484402
 	QuicktimeMov_Brand__Slh3 QuicktimeMov_Brand = 1936484403
@@ -286,6 +293,12 @@ const (
 	QuicktimeMov_Brand__Uhvi QuicktimeMov_Brand = 1969780329
 	QuicktimeMov_Brand__Unif QuicktimeMov_Brand = 1970170214
 	QuicktimeMov_Brand__Uvvu QuicktimeMov_Brand = 1970697845
+	QuicktimeMov_Brand__V3mp QuicktimeMov_Brand = 1983081840
+	QuicktimeMov_Brand__V3mt QuicktimeMov_Brand = 1983081844
+	QuicktimeMov_Brand__V3nt QuicktimeMov_Brand = 1983082100
+	QuicktimeMov_Brand__V3st QuicktimeMov_Brand = 1983083380
+	QuicktimeMov_Brand__Vvci QuicktimeMov_Brand = 1987470185
+	QuicktimeMov_Brand__Vvoi QuicktimeMov_Brand = 1987473257
 	QuicktimeMov_Brand__Vwpt QuicktimeMov_Brand = 1987539060
 	QuicktimeMov_Brand__Yt4 QuicktimeMov_Brand = 2037658656
 )

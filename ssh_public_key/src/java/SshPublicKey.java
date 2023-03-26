@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
  * This format spec deals with this internal binary format (called "blob" in
  * openssh sources) only. Buffer is expected to be raw binary and not base64-d.
  * Implementation closely follows code in OpenSSH.
- * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970">Source</a>
+ * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970">Source</a>
  */
 public class SshPublicKey extends KaitaiStruct {
     public static SshPublicKey fromFile(String fileName) throws IOException {
@@ -61,7 +61,7 @@ public class SshPublicKey extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028">Source</a>
+     * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028">Source</a>
      */
     public static class KeyRsa extends KaitaiStruct {
         public static KeyRsa fromFile(String fileName) throws IOException {
@@ -118,7 +118,7 @@ public class SshPublicKey extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124">Source</a>
+     * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124">Source</a>
      */
     public static class KeyEd25519 extends KaitaiStruct {
         public static KeyEd25519 fromFile(String fileName) throws IOException {
@@ -154,7 +154,7 @@ public class SshPublicKey extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103">Source</a>
+     * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103">Source</a>
      */
     public static class KeyEcdsa extends KaitaiStruct {
         public static KeyEcdsa fromFile(String fileName) throws IOException {
@@ -193,7 +193,7 @@ public class SshPublicKey extends KaitaiStruct {
      * A integer-prefixed string designed to be read using `sshbuf_get_cstring`
      * and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
      * obscure misnomer, as typically "C string" means a null-terminated string.
-     * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181">Source</a>
+     * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181">Source</a>
      */
     public static class Cstring extends KaitaiStruct {
         public static Cstring fromFile(String fileName) throws IOException {
@@ -229,7 +229,7 @@ public class SshPublicKey extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051">Source</a>
+     * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051">Source</a>
      */
     public static class KeyDsa extends KaitaiStruct {
         public static KeyDsa fromFile(String fileName) throws IOException {
@@ -276,8 +276,8 @@ public class SshPublicKey extends KaitaiStruct {
      * 
      * * sshbuf_get_ec
      * * get_ec
-     * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-     * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
+     * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+     * https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
      * ">Source</a>
      */
     public static class EllipticCurve extends KaitaiStruct {
@@ -321,8 +321,8 @@ public class SshPublicKey extends KaitaiStruct {
      * * sshbuf_get_bignum2_bytes_direct
      * * sshbuf_put_bignum2
      * * sshbuf_get_bignum2_bytes_direct
-     * @see <a href="https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-     * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
+     * @see <a href="https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+     * https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
      * ">Source</a>
      */
     public static class Bignum2 extends KaitaiStruct {

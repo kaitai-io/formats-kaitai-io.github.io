@@ -207,16 +207,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="nim.html" title=".class file format parsing Nim library">Nim</a></li>
-                
-                
-                <li>
-                
-                <a href="perl.html" title=".class file format parsing Perl library">Perl</a></li>
-                
-                
-                <li>
-                
                 <a href="php.html" title=".class file format parsing PHP library">PHP</a></li>
                 
                 
@@ -350,20 +340,27 @@ and build them along with your project.</p>
 <span class="cp">#endif</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * \sa https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1 Source</span>
+<span class="cm"> * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html Source</span>
+<span class="cm"> * \sa https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf Source</span>
+<span class="cm"> * \sa https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java Source</span>
+<span class="cm"> * \sa https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template Source</span>
+<span class="cm"> * \sa https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp Source</span>
 <span class="cm"> */</span><span class="w"></span>
 
 <span class="k">class</span> <span class="nc">java_class_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 
 <span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span> <span class="nc">version_guard_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">float_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">attribute_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">method_ref_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">field_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">double_cp_info_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span> <span class="nc">dynamic_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">long_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">invoke_dynamic_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">method_handle_cp_info_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span> <span class="nc">module_package_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">name_and_type_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">utf8_cp_info_t</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="k">class</span> <span class="nc">string_cp_info_t</span><span class="p">;</span><span class="w"></span>
@@ -383,6 +380,43 @@ and build them along with your project.</p>
 
 <span class="k">public</span><span class="o">:</span><span class="w"></span>
 <span class="w">    </span><span class="o">~</span><span class="n">java_class_t</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * `class` file format version 45.3 (appeared in the very first publicly</span>
+<span class="cm">     * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so</span>
+<span class="cm">     * ancient that it&#39;s taken for granted. Earlier formats seem to be</span>
+<span class="cm">     * undocumented. Changes of `version_minor` don&#39;t change `class` format.</span>
+<span class="cm">     * Earlier `version_major`s likely belong to Oak programming language, the</span>
+<span class="cm">     * proprietary predecessor of Java.</span>
+<span class="cm">     * \sa James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.</span>
+<span class="cm">     * \sa Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.</span>
+<span class="cm">     */</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">class</span> <span class="nc">version_guard_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">version_guard_t</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">p_major</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="o">~</span><span class="n">version_guard_t</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_major</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_unnamed0</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">major</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_major</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * \sa https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5 Source</span>
@@ -852,6 +886,38 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span><span class="w"></span>
 
 <span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10 Source</span>
+<span class="cm">     */</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">class</span> <span class="nc">dynamic_cp_info_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">dynamic_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="o">~</span><span class="n">dynamic_cp_info_t</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_bootstrap_method_attr_index</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_name_and_type_index</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">_unnamed0</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">bootstrap_method_attr_index</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_bootstrap_method_attr_index</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">name_and_type_index</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_name_and_type_index</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+
+<span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * \sa https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5 Source</span>
 <span class="cm">     */</span><span class="w"></span>
 
@@ -897,12 +963,14 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">invoke_dynamic_cp_info_t</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_bootstrap_method_attr_index</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_name_and_type_index</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">_unnamed0</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">bootstrap_method_attr_index</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_bootstrap_method_attr_index</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">name_and_type_index</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_name_and_type_index</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
@@ -939,14 +1007,63 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">method_handle_cp_info_t</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="n">reference_kind_enum_t</span><span class="w"> </span><span class="n">m_reference_kind</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_reference_index</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">_unnamed0</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="n">reference_kind_enum_t</span><span class="w"> </span><span class="n">reference_kind</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_reference_kind</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">reference_index</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_reference_index</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * Project Jigsaw modules introduced in Java 9</span>
+<span class="cm">     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16 Source</span>
+<span class="cm">     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11 Source</span>
+<span class="cm">     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12 Source</span>
+<span class="cm">     */</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">class</span> <span class="nc">module_package_cp_info_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">module_package_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="o">~</span><span class="n">module_package_cp_info_t</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_name_as_info</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">utf8_cp_info_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_name_as_info</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">utf8_cp_info_t</span><span class="o">*</span><span class="w"> </span><span class="n">name_as_info</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_name_as_str</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_name_as_str</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name_as_str</span><span class="p">();</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_name_index</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">_unnamed0</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">name_index</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_name_index</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">    </span><span class="p">};</span><span class="w"></span>
@@ -1085,11 +1202,13 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">method_type_cp_info_t</span><span class="p">();</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_descriptor_index</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">version_guard_t</span><span class="o">*</span><span class="w"> </span><span class="n">_unnamed0</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">descriptor_index</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_descriptor_index</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
@@ -1203,7 +1322,10 @@ and build them along with your project.</p>
 <span class="w">            </span><span class="n">TAG_ENUM_NAME_AND_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="n">TAG_ENUM_METHOD_HANDLE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="n">TAG_ENUM_METHOD_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">TAG_ENUM_INVOKE_DYNAMIC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="w"></span>
+<span class="w">            </span><span class="n">TAG_ENUM_DYNAMIC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">TAG_ENUM_INVOKE_DYNAMIC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">TAG_ENUM_MODULE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="n">TAG_ENUM_PACKAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="w"></span>
 <span class="w">        </span><span class="p">};</span><span class="w"></span>
 
 <span class="w">        </span><span class="n">constant_pool_entry_t</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">p_is_prev_two_entries</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
@@ -1521,6 +1643,36 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_attributes</span><span class="p">;</span><span class="w"> </span><span class="n">m_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="n">java_class_t</span><span class="o">::</span><span class="n">version_guard_t</span><span class="o">::</span><span class="n">version_guard_t</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">p_major</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_major</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">version_guard_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_unnamed0</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">version_major</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">major</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_unnamed0</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/version_guard/seq/0&quot;</span><span class="p">));</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="n">java_class_t</span><span class="o">::</span><span class="n">version_guard_t</span><span class="o">::~</span><span class="n">version_guard_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">version_guard_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="n">java_class_t</span><span class="o">::</span><span class="n">float_cp_info_t</span><span class="o">::</span><span class="n">float_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -1989,6 +2141,35 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">double_cp_info_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
+<span class="n">java_class_t</span><span class="o">::</span><span class="n">dynamic_cp_info_t</span><span class="o">::</span><span class="n">dynamic_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">dynamic_cp_info_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">version_guard_t</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">m_bootstrap_method_attr_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="n">m_name_and_type_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="n">java_class_t</span><span class="o">::</span><span class="n">dynamic_cp_info_t</span><span class="o">::~</span><span class="n">dynamic_cp_info_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">dynamic_cp_info_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__unnamed0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
 <span class="n">java_class_t</span><span class="o">::</span><span class="n">long_cp_info_t</span><span class="o">::</span><span class="n">long_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
@@ -2015,6 +2196,7 @@ and build them along with your project.</p>
 <span class="n">java_class_t</span><span class="o">::</span><span class="n">invoke_dynamic_cp_info_t</span><span class="o">::</span><span class="n">invoke_dynamic_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
@@ -2025,6 +2207,7 @@ and build them along with your project.</p>
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">invoke_dynamic_cp_info_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">version_guard_t</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="n">m_bootstrap_method_attr_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
 <span class="w">    </span><span class="n">m_name_and_type_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
@@ -2034,11 +2217,15 @@ and build them along with your project.</p>
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">invoke_dynamic_cp_info_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__unnamed0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="n">java_class_t</span><span class="o">::</span><span class="n">method_handle_cp_info_t</span><span class="o">::</span><span class="n">method_handle_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
@@ -2049,6 +2236,7 @@ and build them along with your project.</p>
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">method_handle_cp_info_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">version_guard_t</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="n">m_reference_kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">java_class_t</span><span class="o">::</span><span class="n">method_handle_cp_info_t</span><span class="o">::</span><span class="n">reference_kind_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span><span class="w"></span>
 <span class="w">    </span><span class="n">m_reference_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
@@ -2058,6 +2246,55 @@ and build them along with your project.</p>
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">method_handle_cp_info_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__unnamed0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="n">java_class_t</span><span class="o">::</span><span class="n">module_package_cp_info_t</span><span class="o">::</span><span class="n">module_package_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">f_name_as_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">f_name_as_str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">module_package_cp_info_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">version_guard_t</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">m_name_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="n">java_class_t</span><span class="o">::</span><span class="n">module_package_cp_info_t</span><span class="o">::~</span><span class="n">module_package_cp_info_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">module_package_cp_info_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__unnamed0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="n">java_class_t</span><span class="o">::</span><span class="n">utf8_cp_info_t</span><span class="o">*</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">module_package_cp_info_t</span><span class="o">::</span><span class="n">name_as_info</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_name_as_info</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_name_as_info</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m_name_as_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">java_class_t</span><span class="o">::</span><span class="n">utf8_cp_info_t</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">constant_pool</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">((</span><span class="n">name_index</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="o">-&gt;</span><span class="n">cp_info</span><span class="p">());</span><span class="w"></span>
+<span class="w">    </span><span class="n">f_name_as_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_name_as_info</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">module_package_cp_info_t</span><span class="o">::</span><span class="n">name_as_str</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_name_as_str</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_name_as_str</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m_name_as_str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name_as_info</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="n">f_name_as_str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_name_as_str</span><span class="p">;</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="n">java_class_t</span><span class="o">::</span><span class="n">name_and_type_cp_info_t</span><span class="o">::</span><span class="n">name_and_type_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -2170,6 +2407,7 @@ and build them along with your project.</p>
 <span class="n">java_class_t</span><span class="o">::</span><span class="n">method_type_cp_info_t</span><span class="o">::</span><span class="n">method_type_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
@@ -2180,6 +2418,7 @@ and build them along with your project.</p>
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">method_type_cp_info_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">version_guard_t</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="n">m_descriptor_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
@@ -2188,6 +2427,9 @@ and build them along with your project.</p>
 <span class="p">}</span><span class="w"></span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">method_type_cp_info_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__unnamed0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="p">;</span><span class="w"> </span><span class="n">m__unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
 <span class="n">java_class_t</span><span class="o">::</span><span class="n">interface_method_ref_cp_info_t</span><span class="o">::</span><span class="n">interface_method_ref_cp_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -2308,6 +2550,11 @@ and build them along with your project.</p>
 <span class="w">            </span><span class="n">m_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">class_cp_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
 <span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_DYNAMIC</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">n_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="n">m_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">dynamic_cp_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_UTF8</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">            </span><span class="n">n_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
 <span class="w">            </span><span class="n">m_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">utf8_cp_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
@@ -2331,6 +2578,11 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_FLOAT</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">            </span><span class="n">n_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
 <span class="w">            </span><span class="n">m_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">float_cp_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_MODULE</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">n_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="n">m_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">module_package_cp_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
 <span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_LONG</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -2361,6 +2613,11 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_METHOD_HANDLE</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">            </span><span class="n">n_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
 <span class="w">            </span><span class="n">m_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">method_handle_cp_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_PACKAGE</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">n_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="n">m_cp_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">module_package_cp_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
 <span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">java_class_t</span><span class="o">::</span><span class="n">constant_pool_entry_t</span><span class="o">::</span><span class="nl">TAG_ENUM_NAME_AND_TYPE</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>

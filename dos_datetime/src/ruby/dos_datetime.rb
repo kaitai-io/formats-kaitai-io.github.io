@@ -38,7 +38,7 @@ end
 #   - [cab](http://justsolve.archiveteam.org/wiki/Cabinet)
 # @see https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time Source
 # @see https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime Source
-# @see https://github.com/reactos/reactos/blob/c6b6444/dll/win32/kernel32/client/time.c#L82-L87 DosDateTimeToFileTime
+# @see https://github.com/reactos/reactos/blob/c6b64448ce4/dll/win32/kernel32/client/time.c#L82-L87 DosDateTimeToFileTime
 # @see https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc page 25/34
 class DosDatetime < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)

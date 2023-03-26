@@ -17,7 +17,7 @@ namespace Kaitai
     /// trx files not necessarily contain all these headers.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c">Source</a>
+    /// Reference: <a href="https://github.com/openwrt/firmware-utils/blob/a2c80c5/src/trx.c">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://web.archive.org/web/20190127154419/https://openwrt.org/docs/techref/header">Source</a>

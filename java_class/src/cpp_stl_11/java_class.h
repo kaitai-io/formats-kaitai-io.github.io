@@ -12,20 +12,27 @@
 #endif
 
 /**
- * \sa https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1 Source
+ * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html Source
+ * \sa https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf Source
+ * \sa https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java Source
+ * \sa https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template Source
+ * \sa https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp Source
  */
 
 class java_class_t : public kaitai::kstruct {
 
 public:
+    class version_guard_t;
     class float_cp_info_t;
     class attribute_info_t;
     class method_ref_cp_info_t;
     class field_info_t;
     class double_cp_info_t;
+    class dynamic_cp_info_t;
     class long_cp_info_t;
     class invoke_dynamic_cp_info_t;
     class method_handle_cp_info_t;
+    class module_package_cp_info_t;
     class name_and_type_cp_info_t;
     class utf8_cp_info_t;
     class string_cp_info_t;
@@ -45,6 +52,43 @@ private:
 
 public:
     ~java_class_t();
+
+    /**
+     * `class` file format version 45.3 (appeared in the very first publicly
+     * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+     * ancient that it's taken for granted. Earlier formats seem to be
+     * undocumented. Changes of `version_minor` don't change `class` format.
+     * Earlier `version_major`s likely belong to Oak programming language, the
+     * proprietary predecessor of Java.
+     * \sa James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.
+     * \sa Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.
+     */
+
+    class version_guard_t : public kaitai::kstruct {
+
+    public:
+
+        version_guard_t(uint16_t p_major, kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, java_class_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~version_guard_t();
+
+    private:
+        std::string m__unnamed0;
+        uint16_t m_major;
+        java_class_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::string _unnamed0() const { return m__unnamed0; }
+        uint16_t major() const { return m_major; }
+        java_class_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
 
     /**
      * \sa https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5 Source
@@ -514,6 +558,38 @@ public:
     };
 
     /**
+     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10 Source
+     */
+
+    class dynamic_cp_info_t : public kaitai::kstruct {
+
+    public:
+
+        dynamic_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = nullptr, java_class_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dynamic_cp_info_t();
+
+    private:
+        std::unique_ptr<version_guard_t> m__unnamed0;
+        uint16_t m_bootstrap_method_attr_index;
+        uint16_t m_name_and_type_index;
+        java_class_t* m__root;
+        java_class_t::constant_pool_entry_t* m__parent;
+
+    public:
+        version_guard_t* _unnamed0() const { return m__unnamed0.get(); }
+        uint16_t bootstrap_method_attr_index() const { return m_bootstrap_method_attr_index; }
+        uint16_t name_and_type_index() const { return m_name_and_type_index; }
+        java_class_t* _root() const { return m__root; }
+        java_class_t::constant_pool_entry_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * \sa https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5 Source
      */
 
@@ -559,12 +635,14 @@ public:
         ~invoke_dynamic_cp_info_t();
 
     private:
+        std::unique_ptr<version_guard_t> m__unnamed0;
         uint16_t m_bootstrap_method_attr_index;
         uint16_t m_name_and_type_index;
         java_class_t* m__root;
         java_class_t::constant_pool_entry_t* m__parent;
 
     public:
+        version_guard_t* _unnamed0() const { return m__unnamed0.get(); }
         uint16_t bootstrap_method_attr_index() const { return m_bootstrap_method_attr_index; }
         uint16_t name_and_type_index() const { return m_name_and_type_index; }
         java_class_t* _root() const { return m__root; }
@@ -601,14 +679,63 @@ public:
         ~method_handle_cp_info_t();
 
     private:
+        std::unique_ptr<version_guard_t> m__unnamed0;
         reference_kind_enum_t m_reference_kind;
         uint16_t m_reference_index;
         java_class_t* m__root;
         java_class_t::constant_pool_entry_t* m__parent;
 
     public:
+        version_guard_t* _unnamed0() const { return m__unnamed0.get(); }
         reference_kind_enum_t reference_kind() const { return m_reference_kind; }
         uint16_t reference_index() const { return m_reference_index; }
+        java_class_t* _root() const { return m__root; }
+        java_class_t::constant_pool_entry_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Project Jigsaw modules introduced in Java 9
+     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16 Source
+     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11 Source
+     * \sa https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12 Source
+     */
+
+    class module_package_cp_info_t : public kaitai::kstruct {
+
+    public:
+
+        module_package_cp_info_t(kaitai::kstream* p__io, java_class_t::constant_pool_entry_t* p__parent = nullptr, java_class_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~module_package_cp_info_t();
+
+    private:
+        bool f_name_as_info;
+        java_class_t::utf8_cp_info_t* m_name_as_info;
+
+    public:
+        java_class_t::utf8_cp_info_t* name_as_info();
+
+    private:
+        bool f_name_as_str;
+        std::string m_name_as_str;
+
+    public:
+        std::string name_as_str();
+
+    private:
+        std::unique_ptr<version_guard_t> m__unnamed0;
+        uint16_t m_name_index;
+        java_class_t* m__root;
+        java_class_t::constant_pool_entry_t* m__parent;
+
+    public:
+        version_guard_t* _unnamed0() const { return m__unnamed0.get(); }
+        uint16_t name_index() const { return m_name_index; }
         java_class_t* _root() const { return m__root; }
         java_class_t::constant_pool_entry_t* _parent() const { return m__parent; }
     };
@@ -747,11 +874,13 @@ public:
         ~method_type_cp_info_t();
 
     private:
+        std::unique_ptr<version_guard_t> m__unnamed0;
         uint16_t m_descriptor_index;
         java_class_t* m__root;
         java_class_t::constant_pool_entry_t* m__parent;
 
     public:
+        version_guard_t* _unnamed0() const { return m__unnamed0.get(); }
         uint16_t descriptor_index() const { return m_descriptor_index; }
         java_class_t* _root() const { return m__root; }
         java_class_t::constant_pool_entry_t* _parent() const { return m__parent; }
@@ -865,7 +994,10 @@ public:
             TAG_ENUM_NAME_AND_TYPE = 12,
             TAG_ENUM_METHOD_HANDLE = 15,
             TAG_ENUM_METHOD_TYPE = 16,
-            TAG_ENUM_INVOKE_DYNAMIC = 18
+            TAG_ENUM_DYNAMIC = 17,
+            TAG_ENUM_INVOKE_DYNAMIC = 18,
+            TAG_ENUM_MODULE = 19,
+            TAG_ENUM_PACKAGE = 20
         };
 
         constant_pool_entry_t(bool p_is_prev_two_entries, kaitai::kstream* p__io, java_class_t* p__parent = nullptr, java_class_t* p__root = nullptr);

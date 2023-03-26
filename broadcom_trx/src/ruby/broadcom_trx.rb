@@ -17,7 +17,7 @@ end
 # a single .trx file.
 # 
 # trx files not necessarily contain all these headers.
-# @see https://github.com/openwrt/openwrt/blob/3f5619f/tools/firmware-utils/src/trx.c Source
+# @see https://github.com/openwrt/firmware-utils/blob/a2c80c5/src/trx.c Source
 # @see https://web.archive.org/web/20190127154419/https://openwrt.org/docs/techref/header Source
 # @see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/partitions/brcm,trx.txt Source
 class BroadcomTrx < Kaitai::Struct::Struct

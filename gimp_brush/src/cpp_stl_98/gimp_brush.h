@@ -22,7 +22,7 @@
  * into GIMP for use in the paint tools by copying them into one of the Brush Folders -
  * select **Edit** > **Preferences** in the menu bar, expand the **Folders** section
  * and choose **Brushes** to see the recognized Brush Folders or to add new ones.
- * \sa https://gitlab.gnome.org/GNOME/gimp/-/raw/4416313/devel-docs/gbr.txt Source
+ * \sa https://github.com/GNOME/gimp/blob/441631322b/devel-docs/gbr.txt Source
  */
 
 class gimp_brush_t : public kaitai::kstruct {
@@ -74,14 +74,14 @@ public:
         uint32_t version() const { return m_version; }
 
         /**
-         * \sa https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L170 Source
-         * \sa https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24 Source
+         * \sa https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L170 Source
+         * \sa https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24 Source
          */
         uint32_t width() const { return m_width; }
 
         /**
-         * \sa https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-load.c#L177 Source
-         * \sa https://github.com/GNOME/gimp/blob/9b6d59f/app/core/gimpbrush-header.h#L24 Source
+         * \sa https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-load.c#L177 Source
+         * \sa https://github.com/GNOME/gimp/blob/441631322b/app/core/gimpbrush-header.h#L24 Source
          */
         uint32_t height() const { return m_height; }
         color_depth_t bytes_per_pixel() const { return m_bytes_per_pixel; }

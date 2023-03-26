@@ -12,7 +12,11 @@ import java.nio.charset.Charset;
 
 
 /**
- * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1">Source</a>
+ * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html">Source</a>
+ * @see <a href="https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf">Source</a>
+ * @see <a href="https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java">Source</a>
+ * @see <a href="https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template">Source</a>
+ * @see <a href="https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp">Source</a>
  */
 public class JavaClass extends KaitaiStruct {
     public static JavaClass fromFile(String fileName) throws IOException {
@@ -71,6 +75,52 @@ public class JavaClass extends KaitaiStruct {
         for (int i = 0; i < attributesCount(); i++) {
             this.attributes.add(new AttributeInfo(this._io, this, _root));
         }
+    }
+
+    /**
+     * `class` file format version 45.3 (appeared in the very first publicly
+     * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+     * ancient that it's taken for granted. Earlier formats seem to be
+     * undocumented. Changes of `version_minor` don't change `class` format.
+     * Earlier `version_major`s likely belong to Oak programming language, the
+     * proprietary predecessor of Java.
+     * @see "James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1."
+     * @see "Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X."
+     */
+    public static class VersionGuard extends KaitaiStruct {
+
+        public VersionGuard(KaitaiStream _io, int major) {
+            this(_io, null, null, major);
+        }
+
+        public VersionGuard(KaitaiStream _io, KaitaiStruct _parent, int major) {
+            this(_io, _parent, null, major);
+        }
+
+        public VersionGuard(KaitaiStream _io, KaitaiStruct _parent, JavaClass _root, int major) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.major = major;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = this._io.readBytes(0);
+            {
+                byte[] _it = _unnamed0();
+                if (!(_root().versionMajor() >= major())) {
+                    throw new KaitaiStream.ValidationExprError(_unnamed0(), _io(), "/types/version_guard/seq/0");
+                }
+            }
+        }
+        private byte[] _unnamed0;
+        private int major;
+        private JavaClass _root;
+        private KaitaiStruct _parent;
+        public byte[] _unnamed0() { return _unnamed0; }
+        public int major() { return major; }
+        public JavaClass _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
 
     /**
@@ -646,6 +696,45 @@ public class JavaClass extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10">Source</a>
+     */
+    public static class DynamicCpInfo extends KaitaiStruct {
+        public static DynamicCpInfo fromFile(String fileName) throws IOException {
+            return new DynamicCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DynamicCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 55);
+            this.bootstrapMethodAttrIndex = this._io.readU2be();
+            this.nameAndTypeIndex = this._io.readU2be();
+        }
+        private VersionGuard _unnamed0;
+        private int bootstrapMethodAttrIndex;
+        private int nameAndTypeIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
+        public int bootstrapMethodAttrIndex() { return bootstrapMethodAttrIndex; }
+        public int nameAndTypeIndex() { return nameAndTypeIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
      * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5">Source</a>
      */
     public static class LongCpInfo extends KaitaiStruct {
@@ -701,13 +790,16 @@ public class JavaClass extends KaitaiStruct {
             _read();
         }
         private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
             this.bootstrapMethodAttrIndex = this._io.readU2be();
             this.nameAndTypeIndex = this._io.readU2be();
         }
+        private VersionGuard _unnamed0;
         private int bootstrapMethodAttrIndex;
         private int nameAndTypeIndex;
         private JavaClass _root;
         private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
         public int bootstrapMethodAttrIndex() { return bootstrapMethodAttrIndex; }
         public int nameAndTypeIndex() { return nameAndTypeIndex; }
         public JavaClass _root() { return _root; }
@@ -759,15 +851,71 @@ public class JavaClass extends KaitaiStruct {
             _read();
         }
         private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
             this.referenceKind = ReferenceKindEnum.byId(this._io.readU1());
             this.referenceIndex = this._io.readU2be();
         }
+        private VersionGuard _unnamed0;
         private ReferenceKindEnum referenceKind;
         private int referenceIndex;
         private JavaClass _root;
         private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
         public ReferenceKindEnum referenceKind() { return referenceKind; }
         public int referenceIndex() { return referenceIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * Project Jigsaw modules introduced in Java 9
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16">Source</a>
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11">Source</a>
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12">Source</a>
+     */
+    public static class ModulePackageCpInfo extends KaitaiStruct {
+        public static ModulePackageCpInfo fromFile(String fileName) throws IOException {
+            return new ModulePackageCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ModulePackageCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ModulePackageCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ModulePackageCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 53);
+            this.nameIndex = this._io.readU2be();
+        }
+        private JavaClass.Utf8CpInfo nameAsInfo;
+        public JavaClass.Utf8CpInfo nameAsInfo() {
+            if (this.nameAsInfo != null)
+                return this.nameAsInfo;
+            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo()));
+            return this.nameAsInfo;
+        }
+        private String nameAsStr;
+        public String nameAsStr() {
+            if (this.nameAsStr != null)
+                return this.nameAsStr;
+            this.nameAsStr = nameAsInfo().value();
+            return this.nameAsStr;
+        }
+        private VersionGuard _unnamed0;
+        private int nameIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
+        public int nameIndex() { return nameIndex; }
         public JavaClass _root() { return _root; }
         public JavaClass.ConstantPoolEntry _parent() { return _parent; }
     }
@@ -928,11 +1076,14 @@ public class JavaClass extends KaitaiStruct {
             _read();
         }
         private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
             this.descriptorIndex = this._io.readU2be();
         }
+        private VersionGuard _unnamed0;
         private int descriptorIndex;
         private JavaClass _root;
         private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
         public int descriptorIndex() { return descriptorIndex; }
         public JavaClass _root() { return _root; }
         public JavaClass.ConstantPoolEntry _parent() { return _parent; }
@@ -1054,12 +1205,15 @@ public class JavaClass extends KaitaiStruct {
             NAME_AND_TYPE(12),
             METHOD_HANDLE(15),
             METHOD_TYPE(16),
-            INVOKE_DYNAMIC(18);
+            DYNAMIC(17),
+            INVOKE_DYNAMIC(18),
+            MODULE(19),
+            PACKAGE(20);
 
             private final long id;
             TagEnum(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map<Long, TagEnum> byId = new HashMap<Long, TagEnum>(14);
+            private static final Map<Long, TagEnum> byId = new HashMap<Long, TagEnum>(17);
             static {
                 for (TagEnum e : TagEnum.values())
                     byId.put(e.id(), e);
@@ -1099,6 +1253,10 @@ public class JavaClass extends KaitaiStruct {
                             this.cpInfo = new ClassCpInfo(this._io, this, _root);
                             break;
                         }
+                        case DYNAMIC: {
+                            this.cpInfo = new DynamicCpInfo(this._io, this, _root);
+                            break;
+                        }
                         case UTF8: {
                             this.cpInfo = new Utf8CpInfo(this._io, this, _root);
                             break;
@@ -1117,6 +1275,10 @@ public class JavaClass extends KaitaiStruct {
                         }
                         case FLOAT: {
                             this.cpInfo = new FloatCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case MODULE: {
+                            this.cpInfo = new ModulePackageCpInfo(this._io, this, _root);
                             break;
                         }
                         case LONG: {
@@ -1141,6 +1303,10 @@ public class JavaClass extends KaitaiStruct {
                         }
                         case METHOD_HANDLE: {
                             this.cpInfo = new MethodHandleCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case PACKAGE: {
+                            this.cpInfo = new ModulePackageCpInfo(this._io, this, _root);
                             break;
                         }
                         case NAME_AND_TYPE: {

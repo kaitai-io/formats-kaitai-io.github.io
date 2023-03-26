@@ -154,6 +154,7 @@ class QuicktimeMov(KaitaiStruct):
         cud9 = 1668637753
         cuvd = 1668642404
         cvid = 1668704612
+        cvvc = 1668707939
         cwvt = 1668773492
         da0a = 1684090977
         da0b = 1684090978
@@ -196,6 +197,11 @@ class QuicktimeMov(KaitaiStruct):
         hvcx = 1752589176
         hvti = 1752593513
         ifaa = 1768317281
+        ifah = 1768317288
+        ifai = 1768317289
+        ifas = 1768317299
+        ifau = 1768317301
+        ifav = 1768317302
         ifhd = 1768319076
         ifhh = 1768319080
         ifhr = 1768319090
@@ -278,6 +284,7 @@ class QuicktimeMov(KaitaiStruct):
         sims = 1936289139
         sisx = 1936290680
         siti = 1936290921
+        sitv = 1936290934
         slh1 = 1936484401
         slh2 = 1936484402
         slh3 = 1936484403
@@ -287,6 +294,12 @@ class QuicktimeMov(KaitaiStruct):
         uhvi = 1969780329
         unif = 1970170214
         uvvu = 1970697845
+        v3mp = 1983081840
+        v3mt = 1983081844
+        v3nt = 1983082100
+        v3st = 1983083380
+        vvci = 1987470185
+        vvoi = 1987473257
         vwpt = 1987539060
         yt4 = 2037658656
     def __init__(self, _io, _parent=None, _root=None):

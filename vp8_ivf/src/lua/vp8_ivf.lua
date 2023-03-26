@@ -6,11 +6,11 @@ local class = require("class")
 require("kaitaistruct")
 
 -- 
--- IVF is a simple container format for raw VP8 data, which is an open
--- and royalty-free video compression format, currently developed by
--- Google.
+-- IVF is a simple container format for raw VP8 data, which is an open and
+-- royalty-free video compression format, currently developed by Google.
 -- 
--- Test .ivf files are available at https://chromium.googlesource.com/webm/vp8-test-vectors
+-- Test .ivf files are available at
+-- <https://chromium.googlesource.com/webm/vp8-test-vectors>
 -- See also: Source (https://wiki.multimedia.cx/index.php/IVF)
 Vp8Ivf = class.class(KaitaiStruct)
 

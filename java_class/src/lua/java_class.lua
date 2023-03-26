@@ -10,7 +10,11 @@ local enum = require("enum")
 local str_decode = require("string_decode")
 
 -- 
--- See also: Source (https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1)
+-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html)
+-- See also: Source (https://docs.oracle.com/javase/specs/jls/se6/jls3.pdf)
+-- See also: Source (https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/jdk.hotspot.agent/share/classes/sun/jvm/hotspot/runtime/ClassConstants.java)
+-- See also: Source (https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/java.base/share/native/include/classfile_constants.h.template)
+-- See also: Source (https://github.com/openjdk/jdk/blob/jdk-21%2B14/src/hotspot/share/classfile/classFileParser.cpp)
 JavaClass = class.class(KaitaiStruct)
 
 function JavaClass:_init(io, parent, root)
@@ -57,6 +61,34 @@ function JavaClass:_read()
   self.attributes = {}
   for i = 0, self.attributes_count - 1 do
     self.attributes[i + 1] = JavaClass.AttributeInfo(self._io, self, self._root)
+  end
+end
+
+
+-- 
+-- `class` file format version 45.3 (appeared in the very first publicly
+-- known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+-- ancient that it's taken for granted. Earlier formats seem to be
+-- undocumented. Changes of `version_minor` don't change `class` format.
+-- Earlier `version_major`s likely belong to Oak programming language, the
+-- proprietary predecessor of Java.
+-- See also: James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1.
+-- See also: Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X.
+JavaClass.VersionGuard = class.class(KaitaiStruct)
+
+function JavaClass.VersionGuard:_init(major, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.major = major
+  self:_read()
+end
+
+function JavaClass.VersionGuard:_read()
+  self._unnamed0 = self._io:read_bytes(0)
+  local _ = self._unnamed0
+  if not(self._root.version_major >= self.major) then
+    error("ValidationExprError")
   end
 end
 
@@ -398,6 +430,24 @@ end
 
 
 -- 
+-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10)
+JavaClass.DynamicCpInfo = class.class(KaitaiStruct)
+
+function JavaClass.DynamicCpInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function JavaClass.DynamicCpInfo:_read()
+  self._unnamed0 = JavaClass.VersionGuard(55, self._io, self, self._root)
+  self.bootstrap_method_attr_index = self._io:read_u2be()
+  self.name_and_type_index = self._io:read_u2be()
+end
+
+
+-- 
 -- See also: Source (https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5)
 JavaClass.LongCpInfo = class.class(KaitaiStruct)
 
@@ -425,6 +475,7 @@ function JavaClass.InvokeDynamicCpInfo:_init(io, parent, root)
 end
 
 function JavaClass.InvokeDynamicCpInfo:_read()
+  self._unnamed0 = JavaClass.VersionGuard(51, self._io, self, self._root)
   self.bootstrap_method_attr_index = self._io:read_u2be()
   self.name_and_type_index = self._io:read_u2be()
 end
@@ -454,8 +505,49 @@ function JavaClass.MethodHandleCpInfo:_init(io, parent, root)
 end
 
 function JavaClass.MethodHandleCpInfo:_read()
+  self._unnamed0 = JavaClass.VersionGuard(51, self._io, self, self._root)
   self.reference_kind = JavaClass.MethodHandleCpInfo.ReferenceKindEnum(self._io:read_u1())
   self.reference_index = self._io:read_u2be()
+end
+
+
+-- 
+-- Project Jigsaw modules introduced in Java 9
+-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16)
+-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11)
+-- See also: Source (https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12)
+JavaClass.ModulePackageCpInfo = class.class(KaitaiStruct)
+
+function JavaClass.ModulePackageCpInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function JavaClass.ModulePackageCpInfo:_read()
+  self._unnamed0 = JavaClass.VersionGuard(53, self._io, self, self._root)
+  self.name_index = self._io:read_u2be()
+end
+
+JavaClass.ModulePackageCpInfo.property.name_as_info = {}
+function JavaClass.ModulePackageCpInfo.property.name_as_info:get()
+  if self._m_name_as_info ~= nil then
+    return self._m_name_as_info
+  end
+
+  self._m_name_as_info = self._root.constant_pool[(self.name_index - 1) + 1].cp_info
+  return self._m_name_as_info
+end
+
+JavaClass.ModulePackageCpInfo.property.name_as_str = {}
+function JavaClass.ModulePackageCpInfo.property.name_as_str:get()
+  if self._m_name_as_str ~= nil then
+    return self._m_name_as_str
+  end
+
+  self._m_name_as_str = self.name_as_info.value
+  return self._m_name_as_str
 end
 
 
@@ -561,6 +653,7 @@ function JavaClass.MethodTypeCpInfo:_init(io, parent, root)
 end
 
 function JavaClass.MethodTypeCpInfo:_read()
+  self._unnamed0 = JavaClass.VersionGuard(51, self._io, self, self._root)
   self.descriptor_index = self._io:read_u2be()
 end
 
@@ -656,7 +749,10 @@ JavaClass.ConstantPoolEntry.TagEnum = enum.Enum {
   name_and_type = 12,
   method_handle = 15,
   method_type = 16,
+  dynamic = 17,
   invoke_dynamic = 18,
+  module = 19,
+  package = 20,
 }
 
 function JavaClass.ConstantPoolEntry:_init(is_prev_two_entries, io, parent, root)
@@ -677,6 +773,8 @@ function JavaClass.ConstantPoolEntry:_read()
       self.cp_info = JavaClass.InterfaceMethodRefCpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.class_type then
       self.cp_info = JavaClass.ClassCpInfo(self._io, self, self._root)
+    elseif _on == JavaClass.ConstantPoolEntry.TagEnum.dynamic then
+      self.cp_info = JavaClass.DynamicCpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.utf8 then
       self.cp_info = JavaClass.Utf8CpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.method_type then
@@ -687,6 +785,8 @@ function JavaClass.ConstantPoolEntry:_read()
       self.cp_info = JavaClass.StringCpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.float then
       self.cp_info = JavaClass.FloatCpInfo(self._io, self, self._root)
+    elseif _on == JavaClass.ConstantPoolEntry.TagEnum.module then
+      self.cp_info = JavaClass.ModulePackageCpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.long then
       self.cp_info = JavaClass.LongCpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.method_ref then
@@ -699,6 +799,8 @@ function JavaClass.ConstantPoolEntry:_read()
       self.cp_info = JavaClass.FieldRefCpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.method_handle then
       self.cp_info = JavaClass.MethodHandleCpInfo(self._io, self, self._root)
+    elseif _on == JavaClass.ConstantPoolEntry.TagEnum.package then
+      self.cp_info = JavaClass.ModulePackageCpInfo(self._io, self, self._root)
     elseif _on == JavaClass.ConstantPoolEntry.TagEnum.name_and_type then
       self.cp_info = JavaClass.NameAndTypeCpInfo(self._io, self, self._root)
     end
