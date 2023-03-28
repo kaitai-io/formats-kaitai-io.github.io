@@ -1,0 +1,28 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__respack {
+		label="Respack";
+		graph[style=dotted];
+
+		respack__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">46</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="json_pos">46</TD><TD PORT="json_size">header.len_json</TD><TD>str(UTF-8)</TD><TD PORT="json_type">json</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header {
+			label="Respack::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="unknown_pos">2</TD><TD PORT="unknown_size">8</TD><TD></TD><TD PORT="unknown_type">unknown</TD></TR>
+				<TR><TD PORT="len_json_pos">10</TD><TD PORT="len_json_size">4</TD><TD>u4le</TD><TD PORT="len_json_type">len_json</TD></TR>
+				<TR><TD PORT="md5_pos">14</TD><TD PORT="md5_size">32</TD><TD>str(UTF-8)</TD><TD PORT="md5_type">md5</TD></TR>
+			</TABLE>>];
+		}
+	}
+	respack__seq:header_type -> header__seq [style=bold];
+	header__seq:len_json_type -> respack__seq:json_size [color="#404040"];
+}
