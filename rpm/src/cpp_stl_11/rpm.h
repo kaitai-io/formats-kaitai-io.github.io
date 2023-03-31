@@ -17,8 +17,8 @@
  * is the current version of the RPM tool). There are historical versions of the
  * RPM file format, as well as a currently abandoned fork (rpm5). These formats
  * are not covered by this specification.
- * \sa https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md Source
- * \sa https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md Source
  * \sa https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html Source
  * \sa http://ftp.rpm.org/max-rpm/ Source
  */
@@ -380,7 +380,14 @@ public:
         HEADER_TAGS_SPEC = 5099,
         HEADER_TAGS_TRANSLATION_URL = 5100,
         HEADER_TAGS_UPSTREAM_RELEASES = 5101,
-        HEADER_TAGS_SOURCE_LICENSE_INTERNAL = 5102
+        HEADER_TAGS_SOURCE_LICENSE_INTERNAL = 5102,
+        HEADER_TAGS_PRE_UNTRANS = 5103,
+        HEADER_TAGS_POST_UNTRANS = 5104,
+        HEADER_TAGS_PRE_UNTRANS_PROG = 5105,
+        HEADER_TAGS_POST_UNTRANS_PROG = 5106,
+        HEADER_TAGS_PRE_UNTRANS_FLAGS = 5107,
+        HEADER_TAGS_POST_UNTRANS_FLAGS = 5108,
+        HEADER_TAGS_SYS_USERS = 5109
     };
 
     enum rpm_types_t {
@@ -738,7 +745,7 @@ public:
     public:
 
         /**
-         * \sa https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102 Source
+         * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
          */
         uint8_t major() const { return m_major; }
         uint8_t minor() const { return m_minor; }

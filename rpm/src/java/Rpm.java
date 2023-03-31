@@ -17,8 +17,8 @@ import java.util.Arrays;
  * is the current version of the RPM tool). There are historical versions of the
  * RPM file format, as well as a currently abandoned fork (rpm5). These formats
  * are not covered by this specification.
- * @see <a href="https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md">Source</a>
- * @see <a href="https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md">Source</a>
  * @see <a href="https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html">Source</a>
  * @see <a href="http://ftp.rpm.org/max-rpm/">Source</a>
  */
@@ -396,12 +396,19 @@ public class Rpm extends KaitaiStruct {
         SPEC(5099),
         TRANSLATION_URL(5100),
         UPSTREAM_RELEASES(5101),
-        SOURCE_LICENSE_INTERNAL(5102);
+        SOURCE_LICENSE_INTERNAL(5102),
+        PRE_UNTRANS(5103),
+        POST_UNTRANS(5104),
+        PRE_UNTRANS_PROG(5105),
+        POST_UNTRANS_PROG(5106),
+        PRE_UNTRANS_FLAGS(5107),
+        POST_UNTRANS_FLAGS(5108),
+        SYS_USERS(5109);
 
         private final long id;
         HeaderTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(293);
+        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(300);
         static {
             for (HeaderTags e : HeaderTags.values())
                 byId.put(e.id(), e);
@@ -900,7 +907,7 @@ public class Rpm extends KaitaiStruct {
         private Rpm.Lead _parent;
 
         /**
-         * @see <a href="https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102">Source</a>
+         * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
          */
         public int major() { return major; }
         public int minor() { return minor; }

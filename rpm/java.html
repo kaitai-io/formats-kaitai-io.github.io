@@ -341,8 +341,8 @@ for instructions how to add it into your project with the build tool that you us
 <span class="cm"> * is the current version of the RPM tool). There are historical versions of the</span>
 <span class="cm"> * RPM file format, as well as a currently abandoned fork (rpm5). These formats</span>
 <span class="cm"> * are not covered by this specification.</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md&quot;&gt;Source&lt;/a&gt;</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> * @see &lt;a href=&quot;https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> * @see &lt;a href=&quot;http://ftp.rpm.org/max-rpm/&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
@@ -720,12 +720,19 @@ for instructions how to add it into your project with the build tool that you us
         <span class="n">SPEC</span><span class="p">(</span><span class="mi">5099</span><span class="p">),</span>
         <span class="n">TRANSLATION_URL</span><span class="p">(</span><span class="mi">5100</span><span class="p">),</span>
         <span class="n">UPSTREAM_RELEASES</span><span class="p">(</span><span class="mi">5101</span><span class="p">),</span>
-        <span class="n">SOURCE_LICENSE_INTERNAL</span><span class="p">(</span><span class="mi">5102</span><span class="p">);</span>
+        <span class="n">SOURCE_LICENSE_INTERNAL</span><span class="p">(</span><span class="mi">5102</span><span class="p">),</span>
+        <span class="n">PRE_UNTRANS</span><span class="p">(</span><span class="mi">5103</span><span class="p">),</span>
+        <span class="n">POST_UNTRANS</span><span class="p">(</span><span class="mi">5104</span><span class="p">),</span>
+        <span class="n">PRE_UNTRANS_PROG</span><span class="p">(</span><span class="mi">5105</span><span class="p">),</span>
+        <span class="n">POST_UNTRANS_PROG</span><span class="p">(</span><span class="mi">5106</span><span class="p">),</span>
+        <span class="n">PRE_UNTRANS_FLAGS</span><span class="p">(</span><span class="mi">5107</span><span class="p">),</span>
+        <span class="n">POST_UNTRANS_FLAGS</span><span class="p">(</span><span class="mi">5108</span><span class="p">),</span>
+        <span class="n">SYS_USERS</span><span class="p">(</span><span class="mi">5109</span><span class="p">);</span>
 
         <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
         <span class="n">HeaderTags</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">HeaderTags</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">HeaderTags</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">293</span><span class="p">);</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">HeaderTags</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">HeaderTags</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
         <span class="kd">static</span> <span class="p">{</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">HeaderTags</span> <span class="n">e</span> <span class="p">:</span> <span class="n">HeaderTags</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
                 <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
@@ -1224,7 +1231,7 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">private</span> <span class="n">Rpm</span><span class="p">.</span><span class="na">Lead</span> <span class="n">_parent</span><span class="p">;</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * @see &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         * @see &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm">         */</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">major</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">major</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">minor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">minor</span><span class="p">;</span> <span class="p">}</span>

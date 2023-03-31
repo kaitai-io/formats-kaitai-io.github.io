@@ -1217,6 +1217,13 @@ namespace Rpm {
         const TRANSLATION_URL = 5100;
         const UPSTREAM_RELEASES = 5101;
         const SOURCE_LICENSE_INTERNAL = 5102;
+        const PRE_UNTRANS = 5103;
+        const POST_UNTRANS = 5104;
+        const PRE_UNTRANS_PROG = 5105;
+        const POST_UNTRANS_PROG = 5106;
+        const PRE_UNTRANS_FLAGS = 5107;
+        const POST_UNTRANS_FLAGS = 5108;
+        const SYS_USERS = 5109;
     }
 }
 

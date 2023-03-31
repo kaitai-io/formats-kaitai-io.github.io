@@ -15,8 +15,8 @@
  * is the current version of the RPM tool). There are historical versions of the
  * RPM file format, as well as a currently abandoned fork (rpm5). These formats
  * are not covered by this specification.
- * @see {@link https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md|Source}
- * @see {@link https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md|Source}
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md|Source}
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md|Source}
  * @see {@link https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html|Source}
  * @see {@link http://ftp.rpm.org/max-rpm/|Source}
  */
@@ -402,6 +402,13 @@ var Rpm = (function() {
     TRANSLATION_URL: 5100,
     UPSTREAM_RELEASES: 5101,
     SOURCE_LICENSE_INTERNAL: 5102,
+    PRE_UNTRANS: 5103,
+    POST_UNTRANS: 5104,
+    PRE_UNTRANS_PROG: 5105,
+    POST_UNTRANS_PROG: 5106,
+    PRE_UNTRANS_FLAGS: 5107,
+    POST_UNTRANS_FLAGS: 5108,
+    SYS_USERS: 5109,
 
     62: "SIGNATURES",
     63: "HEADER_IMMUTABLE",
@@ -696,6 +703,13 @@ var Rpm = (function() {
     5100: "TRANSLATION_URL",
     5101: "UPSTREAM_RELEASES",
     5102: "SOURCE_LICENSE_INTERNAL",
+    5103: "PRE_UNTRANS",
+    5104: "POST_UNTRANS",
+    5105: "PRE_UNTRANS_PROG",
+    5106: "POST_UNTRANS_PROG",
+    5107: "PRE_UNTRANS_FLAGS",
+    5108: "POST_UNTRANS_FLAGS",
+    5109: "SYS_USERS",
   });
 
   Rpm.RpmTypes = Object.freeze({
@@ -1051,7 +1065,7 @@ var Rpm = (function() {
     }
 
     /**
-     * @see {@link https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102|Source}
+     * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102|Source}
      */
 
     return RpmVersion;

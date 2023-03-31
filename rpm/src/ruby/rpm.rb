@@ -13,8 +13,8 @@ end
 # is the current version of the RPM tool). There are historical versions of the
 # RPM file format, as well as a currently abandoned fork (rpm5). These formats
 # are not covered by this specification.
-# @see https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md Source
-# @see https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md Source
+# @see https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md Source
+# @see https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md Source
 # @see https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html Source
 # @see http://ftp.rpm.org/max-rpm/ Source
 class Rpm < Kaitai::Struct::Struct
@@ -362,6 +362,13 @@ class Rpm < Kaitai::Struct::Struct
     5100 => :header_tags_translation_url,
     5101 => :header_tags_upstream_releases,
     5102 => :header_tags_source_license_internal,
+    5103 => :header_tags_pre_untrans,
+    5104 => :header_tags_post_untrans,
+    5105 => :header_tags_pre_untrans_prog,
+    5106 => :header_tags_post_untrans_prog,
+    5107 => :header_tags_pre_untrans_flags,
+    5108 => :header_tags_post_untrans_flags,
+    5109 => :header_tags_sys_users,
   }
   I__HEADER_TAGS = HEADER_TAGS.invert
 
@@ -643,7 +650,7 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102 Source
+    # @see https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
     attr_reader :major
     attr_reader :minor
   end

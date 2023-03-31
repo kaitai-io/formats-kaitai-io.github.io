@@ -13,10 +13,10 @@ namespace Kaitai
     /// are not covered by this specification.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md">Source</a>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md">Source</a>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html">Source</a>
@@ -376,6 +376,13 @@ namespace Kaitai
             TranslationUrl = 5100,
             UpstreamReleases = 5101,
             SourceLicenseInternal = 5102,
+            PreUntrans = 5103,
+            PostUntrans = 5104,
+            PreUntransProg = 5105,
+            PostUntransProg = 5106,
+            PreUntransFlags = 5107,
+            PostUntransFlags = 5108,
+            SysUsers = 5109,
         }
 
         public enum RpmTypes
@@ -845,7 +852,7 @@ namespace Kaitai
             private Rpm.Lead m_parent;
 
             /// <remarks>
-            /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102">Source</a>
+            /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
             /// </remarks>
             public byte Major { get { return _major; } }
             public byte Minor { get { return _minor; } }

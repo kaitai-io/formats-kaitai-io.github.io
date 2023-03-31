@@ -15,8 +15,8 @@ local stringstream = require("string_stream")
 -- is the current version of the RPM tool). There are historical versions of the
 -- RPM file format, as well as a currently abandoned fork (rpm5). These formats
 -- are not covered by this specification.
--- See also: Source (https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md)
--- See also: Source (https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md)
 -- See also: Source (https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html)
 -- See also: Source (http://ftp.rpm.org/max-rpm/)
 Rpm = class.class(KaitaiStruct)
@@ -361,6 +361,13 @@ Rpm.HeaderTags = enum.Enum {
   translation_url = 5100,
   upstream_releases = 5101,
   source_license_internal = 5102,
+  pre_untrans = 5103,
+  post_untrans = 5104,
+  pre_untrans_prog = 5105,
+  post_untrans_prog = 5106,
+  pre_untrans_flags = 5107,
+  post_untrans_flags = 5108,
+  sys_users = 5109,
 }
 
 Rpm.RpmTypes = enum.Enum {
@@ -759,7 +766,7 @@ function Rpm.RpmVersion:_read()
 end
 
 -- 
--- See also: Source (https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102)
 
 Rpm.Dummy = class.class(KaitaiStruct)
 
