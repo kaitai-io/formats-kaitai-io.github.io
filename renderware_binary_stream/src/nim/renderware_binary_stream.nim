@@ -228,6 +228,15 @@ type
     `vertices`*: seq[RenderwareBinaryStream_Vector3d]
     `normals`*: seq[RenderwareBinaryStream_Vector3d]
     `parent`*: RenderwareBinaryStream_StructGeometry
+  RenderwareBinaryStream_StructAtomic* = ref object of KaitaiStruct
+    `frameIndex`*: uint32
+    `geometryIndex`*: uint32
+    `flagRender`*: bool
+    `unnamed3`*: bool
+    `flagCollisionTest`*: bool
+    `unnamed5`*: uint64
+    `unused`*: uint32
+    `parent`*: RenderwareBinaryStream_ListWithHeader
   RenderwareBinaryStream_SurfaceProperties* = ref object of KaitaiStruct
     `ambient`*: float32
     `specular`*: float32
@@ -283,6 +292,7 @@ proc read*(_: typedesc[RenderwareBinaryStream_StructGeometryList], io: KaitaiStr
 proc read*(_: typedesc[RenderwareBinaryStream_Rgba], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Rgba
 proc read*(_: typedesc[RenderwareBinaryStream_Sphere], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_MorphTarget): RenderwareBinaryStream_Sphere
 proc read*(_: typedesc[RenderwareBinaryStream_MorphTarget], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_MorphTarget
+proc read*(_: typedesc[RenderwareBinaryStream_StructAtomic], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructAtomic
 proc read*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_SurfaceProperties
 proc read*(_: typedesc[RenderwareBinaryStream_StructFrameList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructFrameList
 proc read*(_: typedesc[RenderwareBinaryStream_Matrix], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_Frame): RenderwareBinaryStream_Matrix
@@ -320,7 +330,13 @@ proc read*(_: typedesc[RenderwareBinaryStream], io: KaitaiStream, root: KaitaiSt
   this.libraryIdStamp = libraryIdStampExpr
   block:
     let on = this.code
-    if on == renderware_binary_stream.geometry:
+    if on == renderware_binary_stream.atomic:
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == renderware_binary_stream.geometry:
       let rawBodyExpr = this.io.readBytes(int(this.size))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
@@ -569,6 +585,37 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_MorphTarget], filename: string
 
 
 ##[
+@see <a href="https://gtamods.com/wiki/Atomic_(RW_Section)#Structure">Source</a>
+]##
+proc read*(_: typedesc[RenderwareBinaryStream_StructAtomic], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructAtomic =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_StructAtomic)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let frameIndexExpr = this.io.readU4le()
+  this.frameIndex = frameIndexExpr
+  let geometryIndexExpr = this.io.readU4le()
+  this.geometryIndex = geometryIndexExpr
+  let flagRenderExpr = this.io.readBitsIntLe(1) != 0
+  this.flagRender = flagRenderExpr
+  let unnamed3Expr = this.io.readBitsIntLe(1) != 0
+  this.unnamed3 = unnamed3Expr
+  let flagCollisionTestExpr = this.io.readBitsIntLe(1) != 0
+  this.flagCollisionTest = flagCollisionTestExpr
+  let unnamed5Expr = this.io.readBitsIntLe(29)
+  this.unnamed5 = unnamed5Expr
+  alignToByte(this.io)
+  let unusedExpr = this.io.readU4le()
+  this.unused = unusedExpr
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_StructAtomic], filename: string): RenderwareBinaryStream_StructAtomic =
+  RenderwareBinaryStream_StructAtomic.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
 @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_SurfaceProperties =
@@ -677,7 +724,13 @@ proc read*(_: typedesc[RenderwareBinaryStream_ListWithHeader], io: KaitaiStream,
   this.libraryIdStamp = libraryIdStampExpr
   block:
     let on = this.parent.code
-    if on == renderware_binary_stream.geometry:
+    if on == renderware_binary_stream.atomic:
+      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
+      this.rawHeader = rawHeaderExpr
+      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+      let headerExpr = RenderwareBinaryStream_StructAtomic.read(rawHeaderIo, this.root, this)
+      this.header = headerExpr
+    elif on == renderware_binary_stream.geometry:
       let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
       this.rawHeader = rawHeaderExpr
       let rawHeaderIo = newKaitaiStream(rawHeaderExpr)

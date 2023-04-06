@@ -18,12 +18,13 @@ digraph {
 		</TABLE>>];
 renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:sections_geometry</TD><TD PORT="case0">ListWithHeader</TD></TR>
-	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case1">ListWithHeader</TD></TR>
-	<TR><TD>:sections_geometry_list</TD><TD PORT="case2">ListWithHeader</TD></TR>
-	<TR><TD>:sections_texture_native</TD><TD PORT="case3">ListWithHeader</TD></TR>
-	<TR><TD>:sections_clump</TD><TD PORT="case4">ListWithHeader</TD></TR>
-	<TR><TD>:sections_frame_list</TD><TD PORT="case5">ListWithHeader</TD></TR>
+	<TR><TD>:sections_atomic</TD><TD PORT="case0">ListWithHeader</TD></TR>
+	<TR><TD>:sections_geometry</TD><TD PORT="case1">ListWithHeader</TD></TR>
+	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case2">ListWithHeader</TD></TR>
+	<TR><TD>:sections_geometry_list</TD><TD PORT="case3">ListWithHeader</TD></TR>
+	<TR><TD>:sections_texture_native</TD><TD PORT="case4">ListWithHeader</TD></TR>
+	<TR><TD>:sections_clump</TD><TD PORT="case5">ListWithHeader</TD></TR>
+	<TR><TD>:sections_frame_list</TD><TD PORT="case6">ListWithHeader</TD></TR>
 </TABLE>>];
 		subgraph cluster__struct_clump {
 			label="RenderwareBinaryStream::StructClump";
@@ -130,6 +131,21 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD COLSPAN="4" PORT="normals__repeat">repeat _parent.num_vertices times</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__struct_atomic {
+			label="RenderwareBinaryStream::StructAtomic";
+			graph[style=dotted];
+
+			struct_atomic__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="frame_index_pos">0</TD><TD PORT="frame_index_size">4</TD><TD>u4le</TD><TD PORT="frame_index_type">frame_index</TD></TR>
+				<TR><TD PORT="geometry_index_pos">4</TD><TD PORT="geometry_index_size">4</TD><TD>u4le</TD><TD PORT="geometry_index_type">geometry_index</TD></TR>
+				<TR><TD PORT="flag_render_pos">8</TD><TD PORT="flag_render_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="flag_render_type">flag_render</TD></TR>
+				<TR><TD PORT="_unnamed3_pos">8:1</TD><TD PORT="_unnamed3_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="_unnamed3_type">_unnamed3</TD></TR>
+				<TR><TD PORT="flag_collision_test_pos">8:2</TD><TD PORT="flag_collision_test_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="flag_collision_test_type">flag_collision_test</TD></TR>
+				<TR><TD PORT="_unnamed5_pos">8:3</TD><TD PORT="_unnamed5_size">29b</TD><TD>b29</TD><TD PORT="_unnamed5_type">_unnamed5</TD></TR>
+				<TR><TD PORT="unused_pos">12</TD><TD PORT="unused_size">4</TD><TD>u4le</TD><TD PORT="unused_type">unused</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__surface_properties {
 			label="RenderwareBinaryStream::SurfaceProperties";
 			graph[style=dotted];
@@ -192,11 +208,12 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 			</TABLE>>];
 list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:sections_geometry</TD><TD PORT="case0">StructGeometry</TD></TR>
-	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case1">StructTextureDictionary</TD></TR>
-	<TR><TD>:sections_geometry_list</TD><TD PORT="case2">StructGeometryList</TD></TR>
-	<TR><TD>:sections_clump</TD><TD PORT="case3">StructClump</TD></TR>
-	<TR><TD>:sections_frame_list</TD><TD PORT="case4">StructFrameList</TD></TR>
+	<TR><TD>:sections_atomic</TD><TD PORT="case0">StructAtomic</TD></TR>
+	<TR><TD>:sections_geometry</TD><TD PORT="case1">StructGeometry</TD></TR>
+	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case2">StructTextureDictionary</TD></TR>
+	<TR><TD>:sections_geometry_list</TD><TD PORT="case3">StructGeometryList</TD></TR>
+	<TR><TD>:sections_clump</TD><TD PORT="case4">StructClump</TD></TR>
+	<TR><TD>:sections_frame_list</TD><TD PORT="case5">StructFrameList</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__triangle {
@@ -250,6 +267,7 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 	renderware_binary_stream__seq_body_switch:case3 -> list_with_header__seq [style=bold];
 	renderware_binary_stream__seq_body_switch:case4 -> list_with_header__seq [style=bold];
 	renderware_binary_stream__seq_body_switch:case5 -> list_with_header__seq [style=bold];
+	renderware_binary_stream__seq_body_switch:case6 -> list_with_header__seq [style=bold];
 	renderware_binary_stream__seq:code_type -> renderware_binary_stream__seq:body_type [color="#404040"];
 	renderware_binary_stream__seq:library_id_stamp_type -> renderware_binary_stream__inst__version [color="#404040"];
 	renderware_binary_stream__seq:library_id_stamp_type -> renderware_binary_stream__inst__version [color="#404040"];
@@ -278,11 +296,12 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 	struct_frame_list__seq:num_frames_type -> struct_frame_list__seq:frames__repeat [color="#404040"];
 	matrix__seq:entries_type -> vector_3d__seq [style=bold];
 	list_with_header__seq:header_type -> list_with_header__seq_header_switch [style=bold];
-	list_with_header__seq_header_switch:case0 -> struct_geometry__seq [style=bold];
-	list_with_header__seq_header_switch:case1 -> struct_texture_dictionary__seq [style=bold];
-	list_with_header__seq_header_switch:case2 -> struct_geometry_list__seq [style=bold];
-	list_with_header__seq_header_switch:case3 -> struct_clump__seq [style=bold];
-	list_with_header__seq_header_switch:case4 -> struct_frame_list__seq [style=bold];
+	list_with_header__seq_header_switch:case0 -> struct_atomic__seq [style=bold];
+	list_with_header__seq_header_switch:case1 -> struct_geometry__seq [style=bold];
+	list_with_header__seq_header_switch:case2 -> struct_texture_dictionary__seq [style=bold];
+	list_with_header__seq_header_switch:case3 -> struct_geometry_list__seq [style=bold];
+	list_with_header__seq_header_switch:case4 -> struct_clump__seq [style=bold];
+	list_with_header__seq_header_switch:case5 -> struct_frame_list__seq [style=bold];
 	renderware_binary_stream__seq:code_type -> list_with_header__seq:header_type [color="#404040"];
 	list_with_header__seq:entries_type -> renderware_binary_stream__seq [style=bold];
 	list_with_header__seq:library_id_stamp_type -> list_with_header__inst__version [color="#404040"];

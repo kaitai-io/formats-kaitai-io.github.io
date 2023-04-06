@@ -193,7 +193,11 @@ class RenderwareBinaryStream(KaitaiStruct):
         self.size = self._io.read_u4le()
         self.library_id_stamp = self._io.read_u4le()
         _on = self.code
-        if _on == RenderwareBinaryStream.Sections.geometry:
+        if _on == RenderwareBinaryStream.Sections.atomic:
+            self._raw_body = self._io.read_bytes(self.size)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
+        elif _on == RenderwareBinaryStream.Sections.geometry:
             self._raw_body = self._io.read_bytes(self.size)
             _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
             self.body = RenderwareBinaryStream.ListWithHeader(_io__raw_body, self, self._root)
@@ -395,6 +399,28 @@ class RenderwareBinaryStream(KaitaiStruct):
 
 
 
+    class StructAtomic(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://gtamods.com/wiki/Atomic_(RW_Section)#Structure
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.frame_index = self._io.read_u4le()
+            self.geometry_index = self._io.read_u4le()
+            self.flag_render = self._io.read_bits_int_le(1) != 0
+            self._unnamed3 = self._io.read_bits_int_le(1) != 0
+            self.flag_collision_test = self._io.read_bits_int_le(1) != 0
+            self._unnamed5 = self._io.read_bits_int_le(29)
+            self._io.align_to_byte()
+            self.unused = self._io.read_u4le()
+
+
     class SurfaceProperties(KaitaiStruct):
         """
         .. seealso::
@@ -487,7 +513,11 @@ class RenderwareBinaryStream(KaitaiStruct):
             self.header_size = self._io.read_u4le()
             self.library_id_stamp = self._io.read_u4le()
             _on = self._parent.code
-            if _on == RenderwareBinaryStream.Sections.geometry:
+            if _on == RenderwareBinaryStream.Sections.atomic:
+                self._raw_header = self._io.read_bytes(self.header_size)
+                _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
+                self.header = RenderwareBinaryStream.StructAtomic(_io__raw_header, self, self._root)
+            elif _on == RenderwareBinaryStream.Sections.geometry:
                 self._raw_header = self._io.read_bytes(self.header_size)
                 _io__raw_header = KaitaiStream(BytesIO(self._raw_header))
                 self.header = RenderwareBinaryStream.StructGeometry(_io__raw_header, self, self._root)

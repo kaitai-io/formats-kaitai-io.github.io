@@ -25,6 +25,7 @@ public:
     class rgba_t;
     class sphere_t;
     class morph_target_t;
+    class struct_atomic_t;
     class surface_properties_t;
     class struct_frame_list_t;
     class matrix_t;
@@ -508,6 +509,46 @@ public:
         std::vector<vector_3d_t*>* normals() const { return m_normals; }
         renderware_binary_stream_t* _root() const { return m__root; }
         renderware_binary_stream_t::struct_geometry_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://gtamods.com/wiki/Atomic_(RW_Section)#Structure Source
+     */
+
+    class struct_atomic_t : public kaitai::kstruct {
+
+    public:
+
+        struct_atomic_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~struct_atomic_t();
+
+    private:
+        uint32_t m_frame_index;
+        uint32_t m_geometry_index;
+        bool m_flag_render;
+        bool m__unnamed3;
+        bool m_flag_collision_test;
+        uint64_t m__unnamed5;
+        uint32_t m_unused;
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::list_with_header_t* m__parent;
+
+    public:
+        uint32_t frame_index() const { return m_frame_index; }
+        uint32_t geometry_index() const { return m_geometry_index; }
+        bool flag_render() const { return m_flag_render; }
+        bool _unnamed3() const { return m__unnamed3; }
+        bool flag_collision_test() const { return m_flag_collision_test; }
+        uint64_t _unnamed5() const { return m__unnamed5; }
+        uint32_t unused() const { return m_unused; }
+        renderware_binary_stream_t* _root() const { return m__root; }
+        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
     };
 
     /**

@@ -206,7 +206,12 @@ sub _read {
     $self->{size} = $self->{_io}->read_u4le();
     $self->{library_id_stamp} = $self->{_io}->read_u4le();
     my $_on = $self->code();
-    if ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
+    if ($_on == $RenderwareBinaryStream::SECTIONS_ATOMIC) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
@@ -728,6 +733,81 @@ sub normals {
 }
 
 ########################################################################
+package RenderwareBinaryStream::StructAtomic;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{frame_index} = $self->{_io}->read_u4le();
+    $self->{geometry_index} = $self->{_io}->read_u4le();
+    $self->{flag_render} = $self->{_io}->read_bits_int_le(1);
+    $self->{_unnamed3} = $self->{_io}->read_bits_int_le(1);
+    $self->{flag_collision_test} = $self->{_io}->read_bits_int_le(1);
+    $self->{_unnamed5} = $self->{_io}->read_bits_int_le(29);
+    $self->{_io}->align_to_byte();
+    $self->{unused} = $self->{_io}->read_u4le();
+}
+
+sub frame_index {
+    my ($self) = @_;
+    return $self->{frame_index};
+}
+
+sub geometry_index {
+    my ($self) = @_;
+    return $self->{geometry_index};
+}
+
+sub flag_render {
+    my ($self) = @_;
+    return $self->{flag_render};
+}
+
+sub _unnamed3 {
+    my ($self) = @_;
+    return $self->{_unnamed3};
+}
+
+sub flag_collision_test {
+    my ($self) = @_;
+    return $self->{flag_collision_test};
+}
+
+sub _unnamed5 {
+    my ($self) = @_;
+    return $self->{_unnamed5};
+}
+
+sub unused {
+    my ($self) = @_;
+    return $self->{unused};
+}
+
+########################################################################
 package RenderwareBinaryStream::SurfaceProperties;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -951,7 +1031,12 @@ sub _read {
     $self->{header_size} = $self->{_io}->read_u4le();
     $self->{library_id_stamp} = $self->{_io}->read_u4le();
     my $_on = $self->_parent()->code();
-    if ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
+    if ($_on == $RenderwareBinaryStream::SECTIONS_ATOMIC) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructAtomic->new($io__raw_header, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
         $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
         my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
         $self->{header} = RenderwareBinaryStream::StructGeometry->new($io__raw_header, $self, $self->{_root});

@@ -191,6 +191,10 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     @size = @_io.read_u4le
     @library_id_stamp = @_io.read_u4le
     case code
+    when :sections_atomic
+      @_raw_body = @_io.read_bytes(size)
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = ListWithHeader.new(_io__raw_body, self, @_root)
     when :sections_geometry
       @_raw_body = @_io.read_bytes(size)
       _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
@@ -409,6 +413,34 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://gtamods.com/wiki/Atomic_(RW_Section)#Structure Source
+  class StructAtomic < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @frame_index = @_io.read_u4le
+      @geometry_index = @_io.read_u4le
+      @flag_render = @_io.read_bits_int_le(1) != 0
+      @_unnamed3 = @_io.read_bits_int_le(1) != 0
+      @flag_collision_test = @_io.read_bits_int_le(1) != 0
+      @_unnamed5 = @_io.read_bits_int_le(29)
+      @_io.align_to_byte
+      @unused = @_io.read_u4le
+      self
+    end
+    attr_reader :frame_index
+    attr_reader :geometry_index
+    attr_reader :flag_render
+    attr_reader :_unnamed3
+    attr_reader :flag_collision_test
+    attr_reader :_unnamed5
+    attr_reader :unused
+  end
+
+  ##
   # @see https://gtamods.com/wiki/RpGeometry Source
   class SurfaceProperties < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -503,6 +535,10 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       @header_size = @_io.read_u4le
       @library_id_stamp = @_io.read_u4le
       case _parent.code
+      when :sections_atomic
+        @_raw_header = @_io.read_bytes(header_size)
+        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
+        @header = StructAtomic.new(_io__raw_header, self, @_root)
       when :sections_geometry
         @_raw_header = @_io.read_bytes(header_size)
         _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)

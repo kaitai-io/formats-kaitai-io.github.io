@@ -523,6 +523,12 @@ for instructions how to add it into your project with the build tool that you us
             <span class="n">Sections</span> <span class="n">on</span> <span class="o">=</span> <span class="n">code</span><span class="p">();</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">ATOMIC</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">size</span><span class="p">());</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">GEOMETRY</span><span class="p">:</span> <span class="p">{</span>
                     <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">size</span><span class="p">());</span>
                     <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
@@ -912,6 +918,58 @@ for instructions how to add it into your project with the build tool that you us
     <span class="p">}</span>
 
     <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://gtamods.com/wiki/Atomic_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">StructAtomic</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">StructAtomic</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">StructAtomic</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">StructAtomic</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">StructAtomic</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="na">ListWithHeader</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">StructAtomic</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="na">ListWithHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">frameIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">geometryIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flagRender</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flagCollisionTest</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed5</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntLe</span><span class="p">(</span><span class="mi">29</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">unused</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">frameIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">geometryIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">flagRender</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">_unnamed3</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">flagCollisionTest</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">_unnamed5</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">unused</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="na">ListWithHeader</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">frameIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">frameIndex</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">geometryIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">geometryIndex</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">flagRender</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flagRender</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">_unnamed3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed3</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">flagCollisionTest</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flagCollisionTest</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">_unnamed5</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed5</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">unused</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RenderwareBinaryStream</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="na">ListWithHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
 <span class="cm">     * @see &lt;a href=&quot;https://gtamods.com/wiki/RpGeometry&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm">     */</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SurfaceProperties</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
@@ -1102,6 +1160,12 @@ for instructions how to add it into your project with the build tool that you us
                 <span class="n">Sections</span> <span class="n">on</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">().</span><span class="na">code</span><span class="p">();</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">switch</span> <span class="p">(</span><span class="n">_parent</span><span class="p">().</span><span class="na">code</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">ATOMIC</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">headerSize</span><span class="p">());</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_header</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StructAtomic</span><span class="p">(</span><span class="n">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">GEOMETRY</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">headerSize</span><span class="p">());</span>
                         <span class="n">KaitaiStream</span> <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_header</span><span class="p">);</span>

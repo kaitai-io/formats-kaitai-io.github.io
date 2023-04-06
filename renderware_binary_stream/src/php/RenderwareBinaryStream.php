@@ -13,6 +13,11 @@ namespace {
             $this->_m_size = $this->_io->readU4le();
             $this->_m_libraryIdStamp = $this->_io->readU4le();
             switch ($this->code()) {
+                case \RenderwareBinaryStream\Sections::ATOMIC:
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
+                    break;
                 case \RenderwareBinaryStream\Sections::GEOMETRY:
                     $this->_m__raw_body = $this->_io->readBytes($this->size());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -302,6 +307,40 @@ namespace RenderwareBinaryStream {
 }
 
 namespace RenderwareBinaryStream {
+    class StructAtomic extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_frameIndex = $this->_io->readU4le();
+            $this->_m_geometryIndex = $this->_io->readU4le();
+            $this->_m_flagRender = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m__unnamed3 = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_flagCollisionTest = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m__unnamed5 = $this->_io->readBitsIntLe(29);
+            $this->_io->alignToByte();
+            $this->_m_unused = $this->_io->readU4le();
+        }
+        protected $_m_frameIndex;
+        protected $_m_geometryIndex;
+        protected $_m_flagRender;
+        protected $_m__unnamed3;
+        protected $_m_flagCollisionTest;
+        protected $_m__unnamed5;
+        protected $_m_unused;
+        public function frameIndex() { return $this->_m_frameIndex; }
+        public function geometryIndex() { return $this->_m_geometryIndex; }
+        public function flagRender() { return $this->_m_flagRender; }
+        public function _unnamed3() { return $this->_m__unnamed3; }
+        public function flagCollisionTest() { return $this->_m_flagCollisionTest; }
+        public function _unnamed5() { return $this->_m__unnamed5; }
+        public function unused() { return $this->_m_unused; }
+    }
+}
+
+namespace RenderwareBinaryStream {
     class SurfaceProperties extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructGeometry $_parent = null, \RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -408,6 +447,11 @@ namespace RenderwareBinaryStream {
             $this->_m_headerSize = $this->_io->readU4le();
             $this->_m_libraryIdStamp = $this->_io->readU4le();
             switch ($this->_parent()->code()) {
+                case \RenderwareBinaryStream\Sections::ATOMIC:
+                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+                    $this->_m_header = new \RenderwareBinaryStream\StructAtomic($_io__raw_header, $this, $this->_root);
+                    break;
                 case \RenderwareBinaryStream\Sections::GEOMETRY:
                     $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
                     $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);

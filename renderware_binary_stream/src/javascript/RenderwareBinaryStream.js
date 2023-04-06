@@ -364,6 +364,11 @@ var RenderwareBinaryStream = (function() {
     this.size = this._io.readU4le();
     this.libraryIdStamp = this._io.readU4le();
     switch (this.code) {
+    case RenderwareBinaryStream.Sections.ATOMIC:
+      this._raw_body = this._io.readBytes(this.size);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new ListWithHeader(_io__raw_body, this, this._root);
+      break;
     case RenderwareBinaryStream.Sections.GEOMETRY:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -604,6 +609,32 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
+   * @see {@link https://gtamods.com/wiki/Atomic_(RW_Section)#Structure|Source}
+   */
+
+  var StructAtomic = RenderwareBinaryStream.StructAtomic = (function() {
+    function StructAtomic(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    StructAtomic.prototype._read = function() {
+      this.frameIndex = this._io.readU4le();
+      this.geometryIndex = this._io.readU4le();
+      this.flagRender = this._io.readBitsIntLe(1) != 0;
+      this._unnamed3 = this._io.readBitsIntLe(1) != 0;
+      this.flagCollisionTest = this._io.readBitsIntLe(1) != 0;
+      this._unnamed5 = this._io.readBitsIntLe(29);
+      this._io.alignToByte();
+      this.unused = this._io.readU4le();
+    }
+
+    return StructAtomic;
+  })();
+
+  /**
    * @see {@link https://gtamods.com/wiki/RpGeometry|Source}
    */
 
@@ -715,6 +746,11 @@ var RenderwareBinaryStream = (function() {
       this.headerSize = this._io.readU4le();
       this.libraryIdStamp = this._io.readU4le();
       switch (this._parent.code) {
+      case RenderwareBinaryStream.Sections.ATOMIC:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructAtomic(_io__raw_header, this, this._root);
+        break;
       case RenderwareBinaryStream.Sections.GEOMETRY:
         this._raw_header = this._io.readBytes(this.headerSize);
         var _io__raw_header = new KaitaiStream(this._raw_header);

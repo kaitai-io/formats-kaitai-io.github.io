@@ -23,6 +23,13 @@ void renderware_binary_stream_t::_read() {
     m_library_id_stamp = m__io->read_u4le();
     n_body = true;
     switch (code()) {
+    case renderware_binary_stream_t::SECTIONS_ATOMIC: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes(size());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new list_with_header_t(m__io__raw_body, this, m__root);
+        break;
+    }
     case renderware_binary_stream_t::SECTIONS_GEOMETRY: {
         n_body = false;
         m__raw_body = m__io->read_bytes(size());
@@ -430,6 +437,36 @@ void renderware_binary_stream_t::morph_target_t::_clean_up() {
     }
 }
 
+renderware_binary_stream_t::struct_atomic_t::struct_atomic_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void renderware_binary_stream_t::struct_atomic_t::_read() {
+    m_frame_index = m__io->read_u4le();
+    m_geometry_index = m__io->read_u4le();
+    m_flag_render = m__io->read_bits_int_le(1);
+    m__unnamed3 = m__io->read_bits_int_le(1);
+    m_flag_collision_test = m__io->read_bits_int_le(1);
+    m__unnamed5 = m__io->read_bits_int_le(29);
+    m__io->align_to_byte();
+    m_unused = m__io->read_u4le();
+}
+
+renderware_binary_stream_t::struct_atomic_t::~struct_atomic_t() {
+    _clean_up();
+}
+
+void renderware_binary_stream_t::struct_atomic_t::_clean_up() {
+}
+
 renderware_binary_stream_t::surface_properties_t::surface_properties_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -573,6 +610,13 @@ void renderware_binary_stream_t::list_with_header_t::_read() {
     m_library_id_stamp = m__io->read_u4le();
     n_header = true;
     switch (_parent()->code()) {
+    case renderware_binary_stream_t::SECTIONS_ATOMIC: {
+        n_header = false;
+        m__raw_header = m__io->read_bytes(header_size());
+        m__io__raw_header = new kaitai::kstream(m__raw_header);
+        m_header = new struct_atomic_t(m__io__raw_header, this, m__root);
+        break;
+    }
     case renderware_binary_stream_t::SECTIONS_GEOMETRY: {
         n_header = false;
         m__raw_header = m__io->read_bytes(header_size());

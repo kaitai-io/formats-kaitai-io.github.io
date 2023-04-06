@@ -220,6 +220,12 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             Sections on = code();
             if (on != null) {
                 switch (code()) {
+                case ATOMIC: {
+                    this._raw_body = this._io.readBytes(size());
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    this.body = new ListWithHeader(_io__raw_body, this, _root);
+                    break;
+                }
                 case GEOMETRY: {
                     this._raw_body = this._io.readBytes(size());
                     KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -609,6 +615,58 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://gtamods.com/wiki/Atomic_(RW_Section)#Structure">Source</a>
+     */
+    public static class StructAtomic extends KaitaiStruct {
+        public static StructAtomic fromFile(String fileName) throws IOException {
+            return new StructAtomic(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public StructAtomic(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public StructAtomic(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public StructAtomic(KaitaiStream _io, RenderwareBinaryStream.ListWithHeader _parent, RenderwareBinaryStream _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.frameIndex = this._io.readU4le();
+            this.geometryIndex = this._io.readU4le();
+            this.flagRender = this._io.readBitsIntLe(1) != 0;
+            this._unnamed3 = this._io.readBitsIntLe(1) != 0;
+            this.flagCollisionTest = this._io.readBitsIntLe(1) != 0;
+            this._unnamed5 = this._io.readBitsIntLe(29);
+            this._io.alignToByte();
+            this.unused = this._io.readU4le();
+        }
+        private long frameIndex;
+        private long geometryIndex;
+        private boolean flagRender;
+        private boolean _unnamed3;
+        private boolean flagCollisionTest;
+        private long _unnamed5;
+        private long unused;
+        private RenderwareBinaryStream _root;
+        private RenderwareBinaryStream.ListWithHeader _parent;
+        public long frameIndex() { return frameIndex; }
+        public long geometryIndex() { return geometryIndex; }
+        public boolean flagRender() { return flagRender; }
+        public boolean _unnamed3() { return _unnamed3; }
+        public boolean flagCollisionTest() { return flagCollisionTest; }
+        public long _unnamed5() { return _unnamed5; }
+        public long unused() { return unused; }
+        public RenderwareBinaryStream _root() { return _root; }
+        public RenderwareBinaryStream.ListWithHeader _parent() { return _parent; }
+    }
+
+    /**
      * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
      */
     public static class SurfaceProperties extends KaitaiStruct {
@@ -799,6 +857,12 @@ public class RenderwareBinaryStream extends KaitaiStruct {
                 Sections on = _parent().code();
                 if (on != null) {
                     switch (_parent().code()) {
+                    case ATOMIC: {
+                        this._raw_header = this._io.readBytes(headerSize());
+                        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
+                        this.header = new StructAtomic(_io__raw_header, this, _root);
+                        break;
+                    }
                     case GEOMETRY: {
                         this._raw_header = this._io.readBytes(headerSize());
                         KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);

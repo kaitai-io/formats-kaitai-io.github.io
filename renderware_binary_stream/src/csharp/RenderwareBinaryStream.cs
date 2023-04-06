@@ -199,6 +199,12 @@ namespace Kaitai
             _size = m_io.ReadU4le();
             _libraryIdStamp = m_io.ReadU4le();
             switch (Code) {
+            case Sections.Atomic: {
+                __raw_body = m_io.ReadBytes(Size);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new ListWithHeader(io___raw_body, this, m_root);
+                break;
+            }
             case Sections.Geometry: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
@@ -579,6 +585,53 @@ namespace Kaitai
         }
 
         /// <remarks>
+        /// Reference: <a href="https://gtamods.com/wiki/Atomic_(RW_Section)#Structure">Source</a>
+        /// </remarks>
+        public partial class StructAtomic : KaitaiStruct
+        {
+            public static StructAtomic FromFile(string fileName)
+            {
+                return new StructAtomic(new KaitaiStream(fileName));
+            }
+
+            public StructAtomic(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _frameIndex = m_io.ReadU4le();
+                _geometryIndex = m_io.ReadU4le();
+                _flagRender = m_io.ReadBitsIntLe(1) != 0;
+                __unnamed3 = m_io.ReadBitsIntLe(1) != 0;
+                _flagCollisionTest = m_io.ReadBitsIntLe(1) != 0;
+                __unnamed5 = m_io.ReadBitsIntLe(29);
+                m_io.AlignToByte();
+                _unused = m_io.ReadU4le();
+            }
+            private uint _frameIndex;
+            private uint _geometryIndex;
+            private bool _flagRender;
+            private bool __unnamed3;
+            private bool _flagCollisionTest;
+            private ulong __unnamed5;
+            private uint _unused;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.ListWithHeader m_parent;
+            public uint FrameIndex { get { return _frameIndex; } }
+            public uint GeometryIndex { get { return _geometryIndex; } }
+            public bool FlagRender { get { return _flagRender; } }
+            public bool Unnamed_3 { get { return __unnamed3; } }
+            public bool FlagCollisionTest { get { return _flagCollisionTest; } }
+            public ulong Unnamed_5 { get { return __unnamed5; } }
+            public uint Unused { get { return _unused; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
         /// Reference: <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
         /// </remarks>
         public partial class SurfaceProperties : KaitaiStruct
@@ -745,6 +798,12 @@ namespace Kaitai
                 _headerSize = m_io.ReadU4le();
                 _libraryIdStamp = m_io.ReadU4le();
                 switch (M_Parent.Code) {
+                case RenderwareBinaryStream.Sections.Atomic: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructAtomic(io___raw_header, this, m_root);
+                    break;
+                }
                 case RenderwareBinaryStream.Sections.Geometry: {
                     __raw_header = m_io.ReadBytes(HeaderSize);
                     var io___raw_header = new KaitaiStream(__raw_header);
