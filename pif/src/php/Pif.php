@@ -121,6 +121,13 @@ namespace Pif {
                 throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->compression(), $this->_io(), "/types/information_header/seq/6");
             }
         }
+        protected $_m_lenColorTableEntry;
+        public function lenColorTableEntry() {
+            if ($this->_m_lenColorTableEntry !== null)
+                return $this->_m_lenColorTableEntry;
+            $this->_m_lenColorTableEntry = ($this->imageType() == \Pif\ImageType::INDEXED_RGB888 ? 3 : ($this->imageType() == \Pif\ImageType::INDEXED_RGB565 ? 2 : ($this->imageType() == \Pif\ImageType::INDEXED_RGB332 ? 1 : 0)));
+            return $this->_m_lenColorTableEntry;
+        }
         protected $_m_lenColorTableFull;
         public function lenColorTableFull() {
             if ($this->_m_lenColorTableFull !== null)
@@ -134,22 +141,6 @@ namespace Pif {
                 return $this->_m_lenColorTableMax;
             $this->_m_lenColorTableMax = ($this->_root()->fileHeader()->ofsImageData() - $this->_root()->fileHeader()->ofsImageDataMin());
             return $this->_m_lenColorTableMax;
-        }
-        protected $_m_numColorTableEntries;
-        public function numColorTableEntries() {
-            if ($this->_m_numColorTableEntries !== null)
-                return $this->_m_numColorTableEntries;
-            if ($this->usesIndexedMode()) {
-                $this->_m_numColorTableEntries = intval($this->lenColorTable() / $this->lenColorTableEntry());
-            }
-            return $this->_m_numColorTableEntries;
-        }
-        protected $_m_lenColorTableEntry;
-        public function lenColorTableEntry() {
-            if ($this->_m_lenColorTableEntry !== null)
-                return $this->_m_lenColorTableEntry;
-            $this->_m_lenColorTableEntry = ($this->imageType() == \Pif\ImageType::INDEXED_RGB888 ? 3 : ($this->imageType() == \Pif\ImageType::INDEXED_RGB565 ? 2 : ($this->imageType() == \Pif\ImageType::INDEXED_RGB332 ? 1 : 0)));
-            return $this->_m_lenColorTableEntry;
         }
         protected $_m_usesIndexedMode;
         public function usesIndexedMode() {
@@ -168,7 +159,7 @@ namespace Pif {
         public function imageType() { return $this->_m_imageType; }
 
         /**
-         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
          * 
          * > Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
          * > Indexed Image cannot go beyond 8 bits.
@@ -179,7 +170,7 @@ namespace Pif {
         public function lenImageData() { return $this->_m_lenImageData; }
 
         /**
-         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
          * 
          * > Color Table Size: (...), only used in Indexed mode, otherwise zero.
          * ---
@@ -205,8 +196,8 @@ namespace Pif {
 
         private function _read() {
             $this->_m_entries = [];
-            $n = $this->_root()->infoHeader()->numColorTableEntries();
-            for ($i = 0; $i < $n; $i++) {
+            $i = 0;
+            while (!$this->_io->isEof()) {
                 switch ($this->_root()->infoHeader()->imageType()) {
                     case \Pif\ImageType::INDEXED_RGB888:
                         $this->_m_entries[] = $this->_io->readBitsIntLe(24);
@@ -218,6 +209,7 @@ namespace Pif {
                         $this->_m_entries[] = $this->_io->readBitsIntLe(8);
                         break;
                 }
+                $i++;
             }
         }
         protected $_m_entries;

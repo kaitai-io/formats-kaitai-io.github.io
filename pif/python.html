@@ -322,11 +322,11 @@ applications.</p>
 <span class="sd">    See &lt;https://github.com/gfcwfzkm/PIF-Image-Format&gt; for more info.</span>
 <span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
-<span class="sd">       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf</span>
+<span class="sd">       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
-<span class="sd">       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300</span>
+<span class="sd">       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">class</span> <span class="nc">ImageType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -416,6 +416,14 @@ applications.</p>
                 <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotAnyOfError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/information_header/seq/6&quot;</span><span class="p">)</span>
 
         <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">len_color_table_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_color_table_entry&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_color_table_entry</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_color_table_entry</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb888</span> <span class="k">else</span> <span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb565</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb332</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_color_table_entry&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">len_color_table_full</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_color_table_full&#39;</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_color_table_full</span>
@@ -430,24 +438,6 @@ applications.</p>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_color_table_max</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">file_header</span><span class="o">.</span><span class="n">ofs_image_data</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">file_header</span><span class="o">.</span><span class="n">ofs_image_data_min</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_color_table_max&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">num_color_table_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_color_table_entries&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_color_table_entries</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_indexed_mode</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_color_table_entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_color_table</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_color_table_entry</span>
-
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_color_table_entries&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">len_color_table_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_color_table_entry&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_color_table_entry</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_color_table_entry</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb888</span> <span class="k">else</span> <span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb565</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb332</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_color_table_entry&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
         <span class="k">def</span> <span class="nf">uses_indexed_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -467,7 +457,8 @@ applications.</p>
 
         <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">info_header</span><span class="o">.</span><span class="n">num_color_table_entries</span><span class="p">):</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
                 <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">info_header</span><span class="o">.</span><span class="n">image_type</span>
                 <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb888</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">))</span>
@@ -475,6 +466,7 @@ applications.</p>
                     <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
                 <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pif</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">indexed_rgb332</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
 

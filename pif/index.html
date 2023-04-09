@@ -267,8 +267,8 @@ applications.</p>
 
   <span class="no">See &lt;https://github.com/gfcwfzkm/PIF-Image-Format&gt; for more info.</span>
 <span class="nt">doc-ref</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pif_header</span>
@@ -327,7 +327,7 @@ applications.</p>
             <span class="no">true</span>
           <span class="c1"># ^ shouldn&#39;t get there (all cases have been covered before)</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+          <span class="no">See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
 
           <span class="no">&gt; Bits per Pixel: Bit size that each Pixel occupies. Bit size for an</span>
           <span class="no">&gt; Indexed Image cannot go beyond 8 bits.</span>
@@ -350,7 +350,7 @@ applications.</p>
                 <span class="no">: len_color_table_full</span>
             <span class="no">) : 0</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+          <span class="no">See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
 
           <span class="no">&gt; Color Table Size: (...), only used in Indexed mode, otherwise zero.</span>
           <span class="no">---</span>
@@ -381,9 +381,6 @@ applications.</p>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.file_header.ofs_image_data - _root.file_header.ofs_image_data_min</span>
       <span class="nt">uses_indexed_mode</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_color_table_entry != 0</span>
-      <span class="nt">num_color_table_entries</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_color_table / len_color_table_entry</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uses_indexed_mode</span>
   <span class="nt">color_table_data</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
@@ -393,8 +390,7 @@ applications.</p>
             <span class="l l-Scalar l-Scalar-Plain">image_type::indexed_rgb888</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">b24</span>
             <span class="l l-Scalar l-Scalar-Plain">image_type::indexed_rgb565</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">b16</span>
             <span class="l l-Scalar l-Scalar-Plain">image_type::indexed_rgb332</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">b8</span>
-        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.info_header.num_color_table_entries</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
 <span class="nt">enums</span><span class="p">:</span>
   <span class="nt">image_type</span><span class="p">:</span>
     <span class="nt">0x433c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rgb888</span>
@@ -416,7 +412,7 @@ applications.</p>
     <span class="nt">0x7daa</span><span class="p">:</span>
       <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">black_white</span>
       <span class="nt">doc</span><span class="p">:</span> <span class="s">&#39;0:</span><span class="nv"> </span><span class="s">black,</span><span class="nv"> </span><span class="s">1:</span><span class="nv"> </span><span class="s">white&#39;</span>
-      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L233</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L233</span>
     <span class="nt">0x4952</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">indexed_rgb888</span>
     <span class="nt">0x4947</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">indexed_rgb565</span>
     <span class="nt">0x4942</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">indexed_rgb332</span>

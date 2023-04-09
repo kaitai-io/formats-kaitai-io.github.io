@@ -547,6 +547,16 @@ section#format-index .row {
   <span class="kr">end</span>
 <span class="kr">end</span>
 
+<span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">num_uv_layers_raw</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">StructGeometry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_uv_layers_raw</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers_raw</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers_raw</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers_raw</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">16711680</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers_raw</span>
+<span class="kr">end</span>
+
 <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_textured</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">StructGeometry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_textured</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_textured</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
@@ -557,14 +567,24 @@ section#format-index .row {
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_textured</span>
 <span class="kr">end</span>
 
-<span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_prelit</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">StructGeometry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_prelit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span>
+<span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_native</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">StructGeometry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_native</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span>
   <span class="kr">end</span>
 
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span>
+<span class="kr">end</span>
+
+<span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">num_uv_layers</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">StructGeometry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_uv_layers</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">num_uv_layers_raw</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_textured2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">is_textured</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">)))))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_uv_layers_raw</span><span class="p">))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_uv_layers</span>
 <span class="kr">end</span>
 
 <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_textured2</span> <span class="o">=</span> <span class="p">{}</span>
@@ -577,14 +597,14 @@ section#format-index .row {
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_textured2</span>
 <span class="kr">end</span>
 
-<span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_native</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">StructGeometry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_native</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span>
+<span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_prelit</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">StructGeometry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_prelit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span>
   <span class="kr">end</span>
 
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_native</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_prelit</span>
 <span class="kr">end</span>
 
 
@@ -604,11 +624,9 @@ section#format-index .row {
       <span class="n">self</span><span class="p">.</span><span class="n">prelit_colors</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Rgba</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="kr">end</span>
   <span class="kr">end</span>
-  <span class="kr">if</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">is_textured</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">is_textured2</span><span class="p">))</span>  <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">tex_coords</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">num_vertices</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">tex_coords</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">TexCoord</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">end</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">uv_layers</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">num_uv_layers</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">uv_layers</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">UvLayer</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">num_vertices</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="kr">end</span>
   <span class="n">self</span><span class="p">.</span><span class="n">triangles</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">num_triangles</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
@@ -911,6 +929,24 @@ section#format-index .row {
 <span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">TexCoord</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">UvLayer</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">UvLayer</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">num_vertices</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">num_vertices</span> <span class="o">=</span> <span class="n">num_vertices</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">RenderwareBinaryStream</span><span class="p">.</span><span class="nc">UvLayer</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">tex_coords</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_vertices</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">tex_coords</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">TexCoord</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 
 

@@ -273,25 +273,35 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       }
       self
     end
+    def num_uv_layers_raw
+      return @num_uv_layers_raw unless @num_uv_layers_raw.nil?
+      @num_uv_layers_raw = ((format & 16711680) >> 16)
+      @num_uv_layers_raw
+    end
     def is_textured
       return @is_textured unless @is_textured.nil?
       @is_textured = (format & 4) != 0
       @is_textured
     end
-    def is_prelit
-      return @is_prelit unless @is_prelit.nil?
-      @is_prelit = (format & 8) != 0
-      @is_prelit
+    def is_native
+      return @is_native unless @is_native.nil?
+      @is_native = (format & 16777216) != 0
+      @is_native
+    end
+    def num_uv_layers
+      return @num_uv_layers unless @num_uv_layers.nil?
+      @num_uv_layers = (num_uv_layers_raw == 0 ? (is_textured2 ? 2 : (is_textured ? 1 : 0)) : num_uv_layers_raw)
+      @num_uv_layers
     end
     def is_textured2
       return @is_textured2 unless @is_textured2.nil?
       @is_textured2 = (format & 128) != 0
       @is_textured2
     end
-    def is_native
-      return @is_native unless @is_native.nil?
-      @is_native = (format & 16777216) != 0
-      @is_native
+    def is_prelit
+      return @is_prelit unless @is_prelit.nil?
+      @is_prelit = (format & 8) != 0
+      @is_prelit
     end
     attr_reader :format
     attr_reader :num_triangles
@@ -314,12 +324,10 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
           @prelit_colors << Rgba.new(@_io, self, @_root)
         }
       end
-      if  ((_parent.is_textured) || (_parent.is_textured2)) 
-        @tex_coords = []
-        (_parent.num_vertices).times { |i|
-          @tex_coords << TexCoord.new(@_io, self, @_root)
-        }
-      end
+      @uv_layers = []
+      (_parent.num_uv_layers).times { |i|
+        @uv_layers << UvLayer.new(@_io, self, @_root, _parent.num_vertices)
+      }
       @triangles = []
       (_parent.num_triangles).times { |i|
         @triangles << Triangle.new(@_io, self, @_root)
@@ -327,7 +335,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
       self
     end
     attr_reader :prelit_colors
-    attr_reader :tex_coords
+    attr_reader :uv_layers
     attr_reader :triangles
   end
 
@@ -634,6 +642,23 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     end
     attr_reader :u
     attr_reader :v
+  end
+  class UvLayer < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self, num_vertices)
+      super(_io, _parent, _root)
+      @num_vertices = num_vertices
+      _read
+    end
+
+    def _read
+      @tex_coords = []
+      (num_vertices).times { |i|
+        @tex_coords << TexCoord.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :tex_coords
+    attr_reader :num_vertices
   end
   class StructTextureDictionary < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

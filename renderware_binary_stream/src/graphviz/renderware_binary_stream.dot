@@ -52,21 +52,29 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD PORT="morph_targets_pos">...</TD><TD PORT="morph_targets_size">...</TD><TD>MorphTarget</TD><TD PORT="morph_targets_type">morph_targets</TD></TR>
 				<TR><TD COLSPAN="4" PORT="morph_targets__repeat">repeat num_morph_targets times</TD></TR>
 			</TABLE>>];
+			struct_geometry__inst__num_uv_layers_raw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_uv_layers_raw</TD><TD>((format &amp; 16711680) &gt;&gt; 16)</TD></TR>
+			</TABLE>>];
 			struct_geometry__inst__is_textured [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>is_textured</TD><TD>(format &amp; 4) != 0</TD></TR>
 			</TABLE>>];
-			struct_geometry__inst__is_prelit [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			struct_geometry__inst__is_native [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_prelit</TD><TD>(format &amp; 8) != 0</TD></TR>
+				<TR><TD>is_native</TD><TD>(format &amp; 16777216) != 0</TD></TR>
+			</TABLE>>];
+			struct_geometry__inst__num_uv_layers [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_uv_layers</TD><TD>(num_uv_layers_raw == 0 ? (is_textured2 ? 2 : (is_textured ? 1 : 0)) : num_uv_layers_raw)</TD></TR>
 			</TABLE>>];
 			struct_geometry__inst__is_textured2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>is_textured2</TD><TD>(format &amp; 128) != 0</TD></TR>
 			</TABLE>>];
-			struct_geometry__inst__is_native [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			struct_geometry__inst__is_prelit [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_native</TD><TD>(format &amp; 16777216) != 0</TD></TR>
+				<TR><TD>is_prelit</TD><TD>(format &amp; 8) != 0</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__geometry_non_native {
@@ -77,8 +85,8 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="prelit_colors_pos">0</TD><TD PORT="prelit_colors_size">4</TD><TD>Rgba</TD><TD PORT="prelit_colors_type">prelit_colors</TD></TR>
 				<TR><TD COLSPAN="4" PORT="prelit_colors__repeat">repeat _parent.num_vertices times</TD></TR>
-				<TR><TD PORT="tex_coords_pos">...</TD><TD PORT="tex_coords_size">8</TD><TD>TexCoord</TD><TD PORT="tex_coords_type">tex_coords</TD></TR>
-				<TR><TD COLSPAN="4" PORT="tex_coords__repeat">repeat _parent.num_vertices times</TD></TR>
+				<TR><TD PORT="uv_layers_pos">...</TD><TD PORT="uv_layers_size">...</TD><TD>UvLayer</TD><TD PORT="uv_layers_type">uv_layers</TD></TR>
+				<TR><TD COLSPAN="4" PORT="uv_layers__repeat">repeat _parent.num_uv_layers times</TD></TR>
 				<TR><TD PORT="triangles_pos">...</TD><TD PORT="triangles_size">8</TD><TD>Triangle</TD><TD PORT="triangles_type">triangles</TD></TR>
 				<TR><TD COLSPAN="4" PORT="triangles__repeat">repeat _parent.num_triangles times</TD></TR>
 			</TABLE>>];
@@ -250,6 +258,16 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 				<TR><TD PORT="v_pos">4</TD><TD PORT="v_size">4</TD><TD>f4le</TD><TD PORT="v_type">v</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__uv_layer {
+			label="RenderwareBinaryStream::UvLayer";
+			graph[style=dotted];
+
+			uv_layer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="tex_coords_pos">0</TD><TD PORT="tex_coords_size">8</TD><TD>TexCoord</TD><TD PORT="tex_coords_type">tex_coords</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tex_coords__repeat">repeat num_vertices times</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__struct_texture_dictionary {
 			label="RenderwareBinaryStream::StructTextureDictionary";
 			graph[style=dotted];
@@ -277,14 +295,19 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 	struct_geometry__seq:geometry_type -> geometry_non_native__seq [style=bold];
 	struct_geometry__seq:morph_targets_type -> morph_target__seq [style=bold];
 	struct_geometry__seq:num_morph_targets_type -> struct_geometry__seq:morph_targets__repeat [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__num_uv_layers_raw [color="#404040"];
 	struct_geometry__seq:format_type -> struct_geometry__inst__is_textured [color="#404040"];
-	struct_geometry__seq:format_type -> struct_geometry__inst__is_prelit [color="#404040"];
-	struct_geometry__seq:format_type -> struct_geometry__inst__is_textured2 [color="#404040"];
 	struct_geometry__seq:format_type -> struct_geometry__inst__is_native [color="#404040"];
+	struct_geometry__inst__num_uv_layers_raw:num_uv_layers_raw_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
+	struct_geometry__inst__is_textured2:is_textured2_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
+	struct_geometry__inst__is_textured:is_textured_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
+	struct_geometry__inst__num_uv_layers_raw:num_uv_layers_raw_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__is_textured2 [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__is_prelit [color="#404040"];
 	geometry_non_native__seq:prelit_colors_type -> rgba__seq [style=bold];
 	struct_geometry__seq:num_vertices_type -> geometry_non_native__seq:prelit_colors__repeat [color="#404040"];
-	geometry_non_native__seq:tex_coords_type -> tex_coord__seq [style=bold];
-	struct_geometry__seq:num_vertices_type -> geometry_non_native__seq:tex_coords__repeat [color="#404040"];
+	geometry_non_native__seq:uv_layers_type -> uv_layer__seq [style=bold];
+	struct_geometry__inst__num_uv_layers:num_uv_layers_type -> geometry_non_native__seq:uv_layers__repeat [color="#404040"];
 	geometry_non_native__seq:triangles_type -> triangle__seq [style=bold];
 	struct_geometry__seq:num_triangles_type -> geometry_non_native__seq:triangles__repeat [color="#404040"];
 	morph_target__seq:bounding_sphere_type -> sphere__seq [style=bold];
@@ -310,4 +333,6 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 	list_with_header__seq:library_id_stamp_type -> list_with_header__inst__version [color="#404040"];
 	frame__seq:rotation_matrix_type -> matrix__seq [style=bold];
 	frame__seq:position_type -> vector_3d__seq [style=bold];
+	uv_layer__seq:tex_coords_type -> tex_coord__seq [style=bold];
+	uv_layer__params:num_vertices_type -> uv_layer__seq:tex_coords__repeat [color="#404040"];
 }

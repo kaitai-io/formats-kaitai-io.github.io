@@ -13,8 +13,8 @@ import (
  * applications.
  * 
  * See <https://github.com/gfcwfzkm/PIF-Image-Format> for more info.
- * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf">Source</a>
- * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300">Source</a>
+ * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf">Source</a>
+ * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300">Source</a>
  */
 
 type Pif_ImageType int
@@ -199,14 +199,12 @@ type Pif_InformationHeader struct {
 	_io *kaitai.Stream
 	_root *Pif
 	_parent *Pif
+	_f_lenColorTableEntry bool
+	lenColorTableEntry int8
 	_f_lenColorTableFull bool
 	lenColorTableFull int
 	_f_lenColorTableMax bool
 	lenColorTableMax int
-	_f_numColorTableEntries bool
-	numColorTableEntries int
-	_f_lenColorTableEntry bool
-	lenColorTableEntry int8
 	_f_usesIndexedMode bool
 	usesIndexedMode bool
 }
@@ -410,15 +408,41 @@ func (this *Pif_InformationHeader) Read(io *kaitai.Stream, parent *Pif, root *Pi
 	}
 	return err
 }
+func (this *Pif_InformationHeader) LenColorTableEntry() (v int8, err error) {
+	if (this._f_lenColorTableEntry) {
+		return this.lenColorTableEntry, nil
+	}
+	var tmp48 int8;
+	if (this.ImageType == Pif_ImageType__IndexedRgb888) {
+		tmp48 = 3
+	} else {
+		var tmp49 int8;
+		if (this.ImageType == Pif_ImageType__IndexedRgb565) {
+			tmp49 = 2
+		} else {
+			var tmp50 int8;
+			if (this.ImageType == Pif_ImageType__IndexedRgb332) {
+				tmp50 = 1
+			} else {
+				tmp50 = 0
+			}
+			tmp49 = tmp50
+		}
+		tmp48 = tmp49
+	}
+	this.lenColorTableEntry = int8(tmp48)
+	this._f_lenColorTableEntry = true
+	return this.lenColorTableEntry, nil
+}
 func (this *Pif_InformationHeader) LenColorTableFull() (v int, err error) {
 	if (this._f_lenColorTableFull) {
 		return this.lenColorTableFull, nil
 	}
-	tmp48, err := this.LenColorTableEntry()
+	tmp51, err := this.LenColorTableEntry()
 	if err != nil {
 		return 0, err
 	}
-	this.lenColorTableFull = int((tmp48 * (1 << this.BitsPerPixel)))
+	this.lenColorTableFull = int((tmp51 * (1 << this.BitsPerPixel)))
 	this._f_lenColorTableFull = true
 	return this.lenColorTableFull, nil
 }
@@ -426,80 +450,36 @@ func (this *Pif_InformationHeader) LenColorTableMax() (v int, err error) {
 	if (this._f_lenColorTableMax) {
 		return this.lenColorTableMax, nil
 	}
-	tmp49, err := this._root.FileHeader.OfsImageDataMin()
+	tmp52, err := this._root.FileHeader.OfsImageDataMin()
 	if err != nil {
 		return 0, err
 	}
-	this.lenColorTableMax = int((this._root.FileHeader.OfsImageData - tmp49))
+	this.lenColorTableMax = int((this._root.FileHeader.OfsImageData - tmp52))
 	this._f_lenColorTableMax = true
 	return this.lenColorTableMax, nil
-}
-func (this *Pif_InformationHeader) NumColorTableEntries() (v int, err error) {
-	if (this._f_numColorTableEntries) {
-		return this.numColorTableEntries, nil
-	}
-	tmp50, err := this.UsesIndexedMode()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp50) {
-		tmp51, err := this.LenColorTableEntry()
-		if err != nil {
-			return 0, err
-		}
-		this.numColorTableEntries = int((this.LenColorTable / tmp51))
-	}
-	this._f_numColorTableEntries = true
-	return this.numColorTableEntries, nil
-}
-func (this *Pif_InformationHeader) LenColorTableEntry() (v int8, err error) {
-	if (this._f_lenColorTableEntry) {
-		return this.lenColorTableEntry, nil
-	}
-	var tmp52 int8;
-	if (this.ImageType == Pif_ImageType__IndexedRgb888) {
-		tmp52 = 3
-	} else {
-		var tmp53 int8;
-		if (this.ImageType == Pif_ImageType__IndexedRgb565) {
-			tmp53 = 2
-		} else {
-			var tmp54 int8;
-			if (this.ImageType == Pif_ImageType__IndexedRgb332) {
-				tmp54 = 1
-			} else {
-				tmp54 = 0
-			}
-			tmp53 = tmp54
-		}
-		tmp52 = tmp53
-	}
-	this.lenColorTableEntry = int8(tmp52)
-	this._f_lenColorTableEntry = true
-	return this.lenColorTableEntry, nil
 }
 func (this *Pif_InformationHeader) UsesIndexedMode() (v bool, err error) {
 	if (this._f_usesIndexedMode) {
 		return this.usesIndexedMode, nil
 	}
-	tmp55, err := this.LenColorTableEntry()
+	tmp53, err := this.LenColorTableEntry()
 	if err != nil {
 		return false, err
 	}
-	this.usesIndexedMode = bool(tmp55 != 0)
+	this.usesIndexedMode = bool(tmp53 != 0)
 	this._f_usesIndexedMode = true
 	return this.usesIndexedMode, nil
 }
 
 /**
- * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+ * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
  * 
  * > Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
  * > Indexed Image cannot go beyond 8 bits.
  */
 
 /**
- * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+ * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
  * 
  * > Color Table Size: (...), only used in Indexed mode, otherwise zero.
  * ---
@@ -527,31 +507,33 @@ func (this *Pif_ColorTableData) Read(io *kaitai.Stream, parent *Pif, root *Pif) 
 	this._parent = parent
 	this._root = root
 
-	tmp56, err := this._root.InfoHeader.NumColorTableEntries()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp56); i++ {
-		_ = i
+	for i := 1;; i++ {
+		tmp54, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp54 {
+			break
+		}
 		switch (this._root.InfoHeader.ImageType) {
 		case Pif_ImageType__IndexedRgb888:
-			tmp57, err := this._io.ReadBitsIntLe(24)
+			tmp55, err := this._io.ReadBitsIntLe(24)
+			if err != nil {
+				return err
+			}
+			this.Entries = append(this.Entries, tmp55)
+		case Pif_ImageType__IndexedRgb565:
+			tmp56, err := this._io.ReadBitsIntLe(16)
+			if err != nil {
+				return err
+			}
+			this.Entries = append(this.Entries, tmp56)
+		case Pif_ImageType__IndexedRgb332:
+			tmp57, err := this._io.ReadBitsIntLe(8)
 			if err != nil {
 				return err
 			}
 			this.Entries = append(this.Entries, tmp57)
-		case Pif_ImageType__IndexedRgb565:
-			tmp58, err := this._io.ReadBitsIntLe(16)
-			if err != nil {
-				return err
-			}
-			this.Entries = append(this.Entries, tmp58)
-		case Pif_ImageType__IndexedRgb332:
-			tmp59, err := this._io.ReadBitsIntLe(8)
-			if err != nil {
-				return err
-			}
-			this.Entries = append(this.Entries, tmp59)
 		}
 	}
 	return err

@@ -288,6 +288,16 @@ function RenderwareBinaryStream.StructGeometry:_read()
   end
 end
 
+RenderwareBinaryStream.StructGeometry.property.num_uv_layers_raw = {}
+function RenderwareBinaryStream.StructGeometry.property.num_uv_layers_raw:get()
+  if self._m_num_uv_layers_raw ~= nil then
+    return self._m_num_uv_layers_raw
+  end
+
+  self._m_num_uv_layers_raw = ((self.format & 16711680) >> 16)
+  return self._m_num_uv_layers_raw
+end
+
 RenderwareBinaryStream.StructGeometry.property.is_textured = {}
 function RenderwareBinaryStream.StructGeometry.property.is_textured:get()
   if self._m_is_textured ~= nil then
@@ -298,14 +308,24 @@ function RenderwareBinaryStream.StructGeometry.property.is_textured:get()
   return self._m_is_textured
 end
 
-RenderwareBinaryStream.StructGeometry.property.is_prelit = {}
-function RenderwareBinaryStream.StructGeometry.property.is_prelit:get()
-  if self._m_is_prelit ~= nil then
-    return self._m_is_prelit
+RenderwareBinaryStream.StructGeometry.property.is_native = {}
+function RenderwareBinaryStream.StructGeometry.property.is_native:get()
+  if self._m_is_native ~= nil then
+    return self._m_is_native
   end
 
-  self._m_is_prelit = (self.format & 8) ~= 0
-  return self._m_is_prelit
+  self._m_is_native = (self.format & 16777216) ~= 0
+  return self._m_is_native
+end
+
+RenderwareBinaryStream.StructGeometry.property.num_uv_layers = {}
+function RenderwareBinaryStream.StructGeometry.property.num_uv_layers:get()
+  if self._m_num_uv_layers ~= nil then
+    return self._m_num_uv_layers
+  end
+
+  self._m_num_uv_layers = utils.box_unwrap((self.num_uv_layers_raw == 0) and utils.box_wrap(utils.box_unwrap((self.is_textured2) and utils.box_wrap(2) or (utils.box_unwrap((self.is_textured) and utils.box_wrap(1) or (0))))) or (self.num_uv_layers_raw))
+  return self._m_num_uv_layers
 end
 
 RenderwareBinaryStream.StructGeometry.property.is_textured2 = {}
@@ -318,14 +338,14 @@ function RenderwareBinaryStream.StructGeometry.property.is_textured2:get()
   return self._m_is_textured2
 end
 
-RenderwareBinaryStream.StructGeometry.property.is_native = {}
-function RenderwareBinaryStream.StructGeometry.property.is_native:get()
-  if self._m_is_native ~= nil then
-    return self._m_is_native
+RenderwareBinaryStream.StructGeometry.property.is_prelit = {}
+function RenderwareBinaryStream.StructGeometry.property.is_prelit:get()
+  if self._m_is_prelit ~= nil then
+    return self._m_is_prelit
   end
 
-  self._m_is_native = (self.format & 16777216) ~= 0
-  return self._m_is_native
+  self._m_is_prelit = (self.format & 8) ~= 0
+  return self._m_is_prelit
 end
 
 
@@ -345,11 +365,9 @@ function RenderwareBinaryStream.GeometryNonNative:_read()
       self.prelit_colors[i + 1] = RenderwareBinaryStream.Rgba(self._io, self, self._root)
     end
   end
-  if  ((self._parent.is_textured) or (self._parent.is_textured2))  then
-    self.tex_coords = {}
-    for i = 0, self._parent.num_vertices - 1 do
-      self.tex_coords[i + 1] = RenderwareBinaryStream.TexCoord(self._io, self, self._root)
-    end
+  self.uv_layers = {}
+  for i = 0, self._parent.num_uv_layers - 1 do
+    self.uv_layers[i + 1] = RenderwareBinaryStream.UvLayer(self._parent.num_vertices, self._io, self, self._root)
   end
   self.triangles = {}
   for i = 0, self._parent.num_triangles - 1 do
@@ -652,6 +670,24 @@ end
 function RenderwareBinaryStream.TexCoord:_read()
   self.u = self._io:read_f4le()
   self.v = self._io:read_f4le()
+end
+
+
+RenderwareBinaryStream.UvLayer = class.class(KaitaiStruct)
+
+function RenderwareBinaryStream.UvLayer:_init(num_vertices, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.num_vertices = num_vertices
+  self:_read()
+end
+
+function RenderwareBinaryStream.UvLayer:_read()
+  self.tex_coords = {}
+  for i = 0, self.num_vertices - 1 do
+    self.tex_coords[i + 1] = RenderwareBinaryStream.TexCoord(self._io, self, self._root)
+  end
 end
 
 

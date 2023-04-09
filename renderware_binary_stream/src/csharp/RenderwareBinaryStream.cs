@@ -300,10 +300,12 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_numUvLayersRaw = false;
                 f_isTextured = false;
-                f_isPrelit = false;
-                f_isTextured2 = false;
                 f_isNative = false;
+                f_numUvLayers = false;
+                f_isTextured2 = false;
+                f_isPrelit = false;
                 _read();
             }
             private void _read()
@@ -324,6 +326,19 @@ namespace Kaitai
                     _morphTargets.Add(new MorphTarget(m_io, this, m_root));
                 }
             }
+            private bool f_numUvLayersRaw;
+            private int _numUvLayersRaw;
+            public int NumUvLayersRaw
+            {
+                get
+                {
+                    if (f_numUvLayersRaw)
+                        return _numUvLayersRaw;
+                    _numUvLayersRaw = (int) (((Format & 16711680) >> 16));
+                    f_numUvLayersRaw = true;
+                    return _numUvLayersRaw;
+                }
+            }
             private bool f_isTextured;
             private bool _isTextured;
             public bool IsTextured
@@ -337,17 +352,30 @@ namespace Kaitai
                     return _isTextured;
                 }
             }
-            private bool f_isPrelit;
-            private bool _isPrelit;
-            public bool IsPrelit
+            private bool f_isNative;
+            private bool _isNative;
+            public bool IsNative
             {
                 get
                 {
-                    if (f_isPrelit)
-                        return _isPrelit;
-                    _isPrelit = (bool) ((Format & 8) != 0);
-                    f_isPrelit = true;
-                    return _isPrelit;
+                    if (f_isNative)
+                        return _isNative;
+                    _isNative = (bool) ((Format & 16777216) != 0);
+                    f_isNative = true;
+                    return _isNative;
+                }
+            }
+            private bool f_numUvLayers;
+            private int _numUvLayers;
+            public int NumUvLayers
+            {
+                get
+                {
+                    if (f_numUvLayers)
+                        return _numUvLayers;
+                    _numUvLayers = (int) ((NumUvLayersRaw == 0 ? (IsTextured2 ? 2 : (IsTextured ? 1 : 0)) : NumUvLayersRaw));
+                    f_numUvLayers = true;
+                    return _numUvLayers;
                 }
             }
             private bool f_isTextured2;
@@ -363,17 +391,17 @@ namespace Kaitai
                     return _isTextured2;
                 }
             }
-            private bool f_isNative;
-            private bool _isNative;
-            public bool IsNative
+            private bool f_isPrelit;
+            private bool _isPrelit;
+            public bool IsPrelit
             {
                 get
                 {
-                    if (f_isNative)
-                        return _isNative;
-                    _isNative = (bool) ((Format & 16777216) != 0);
-                    f_isNative = true;
-                    return _isNative;
+                    if (f_isPrelit)
+                        return _isPrelit;
+                    _isPrelit = (bool) ((Format & 8) != 0);
+                    f_isPrelit = true;
+                    return _isPrelit;
                 }
             }
             private uint _format;
@@ -417,12 +445,10 @@ namespace Kaitai
                         _prelitColors.Add(new Rgba(m_io, this, m_root));
                     }
                 }
-                if ( ((M_Parent.IsTextured) || (M_Parent.IsTextured2)) ) {
-                    _texCoords = new List<TexCoord>();
-                    for (var i = 0; i < M_Parent.NumVertices; i++)
-                    {
-                        _texCoords.Add(new TexCoord(m_io, this, m_root));
-                    }
+                _uvLayers = new List<UvLayer>();
+                for (var i = 0; i < M_Parent.NumUvLayers; i++)
+                {
+                    _uvLayers.Add(new UvLayer(M_Parent.NumVertices, m_io, this, m_root));
                 }
                 _triangles = new List<Triangle>();
                 for (var i = 0; i < M_Parent.NumTriangles; i++)
@@ -431,12 +457,12 @@ namespace Kaitai
                 }
             }
             private List<Rgba> _prelitColors;
-            private List<TexCoord> _texCoords;
+            private List<UvLayer> _uvLayers;
             private List<Triangle> _triangles;
             private RenderwareBinaryStream m_root;
             private RenderwareBinaryStream.StructGeometry m_parent;
             public List<Rgba> PrelitColors { get { return _prelitColors; } }
-            public List<TexCoord> TexCoords { get { return _texCoords; } }
+            public List<UvLayer> UvLayers { get { return _uvLayers; } }
             public List<Triangle> Triangles { get { return _triangles; } }
             public RenderwareBinaryStream M_Root { get { return m_root; } }
             public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
@@ -955,7 +981,7 @@ namespace Kaitai
                 return new TexCoord(new KaitaiStream(fileName));
             }
 
-            public TexCoord(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            public TexCoord(KaitaiStream p__io, RenderwareBinaryStream.UvLayer p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -969,9 +995,35 @@ namespace Kaitai
             private float _u;
             private float _v;
             private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.GeometryNonNative m_parent;
+            private RenderwareBinaryStream.UvLayer m_parent;
             public float U { get { return _u; } }
             public float V { get { return _v; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.UvLayer M_Parent { get { return m_parent; } }
+        }
+        public partial class UvLayer : KaitaiStruct
+        {
+            public UvLayer(uint p_numVertices, KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _numVertices = p_numVertices;
+                _read();
+            }
+            private void _read()
+            {
+                _texCoords = new List<TexCoord>();
+                for (var i = 0; i < NumVertices; i++)
+                {
+                    _texCoords.Add(new TexCoord(m_io, this, m_root));
+                }
+            }
+            private List<TexCoord> _texCoords;
+            private uint _numVertices;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.GeometryNonNative m_parent;
+            public List<TexCoord> TexCoords { get { return _texCoords; } }
+            public uint NumVertices { get { return _numVertices; } }
             public RenderwareBinaryStream M_Root { get { return m_root; } }
             public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
         }

@@ -317,8 +317,8 @@ applications.</p>
 <span class="c1"># applications.</span>
 <span class="c1"># </span>
 <span class="c1"># See &lt;https://github.com/gfcwfzkm/PIF-Image-Format&gt; for more info.</span>
-<span class="c1"># @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf Source</span>
-<span class="c1"># @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300 Source</span>
+<span class="c1"># @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf Source</span>
+<span class="c1"># @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300 Source</span>
 <span class="k">class</span> <span class="nc">Pif</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
   <span class="no">IMAGE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
@@ -401,6 +401,11 @@ applications.</p>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">compression</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/information_header/seq/6&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compression_type_none</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">compression</span> <span class="o">==</span> <span class="ss">:compression_type_rle</span><span class="p">))</span> 
       <span class="nb">self</span>
     <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">len_color_table_entry</span>
+      <span class="k">return</span> <span class="vi">@len_color_table_entry</span> <span class="k">unless</span> <span class="vi">@len_color_table_entry</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@len_color_table_entry</span> <span class="o">=</span> <span class="p">(</span><span class="n">image_type</span> <span class="o">==</span> <span class="ss">:image_type_indexed_rgb888</span> <span class="p">?</span> <span class="mi">3</span> <span class="p">:</span> <span class="p">(</span><span class="n">image_type</span> <span class="o">==</span> <span class="ss">:image_type_indexed_rgb565</span> <span class="p">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">(</span><span class="n">image_type</span> <span class="o">==</span> <span class="ss">:image_type_indexed_rgb332</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
+      <span class="vi">@len_color_table_entry</span>
+    <span class="k">end</span>
     <span class="k">def</span> <span class="nf">len_color_table_full</span>
       <span class="k">return</span> <span class="vi">@len_color_table_full</span> <span class="k">unless</span> <span class="vi">@len_color_table_full</span><span class="o">.</span><span class="n">nil?</span>
       <span class="vi">@len_color_table_full</span> <span class="o">=</span> <span class="p">(</span><span class="n">len_color_table_entry</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">bits_per_pixel</span><span class="p">))</span>
@@ -411,18 +416,6 @@ applications.</p>
       <span class="vi">@len_color_table_max</span> <span class="o">=</span> <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">file_header</span><span class="o">.</span><span class="n">ofs_image_data</span> <span class="o">-</span> <span class="n">_root</span><span class="o">.</span><span class="n">file_header</span><span class="o">.</span><span class="n">ofs_image_data_min</span><span class="p">)</span>
       <span class="vi">@len_color_table_max</span>
     <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">num_color_table_entries</span>
-      <span class="k">return</span> <span class="vi">@num_color_table_entries</span> <span class="k">unless</span> <span class="vi">@num_color_table_entries</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="n">uses_indexed_mode</span>
-        <span class="vi">@num_color_table_entries</span> <span class="o">=</span> <span class="p">(</span><span class="n">len_color_table</span> <span class="o">/</span> <span class="n">len_color_table_entry</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="vi">@num_color_table_entries</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">len_color_table_entry</span>
-      <span class="k">return</span> <span class="vi">@len_color_table_entry</span> <span class="k">unless</span> <span class="vi">@len_color_table_entry</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@len_color_table_entry</span> <span class="o">=</span> <span class="p">(</span><span class="n">image_type</span> <span class="o">==</span> <span class="ss">:image_type_indexed_rgb888</span> <span class="p">?</span> <span class="mi">3</span> <span class="p">:</span> <span class="p">(</span><span class="n">image_type</span> <span class="o">==</span> <span class="ss">:image_type_indexed_rgb565</span> <span class="p">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">(</span><span class="n">image_type</span> <span class="o">==</span> <span class="ss">:image_type_indexed_rgb332</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
-      <span class="vi">@len_color_table_entry</span>
-    <span class="k">end</span>
     <span class="k">def</span> <span class="nf">uses_indexed_mode</span>
       <span class="k">return</span> <span class="vi">@uses_indexed_mode</span> <span class="k">unless</span> <span class="vi">@uses_indexed_mode</span><span class="o">.</span><span class="n">nil?</span>
       <span class="vi">@uses_indexed_mode</span> <span class="o">=</span> <span class="n">len_color_table_entry</span> <span class="o">!=</span> <span class="mi">0</span>
@@ -431,7 +424,7 @@ applications.</p>
     <span class="kp">attr_reader</span> <span class="ss">:image_type</span>
 
     <span class="c1">##</span>
-    <span class="c1"># See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+    <span class="c1"># See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
     <span class="c1"># </span>
     <span class="c1"># &gt; Bits per Pixel: Bit size that each Pixel occupies. Bit size for an</span>
     <span class="c1"># &gt; Indexed Image cannot go beyond 8 bits.</span>
@@ -441,7 +434,7 @@ applications.</p>
     <span class="kp">attr_reader</span> <span class="ss">:len_image_data</span>
 
     <span class="c1">##</span>
-    <span class="c1"># See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+    <span class="c1"># See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
     <span class="c1"># </span>
     <span class="c1"># &gt; Color Table Size: (...), only used in Indexed mode, otherwise zero.</span>
     <span class="c1"># ---</span>
@@ -463,7 +456,8 @@ applications.</p>
 
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
-      <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">info_header</span><span class="o">.</span><span class="n">num_color_table_entries</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
         <span class="k">case</span> <span class="n">_root</span><span class="o">.</span><span class="n">info_header</span><span class="o">.</span><span class="n">image_type</span>
         <span class="k">when</span> <span class="ss">:image_type_indexed_rgb888</span>
           <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
@@ -472,7 +466,8 @@ applications.</p>
         <span class="k">when</span> <span class="ss">:image_type_indexed_rgb332</span>
           <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
         <span class="k">end</span>
-      <span class="p">}</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:entries</span>

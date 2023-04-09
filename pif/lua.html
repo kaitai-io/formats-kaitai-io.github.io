@@ -276,8 +276,8 @@ applications.</p>
 <span class="c1">-- applications.</span>
 <span class="c1">-- </span>
 <span class="c1">-- See &lt;https://github.com/gfcwfzkm/PIF-Image-Format&gt; for more info.</span>
-<span class="c1">-- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf)</span>
-<span class="c1">-- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300)</span>
+<span class="c1">-- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf)</span>
+<span class="c1">-- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300)</span>
 <span class="n">Pif</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
@@ -403,6 +403,16 @@ applications.</p>
   <span class="kr">end</span>
 <span class="kr">end</span>
 
+<span class="n">Pif</span><span class="p">.</span><span class="n">InformationHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_color_table_entry</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Pif</span><span class="p">.</span><span class="nc">InformationHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_color_table_entry</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb888</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb565</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb332</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">))))))</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span>
+<span class="kr">end</span>
+
 <span class="n">Pif</span><span class="p">.</span><span class="n">InformationHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_color_table_full</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Pif</span><span class="p">.</span><span class="nc">InformationHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_color_table_full</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_full</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
@@ -423,28 +433,6 @@ applications.</p>
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_max</span>
 <span class="kr">end</span>
 
-<span class="n">Pif</span><span class="p">.</span><span class="n">InformationHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">num_color_table_entries</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Pif</span><span class="p">.</span><span class="nc">InformationHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_color_table_entries</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_color_table_entries</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_color_table_entries</span>
-  <span class="kr">end</span>
-
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">uses_indexed_mode</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_m_num_color_table_entries</span> <span class="o">=</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_color_table</span> <span class="o">/</span> <span class="n">self</span><span class="p">.</span><span class="n">len_color_table_entry</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_num_color_table_entries</span>
-<span class="kr">end</span>
-
-<span class="n">Pif</span><span class="p">.</span><span class="n">InformationHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_color_table_entry</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Pif</span><span class="p">.</span><span class="nc">InformationHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_color_table_entry</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb888</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb565</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">image_type</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb332</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">))))))</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_color_table_entry</span>
-<span class="kr">end</span>
-
 <span class="n">Pif</span><span class="p">.</span><span class="n">InformationHeader</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">uses_indexed_mode</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Pif</span><span class="p">.</span><span class="nc">InformationHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">uses_indexed_mode</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_uses_indexed_mode</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
@@ -456,12 +444,12 @@ applications.</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+<span class="c1">-- See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
 <span class="c1">-- </span>
 <span class="c1">-- &gt; Bits per Pixel: Bit size that each Pixel occupies. Bit size for an</span>
 <span class="c1">-- &gt; Indexed Image cannot go beyond 8 bits.</span>
 <span class="c1">-- </span>
-<span class="c1">-- See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+<span class="c1">-- See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
 <span class="c1">-- </span>
 <span class="c1">-- &gt; Color Table Size: (...), only used in Indexed mode, otherwise zero.</span>
 <span class="c1">-- ---</span>
@@ -484,7 +472,8 @@ applications.</p>
 
 <span class="kr">function</span> <span class="nc">Pif</span><span class="p">.</span><span class="nc">ColorTableData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">info_header</span><span class="p">.</span><span class="n">num_color_table_entries</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
     <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">info_header</span><span class="p">.</span><span class="n">image_type</span>
     <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb888</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
@@ -493,6 +482,7 @@ applications.</p>
     <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">indexed_rgb332</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
     <span class="kr">end</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
   <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>

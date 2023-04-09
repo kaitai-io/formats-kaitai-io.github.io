@@ -756,6 +756,14 @@ section#format-index .row {
         <span class="k">this</span><span class="p">.</span><span class="nx">morphTargets</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">MorphTarget</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
       <span class="p">}</span>
     <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numUvLayersRaw&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayersRaw</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayersRaw</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayersRaw</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mf">16711680</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mf">16</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayersRaw</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
     <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isTextured&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
@@ -764,12 +772,20 @@ section#format-index .row {
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isPrelit&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isNative&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mf">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mf">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numUvLayers&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayers</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayers</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayers</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numUvLayersRaw</span> <span class="o">==</span> <span class="mf">0</span> <span class="o">?</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isTextured2</span> <span class="o">?</span> <span class="mf">2</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isTextured</span> <span class="o">?</span> <span class="mf">1</span> <span class="o">:</span> <span class="mf">0</span><span class="p">))</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">numUvLayersRaw</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numUvLayers</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
     <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isTextured2&#39;</span><span class="p">,</span> <span class="p">{</span>
@@ -780,12 +796,12 @@ section#format-index .row {
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured2</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isNative&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isPrelit&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mf">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mf">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
 
@@ -807,11 +823,9 @@ section#format-index .row {
           <span class="k">this</span><span class="p">.</span><span class="nx">prelitColors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">Rgba</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
         <span class="p">}</span>
       <span class="p">}</span>
-      <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">isTextured</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">isTextured2</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">TexCoord</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
-        <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">uvLayers</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numUvLayers</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">uvLayers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">UvLayer</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">));</span>
       <span class="p">}</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">triangles</span> <span class="o">=</span> <span class="p">[];</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numTriangles</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -1151,6 +1165,25 @@ section#format-index .row {
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="nx">TexCoord</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">UvLayer</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">UvLayer</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">UvLayer</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">numVertices</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numVertices</span> <span class="o">=</span> <span class="nx">numVertices</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">UvLayer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span> <span class="nx">TexCoord</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">UvLayer</span><span class="p">;</span>
   <span class="p">})();</span>
 
   <span class="kd">var</span> <span class="nx">StructTextureDictionary</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">StructTextureDictionary</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>

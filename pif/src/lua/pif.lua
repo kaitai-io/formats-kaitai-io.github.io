@@ -14,8 +14,8 @@ local utils = require("utils")
 -- applications.
 -- 
 -- See <https://github.com/gfcwfzkm/PIF-Image-Format> for more info.
--- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf)
--- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300)
+-- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf)
+-- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300)
 Pif = class.class(KaitaiStruct)
 
 Pif.ImageType = enum.Enum {
@@ -141,6 +141,16 @@ function Pif.InformationHeader:_read()
   end
 end
 
+Pif.InformationHeader.property.len_color_table_entry = {}
+function Pif.InformationHeader.property.len_color_table_entry:get()
+  if self._m_len_color_table_entry ~= nil then
+    return self._m_len_color_table_entry
+  end
+
+  self._m_len_color_table_entry = utils.box_unwrap((self.image_type == Pif.ImageType.indexed_rgb888) and utils.box_wrap(3) or (utils.box_unwrap((self.image_type == Pif.ImageType.indexed_rgb565) and utils.box_wrap(2) or (utils.box_unwrap((self.image_type == Pif.ImageType.indexed_rgb332) and utils.box_wrap(1) or (0))))))
+  return self._m_len_color_table_entry
+end
+
 Pif.InformationHeader.property.len_color_table_full = {}
 function Pif.InformationHeader.property.len_color_table_full:get()
   if self._m_len_color_table_full ~= nil then
@@ -161,28 +171,6 @@ function Pif.InformationHeader.property.len_color_table_max:get()
   return self._m_len_color_table_max
 end
 
-Pif.InformationHeader.property.num_color_table_entries = {}
-function Pif.InformationHeader.property.num_color_table_entries:get()
-  if self._m_num_color_table_entries ~= nil then
-    return self._m_num_color_table_entries
-  end
-
-  if self.uses_indexed_mode then
-    self._m_num_color_table_entries = math.floor(self.len_color_table / self.len_color_table_entry)
-  end
-  return self._m_num_color_table_entries
-end
-
-Pif.InformationHeader.property.len_color_table_entry = {}
-function Pif.InformationHeader.property.len_color_table_entry:get()
-  if self._m_len_color_table_entry ~= nil then
-    return self._m_len_color_table_entry
-  end
-
-  self._m_len_color_table_entry = utils.box_unwrap((self.image_type == Pif.ImageType.indexed_rgb888) and utils.box_wrap(3) or (utils.box_unwrap((self.image_type == Pif.ImageType.indexed_rgb565) and utils.box_wrap(2) or (utils.box_unwrap((self.image_type == Pif.ImageType.indexed_rgb332) and utils.box_wrap(1) or (0))))))
-  return self._m_len_color_table_entry
-end
-
 Pif.InformationHeader.property.uses_indexed_mode = {}
 function Pif.InformationHeader.property.uses_indexed_mode:get()
   if self._m_uses_indexed_mode ~= nil then
@@ -194,12 +182,12 @@ function Pif.InformationHeader.property.uses_indexed_mode:get()
 end
 
 -- 
--- See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+-- See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
 -- 
 -- > Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
 -- > Indexed Image cannot go beyond 8 bits.
 -- 
--- See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+-- See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
 -- 
 -- > Color Table Size: (...), only used in Indexed mode, otherwise zero.
 -- ---
@@ -222,7 +210,8 @@ end
 
 function Pif.ColorTableData:_read()
   self.entries = {}
-  for i = 0, self._root.info_header.num_color_table_entries - 1 do
+  local i = 0
+  while not self._io:is_eof() do
     local _on = self._root.info_header.image_type
     if _on == Pif.ImageType.indexed_rgb888 then
       self.entries[i + 1] = self._io:read_bits_int_le(24)
@@ -231,6 +220,7 @@ function Pif.ColorTableData:_read()
     elseif _on == Pif.ImageType.indexed_rgb332 then
       self.entries[i + 1] = self._io:read_bits_int_le(8)
     end
+    i = i + 1
   end
 end
 

@@ -354,6 +354,14 @@ public class RenderwareBinaryStream extends KaitaiStruct {
                 this.morphTargets.add(new MorphTarget(this._io, this, _root));
             }
         }
+        private Integer numUvLayersRaw;
+        public Integer numUvLayersRaw() {
+            if (this.numUvLayersRaw != null)
+                return this.numUvLayersRaw;
+            int _tmp = (int) (((format() & 16711680) >> 16));
+            this.numUvLayersRaw = _tmp;
+            return this.numUvLayersRaw;
+        }
         private Boolean isTextured;
         public Boolean isTextured() {
             if (this.isTextured != null)
@@ -362,13 +370,21 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             this.isTextured = _tmp;
             return this.isTextured;
         }
-        private Boolean isPrelit;
-        public Boolean isPrelit() {
-            if (this.isPrelit != null)
-                return this.isPrelit;
-            boolean _tmp = (boolean) ((format() & 8) != 0);
-            this.isPrelit = _tmp;
-            return this.isPrelit;
+        private Boolean isNative;
+        public Boolean isNative() {
+            if (this.isNative != null)
+                return this.isNative;
+            boolean _tmp = (boolean) ((format() & 16777216) != 0);
+            this.isNative = _tmp;
+            return this.isNative;
+        }
+        private Integer numUvLayers;
+        public Integer numUvLayers() {
+            if (this.numUvLayers != null)
+                return this.numUvLayers;
+            int _tmp = (int) ((numUvLayersRaw() == 0 ? (isTextured2() ? 2 : (isTextured() ? 1 : 0)) : numUvLayersRaw()));
+            this.numUvLayers = _tmp;
+            return this.numUvLayers;
         }
         private Boolean isTextured2;
         public Boolean isTextured2() {
@@ -378,13 +394,13 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             this.isTextured2 = _tmp;
             return this.isTextured2;
         }
-        private Boolean isNative;
-        public Boolean isNative() {
-            if (this.isNative != null)
-                return this.isNative;
-            boolean _tmp = (boolean) ((format() & 16777216) != 0);
-            this.isNative = _tmp;
-            return this.isNative;
+        private Boolean isPrelit;
+        public Boolean isPrelit() {
+            if (this.isPrelit != null)
+                return this.isPrelit;
+            boolean _tmp = (boolean) ((format() & 8) != 0);
+            this.isPrelit = _tmp;
+            return this.isPrelit;
         }
         private long format;
         private long numTriangles;
@@ -431,11 +447,9 @@ public class RenderwareBinaryStream extends KaitaiStruct {
                     this.prelitColors.add(new Rgba(this._io, this, _root));
                 }
             }
-            if ( ((_parent().isTextured()) || (_parent().isTextured2())) ) {
-                this.texCoords = new ArrayList<TexCoord>();
-                for (int i = 0; i < _parent().numVertices(); i++) {
-                    this.texCoords.add(new TexCoord(this._io, this, _root));
-                }
+            this.uvLayers = new ArrayList<UvLayer>();
+            for (int i = 0; i < _parent().numUvLayers(); i++) {
+                this.uvLayers.add(new UvLayer(this._io, this, _root, _parent().numVertices()));
             }
             this.triangles = new ArrayList<Triangle>();
             for (int i = 0; i < _parent().numTriangles(); i++) {
@@ -443,12 +457,12 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             }
         }
         private ArrayList<Rgba> prelitColors;
-        private ArrayList<TexCoord> texCoords;
+        private ArrayList<UvLayer> uvLayers;
         private ArrayList<Triangle> triangles;
         private RenderwareBinaryStream _root;
         private RenderwareBinaryStream.StructGeometry _parent;
         public ArrayList<Rgba> prelitColors() { return prelitColors; }
-        public ArrayList<TexCoord> texCoords() { return texCoords; }
+        public ArrayList<UvLayer> uvLayers() { return uvLayers; }
         public ArrayList<Triangle> triangles() { return triangles; }
         public RenderwareBinaryStream _root() { return _root; }
         public RenderwareBinaryStream.StructGeometry _parent() { return _parent; }
@@ -1025,11 +1039,11 @@ public class RenderwareBinaryStream extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public TexCoord(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent) {
+        public TexCoord(KaitaiStream _io, RenderwareBinaryStream.UvLayer _parent) {
             this(_io, _parent, null);
         }
 
-        public TexCoord(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent, RenderwareBinaryStream _root) {
+        public TexCoord(KaitaiStream _io, RenderwareBinaryStream.UvLayer _parent, RenderwareBinaryStream _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -1042,9 +1056,41 @@ public class RenderwareBinaryStream extends KaitaiStruct {
         private float u;
         private float v;
         private RenderwareBinaryStream _root;
-        private RenderwareBinaryStream.GeometryNonNative _parent;
+        private RenderwareBinaryStream.UvLayer _parent;
         public float u() { return u; }
         public float v() { return v; }
+        public RenderwareBinaryStream _root() { return _root; }
+        public RenderwareBinaryStream.UvLayer _parent() { return _parent; }
+    }
+    public static class UvLayer extends KaitaiStruct {
+
+        public UvLayer(KaitaiStream _io, long numVertices) {
+            this(_io, null, null, numVertices);
+        }
+
+        public UvLayer(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent, long numVertices) {
+            this(_io, _parent, null, numVertices);
+        }
+
+        public UvLayer(KaitaiStream _io, RenderwareBinaryStream.GeometryNonNative _parent, RenderwareBinaryStream _root, long numVertices) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.numVertices = numVertices;
+            _read();
+        }
+        private void _read() {
+            this.texCoords = new ArrayList<TexCoord>();
+            for (int i = 0; i < numVertices(); i++) {
+                this.texCoords.add(new TexCoord(this._io, this, _root));
+            }
+        }
+        private ArrayList<TexCoord> texCoords;
+        private long numVertices;
+        private RenderwareBinaryStream _root;
+        private RenderwareBinaryStream.GeometryNonNative _parent;
+        public ArrayList<TexCoord> texCoords() { return texCoords; }
+        public long numVertices() { return numVertices; }
         public RenderwareBinaryStream _root() { return _root; }
         public RenderwareBinaryStream.GeometryNonNative _parent() { return _parent; }
     }

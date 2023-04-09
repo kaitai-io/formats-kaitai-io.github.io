@@ -458,6 +458,14 @@ var RenderwareBinaryStream = (function() {
         this.morphTargets.push(new MorphTarget(this._io, this, this._root));
       }
     }
+    Object.defineProperty(StructGeometry.prototype, 'numUvLayersRaw', {
+      get: function() {
+        if (this._m_numUvLayersRaw !== undefined)
+          return this._m_numUvLayersRaw;
+        this._m_numUvLayersRaw = ((this.format & 16711680) >>> 16);
+        return this._m_numUvLayersRaw;
+      }
+    });
     Object.defineProperty(StructGeometry.prototype, 'isTextured', {
       get: function() {
         if (this._m_isTextured !== undefined)
@@ -466,12 +474,20 @@ var RenderwareBinaryStream = (function() {
         return this._m_isTextured;
       }
     });
-    Object.defineProperty(StructGeometry.prototype, 'isPrelit', {
+    Object.defineProperty(StructGeometry.prototype, 'isNative', {
       get: function() {
-        if (this._m_isPrelit !== undefined)
-          return this._m_isPrelit;
-        this._m_isPrelit = (this.format & 8) != 0;
-        return this._m_isPrelit;
+        if (this._m_isNative !== undefined)
+          return this._m_isNative;
+        this._m_isNative = (this.format & 16777216) != 0;
+        return this._m_isNative;
+      }
+    });
+    Object.defineProperty(StructGeometry.prototype, 'numUvLayers', {
+      get: function() {
+        if (this._m_numUvLayers !== undefined)
+          return this._m_numUvLayers;
+        this._m_numUvLayers = (this.numUvLayersRaw == 0 ? (this.isTextured2 ? 2 : (this.isTextured ? 1 : 0)) : this.numUvLayersRaw);
+        return this._m_numUvLayers;
       }
     });
     Object.defineProperty(StructGeometry.prototype, 'isTextured2', {
@@ -482,12 +498,12 @@ var RenderwareBinaryStream = (function() {
         return this._m_isTextured2;
       }
     });
-    Object.defineProperty(StructGeometry.prototype, 'isNative', {
+    Object.defineProperty(StructGeometry.prototype, 'isPrelit', {
       get: function() {
-        if (this._m_isNative !== undefined)
-          return this._m_isNative;
-        this._m_isNative = (this.format & 16777216) != 0;
-        return this._m_isNative;
+        if (this._m_isPrelit !== undefined)
+          return this._m_isPrelit;
+        this._m_isPrelit = (this.format & 8) != 0;
+        return this._m_isPrelit;
       }
     });
 
@@ -509,11 +525,9 @@ var RenderwareBinaryStream = (function() {
           this.prelitColors.push(new Rgba(this._io, this, this._root));
         }
       }
-      if ( ((this._parent.isTextured) || (this._parent.isTextured2)) ) {
-        this.texCoords = [];
-        for (var i = 0; i < this._parent.numVertices; i++) {
-          this.texCoords.push(new TexCoord(this._io, this, this._root));
-        }
+      this.uvLayers = [];
+      for (var i = 0; i < this._parent.numUvLayers; i++) {
+        this.uvLayers.push(new UvLayer(this._io, this, this._root, this._parent.numVertices));
       }
       this.triangles = [];
       for (var i = 0; i < this._parent.numTriangles; i++) {
@@ -853,6 +867,25 @@ var RenderwareBinaryStream = (function() {
     }
 
     return TexCoord;
+  })();
+
+  var UvLayer = RenderwareBinaryStream.UvLayer = (function() {
+    function UvLayer(_io, _parent, _root, numVertices) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+      this.numVertices = numVertices;
+
+      this._read();
+    }
+    UvLayer.prototype._read = function() {
+      this.texCoords = [];
+      for (var i = 0; i < this.numVertices; i++) {
+        this.texCoords.push(new TexCoord(this._io, this, this._root));
+      }
+    }
+
+    return UvLayer;
   })();
 
   var StructTextureDictionary = RenderwareBinaryStream.StructTextureDictionary = (function() {

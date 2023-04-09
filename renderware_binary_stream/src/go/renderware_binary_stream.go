@@ -406,14 +406,18 @@ type RenderwareBinaryStream_StructGeometry struct {
 	_io *kaitai.Stream
 	_root *RenderwareBinaryStream
 	_parent *RenderwareBinaryStream_ListWithHeader
+	_f_numUvLayersRaw bool
+	numUvLayersRaw int
 	_f_isTextured bool
 	isTextured bool
-	_f_isPrelit bool
-	isPrelit bool
-	_f_isTextured2 bool
-	isTextured2 bool
 	_f_isNative bool
 	isNative bool
+	_f_numUvLayers bool
+	numUvLayers int
+	_f_isTextured2 bool
+	isTextured2 bool
+	_f_isPrelit bool
+	isPrelit bool
 }
 func NewRenderwareBinaryStream_StructGeometry() *RenderwareBinaryStream_StructGeometry {
 	return &RenderwareBinaryStream_StructGeometry{
@@ -480,6 +484,14 @@ func (this *RenderwareBinaryStream_StructGeometry) Read(io *kaitai.Stream, paren
 	}
 	return err
 }
+func (this *RenderwareBinaryStream_StructGeometry) NumUvLayersRaw() (v int, err error) {
+	if (this._f_numUvLayersRaw) {
+		return this.numUvLayersRaw, nil
+	}
+	this.numUvLayersRaw = int(((this.Format & 16711680) >> 16))
+	this._f_numUvLayersRaw = true
+	return this.numUvLayersRaw, nil
+}
 func (this *RenderwareBinaryStream_StructGeometry) IsTextured() (v bool, err error) {
 	if (this._f_isTextured) {
 		return this.isTextured, nil
@@ -487,22 +499,6 @@ func (this *RenderwareBinaryStream_StructGeometry) IsTextured() (v bool, err err
 	this.isTextured = bool((this.Format & 4) != 0)
 	this._f_isTextured = true
 	return this.isTextured, nil
-}
-func (this *RenderwareBinaryStream_StructGeometry) IsPrelit() (v bool, err error) {
-	if (this._f_isPrelit) {
-		return this.isPrelit, nil
-	}
-	this.isPrelit = bool((this.Format & 8) != 0)
-	this._f_isPrelit = true
-	return this.isPrelit, nil
-}
-func (this *RenderwareBinaryStream_StructGeometry) IsTextured2() (v bool, err error) {
-	if (this._f_isTextured2) {
-		return this.isTextured2, nil
-	}
-	this.isTextured2 = bool((this.Format & 128) != 0)
-	this._f_isTextured2 = true
-	return this.isTextured2, nil
 }
 func (this *RenderwareBinaryStream_StructGeometry) IsNative() (v bool, err error) {
 	if (this._f_isNative) {
@@ -512,9 +508,67 @@ func (this *RenderwareBinaryStream_StructGeometry) IsNative() (v bool, err error
 	this._f_isNative = true
 	return this.isNative, nil
 }
+func (this *RenderwareBinaryStream_StructGeometry) NumUvLayers() (v int, err error) {
+	if (this._f_numUvLayers) {
+		return this.numUvLayers, nil
+	}
+	var tmp34 int8;
+	tmp35, err := this.NumUvLayersRaw()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp35 == 0) {
+		var tmp36 int8;
+		tmp37, err := this.IsTextured2()
+		if err != nil {
+			return 0, err
+		}
+		if (tmp37) {
+			tmp36 = 2
+		} else {
+			var tmp38 int8;
+			tmp39, err := this.IsTextured()
+			if err != nil {
+				return 0, err
+			}
+			if (tmp39) {
+				tmp38 = 1
+			} else {
+				tmp38 = 0
+			}
+			tmp36 = tmp38
+		}
+		tmp34 = tmp36
+	} else {
+		tmp40, err := this.NumUvLayersRaw()
+		if err != nil {
+			return 0, err
+		}
+		tmp34 = tmp40
+	}
+	this.numUvLayers = int(tmp34)
+	this._f_numUvLayers = true
+	return this.numUvLayers, nil
+}
+func (this *RenderwareBinaryStream_StructGeometry) IsTextured2() (v bool, err error) {
+	if (this._f_isTextured2) {
+		return this.isTextured2, nil
+	}
+	this.isTextured2 = bool((this.Format & 128) != 0)
+	this._f_isTextured2 = true
+	return this.isTextured2, nil
+}
+func (this *RenderwareBinaryStream_StructGeometry) IsPrelit() (v bool, err error) {
+	if (this._f_isPrelit) {
+		return this.isPrelit, nil
+	}
+	this.isPrelit = bool((this.Format & 8) != 0)
+	this._f_isPrelit = true
+	return this.isPrelit, nil
+}
 type RenderwareBinaryStream_GeometryNonNative struct {
 	PrelitColors []*RenderwareBinaryStream_Rgba
-	TexCoords []*RenderwareBinaryStream_TexCoord
+	UvLayers []*RenderwareBinaryStream_UvLayer
 	Triangles []*RenderwareBinaryStream_Triangle
 	_io *kaitai.Stream
 	_root *RenderwareBinaryStream
@@ -530,48 +584,42 @@ func (this *RenderwareBinaryStream_GeometryNonNative) Read(io *kaitai.Stream, pa
 	this._parent = parent
 	this._root = root
 
-	tmp34, err := this._parent.IsPrelit()
+	tmp41, err := this._parent.IsPrelit()
 	if err != nil {
 		return err
 	}
-	if (tmp34) {
+	if (tmp41) {
 		for i := 0; i < int(this._parent.NumVertices); i++ {
 			_ = i
-			tmp35 := NewRenderwareBinaryStream_Rgba()
-			err = tmp35.Read(this._io, this, this._root)
+			tmp42 := NewRenderwareBinaryStream_Rgba()
+			err = tmp42.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.PrelitColors = append(this.PrelitColors, tmp35)
+			this.PrelitColors = append(this.PrelitColors, tmp42)
 		}
 	}
-	tmp36, err := this._parent.IsTextured()
+	tmp43, err := this._parent.NumUvLayers()
 	if err != nil {
 		return err
 	}
-	tmp37, err := this._parent.IsTextured2()
-	if err != nil {
-		return err
-	}
-	if ( ((tmp36) || (tmp37)) ) {
-		for i := 0; i < int(this._parent.NumVertices); i++ {
-			_ = i
-			tmp38 := NewRenderwareBinaryStream_TexCoord()
-			err = tmp38.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.TexCoords = append(this.TexCoords, tmp38)
-		}
-	}
-	for i := 0; i < int(this._parent.NumTriangles); i++ {
+	for i := 0; i < int(tmp43); i++ {
 		_ = i
-		tmp39 := NewRenderwareBinaryStream_Triangle()
-		err = tmp39.Read(this._io, this, this._root)
+		tmp44 := NewRenderwareBinaryStream_UvLayer(this._parent.NumVertices)
+		err = tmp44.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Triangles = append(this.Triangles, tmp39)
+		this.UvLayers = append(this.UvLayers, tmp44)
+	}
+	for i := 0; i < int(this._parent.NumTriangles); i++ {
+		_ = i
+		tmp45 := NewRenderwareBinaryStream_Triangle()
+		err = tmp45.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Triangles = append(this.Triangles, tmp45)
 	}
 	return err
 }
@@ -595,11 +643,11 @@ func (this *RenderwareBinaryStream_StructGeometryList) Read(io *kaitai.Stream, p
 	this._parent = parent
 	this._root = root
 
-	tmp40, err := this._io.ReadU4le()
+	tmp46, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumGeometries = uint32(tmp40)
+	this.NumGeometries = uint32(tmp46)
 	return err
 }
 type RenderwareBinaryStream_Rgba struct {
@@ -621,26 +669,26 @@ func (this *RenderwareBinaryStream_Rgba) Read(io *kaitai.Stream, parent *Renderw
 	this._parent = parent
 	this._root = root
 
-	tmp41, err := this._io.ReadU1()
+	tmp47, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.R = tmp41
-	tmp42, err := this._io.ReadU1()
+	this.R = tmp47
+	tmp48, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.G = tmp42
-	tmp43, err := this._io.ReadU1()
+	this.G = tmp48
+	tmp49, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.B = tmp43
-	tmp44, err := this._io.ReadU1()
+	this.B = tmp49
+	tmp50, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.A = tmp44
+	this.A = tmp50
 	return err
 }
 type RenderwareBinaryStream_Sphere struct {
@@ -662,26 +710,26 @@ func (this *RenderwareBinaryStream_Sphere) Read(io *kaitai.Stream, parent *Rende
 	this._parent = parent
 	this._root = root
 
-	tmp45, err := this._io.ReadF4le()
+	tmp51, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.X = float32(tmp45)
-	tmp46, err := this._io.ReadF4le()
+	this.X = float32(tmp51)
+	tmp52, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Y = float32(tmp46)
-	tmp47, err := this._io.ReadF4le()
+	this.Y = float32(tmp52)
+	tmp53, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Z = float32(tmp47)
-	tmp48, err := this._io.ReadF4le()
+	this.Z = float32(tmp53)
+	tmp54, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Radius = float32(tmp48)
+	this.Radius = float32(tmp54)
 	return err
 }
 type RenderwareBinaryStream_MorphTarget struct {
@@ -704,42 +752,42 @@ func (this *RenderwareBinaryStream_MorphTarget) Read(io *kaitai.Stream, parent *
 	this._parent = parent
 	this._root = root
 
-	tmp49 := NewRenderwareBinaryStream_Sphere()
-	err = tmp49.Read(this._io, this, this._root)
+	tmp55 := NewRenderwareBinaryStream_Sphere()
+	err = tmp55.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.BoundingSphere = tmp49
-	tmp50, err := this._io.ReadU4le()
+	this.BoundingSphere = tmp55
+	tmp56, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.HasVertices = uint32(tmp50)
-	tmp51, err := this._io.ReadU4le()
+	this.HasVertices = uint32(tmp56)
+	tmp57, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.HasNormals = uint32(tmp51)
+	this.HasNormals = uint32(tmp57)
 	if (this.HasVertices != 0) {
 		for i := 0; i < int(this._parent.NumVertices); i++ {
 			_ = i
-			tmp52 := NewRenderwareBinaryStream_Vector3d()
-			err = tmp52.Read(this._io, this, this._root)
+			tmp58 := NewRenderwareBinaryStream_Vector3d()
+			err = tmp58.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Vertices = append(this.Vertices, tmp52)
+			this.Vertices = append(this.Vertices, tmp58)
 		}
 	}
 	if (this.HasNormals != 0) {
 		for i := 0; i < int(this._parent.NumVertices); i++ {
 			_ = i
-			tmp53 := NewRenderwareBinaryStream_Vector3d()
-			err = tmp53.Read(this._io, this, this._root)
+			tmp59 := NewRenderwareBinaryStream_Vector3d()
+			err = tmp59.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Normals = append(this.Normals, tmp53)
+			this.Normals = append(this.Normals, tmp59)
 		}
 	}
 	return err
@@ -770,42 +818,42 @@ func (this *RenderwareBinaryStream_StructAtomic) Read(io *kaitai.Stream, parent 
 	this._parent = parent
 	this._root = root
 
-	tmp54, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.FrameIndex = uint32(tmp54)
-	tmp55, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.GeometryIndex = uint32(tmp55)
-	tmp56, err := this._io.ReadBitsIntLe(1)
-	if err != nil {
-		return err
-	}
-	this.FlagRender = tmp56 != 0
-	tmp57, err := this._io.ReadBitsIntLe(1)
-	if err != nil {
-		return err
-	}
-	this._unnamed3 = tmp57 != 0
-	tmp58, err := this._io.ReadBitsIntLe(1)
-	if err != nil {
-		return err
-	}
-	this.FlagCollisionTest = tmp58 != 0
-	tmp59, err := this._io.ReadBitsIntLe(29)
-	if err != nil {
-		return err
-	}
-	this._unnamed5 = tmp59
-	this._io.AlignToByte()
 	tmp60, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Unused = uint32(tmp60)
+	this.FrameIndex = uint32(tmp60)
+	tmp61, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.GeometryIndex = uint32(tmp61)
+	tmp62, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.FlagRender = tmp62 != 0
+	tmp63, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this._unnamed3 = tmp63 != 0
+	tmp64, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.FlagCollisionTest = tmp64 != 0
+	tmp65, err := this._io.ReadBitsIntLe(29)
+	if err != nil {
+		return err
+	}
+	this._unnamed5 = tmp65
+	this._io.AlignToByte()
+	tmp66, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Unused = uint32(tmp66)
 	return err
 }
 
@@ -830,21 +878,21 @@ func (this *RenderwareBinaryStream_SurfaceProperties) Read(io *kaitai.Stream, pa
 	this._parent = parent
 	this._root = root
 
-	tmp61, err := this._io.ReadF4le()
+	tmp67, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Ambient = float32(tmp61)
-	tmp62, err := this._io.ReadF4le()
+	this.Ambient = float32(tmp67)
+	tmp68, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Specular = float32(tmp62)
-	tmp63, err := this._io.ReadF4le()
+	this.Specular = float32(tmp68)
+	tmp69, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Diffuse = float32(tmp63)
+	this.Diffuse = float32(tmp69)
 	return err
 }
 
@@ -868,19 +916,19 @@ func (this *RenderwareBinaryStream_StructFrameList) Read(io *kaitai.Stream, pare
 	this._parent = parent
 	this._root = root
 
-	tmp64, err := this._io.ReadU4le()
+	tmp70, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumFrames = uint32(tmp64)
+	this.NumFrames = uint32(tmp70)
 	for i := 0; i < int(this.NumFrames); i++ {
 		_ = i
-		tmp65 := NewRenderwareBinaryStream_Frame()
-		err = tmp65.Read(this._io, this, this._root)
+		tmp71 := NewRenderwareBinaryStream_Frame()
+		err = tmp71.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Frames = append(this.Frames, tmp65)
+		this.Frames = append(this.Frames, tmp71)
 	}
 	return err
 }
@@ -906,12 +954,12 @@ func (this *RenderwareBinaryStream_Matrix) Read(io *kaitai.Stream, parent *Rende
 
 	for i := 0; i < int(3); i++ {
 		_ = i
-		tmp66 := NewRenderwareBinaryStream_Vector3d()
-		err = tmp66.Read(this._io, this, this._root)
+		tmp72 := NewRenderwareBinaryStream_Vector3d()
+		err = tmp72.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp66)
+		this.Entries = append(this.Entries, tmp72)
 	}
 	return err
 }
@@ -937,21 +985,21 @@ func (this *RenderwareBinaryStream_Vector3d) Read(io *kaitai.Stream, parent inte
 	this._parent = parent
 	this._root = root
 
-	tmp67, err := this._io.ReadF4le()
+	tmp73, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.X = float32(tmp67)
-	tmp68, err := this._io.ReadF4le()
+	this.X = float32(tmp73)
+	tmp74, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Y = float32(tmp68)
-	tmp69, err := this._io.ReadF4le()
+	this.Y = float32(tmp74)
+	tmp75, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Z = float32(tmp69)
+	this.Z = float32(tmp75)
 	return err
 }
 
@@ -986,69 +1034,27 @@ func (this *RenderwareBinaryStream_ListWithHeader) Read(io *kaitai.Stream, paren
 	this._parent = parent
 	this._root = root
 
-	tmp70, err := this._io.ReadBytes(int(4))
+	tmp76, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp70 = tmp70
-	this.Code = tmp70
+	tmp76 = tmp76
+	this.Code = tmp76
 	if !(bytes.Equal(this.Code, []uint8{1, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{1, 0, 0, 0}, this.Code, this._io, "/types/list_with_header/seq/0")
 	}
-	tmp71, err := this._io.ReadU4le()
+	tmp77, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.HeaderSize = uint32(tmp71)
-	tmp72, err := this._io.ReadU4le()
+	this.HeaderSize = uint32(tmp77)
+	tmp78, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LibraryIdStamp = uint32(tmp72)
+	this.LibraryIdStamp = uint32(tmp78)
 	switch (this._parent.Code) {
 	case RenderwareBinaryStream_Sections__Atomic:
-		tmp73, err := this._io.ReadBytes(int(this.HeaderSize))
-		if err != nil {
-			return err
-		}
-		tmp73 = tmp73
-		this._raw_Header = tmp73
-		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp74 := NewRenderwareBinaryStream_StructAtomic()
-		err = tmp74.Read(_io__raw_Header, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Header = tmp74
-	case RenderwareBinaryStream_Sections__Geometry:
-		tmp75, err := this._io.ReadBytes(int(this.HeaderSize))
-		if err != nil {
-			return err
-		}
-		tmp75 = tmp75
-		this._raw_Header = tmp75
-		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp76 := NewRenderwareBinaryStream_StructGeometry()
-		err = tmp76.Read(_io__raw_Header, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Header = tmp76
-	case RenderwareBinaryStream_Sections__TextureDictionary:
-		tmp77, err := this._io.ReadBytes(int(this.HeaderSize))
-		if err != nil {
-			return err
-		}
-		tmp77 = tmp77
-		this._raw_Header = tmp77
-		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp78 := NewRenderwareBinaryStream_StructTextureDictionary()
-		err = tmp78.Read(_io__raw_Header, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Header = tmp78
-	case RenderwareBinaryStream_Sections__GeometryList:
 		tmp79, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
@@ -1056,13 +1062,13 @@ func (this *RenderwareBinaryStream_ListWithHeader) Read(io *kaitai.Stream, paren
 		tmp79 = tmp79
 		this._raw_Header = tmp79
 		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp80 := NewRenderwareBinaryStream_StructGeometryList()
+		tmp80 := NewRenderwareBinaryStream_StructAtomic()
 		err = tmp80.Read(_io__raw_Header, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Header = tmp80
-	case RenderwareBinaryStream_Sections__Clump:
+	case RenderwareBinaryStream_Sections__Geometry:
 		tmp81, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
@@ -1070,13 +1076,13 @@ func (this *RenderwareBinaryStream_ListWithHeader) Read(io *kaitai.Stream, paren
 		tmp81 = tmp81
 		this._raw_Header = tmp81
 		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp82 := NewRenderwareBinaryStream_StructClump()
+		tmp82 := NewRenderwareBinaryStream_StructGeometry()
 		err = tmp82.Read(_io__raw_Header, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Header = tmp82
-	case RenderwareBinaryStream_Sections__FrameList:
+	case RenderwareBinaryStream_Sections__TextureDictionary:
 		tmp83, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
@@ -1084,34 +1090,76 @@ func (this *RenderwareBinaryStream_ListWithHeader) Read(io *kaitai.Stream, paren
 		tmp83 = tmp83
 		this._raw_Header = tmp83
 		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp84 := NewRenderwareBinaryStream_StructFrameList()
+		tmp84 := NewRenderwareBinaryStream_StructTextureDictionary()
 		err = tmp84.Read(_io__raw_Header, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Header = tmp84
-	default:
+	case RenderwareBinaryStream_Sections__GeometryList:
 		tmp85, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
 		}
 		tmp85 = tmp85
 		this._raw_Header = tmp85
+		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
+		tmp86 := NewRenderwareBinaryStream_StructGeometryList()
+		err = tmp86.Read(_io__raw_Header, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Header = tmp86
+	case RenderwareBinaryStream_Sections__Clump:
+		tmp87, err := this._io.ReadBytes(int(this.HeaderSize))
+		if err != nil {
+			return err
+		}
+		tmp87 = tmp87
+		this._raw_Header = tmp87
+		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
+		tmp88 := NewRenderwareBinaryStream_StructClump()
+		err = tmp88.Read(_io__raw_Header, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Header = tmp88
+	case RenderwareBinaryStream_Sections__FrameList:
+		tmp89, err := this._io.ReadBytes(int(this.HeaderSize))
+		if err != nil {
+			return err
+		}
+		tmp89 = tmp89
+		this._raw_Header = tmp89
+		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
+		tmp90 := NewRenderwareBinaryStream_StructFrameList()
+		err = tmp90.Read(_io__raw_Header, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Header = tmp90
+	default:
+		tmp91, err := this._io.ReadBytes(int(this.HeaderSize))
+		if err != nil {
+			return err
+		}
+		tmp91 = tmp91
+		this._raw_Header = tmp91
 	}
 	for i := 1;; i++ {
-		tmp86, err := this._io.EOF()
+		tmp92, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp86 {
+		if tmp92 {
 			break
 		}
-		tmp87 := NewRenderwareBinaryStream()
-		err = tmp87.Read(this._io, this, nil)
+		tmp93 := NewRenderwareBinaryStream()
+		err = tmp93.Read(this._io, this, nil)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp87)
+		this.Entries = append(this.Entries, tmp93)
 	}
 	return err
 }
@@ -1119,13 +1167,13 @@ func (this *RenderwareBinaryStream_ListWithHeader) Version() (v int, err error) 
 	if (this._f_version) {
 		return this.version, nil
 	}
-	var tmp88 int;
+	var tmp94 int;
 	if ((this.LibraryIdStamp & uint32(4294901760)) != 0) {
-		tmp88 = ((((this.LibraryIdStamp >> 14) & 261888) + 196608) | ((this.LibraryIdStamp >> 16) & 63))
+		tmp94 = ((((this.LibraryIdStamp >> 14) & 261888) + 196608) | ((this.LibraryIdStamp >> 16) & 63))
 	} else {
-		tmp88 = (this.LibraryIdStamp << 8)
+		tmp94 = (this.LibraryIdStamp << 8)
 	}
-	this.version = int(tmp88)
+	this.version = int(tmp94)
 	this._f_version = true
 	return this.version, nil
 }
@@ -1148,26 +1196,26 @@ func (this *RenderwareBinaryStream_Triangle) Read(io *kaitai.Stream, parent *Ren
 	this._parent = parent
 	this._root = root
 
-	tmp89, err := this._io.ReadU2le()
+	tmp95, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Vertex2 = uint16(tmp89)
-	tmp90, err := this._io.ReadU2le()
+	this.Vertex2 = uint16(tmp95)
+	tmp96, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Vertex1 = uint16(tmp90)
-	tmp91, err := this._io.ReadU2le()
+	this.Vertex1 = uint16(tmp96)
+	tmp97, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaterialId = uint16(tmp91)
-	tmp92, err := this._io.ReadU2le()
+	this.MaterialId = uint16(tmp97)
+	tmp98, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Vertex3 = uint16(tmp92)
+	this.Vertex3 = uint16(tmp98)
 	return err
 }
 
@@ -1193,28 +1241,28 @@ func (this *RenderwareBinaryStream_Frame) Read(io *kaitai.Stream, parent *Render
 	this._parent = parent
 	this._root = root
 
-	tmp93 := NewRenderwareBinaryStream_Matrix()
-	err = tmp93.Read(this._io, this, this._root)
+	tmp99 := NewRenderwareBinaryStream_Matrix()
+	err = tmp99.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.RotationMatrix = tmp93
-	tmp94 := NewRenderwareBinaryStream_Vector3d()
-	err = tmp94.Read(this._io, this, this._root)
+	this.RotationMatrix = tmp99
+	tmp100 := NewRenderwareBinaryStream_Vector3d()
+	err = tmp100.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Position = tmp94
-	tmp95, err := this._io.ReadS4le()
+	this.Position = tmp100
+	tmp101, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.CurFrameIdx = int32(tmp95)
-	tmp96, err := this._io.ReadU4le()
+	this.CurFrameIdx = int32(tmp101)
+	tmp102, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MatrixCreationFlags = uint32(tmp96)
+	this.MatrixCreationFlags = uint32(tmp102)
 	return err
 }
 type RenderwareBinaryStream_TexCoord struct {
@@ -1222,28 +1270,57 @@ type RenderwareBinaryStream_TexCoord struct {
 	V float32
 	_io *kaitai.Stream
 	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_GeometryNonNative
+	_parent *RenderwareBinaryStream_UvLayer
 }
 func NewRenderwareBinaryStream_TexCoord() *RenderwareBinaryStream_TexCoord {
 	return &RenderwareBinaryStream_TexCoord{
 	}
 }
 
-func (this *RenderwareBinaryStream_TexCoord) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_GeometryNonNative, root *RenderwareBinaryStream) (err error) {
+func (this *RenderwareBinaryStream_TexCoord) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_UvLayer, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp97, err := this._io.ReadF4le()
+	tmp103, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.U = float32(tmp97)
-	tmp98, err := this._io.ReadF4le()
+	this.U = float32(tmp103)
+	tmp104, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.V = float32(tmp98)
+	this.V = float32(tmp104)
+	return err
+}
+type RenderwareBinaryStream_UvLayer struct {
+	TexCoords []*RenderwareBinaryStream_TexCoord
+	NumVertices uint32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_GeometryNonNative
+}
+func NewRenderwareBinaryStream_UvLayer(numVertices uint32) *RenderwareBinaryStream_UvLayer {
+	return &RenderwareBinaryStream_UvLayer{
+		NumVertices: numVertices,
+	}
+}
+
+func (this *RenderwareBinaryStream_UvLayer) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_GeometryNonNative, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(this.NumVertices); i++ {
+		_ = i
+		tmp105 := NewRenderwareBinaryStream_TexCoord()
+		err = tmp105.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.TexCoords = append(this.TexCoords, tmp105)
+	}
 	return err
 }
 type RenderwareBinaryStream_StructTextureDictionary struct {
@@ -1262,10 +1339,10 @@ func (this *RenderwareBinaryStream_StructTextureDictionary) Read(io *kaitai.Stre
 	this._parent = parent
 	this._root = root
 
-	tmp99, err := this._io.ReadU4le()
+	tmp106, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumTextures = uint32(tmp99)
+	this.NumTextures = uint32(tmp106)
 	return err
 }

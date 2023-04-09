@@ -17,8 +17,8 @@
  * applications.
  * 
  * See <https://github.com/gfcwfzkm/PIF-Image-Format> for more info.
- * \sa https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf Source
- * \sa https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300 Source
+ * \sa https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf Source
+ * \sa https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300 Source
  */
 
 class pif_t : public kaitai::kstruct {
@@ -102,6 +102,13 @@ public:
         ~information_header_t();
 
     private:
+        bool f_len_color_table_entry;
+        int8_t m_len_color_table_entry;
+
+    public:
+        int8_t len_color_table_entry();
+
+    private:
         bool f_len_color_table_full;
         int32_t m_len_color_table_full;
 
@@ -114,26 +121,6 @@ public:
 
     public:
         int32_t len_color_table_max();
-
-    private:
-        bool f_num_color_table_entries;
-        int32_t m_num_color_table_entries;
-        bool n_num_color_table_entries;
-
-    public:
-        bool _is_null_num_color_table_entries() { num_color_table_entries(); return n_num_color_table_entries; };
-
-    private:
-
-    public:
-        int32_t num_color_table_entries();
-
-    private:
-        bool f_len_color_table_entry;
-        int8_t m_len_color_table_entry;
-
-    public:
-        int8_t len_color_table_entry();
 
     private:
         bool f_uses_indexed_mode;
@@ -157,7 +144,7 @@ public:
         image_type_t image_type() const { return m_image_type; }
 
         /**
-         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
          * 
          * > Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
          * > Indexed Image cannot go beyond 8 bits.
@@ -168,7 +155,7 @@ public:
         uint32_t len_image_data() const { return m_len_image_data; }
 
         /**
-         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
          * 
          * > Color Table Size: (...), only used in Indexed mode, otherwise zero.
          * ---

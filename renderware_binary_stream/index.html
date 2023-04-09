@@ -406,13 +406,24 @@ section#format-index .row {
         <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_morph_targets</span>
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">is_textured</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x00000004 != 0</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x0000_0004 != 0</span>
       <span class="nt">is_prelit</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x00000008 != 0</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x0000_0008 != 0</span>
       <span class="nt">is_textured2</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x00000080 != 0</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x0000_0080 != 0</span>
       <span class="nt">is_native</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x01000000 != 0</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format &amp; 0x0100_0000 != 0</span>
+      <span class="nt">num_uv_layers_raw</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(format &amp; 0x00ff_0000) &gt;&gt; 16</span>
+      <span class="nt">num_uv_layers</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">num_uv_layers_raw == 0</span>
+            <span class="no">? is_textured2</span>
+              <span class="no">? 2</span>
+              <span class="no">: is_textured</span>
+                <span class="no">? 1</span>
+                <span class="no">: 0</span>
+            <span class="no">: num_uv_layers_raw</span>
   <span class="nt">surface_properties</span><span class="p">:</span>
     <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://gtamods.com/wiki/RpGeometry</span>
     <span class="nt">seq</span><span class="p">:</span>
@@ -429,16 +440,23 @@ section#format-index .row {
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
         <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.num_vertices</span>
         <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.is_prelit</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tex_coords</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tex_coord</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uv_layers</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uv_layer(_parent.num_vertices)</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.num_vertices</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.is_textured or _parent.is_textured2</span>
-        <span class="c1"># FIXME: repeated for number of texture sets</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.num_uv_layers</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">triangles</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">triangle</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
         <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.num_triangles</span>
+  <span class="nt">uv_layer</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_vertices</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tex_coords</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tex_coord</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_vertices</span>
   <span class="nt">rgba</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">r</span>
@@ -643,22 +661,22 @@ section#format-index .row {
     <span class="nt">0x01bf</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dictionary_tk</span>
     <span class="nt">0x01c0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uv_animation_linear</span>
     <span class="nt">0x01c1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uv_animation_parameter</span>
-    <span class="nt">0x0253f200</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">atomic_visibility_distance</span>
-    <span class="nt">0x0253f201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clump_visibility_distance</span>
-    <span class="nt">0x0253f202</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_visibility_distance</span>
-    <span class="nt">0x0253f2f3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pipeline_set</span>
-    <span class="nt">0x0253f2f4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_5</span>
-    <span class="nt">0x0253f2f5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">texdictionary_link</span>
-    <span class="nt">0x0253f2f6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">specular_material</span>
-    <span class="nt">0x0253f2f7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_8</span>
-    <span class="nt">0x0253f2f8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">effect_2d</span>
-    <span class="nt">0x0253f2f9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra_vert_colour</span>
-    <span class="nt">0x0253f2fa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collision_model</span>
-    <span class="nt">0x0253f2fb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gta_hanim</span>
-    <span class="nt">0x0253f2fc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reflection_material</span>
-    <span class="nt">0x0253f2fd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">breakable</span>
-    <span class="nt">0x0253f2fe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame</span>
-    <span class="nt">0x0253f2ff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_16</span>
+    <span class="nt">0x0253_f200</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">atomic_visibility_distance</span>
+    <span class="nt">0x0253_f201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clump_visibility_distance</span>
+    <span class="nt">0x0253_f202</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_visibility_distance</span>
+    <span class="nt">0x0253_f2f3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pipeline_set</span>
+    <span class="nt">0x0253_f2f4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_5</span>
+    <span class="nt">0x0253_f2f5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">texdictionary_link</span>
+    <span class="nt">0x0253_f2f6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">specular_material</span>
+    <span class="nt">0x0253_f2f7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_8</span>
+    <span class="nt">0x0253_f2f8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">effect_2d</span>
+    <span class="nt">0x0253_f2f9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra_vert_colour</span>
+    <span class="nt">0x0253_f2fa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collision_model</span>
+    <span class="nt">0x0253_f2fb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gta_hanim</span>
+    <span class="nt">0x0253_f2fc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reflection_material</span>
+    <span class="nt">0x0253_f2fd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">breakable</span>
+    <span class="nt">0x0253_f2fe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame</span>
+    <span class="nt">0x0253_f2ff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_16</span>
     <span class="nt">0x050e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bin_mesh_plg</span>
     <span class="nt">0x0510</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">native_data_plg</span>
     <span class="nt">0xf21e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zmodeler_lock</span>

@@ -381,6 +381,13 @@ section#format-index .row {
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_morphTargets</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\RenderwareBinaryStream\MorphTarget</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_numUvLayersRaw</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numUvLayersRaw</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayersRaw</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayersRaw</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayersRaw</span> <span class="o">=</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16711680</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayersRaw</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_isTextured</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">isTextured</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTextured</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
@@ -388,12 +395,19 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTextured</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTextured</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_isPrelit</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">isPrelit</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_isNative</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isNative</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_numUvLayers</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numUvLayers</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayers</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayers</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayers</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numUvLayersRaw</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isTextured2</span><span class="p">()</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isTextured</span><span class="p">()</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numUvLayersRaw</span><span class="p">());</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numUvLayers</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_isTextured2</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">isTextured2</span><span class="p">()</span> <span class="p">{</span>
@@ -402,12 +416,12 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTextured2</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTextured2</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_isNative</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">isNative</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isNative</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_isPrelit</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isPrelit</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPrelit</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_format</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_numTriangles</span><span class="p">;</span>
@@ -441,12 +455,10 @@ section#format-index .row {
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_prelitColors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\RenderwareBinaryStream\Rgba</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                 <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isTextured</span><span class="p">())</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isTextured2</span><span class="p">()))</span> <span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_texCoords</span> <span class="o">=</span> <span class="p">[];</span>
-                <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">numVertices</span><span class="p">();</span>
-                <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_texCoords</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\RenderwareBinaryStream\TexCoord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_uvLayers</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">numUvLayers</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_uvLayers</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\RenderwareBinaryStream\UvLayer</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">numVertices</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_triangles</span> <span class="o">=</span> <span class="p">[];</span>
             <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">numTriangles</span><span class="p">();</span>
@@ -455,10 +467,10 @@ section#format-index .row {
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_prelitColors</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_texCoords</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_uvLayers</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_triangles</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">prelitColors</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_prelitColors</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">texCoords</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_texCoords</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">uvLayers</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_uvLayers</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">triangles</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_triangles</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -819,7 +831,7 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">RenderwareBinaryStream</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TexCoord</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\RenderwareBinaryStream\GeometryNonNative</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\RenderwareBinaryStream</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\RenderwareBinaryStream\UvLayer</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\RenderwareBinaryStream</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -832,6 +844,28 @@ section#format-index .row {
         <span class="k">protected</span> <span class="nv">$_m_v</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">u</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_u</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">v</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_v</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">RenderwareBinaryStream</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">UvLayer</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$numVertices</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\RenderwareBinaryStream\GeometryNonNative</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\RenderwareBinaryStream</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numVertices</span> <span class="o">=</span> <span class="nv">$numVertices</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_texCoords</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numVertices</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_texCoords</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\RenderwareBinaryStream\TexCoord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_texCoords</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numVertices</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">texCoords</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_texCoords</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numVertices</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numVertices</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 

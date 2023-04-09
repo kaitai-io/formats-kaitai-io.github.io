@@ -13,8 +13,8 @@ end
 # applications.
 # 
 # See <https://github.com/gfcwfzkm/PIF-Image-Format> for more info.
-# @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf Source
-# @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300 Source
+# @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf Source
+# @see https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300 Source
 class Pif < Kaitai::Struct::Struct
 
   IMAGE_TYPE = {
@@ -97,6 +97,11 @@ class Pif < Kaitai::Struct::Struct
       raise Kaitai::Struct::ValidationNotAnyOfError.new(compression, _io, "/types/information_header/seq/6") if not  ((compression == :compression_type_none) || (compression == :compression_type_rle)) 
       self
     end
+    def len_color_table_entry
+      return @len_color_table_entry unless @len_color_table_entry.nil?
+      @len_color_table_entry = (image_type == :image_type_indexed_rgb888 ? 3 : (image_type == :image_type_indexed_rgb565 ? 2 : (image_type == :image_type_indexed_rgb332 ? 1 : 0)))
+      @len_color_table_entry
+    end
     def len_color_table_full
       return @len_color_table_full unless @len_color_table_full.nil?
       @len_color_table_full = (len_color_table_entry * (1 << bits_per_pixel))
@@ -107,18 +112,6 @@ class Pif < Kaitai::Struct::Struct
       @len_color_table_max = (_root.file_header.ofs_image_data - _root.file_header.ofs_image_data_min)
       @len_color_table_max
     end
-    def num_color_table_entries
-      return @num_color_table_entries unless @num_color_table_entries.nil?
-      if uses_indexed_mode
-        @num_color_table_entries = (len_color_table / len_color_table_entry)
-      end
-      @num_color_table_entries
-    end
-    def len_color_table_entry
-      return @len_color_table_entry unless @len_color_table_entry.nil?
-      @len_color_table_entry = (image_type == :image_type_indexed_rgb888 ? 3 : (image_type == :image_type_indexed_rgb565 ? 2 : (image_type == :image_type_indexed_rgb332 ? 1 : 0)))
-      @len_color_table_entry
-    end
     def uses_indexed_mode
       return @uses_indexed_mode unless @uses_indexed_mode.nil?
       @uses_indexed_mode = len_color_table_entry != 0
@@ -127,7 +120,7 @@ class Pif < Kaitai::Struct::Struct
     attr_reader :image_type
 
     ##
-    # See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+    # See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
     # 
     # > Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
     # > Indexed Image cannot go beyond 8 bits.
@@ -137,7 +130,7 @@ class Pif < Kaitai::Struct::Struct
     attr_reader :len_image_data
 
     ##
-    # See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+    # See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
     # 
     # > Color Table Size: (...), only used in Indexed mode, otherwise zero.
     # ---
@@ -159,7 +152,8 @@ class Pif < Kaitai::Struct::Struct
 
     def _read
       @entries = []
-      (_root.info_header.num_color_table_entries).times { |i|
+      i = 0
+      while not @_io.eof?
         case _root.info_header.image_type
         when :image_type_indexed_rgb888
           @entries << @_io.read_bits_int_le(24)
@@ -168,7 +162,8 @@ class Pif < Kaitai::Struct::Struct
         when :image_type_indexed_rgb332
           @entries << @_io.read_bits_int_le(8)
         end
-      }
+        i += 1
+      end
       self
     end
     attr_reader :entries

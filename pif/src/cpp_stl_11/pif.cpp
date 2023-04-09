@@ -80,10 +80,9 @@ int32_t pif_t::pif_header_t::ofs_image_data_min() {
 pif_t::information_header_t::information_header_t(kaitai::kstream* p__io, pif_t* p__parent, pif_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_len_color_table_entry = false;
     f_len_color_table_full = false;
     f_len_color_table_max = false;
-    f_num_color_table_entries = false;
-    f_len_color_table_entry = false;
     f_uses_indexed_mode = false;
     _read();
 }
@@ -126,6 +125,14 @@ pif_t::information_header_t::~information_header_t() {
 void pif_t::information_header_t::_clean_up() {
 }
 
+int8_t pif_t::information_header_t::len_color_table_entry() {
+    if (f_len_color_table_entry)
+        return m_len_color_table_entry;
+    m_len_color_table_entry = ((image_type() == pif_t::IMAGE_TYPE_INDEXED_RGB888) ? (3) : (((image_type() == pif_t::IMAGE_TYPE_INDEXED_RGB565) ? (2) : (((image_type() == pif_t::IMAGE_TYPE_INDEXED_RGB332) ? (1) : (0))))));
+    f_len_color_table_entry = true;
+    return m_len_color_table_entry;
+}
+
 int32_t pif_t::information_header_t::len_color_table_full() {
     if (f_len_color_table_full)
         return m_len_color_table_full;
@@ -140,26 +147,6 @@ int32_t pif_t::information_header_t::len_color_table_max() {
     m_len_color_table_max = (_root()->file_header()->ofs_image_data() - _root()->file_header()->ofs_image_data_min());
     f_len_color_table_max = true;
     return m_len_color_table_max;
-}
-
-int32_t pif_t::information_header_t::num_color_table_entries() {
-    if (f_num_color_table_entries)
-        return m_num_color_table_entries;
-    n_num_color_table_entries = true;
-    if (uses_indexed_mode()) {
-        n_num_color_table_entries = false;
-        m_num_color_table_entries = (len_color_table() / len_color_table_entry());
-    }
-    f_num_color_table_entries = true;
-    return m_num_color_table_entries;
-}
-
-int8_t pif_t::information_header_t::len_color_table_entry() {
-    if (f_len_color_table_entry)
-        return m_len_color_table_entry;
-    m_len_color_table_entry = ((image_type() == pif_t::IMAGE_TYPE_INDEXED_RGB888) ? (3) : (((image_type() == pif_t::IMAGE_TYPE_INDEXED_RGB565) ? (2) : (((image_type() == pif_t::IMAGE_TYPE_INDEXED_RGB332) ? (1) : (0))))));
-    f_len_color_table_entry = true;
-    return m_len_color_table_entry;
 }
 
 bool pif_t::information_header_t::uses_indexed_mode() {
@@ -179,21 +166,24 @@ pif_t::color_table_data_t::color_table_data_t(kaitai::kstream* p__io, pif_t* p__
 
 void pif_t::color_table_data_t::_read() {
     m_entries = std::unique_ptr<std::vector<int32_t>>(new std::vector<int32_t>());
-    const int l_entries = _root()->info_header()->num_color_table_entries();
-    for (int i = 0; i < l_entries; i++) {
-        switch (_root()->info_header()->image_type()) {
-        case pif_t::IMAGE_TYPE_INDEXED_RGB888: {
-            m_entries->push_back(std::move(m__io->read_bits_int_le(24)));
-            break;
-        }
-        case pif_t::IMAGE_TYPE_INDEXED_RGB565: {
-            m_entries->push_back(std::move(m__io->read_bits_int_le(16)));
-            break;
-        }
-        case pif_t::IMAGE_TYPE_INDEXED_RGB332: {
-            m_entries->push_back(std::move(m__io->read_bits_int_le(8)));
-            break;
-        }
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            switch (_root()->info_header()->image_type()) {
+            case pif_t::IMAGE_TYPE_INDEXED_RGB888: {
+                m_entries->push_back(std::move(m__io->read_bits_int_le(24)));
+                break;
+            }
+            case pif_t::IMAGE_TYPE_INDEXED_RGB565: {
+                m_entries->push_back(std::move(m__io->read_bits_int_le(16)));
+                break;
+            }
+            case pif_t::IMAGE_TYPE_INDEXED_RGB332: {
+                m_entries->push_back(std::move(m__io->read_bits_int_le(8)));
+                break;
+            }
+            }
+            i++;
         }
     }
 }

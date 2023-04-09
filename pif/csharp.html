@@ -317,10 +317,10 @@ can also be found there.</p>
     <span class="c1">/// See &amp;lt;https://github.com/gfcwfzkm/PIF-Image-Format&amp;gt; for more info.</span>
     <span class="c1">/// &lt;/summary&gt;</span>
     <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&quot;&gt;Source&lt;/a&gt;</span>
     <span class="c1">/// &lt;/remarks&gt;</span>
     <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300&quot;&gt;Source&lt;/a&gt;</span>
     <span class="c1">/// &lt;/remarks&gt;</span>
     <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Pif</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">{</span>
@@ -435,10 +435,9 @@ can also be found there.</p>
             <span class="p">{</span>
                 <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                 <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_lenColorTableEntry</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">f_lenColorTableFull</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">f_lenColorTableMax</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_numColorTableEntries</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_lenColorTableEntry</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">f_usesIndexedMode</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">_read</span><span class="p">();</span>
             <span class="p">}</span>
@@ -479,6 +478,19 @@ can also be found there.</p>
                     <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotAnyOfError</span><span class="p">(</span><span class="n">Compression</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/information_header/seq/6&quot;</span><span class="p">);</span>
                 <span class="p">}</span>
             <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenColorTableEntry</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">sbyte</span> <span class="n">_lenColorTableEntry</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">sbyte</span> <span class="n">LenColorTableEntry</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_lenColorTableEntry</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_lenColorTableEntry</span><span class="p">;</span>
+                    <span class="n">_lenColorTableEntry</span> <span class="p">=</span> <span class="p">(</span><span class="kt">sbyte</span><span class="p">)</span> <span class="p">((</span><span class="n">ImageType</span> <span class="p">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb888</span> <span class="p">?</span> <span class="m">3</span> <span class="p">:</span> <span class="p">(</span><span class="n">ImageType</span> <span class="p">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb565</span> <span class="p">?</span> <span class="m">2</span> <span class="p">:</span> <span class="p">(</span><span class="n">ImageType</span> <span class="p">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb332</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">))));</span>
+                    <span class="n">f_lenColorTableEntry</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_lenColorTableEntry</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenColorTableFull</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">int</span> <span class="n">_lenColorTableFull</span><span class="p">;</span>
             <span class="k">public</span> <span class="kt">int</span> <span class="n">LenColorTableFull</span>
@@ -503,34 +515,6 @@ can also be found there.</p>
                     <span class="n">_lenColorTableMax</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">M_Root</span><span class="p">.</span><span class="n">FileHeader</span><span class="p">.</span><span class="n">OfsImageData</span> <span class="p">-</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">FileHeader</span><span class="p">.</span><span class="n">OfsImageDataMin</span><span class="p">));</span>
                     <span class="n">f_lenColorTableMax</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                     <span class="k">return</span> <span class="n">_lenColorTableMax</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_numColorTableEntries</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int?</span> <span class="n">_numColorTableEntries</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">int?</span> <span class="n">NumColorTableEntries</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_numColorTableEntries</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_numColorTableEntries</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">UsesIndexedMode</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">_numColorTableEntries</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">LenColorTable</span> <span class="p">/</span> <span class="n">LenColorTableEntry</span><span class="p">));</span>
-                    <span class="p">}</span>
-                    <span class="n">f_numColorTableEntries</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_numColorTableEntries</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenColorTableEntry</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">sbyte</span> <span class="n">_lenColorTableEntry</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">sbyte</span> <span class="n">LenColorTableEntry</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_lenColorTableEntry</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_lenColorTableEntry</span><span class="p">;</span>
-                    <span class="n">_lenColorTableEntry</span> <span class="p">=</span> <span class="p">(</span><span class="kt">sbyte</span><span class="p">)</span> <span class="p">((</span><span class="n">ImageType</span> <span class="p">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb888</span> <span class="p">?</span> <span class="m">3</span> <span class="p">:</span> <span class="p">(</span><span class="n">ImageType</span> <span class="p">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb565</span> <span class="p">?</span> <span class="m">2</span> <span class="p">:</span> <span class="p">(</span><span class="n">ImageType</span> <span class="p">==</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb332</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">))));</span>
-                    <span class="n">f_lenColorTableEntry</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_lenColorTableEntry</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_usesIndexedMode</span><span class="p">;</span>
@@ -558,7 +542,7 @@ can also be found there.</p>
             <span class="k">public</span> <span class="n">ImageType</span> <span class="n">ImageType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_imageType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
             <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// See &amp;lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&amp;gt;:</span>
+            <span class="c1">/// See &amp;lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&amp;gt;:</span>
             <span class="c1">/// </span>
             <span class="c1">/// &amp;gt; Bits per Pixel: Bit size that each Pixel occupies. Bit size for an</span>
             <span class="c1">/// &amp;gt; Indexed Image cannot go beyond 8 bits.</span>
@@ -569,7 +553,7 @@ can also be found there.</p>
             <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenImageData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenImageData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
             <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// See &amp;lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&amp;gt;:</span>
+            <span class="c1">/// See &amp;lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&amp;gt;:</span>
             <span class="c1">/// </span>
             <span class="c1">/// &amp;gt; Color Table Size: (...), only used in Indexed mode, otherwise zero.</span>
             <span class="c1">/// ---</span>
@@ -602,21 +586,24 @@ can also be found there.</p>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
                 <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;();</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">InfoHeader</span><span class="p">.</span><span class="n">NumColorTableEntries</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
                 <span class="p">{</span>
-                    <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">InfoHeader</span><span class="p">.</span><span class="n">ImageType</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb888</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">24</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb565</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">16</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb332</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">8</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">InfoHeader</span><span class="p">.</span><span class="n">ImageType</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb888</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">24</span><span class="p">));</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb565</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">16</span><span class="p">));</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">Pif</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">IndexedRgb332</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">8</span><span class="p">));</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                        <span class="n">i</span><span class="p">++;</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>

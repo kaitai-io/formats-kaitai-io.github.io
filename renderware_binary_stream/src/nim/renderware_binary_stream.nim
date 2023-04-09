@@ -193,17 +193,21 @@ type
     `geometry`*: RenderwareBinaryStream_GeometryNonNative
     `morphTargets`*: seq[RenderwareBinaryStream_MorphTarget]
     `parent`*: RenderwareBinaryStream_ListWithHeader
+    `numUvLayersRawInst`: int
+    `numUvLayersRawInstFlag`: bool
     `isTexturedInst`: bool
     `isTexturedInstFlag`: bool
-    `isPrelitInst`: bool
-    `isPrelitInstFlag`: bool
-    `isTextured2Inst`: bool
-    `isTextured2InstFlag`: bool
     `isNativeInst`: bool
     `isNativeInstFlag`: bool
+    `numUvLayersInst`: int
+    `numUvLayersInstFlag`: bool
+    `isTextured2Inst`: bool
+    `isTextured2InstFlag`: bool
+    `isPrelitInst`: bool
+    `isPrelitInstFlag`: bool
   RenderwareBinaryStream_GeometryNonNative* = ref object of KaitaiStruct
     `prelitColors`*: seq[RenderwareBinaryStream_Rgba]
-    `texCoords`*: seq[RenderwareBinaryStream_TexCoord]
+    `uvLayers`*: seq[RenderwareBinaryStream_UvLayer]
     `triangles`*: seq[RenderwareBinaryStream_Triangle]
     `parent`*: RenderwareBinaryStream_StructGeometry
   RenderwareBinaryStream_StructGeometryList* = ref object of KaitaiStruct
@@ -279,6 +283,10 @@ type
   RenderwareBinaryStream_TexCoord* = ref object of KaitaiStruct
     `u`*: float32
     `v`*: float32
+    `parent`*: RenderwareBinaryStream_UvLayer
+  RenderwareBinaryStream_UvLayer* = ref object of KaitaiStruct
+    `texCoords`*: seq[RenderwareBinaryStream_TexCoord]
+    `numVertices`*: uint32
     `parent`*: RenderwareBinaryStream_GeometryNonNative
   RenderwareBinaryStream_StructTextureDictionary* = ref object of KaitaiStruct
     `numTextures`*: uint32
@@ -300,14 +308,17 @@ proc read*(_: typedesc[RenderwareBinaryStream_Vector3d], io: KaitaiStream, root:
 proc read*(_: typedesc[RenderwareBinaryStream_ListWithHeader], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream): RenderwareBinaryStream_ListWithHeader
 proc read*(_: typedesc[RenderwareBinaryStream_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Triangle
 proc read*(_: typedesc[RenderwareBinaryStream_Frame], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructFrameList): RenderwareBinaryStream_Frame
-proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_TexCoord
+proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_UvLayer): RenderwareBinaryStream_TexCoord
+proc read*(_: typedesc[RenderwareBinaryStream_UvLayer], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative, numVertices: any): RenderwareBinaryStream_UvLayer
 proc read*(_: typedesc[RenderwareBinaryStream_StructTextureDictionary], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructTextureDictionary
 
 proc version*(this: RenderwareBinaryStream): int
+proc numUvLayersRaw*(this: RenderwareBinaryStream_StructGeometry): int
 proc isTextured*(this: RenderwareBinaryStream_StructGeometry): bool
-proc isPrelit*(this: RenderwareBinaryStream_StructGeometry): bool
-proc isTextured2*(this: RenderwareBinaryStream_StructGeometry): bool
 proc isNative*(this: RenderwareBinaryStream_StructGeometry): bool
+proc numUvLayers*(this: RenderwareBinaryStream_StructGeometry): int
+proc isTextured2*(this: RenderwareBinaryStream_StructGeometry): bool
+proc isPrelit*(this: RenderwareBinaryStream_StructGeometry): bool
 proc version*(this: RenderwareBinaryStream_ListWithHeader): int
 
 
@@ -441,6 +452,14 @@ proc read*(_: typedesc[RenderwareBinaryStream_StructGeometry], io: KaitaiStream,
     let it = RenderwareBinaryStream_MorphTarget.read(this.io, this.root, this)
     this.morphTargets.add(it)
 
+proc numUvLayersRaw(this: RenderwareBinaryStream_StructGeometry): int = 
+  if this.numUvLayersRawInstFlag:
+    return this.numUvLayersRawInst
+  let numUvLayersRawInstExpr = int(((this.format and 16711680) shr 16))
+  this.numUvLayersRawInst = numUvLayersRawInstExpr
+  this.numUvLayersRawInstFlag = true
+  return this.numUvLayersRawInst
+
 proc isTextured(this: RenderwareBinaryStream_StructGeometry): bool = 
   if this.isTexturedInstFlag:
     return this.isTexturedInst
@@ -449,13 +468,21 @@ proc isTextured(this: RenderwareBinaryStream_StructGeometry): bool =
   this.isTexturedInstFlag = true
   return this.isTexturedInst
 
-proc isPrelit(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isPrelitInstFlag:
-    return this.isPrelitInst
-  let isPrelitInstExpr = bool((this.format and 8) != 0)
-  this.isPrelitInst = isPrelitInstExpr
-  this.isPrelitInstFlag = true
-  return this.isPrelitInst
+proc isNative(this: RenderwareBinaryStream_StructGeometry): bool = 
+  if this.isNativeInstFlag:
+    return this.isNativeInst
+  let isNativeInstExpr = bool((this.format and 16777216) != 0)
+  this.isNativeInst = isNativeInstExpr
+  this.isNativeInstFlag = true
+  return this.isNativeInst
+
+proc numUvLayers(this: RenderwareBinaryStream_StructGeometry): int = 
+  if this.numUvLayersInstFlag:
+    return this.numUvLayersInst
+  let numUvLayersInstExpr = int((if this.numUvLayersRaw == 0: (if this.isTextured2: 2 else: (if this.isTextured: 1 else: 0)) else: this.numUvLayersRaw))
+  this.numUvLayersInst = numUvLayersInstExpr
+  this.numUvLayersInstFlag = true
+  return this.numUvLayersInst
 
 proc isTextured2(this: RenderwareBinaryStream_StructGeometry): bool = 
   if this.isTextured2InstFlag:
@@ -465,13 +492,13 @@ proc isTextured2(this: RenderwareBinaryStream_StructGeometry): bool =
   this.isTextured2InstFlag = true
   return this.isTextured2Inst
 
-proc isNative(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isNativeInstFlag:
-    return this.isNativeInst
-  let isNativeInstExpr = bool((this.format and 16777216) != 0)
-  this.isNativeInst = isNativeInstExpr
-  this.isNativeInstFlag = true
-  return this.isNativeInst
+proc isPrelit(this: RenderwareBinaryStream_StructGeometry): bool = 
+  if this.isPrelitInstFlag:
+    return this.isPrelitInst
+  let isPrelitInstExpr = bool((this.format and 8) != 0)
+  this.isPrelitInst = isPrelitInstExpr
+  this.isPrelitInstFlag = true
+  return this.isPrelitInst
 
 proc fromFile*(_: typedesc[RenderwareBinaryStream_StructGeometry], filename: string): RenderwareBinaryStream_StructGeometry =
   RenderwareBinaryStream_StructGeometry.read(newKaitaiFileStream(filename), nil, nil)
@@ -488,10 +515,9 @@ proc read*(_: typedesc[RenderwareBinaryStream_GeometryNonNative], io: KaitaiStre
     for i in 0 ..< int(this.parent.numVertices):
       let it = RenderwareBinaryStream_Rgba.read(this.io, this.root, this)
       this.prelitColors.add(it)
-  if  ((this.parent.isTextured) or (this.parent.isTextured2)) :
-    for i in 0 ..< int(this.parent.numVertices):
-      let it = RenderwareBinaryStream_TexCoord.read(this.io, this.root, this)
-      this.texCoords.add(it)
+  for i in 0 ..< int(this.parent.numUvLayers):
+    let it = RenderwareBinaryStream_UvLayer.read(this.io, this.root, this, this.parent.numVertices)
+    this.uvLayers.add(it)
   for i in 0 ..< int(this.parent.numTriangles):
     let it = RenderwareBinaryStream_Triangle.read(this.io, this.root, this)
     this.triangles.add(it)
@@ -825,7 +851,7 @@ proc read*(_: typedesc[RenderwareBinaryStream_Frame], io: KaitaiStream, root: Ka
 proc fromFile*(_: typedesc[RenderwareBinaryStream_Frame], filename: string): RenderwareBinaryStream_Frame =
   RenderwareBinaryStream_Frame.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_TexCoord =
+proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_UvLayer): RenderwareBinaryStream_TexCoord =
   template this: untyped = result
   this = new(RenderwareBinaryStream_TexCoord)
   let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
@@ -840,6 +866,23 @@ proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root:
 
 proc fromFile*(_: typedesc[RenderwareBinaryStream_TexCoord], filename: string): RenderwareBinaryStream_TexCoord =
   RenderwareBinaryStream_TexCoord.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[RenderwareBinaryStream_UvLayer], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative, numVertices: any): RenderwareBinaryStream_UvLayer =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_UvLayer)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let numVerticesExpr = uint32(numVertices)
+  this.numVertices = numVerticesExpr
+
+  for i in 0 ..< int(this.numVertices):
+    let it = RenderwareBinaryStream_TexCoord.read(this.io, this.root, this)
+    this.texCoords.add(it)
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_UvLayer], filename: string): RenderwareBinaryStream_UvLayer =
+  RenderwareBinaryStream_UvLayer.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[RenderwareBinaryStream_StructTextureDictionary], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructTextureDictionary =
   template this: untyped = result

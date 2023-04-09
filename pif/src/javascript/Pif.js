@@ -15,8 +15,8 @@
  * applications.
  * 
  * See <https://github.com/gfcwfzkm/PIF-Image-Format> for more info.
- * @see {@link https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf|Source}
- * @see {@link https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300|Source}
+ * @see {@link https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf|Source}
+ * @see {@link https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300|Source}
  */
 
 var Pif = (function() {
@@ -138,6 +138,14 @@ var Pif = (function() {
         throw new KaitaiStream.ValidationNotAnyOfError(this.compression, this._io, "/types/information_header/seq/6");
       }
     }
+    Object.defineProperty(InformationHeader.prototype, 'lenColorTableEntry', {
+      get: function() {
+        if (this._m_lenColorTableEntry !== undefined)
+          return this._m_lenColorTableEntry;
+        this._m_lenColorTableEntry = (this.imageType == Pif.ImageType.INDEXED_RGB888 ? 3 : (this.imageType == Pif.ImageType.INDEXED_RGB565 ? 2 : (this.imageType == Pif.ImageType.INDEXED_RGB332 ? 1 : 0)));
+        return this._m_lenColorTableEntry;
+      }
+    });
     Object.defineProperty(InformationHeader.prototype, 'lenColorTableFull', {
       get: function() {
         if (this._m_lenColorTableFull !== undefined)
@@ -154,24 +162,6 @@ var Pif = (function() {
         return this._m_lenColorTableMax;
       }
     });
-    Object.defineProperty(InformationHeader.prototype, 'numColorTableEntries', {
-      get: function() {
-        if (this._m_numColorTableEntries !== undefined)
-          return this._m_numColorTableEntries;
-        if (this.usesIndexedMode) {
-          this._m_numColorTableEntries = Math.floor(this.lenColorTable / this.lenColorTableEntry);
-        }
-        return this._m_numColorTableEntries;
-      }
-    });
-    Object.defineProperty(InformationHeader.prototype, 'lenColorTableEntry', {
-      get: function() {
-        if (this._m_lenColorTableEntry !== undefined)
-          return this._m_lenColorTableEntry;
-        this._m_lenColorTableEntry = (this.imageType == Pif.ImageType.INDEXED_RGB888 ? 3 : (this.imageType == Pif.ImageType.INDEXED_RGB565 ? 2 : (this.imageType == Pif.ImageType.INDEXED_RGB332 ? 1 : 0)));
-        return this._m_lenColorTableEntry;
-      }
-    });
     Object.defineProperty(InformationHeader.prototype, 'usesIndexedMode', {
       get: function() {
         if (this._m_usesIndexedMode !== undefined)
@@ -182,14 +172,14 @@ var Pif = (function() {
     });
 
     /**
-     * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+     * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
      * 
      * > Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
      * > Indexed Image cannot go beyond 8 bits.
      */
 
     /**
-     * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+     * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
      * 
      * > Color Table Size: (...), only used in Indexed mode, otherwise zero.
      * ---
@@ -215,7 +205,8 @@ var Pif = (function() {
     }
     ColorTableData.prototype._read = function() {
       this.entries = [];
-      for (var i = 0; i < this._root.infoHeader.numColorTableEntries; i++) {
+      var i = 0;
+      while (!this._io.isEof()) {
         switch (this._root.infoHeader.imageType) {
         case Pif.ImageType.INDEXED_RGB888:
           this.entries.push(this._io.readBitsIntLe(24));
@@ -227,6 +218,7 @@ var Pif = (function() {
           this.entries.push(this._io.readBitsIntLe(8));
           break;
         }
+        i++;
       }
     }
 

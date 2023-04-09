@@ -34,6 +34,7 @@ public:
     class triangle_t;
     class frame_t;
     class tex_coord_t;
+    class uv_layer_t;
     class struct_texture_dictionary_t;
 
     enum sections_t {
@@ -277,6 +278,13 @@ public:
         ~struct_geometry_t();
 
     private:
+        bool f_num_uv_layers_raw;
+        int32_t m_num_uv_layers_raw;
+
+    public:
+        int32_t num_uv_layers_raw();
+
+    private:
         bool f_is_textured;
         bool m_is_textured;
 
@@ -284,11 +292,18 @@ public:
         bool is_textured();
 
     private:
-        bool f_is_prelit;
-        bool m_is_prelit;
+        bool f_is_native;
+        bool m_is_native;
 
     public:
-        bool is_prelit();
+        bool is_native();
+
+    private:
+        bool f_num_uv_layers;
+        int32_t m_num_uv_layers;
+
+    public:
+        int32_t num_uv_layers();
 
     private:
         bool f_is_textured2;
@@ -298,11 +313,11 @@ public:
         bool is_textured2();
 
     private:
-        bool f_is_native;
-        bool m_is_native;
+        bool f_is_prelit;
+        bool m_is_prelit;
 
     public:
-        bool is_native();
+        bool is_prelit();
 
     private:
         uint32_t m_format;
@@ -360,20 +375,14 @@ public:
         bool _is_null_prelit_colors() { prelit_colors(); return n_prelit_colors; };
 
     private:
-        std::unique_ptr<std::vector<std::unique_ptr<tex_coord_t>>> m_tex_coords;
-        bool n_tex_coords;
-
-    public:
-        bool _is_null_tex_coords() { tex_coords(); return n_tex_coords; };
-
-    private:
+        std::unique_ptr<std::vector<std::unique_ptr<uv_layer_t>>> m_uv_layers;
         std::unique_ptr<std::vector<std::unique_ptr<triangle_t>>> m_triangles;
         renderware_binary_stream_t* m__root;
         renderware_binary_stream_t::struct_geometry_t* m__parent;
 
     public:
         std::vector<std::unique_ptr<rgba_t>>* prelit_colors() const { return m_prelit_colors.get(); }
-        std::vector<std::unique_ptr<tex_coord_t>>* tex_coords() const { return m_tex_coords.get(); }
+        std::vector<std::unique_ptr<uv_layer_t>>* uv_layers() const { return m_uv_layers.get(); }
         std::vector<std::unique_ptr<triangle_t>>* triangles() const { return m_triangles.get(); }
         renderware_binary_stream_t* _root() const { return m__root; }
         renderware_binary_stream_t::struct_geometry_t* _parent() const { return m__parent; }
@@ -799,7 +808,7 @@ public:
 
     public:
 
-        tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent = nullptr, renderware_binary_stream_t* p__root = nullptr);
+        tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::uv_layer_t* p__parent = nullptr, renderware_binary_stream_t* p__root = nullptr);
 
     private:
         void _read();
@@ -812,11 +821,37 @@ public:
         float m_u;
         float m_v;
         renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::geometry_non_native_t* m__parent;
+        renderware_binary_stream_t::uv_layer_t* m__parent;
 
     public:
         float u() const { return m_u; }
         float v() const { return m_v; }
+        renderware_binary_stream_t* _root() const { return m__root; }
+        renderware_binary_stream_t::uv_layer_t* _parent() const { return m__parent; }
+    };
+
+    class uv_layer_t : public kaitai::kstruct {
+
+    public:
+
+        uv_layer_t(uint32_t p_num_vertices, kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent = nullptr, renderware_binary_stream_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~uv_layer_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<tex_coord_t>>> m_tex_coords;
+        uint32_t m_num_vertices;
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::geometry_non_native_t* m__parent;
+
+    public:
+        std::vector<std::unique_ptr<tex_coord_t>>* tex_coords() const { return m_tex_coords.get(); }
+        uint32_t num_vertices() const { return m_num_vertices; }
         renderware_binary_stream_t* _root() const { return m__root; }
         renderware_binary_stream_t::geometry_non_native_t* _parent() const { return m__parent; }
     };

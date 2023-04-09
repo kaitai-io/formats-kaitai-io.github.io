@@ -275,8 +275,8 @@ applications.</p>
 <span class="cm"> * applications.</span>
 <span class="cm"> * </span>
 <span class="cm"> * See &lt;https://github.com/gfcwfzkm/PIF-Image-Format&gt; for more info.</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&quot;&gt;Source&lt;/a&gt;</span>
-<span class="cm"> * @see &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 
 <span class="kd">type</span> <span class="nx">Pif_ImageType</span> <span class="kt">int</span>
@@ -461,14 +461,12 @@ applications.</p>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Pif</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Pif</span>
+	<span class="nx">_f_lenColorTableEntry</span> <span class="kt">bool</span>
+	<span class="nx">lenColorTableEntry</span> <span class="kt">int8</span>
 	<span class="nx">_f_lenColorTableFull</span> <span class="kt">bool</span>
 	<span class="nx">lenColorTableFull</span> <span class="kt">int</span>
 	<span class="nx">_f_lenColorTableMax</span> <span class="kt">bool</span>
 	<span class="nx">lenColorTableMax</span> <span class="kt">int</span>
-	<span class="nx">_f_numColorTableEntries</span> <span class="kt">bool</span>
-	<span class="nx">numColorTableEntries</span> <span class="kt">int</span>
-	<span class="nx">_f_lenColorTableEntry</span> <span class="kt">bool</span>
-	<span class="nx">lenColorTableEntry</span> <span class="kt">int8</span>
 	<span class="nx">_f_usesIndexedMode</span> <span class="kt">bool</span>
 	<span class="nx">usesIndexedMode</span> <span class="kt">bool</span>
 <span class="p">}</span>
@@ -672,15 +670,41 @@ applications.</p>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Pif_InformationHeader</span><span class="p">)</span> <span class="nx">LenColorTableEntry</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int8</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableEntry</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableEntry</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="kd">var</span> <span class="nx">tmp48</span> <span class="kt">int8</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ImageType</span> <span class="o">==</span> <span class="nx">Pif_ImageType__IndexedRgb888</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp48</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tmp49</span> <span class="kt">int8</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ImageType</span> <span class="o">==</span> <span class="nx">Pif_ImageType__IndexedRgb565</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">tmp49</span> <span class="p">=</span> <span class="mi">2</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">tmp50</span> <span class="kt">int8</span><span class="p">;</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ImageType</span> <span class="o">==</span> <span class="nx">Pif_ImageType__IndexedRgb332</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">tmp50</span> <span class="p">=</span> <span class="mi">1</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="nx">tmp50</span> <span class="p">=</span> <span class="mi">0</span>
+			<span class="p">}</span>
+			<span class="nx">tmp49</span> <span class="p">=</span> <span class="nx">tmp50</span>
+		<span class="p">}</span>
+		<span class="nx">tmp48</span> <span class="p">=</span> <span class="nx">tmp49</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableEntry</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="nx">tmp48</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableEntry</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableEntry</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Pif_InformationHeader</span><span class="p">)</span> <span class="nx">LenColorTableFull</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableFull</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableFull</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp48</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenColorTableEntry</span><span class="p">()</span>
+	<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenColorTableEntry</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableFull</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">tmp48</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BitsPerPixel</span><span class="p">)))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableFull</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">tmp51</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BitsPerPixel</span><span class="p">)))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableFull</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableFull</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -688,80 +712,36 @@ applications.</p>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableMax</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableMax</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">FileHeader</span><span class="p">.</span><span class="nx">OfsImageDataMin</span><span class="p">()</span>
+	<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">FileHeader</span><span class="p">.</span><span class="nx">OfsImageDataMin</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableMax</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">FileHeader</span><span class="p">.</span><span class="nx">OfsImageData</span> <span class="o">-</span> <span class="nx">tmp49</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableMax</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">FileHeader</span><span class="p">.</span><span class="nx">OfsImageData</span> <span class="o">-</span> <span class="nx">tmp52</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableMax</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableMax</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Pif_InformationHeader</span><span class="p">)</span> <span class="nx">NumColorTableEntries</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_numColorTableEntries</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">numColorTableEntries</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">UsesIndexedMode</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp50</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenColorTableEntry</span><span class="p">()</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">numColorTableEntries</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenColorTable</span> <span class="o">/</span> <span class="nx">tmp51</span><span class="p">))</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_numColorTableEntries</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">numColorTableEntries</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Pif_InformationHeader</span><span class="p">)</span> <span class="nx">LenColorTableEntry</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int8</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableEntry</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableEntry</span><span class="p">,</span> <span class="kc">nil</span>
-	<span class="p">}</span>
-	<span class="kd">var</span> <span class="nx">tmp52</span> <span class="kt">int8</span><span class="p">;</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ImageType</span> <span class="o">==</span> <span class="nx">Pif_ImageType__IndexedRgb888</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">tmp52</span> <span class="p">=</span> <span class="mi">3</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">tmp53</span> <span class="kt">int8</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ImageType</span> <span class="o">==</span> <span class="nx">Pif_ImageType__IndexedRgb565</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">tmp53</span> <span class="p">=</span> <span class="mi">2</span>
-		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-			<span class="kd">var</span> <span class="nx">tmp54</span> <span class="kt">int8</span><span class="p">;</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ImageType</span> <span class="o">==</span> <span class="nx">Pif_ImageType__IndexedRgb332</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">tmp54</span> <span class="p">=</span> <span class="mi">1</span>
-			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-				<span class="nx">tmp54</span> <span class="p">=</span> <span class="mi">0</span>
-			<span class="p">}</span>
-			<span class="nx">tmp53</span> <span class="p">=</span> <span class="nx">tmp54</span>
-		<span class="p">}</span>
-		<span class="nx">tmp52</span> <span class="p">=</span> <span class="nx">tmp53</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableEntry</span> <span class="p">=</span> <span class="nb">int8</span><span class="p">(</span><span class="nx">tmp52</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenColorTableEntry</span> <span class="p">=</span> <span class="kc">true</span>
-	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">lenColorTableEntry</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Pif_InformationHeader</span><span class="p">)</span> <span class="nx">UsesIndexedMode</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">bool</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_usesIndexedMode</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">usesIndexedMode</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenColorTableEntry</span><span class="p">()</span>
+	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenColorTableEntry</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">usesIndexedMode</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">(</span><span class="nx">tmp55</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">usesIndexedMode</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">(</span><span class="nx">tmp53</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_usesIndexedMode</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">usesIndexedMode</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+<span class="cm"> * See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
 <span class="cm"> * </span>
 <span class="cm"> * &gt; Bits per Pixel: Bit size that each Pixel occupies. Bit size for an</span>
 <span class="cm"> * &gt; Indexed Image cannot go beyond 8 bits.</span>
 <span class="cm"> */</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
+<span class="cm"> * See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:</span>
 <span class="cm"> * </span>
 <span class="cm"> * &gt; Color Table Size: (...), only used in Indexed mode, otherwise zero.</span>
 <span class="cm"> * ---</span>
@@ -789,31 +769,33 @@ applications.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">InfoHeader</span><span class="p">.</span><span class="nx">NumColorTableEntries</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="nx">tmp56</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">_</span> <span class="p">=</span> <span class="nx">i</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">tmp54</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
 		<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">InfoHeader</span><span class="p">.</span><span class="nx">ImageType</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">case</span> <span class="nx">Pif_ImageType__IndexedRgb888</span><span class="p">:</span>
-			<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+			<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">tmp55</span><span class="p">)</span>
+		<span class="k">case</span> <span class="nx">Pif_ImageType__IndexedRgb565</span><span class="p">:</span>
+			<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">tmp56</span><span class="p">)</span>
+		<span class="k">case</span> <span class="nx">Pif_ImageType__IndexedRgb332</span><span class="p">:</span>
+			<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 				<span class="k">return</span> <span class="nx">err</span>
 			<span class="p">}</span>
 			<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">tmp57</span><span class="p">)</span>
-		<span class="k">case</span> <span class="nx">Pif_ImageType__IndexedRgb565</span><span class="p">:</span>
-			<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-				<span class="k">return</span> <span class="nx">err</span>
-			<span class="p">}</span>
-			<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">tmp58</span><span class="p">)</span>
-		<span class="k">case</span> <span class="nx">Pif_ImageType__IndexedRgb332</span><span class="p">:</span>
-			<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-				<span class="k">return</span> <span class="nx">err</span>
-			<span class="p">}</span>
-			<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">tmp59</span><span class="p">)</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>

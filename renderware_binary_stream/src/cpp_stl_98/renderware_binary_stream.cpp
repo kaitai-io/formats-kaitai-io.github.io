@@ -137,10 +137,12 @@ renderware_binary_stream_t::struct_geometry_t::struct_geometry_t(kaitai::kstream
     m_surf_prop = 0;
     m_geometry = 0;
     m_morph_targets = 0;
+    f_num_uv_layers_raw = false;
     f_is_textured = false;
-    f_is_prelit = false;
-    f_is_textured2 = false;
     f_is_native = false;
+    f_num_uv_layers = false;
+    f_is_textured2 = false;
+    f_is_prelit = false;
 
     try {
         _read();
@@ -195,28 +197,20 @@ void renderware_binary_stream_t::struct_geometry_t::_clean_up() {
     }
 }
 
+int32_t renderware_binary_stream_t::struct_geometry_t::num_uv_layers_raw() {
+    if (f_num_uv_layers_raw)
+        return m_num_uv_layers_raw;
+    m_num_uv_layers_raw = ((format() & 16711680) >> 16);
+    f_num_uv_layers_raw = true;
+    return m_num_uv_layers_raw;
+}
+
 bool renderware_binary_stream_t::struct_geometry_t::is_textured() {
     if (f_is_textured)
         return m_is_textured;
     m_is_textured = (format() & 4) != 0;
     f_is_textured = true;
     return m_is_textured;
-}
-
-bool renderware_binary_stream_t::struct_geometry_t::is_prelit() {
-    if (f_is_prelit)
-        return m_is_prelit;
-    m_is_prelit = (format() & 8) != 0;
-    f_is_prelit = true;
-    return m_is_prelit;
-}
-
-bool renderware_binary_stream_t::struct_geometry_t::is_textured2() {
-    if (f_is_textured2)
-        return m_is_textured2;
-    m_is_textured2 = (format() & 128) != 0;
-    f_is_textured2 = true;
-    return m_is_textured2;
 }
 
 bool renderware_binary_stream_t::struct_geometry_t::is_native() {
@@ -227,11 +221,35 @@ bool renderware_binary_stream_t::struct_geometry_t::is_native() {
     return m_is_native;
 }
 
+int32_t renderware_binary_stream_t::struct_geometry_t::num_uv_layers() {
+    if (f_num_uv_layers)
+        return m_num_uv_layers;
+    m_num_uv_layers = ((num_uv_layers_raw() == 0) ? (((is_textured2()) ? (2) : (((is_textured()) ? (1) : (0))))) : (num_uv_layers_raw()));
+    f_num_uv_layers = true;
+    return m_num_uv_layers;
+}
+
+bool renderware_binary_stream_t::struct_geometry_t::is_textured2() {
+    if (f_is_textured2)
+        return m_is_textured2;
+    m_is_textured2 = (format() & 128) != 0;
+    f_is_textured2 = true;
+    return m_is_textured2;
+}
+
+bool renderware_binary_stream_t::struct_geometry_t::is_prelit() {
+    if (f_is_prelit)
+        return m_is_prelit;
+    m_is_prelit = (format() & 8) != 0;
+    f_is_prelit = true;
+    return m_is_prelit;
+}
+
 renderware_binary_stream_t::geometry_non_native_t::geometry_non_native_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     m_prelit_colors = 0;
-    m_tex_coords = 0;
+    m_uv_layers = 0;
     m_triangles = 0;
 
     try {
@@ -252,14 +270,10 @@ void renderware_binary_stream_t::geometry_non_native_t::_read() {
             m_prelit_colors->push_back(new rgba_t(m__io, this, m__root));
         }
     }
-    n_tex_coords = true;
-    if ( ((_parent()->is_textured()) || (_parent()->is_textured2())) ) {
-        n_tex_coords = false;
-        m_tex_coords = new std::vector<tex_coord_t*>();
-        const int l_tex_coords = _parent()->num_vertices();
-        for (int i = 0; i < l_tex_coords; i++) {
-            m_tex_coords->push_back(new tex_coord_t(m__io, this, m__root));
-        }
+    m_uv_layers = new std::vector<uv_layer_t*>();
+    const int l_uv_layers = _parent()->num_uv_layers();
+    for (int i = 0; i < l_uv_layers; i++) {
+        m_uv_layers->push_back(new uv_layer_t(_parent()->num_vertices(), m__io, this, m__root));
     }
     m_triangles = new std::vector<triangle_t*>();
     const int l_triangles = _parent()->num_triangles();
@@ -281,13 +295,11 @@ void renderware_binary_stream_t::geometry_non_native_t::_clean_up() {
             delete m_prelit_colors; m_prelit_colors = 0;
         }
     }
-    if (!n_tex_coords) {
-        if (m_tex_coords) {
-            for (std::vector<tex_coord_t*>::iterator it = m_tex_coords->begin(); it != m_tex_coords->end(); ++it) {
-                delete *it;
-            }
-            delete m_tex_coords; m_tex_coords = 0;
+    if (m_uv_layers) {
+        for (std::vector<uv_layer_t*>::iterator it = m_uv_layers->begin(); it != m_uv_layers->end(); ++it) {
+            delete *it;
         }
+        delete m_uv_layers; m_uv_layers = 0;
     }
     if (m_triangles) {
         for (std::vector<triangle_t*>::iterator it = m_triangles->begin(); it != m_triangles->end(); ++it) {
@@ -756,7 +768,7 @@ void renderware_binary_stream_t::frame_t::_clean_up() {
     }
 }
 
-renderware_binary_stream_t::tex_coord_t::tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+renderware_binary_stream_t::tex_coord_t::tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::uv_layer_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -778,6 +790,41 @@ renderware_binary_stream_t::tex_coord_t::~tex_coord_t() {
 }
 
 void renderware_binary_stream_t::tex_coord_t::_clean_up() {
+}
+
+renderware_binary_stream_t::uv_layer_t::uv_layer_t(uint32_t p_num_vertices, kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_num_vertices = p_num_vertices;
+    m_tex_coords = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void renderware_binary_stream_t::uv_layer_t::_read() {
+    m_tex_coords = new std::vector<tex_coord_t*>();
+    const int l_tex_coords = num_vertices();
+    for (int i = 0; i < l_tex_coords; i++) {
+        m_tex_coords->push_back(new tex_coord_t(m__io, this, m__root));
+    }
+}
+
+renderware_binary_stream_t::uv_layer_t::~uv_layer_t() {
+    _clean_up();
+}
+
+void renderware_binary_stream_t::uv_layer_t::_clean_up() {
+    if (m_tex_coords) {
+        for (std::vector<tex_coord_t*>::iterator it = m_tex_coords->begin(); it != m_tex_coords->end(); ++it) {
+            delete *it;
+        }
+        delete m_tex_coords; m_tex_coords = 0;
+    }
 }
 
 renderware_binary_stream_t::struct_texture_dictionary_t::struct_texture_dictionary_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {

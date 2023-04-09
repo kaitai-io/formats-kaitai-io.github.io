@@ -379,6 +379,13 @@ sub _read {
     }
 }
 
+sub num_uv_layers_raw {
+    my ($self) = @_;
+    return $self->{num_uv_layers_raw} if ($self->{num_uv_layers_raw});
+    $self->{num_uv_layers_raw} = (($self->format() & 16711680) >> 16);
+    return $self->{num_uv_layers_raw};
+}
+
 sub is_textured {
     my ($self) = @_;
     return $self->{is_textured} if ($self->{is_textured});
@@ -386,11 +393,18 @@ sub is_textured {
     return $self->{is_textured};
 }
 
-sub is_prelit {
+sub is_native {
     my ($self) = @_;
-    return $self->{is_prelit} if ($self->{is_prelit});
-    $self->{is_prelit} = ($self->format() & 8) != 0;
-    return $self->{is_prelit};
+    return $self->{is_native} if ($self->{is_native});
+    $self->{is_native} = ($self->format() & 16777216) != 0;
+    return $self->{is_native};
+}
+
+sub num_uv_layers {
+    my ($self) = @_;
+    return $self->{num_uv_layers} if ($self->{num_uv_layers});
+    $self->{num_uv_layers} = ($self->num_uv_layers_raw() == 0 ? ($self->is_textured2() ? 2 : ($self->is_textured() ? 1 : 0)) : $self->num_uv_layers_raw());
+    return $self->{num_uv_layers};
 }
 
 sub is_textured2 {
@@ -400,11 +414,11 @@ sub is_textured2 {
     return $self->{is_textured2};
 }
 
-sub is_native {
+sub is_prelit {
     my ($self) = @_;
-    return $self->{is_native} if ($self->{is_native});
-    $self->{is_native} = ($self->format() & 16777216) != 0;
-    return $self->{is_native};
+    return $self->{is_prelit} if ($self->{is_prelit});
+    $self->{is_prelit} = ($self->format() & 8) != 0;
+    return $self->{is_prelit};
 }
 
 sub format {
@@ -479,12 +493,10 @@ sub _read {
             push @{$self->{prelit_colors}}, RenderwareBinaryStream::Rgba->new($self->{_io}, $self, $self->{_root});
         }
     }
-    if ( (($self->_parent()->is_textured()) || ($self->_parent()->is_textured2())) ) {
-        $self->{tex_coords} = ();
-        my $n_tex_coords = $self->_parent()->num_vertices();
-        for (my $i = 0; $i < $n_tex_coords; $i++) {
-            push @{$self->{tex_coords}}, RenderwareBinaryStream::TexCoord->new($self->{_io}, $self, $self->{_root});
-        }
+    $self->{uv_layers} = ();
+    my $n_uv_layers = $self->_parent()->num_uv_layers();
+    for (my $i = 0; $i < $n_uv_layers; $i++) {
+        push @{$self->{uv_layers}}, RenderwareBinaryStream::UvLayer->new($self->{_io}, $self, $self->{_root});
     }
     $self->{triangles} = ();
     my $n_triangles = $self->_parent()->num_triangles();
@@ -498,9 +510,9 @@ sub prelit_colors {
     return $self->{prelit_colors};
 }
 
-sub tex_coords {
+sub uv_layers {
     my ($self) = @_;
-    return $self->{tex_coords};
+    return $self->{uv_layers};
 }
 
 sub triangles {
@@ -1261,6 +1273,53 @@ sub u {
 sub v {
     my ($self) = @_;
     return $self->{v};
+}
+
+########################################################################
+package RenderwareBinaryStream::UvLayer;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tex_coords} = ();
+    my $n_tex_coords = $self->num_vertices();
+    for (my $i = 0; $i < $n_tex_coords; $i++) {
+        push @{$self->{tex_coords}}, RenderwareBinaryStream::TexCoord->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tex_coords {
+    my ($self) = @_;
+    return $self->{tex_coords};
+}
+
+sub num_vertices {
+    my ($self) = @_;
+    return $self->{num_vertices};
 }
 
 ########################################################################

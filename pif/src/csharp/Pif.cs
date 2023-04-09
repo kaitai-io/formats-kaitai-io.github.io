@@ -13,10 +13,10 @@ namespace Kaitai
     /// See &lt;https://github.com/gfcwfzkm/PIF-Image-Format&gt; for more info.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf">Source</a>
+    /// Reference: <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300">Source</a>
+    /// Reference: <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300">Source</a>
     /// </remarks>
     public partial class Pif : KaitaiStruct
     {
@@ -131,10 +131,9 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_lenColorTableEntry = false;
                 f_lenColorTableFull = false;
                 f_lenColorTableMax = false;
-                f_numColorTableEntries = false;
-                f_lenColorTableEntry = false;
                 f_usesIndexedMode = false;
                 _read();
             }
@@ -175,6 +174,19 @@ namespace Kaitai
                     throw new ValidationNotAnyOfError(Compression, M_Io, "/types/information_header/seq/6");
                 }
             }
+            private bool f_lenColorTableEntry;
+            private sbyte _lenColorTableEntry;
+            public sbyte LenColorTableEntry
+            {
+                get
+                {
+                    if (f_lenColorTableEntry)
+                        return _lenColorTableEntry;
+                    _lenColorTableEntry = (sbyte) ((ImageType == Pif.ImageType.IndexedRgb888 ? 3 : (ImageType == Pif.ImageType.IndexedRgb565 ? 2 : (ImageType == Pif.ImageType.IndexedRgb332 ? 1 : 0))));
+                    f_lenColorTableEntry = true;
+                    return _lenColorTableEntry;
+                }
+            }
             private bool f_lenColorTableFull;
             private int _lenColorTableFull;
             public int LenColorTableFull
@@ -199,34 +211,6 @@ namespace Kaitai
                     _lenColorTableMax = (int) ((M_Root.FileHeader.OfsImageData - M_Root.FileHeader.OfsImageDataMin));
                     f_lenColorTableMax = true;
                     return _lenColorTableMax;
-                }
-            }
-            private bool f_numColorTableEntries;
-            private int? _numColorTableEntries;
-            public int? NumColorTableEntries
-            {
-                get
-                {
-                    if (f_numColorTableEntries)
-                        return _numColorTableEntries;
-                    if (UsesIndexedMode) {
-                        _numColorTableEntries = (int) ((LenColorTable / LenColorTableEntry));
-                    }
-                    f_numColorTableEntries = true;
-                    return _numColorTableEntries;
-                }
-            }
-            private bool f_lenColorTableEntry;
-            private sbyte _lenColorTableEntry;
-            public sbyte LenColorTableEntry
-            {
-                get
-                {
-                    if (f_lenColorTableEntry)
-                        return _lenColorTableEntry;
-                    _lenColorTableEntry = (sbyte) ((ImageType == Pif.ImageType.IndexedRgb888 ? 3 : (ImageType == Pif.ImageType.IndexedRgb565 ? 2 : (ImageType == Pif.ImageType.IndexedRgb332 ? 1 : 0))));
-                    f_lenColorTableEntry = true;
-                    return _lenColorTableEntry;
                 }
             }
             private bool f_usesIndexedMode;
@@ -254,7 +238,7 @@ namespace Kaitai
             public ImageType ImageType { get { return _imageType; } }
 
             /// <summary>
-            /// See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:
+            /// See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:
             /// 
             /// &gt; Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
             /// &gt; Indexed Image cannot go beyond 8 bits.
@@ -265,7 +249,7 @@ namespace Kaitai
             public uint LenImageData { get { return _lenImageData; } }
 
             /// <summary>
-            /// See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf&gt;:
+            /// See &lt;https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf&gt;:
             /// 
             /// &gt; Color Table Size: (...), only used in Indexed mode, otherwise zero.
             /// ---
@@ -298,21 +282,24 @@ namespace Kaitai
             private void _read()
             {
                 _entries = new List<int>();
-                for (var i = 0; i < M_Root.InfoHeader.NumColorTableEntries; i++)
                 {
-                    switch (M_Root.InfoHeader.ImageType) {
-                    case Pif.ImageType.IndexedRgb888: {
-                        _entries.Add(m_io.ReadBitsIntLe(24));
-                        break;
-                    }
-                    case Pif.ImageType.IndexedRgb565: {
-                        _entries.Add(m_io.ReadBitsIntLe(16));
-                        break;
-                    }
-                    case Pif.ImageType.IndexedRgb332: {
-                        _entries.Add(m_io.ReadBitsIntLe(8));
-                        break;
-                    }
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        switch (M_Root.InfoHeader.ImageType) {
+                        case Pif.ImageType.IndexedRgb888: {
+                            _entries.Add(m_io.ReadBitsIntLe(24));
+                            break;
+                        }
+                        case Pif.ImageType.IndexedRgb565: {
+                            _entries.Add(m_io.ReadBitsIntLe(16));
+                            break;
+                        }
+                        case Pif.ImageType.IndexedRgb332: {
+                            _entries.Add(m_io.ReadBitsIntLe(8));
+                            break;
+                        }
+                        }
+                        i++;
                     }
                 }
             }

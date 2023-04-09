@@ -601,10 +601,12 @@ can also be found there.</p>
             <span class="p">{</span>
                 <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                 <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_numUvLayersRaw</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">f_isTextured</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isPrelit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isTextured2</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">f_isNative</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_numUvLayers</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isTextured2</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isPrelit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">_read</span><span class="p">();</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
@@ -625,6 +627,19 @@ can also be found there.</p>
                     <span class="n">_morphTargets</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">MorphTarget</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
                 <span class="p">}</span>
             <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_numUvLayersRaw</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_numUvLayersRaw</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">NumUvLayersRaw</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_numUvLayersRaw</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_numUvLayersRaw</span><span class="p">;</span>
+                    <span class="n">_numUvLayersRaw</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">16711680</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">16</span><span class="p">));</span>
+                    <span class="n">f_numUvLayersRaw</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_numUvLayersRaw</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isTextured</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isTextured</span><span class="p">;</span>
             <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsTextured</span>
@@ -638,17 +653,30 @@ can also be found there.</p>
                     <span class="k">return</span> <span class="n">_isTextured</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isPrelit</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isPrelit</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsPrelit</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isNative</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isNative</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsNative</span>
             <span class="p">{</span>
                 <span class="k">get</span>
                 <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isPrelit</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isPrelit</span><span class="p">;</span>
-                    <span class="n">_isPrelit</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">8</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_isPrelit</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isPrelit</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isNative</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isNative</span><span class="p">;</span>
+                    <span class="n">_isNative</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">16777216</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isNative</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isNative</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_numUvLayers</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_numUvLayers</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">NumUvLayers</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_numUvLayers</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_numUvLayers</span><span class="p">;</span>
+                    <span class="n">_numUvLayers</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">NumUvLayersRaw</span> <span class="p">==</span> <span class="m">0</span> <span class="p">?</span> <span class="p">(</span><span class="n">IsTextured2</span> <span class="p">?</span> <span class="m">2</span> <span class="p">:</span> <span class="p">(</span><span class="n">IsTextured</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">))</span> <span class="p">:</span> <span class="n">NumUvLayersRaw</span><span class="p">));</span>
+                    <span class="n">f_numUvLayers</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_numUvLayers</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isTextured2</span><span class="p">;</span>
@@ -664,17 +692,17 @@ can also be found there.</p>
                     <span class="k">return</span> <span class="n">_isTextured2</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isNative</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isNative</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsNative</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isPrelit</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isPrelit</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsPrelit</span>
             <span class="p">{</span>
                 <span class="k">get</span>
                 <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isNative</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isNative</span><span class="p">;</span>
-                    <span class="n">_isNative</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">16777216</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_isNative</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isNative</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isPrelit</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isPrelit</span><span class="p">;</span>
+                    <span class="n">_isPrelit</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">8</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isPrelit</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isPrelit</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="kt">uint</span> <span class="n">_format</span><span class="p">;</span>
@@ -718,12 +746,10 @@ can also be found there.</p>
                         <span class="n">_prelitColors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Rgba</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsTextured</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsTextured2</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_texCoords</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;();</span>
-                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-                    <span class="p">{</span>
-                        <span class="n">_texCoords</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TexCoord</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                    <span class="p">}</span>
+                <span class="n">_uvLayers</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UvLayer</span><span class="p">&gt;();</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumUvLayers</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_uvLayers</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">UvLayer</span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">,</span> <span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
                 <span class="p">}</span>
                 <span class="n">_triangles</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;();</span>
                 <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumTriangles</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
@@ -732,12 +758,12 @@ can also be found there.</p>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgba</span><span class="p">&gt;</span> <span class="n">_prelitColors</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;</span> <span class="n">_texCoords</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UvLayer</span><span class="p">&gt;</span> <span class="n">_uvLayers</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;</span> <span class="n">_triangles</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">m_parent</span><span class="p">;</span>
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgba</span><span class="p">&gt;</span> <span class="n">PrelitColors</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_prelitColors</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;</span> <span class="n">TexCoords</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_texCoords</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UvLayer</span><span class="p">&gt;</span> <span class="n">UvLayers</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_uvLayers</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;</span> <span class="n">Triangles</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_triangles</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
@@ -1256,7 +1282,7 @@ can also be found there.</p>
                 <span class="k">return</span> <span class="k">new</span> <span class="nf">TexCoord</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
             <span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">TexCoord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="k">public</span> <span class="nf">TexCoord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">UvLayer</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
             <span class="p">{</span>
                 <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                 <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
@@ -1270,9 +1296,35 @@ can also be found there.</p>
             <span class="k">private</span> <span class="kt">float</span> <span class="n">_u</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">float</span> <span class="n">_v</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">UvLayer</span> <span class="n">m_parent</span><span class="p">;</span>
             <span class="k">public</span> <span class="kt">float</span> <span class="n">U</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_u</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="kt">float</span> <span class="n">V</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_v</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">UvLayer</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">UvLayer</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="nf">UvLayer</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_numVertices</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_numVertices</span> <span class="p">=</span> <span class="n">p_numVertices</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_texCoords</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;();</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumVertices</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_texCoords</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TexCoord</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;</span> <span class="n">_texCoords</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numVertices</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;</span> <span class="n">TexCoords</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_texCoords</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumVertices</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numVertices</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>

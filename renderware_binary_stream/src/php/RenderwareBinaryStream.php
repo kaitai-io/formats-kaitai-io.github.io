@@ -122,6 +122,13 @@ namespace RenderwareBinaryStream {
                 $this->_m_morphTargets[] = new \RenderwareBinaryStream\MorphTarget($this->_io, $this, $this->_root);
             }
         }
+        protected $_m_numUvLayersRaw;
+        public function numUvLayersRaw() {
+            if ($this->_m_numUvLayersRaw !== null)
+                return $this->_m_numUvLayersRaw;
+            $this->_m_numUvLayersRaw = (($this->format() & 16711680) >> 16);
+            return $this->_m_numUvLayersRaw;
+        }
         protected $_m_isTextured;
         public function isTextured() {
             if ($this->_m_isTextured !== null)
@@ -129,12 +136,19 @@ namespace RenderwareBinaryStream {
             $this->_m_isTextured = ($this->format() & 4) != 0;
             return $this->_m_isTextured;
         }
-        protected $_m_isPrelit;
-        public function isPrelit() {
-            if ($this->_m_isPrelit !== null)
-                return $this->_m_isPrelit;
-            $this->_m_isPrelit = ($this->format() & 8) != 0;
-            return $this->_m_isPrelit;
+        protected $_m_isNative;
+        public function isNative() {
+            if ($this->_m_isNative !== null)
+                return $this->_m_isNative;
+            $this->_m_isNative = ($this->format() & 16777216) != 0;
+            return $this->_m_isNative;
+        }
+        protected $_m_numUvLayers;
+        public function numUvLayers() {
+            if ($this->_m_numUvLayers !== null)
+                return $this->_m_numUvLayers;
+            $this->_m_numUvLayers = ($this->numUvLayersRaw() == 0 ? ($this->isTextured2() ? 2 : ($this->isTextured() ? 1 : 0)) : $this->numUvLayersRaw());
+            return $this->_m_numUvLayers;
         }
         protected $_m_isTextured2;
         public function isTextured2() {
@@ -143,12 +157,12 @@ namespace RenderwareBinaryStream {
             $this->_m_isTextured2 = ($this->format() & 128) != 0;
             return $this->_m_isTextured2;
         }
-        protected $_m_isNative;
-        public function isNative() {
-            if ($this->_m_isNative !== null)
-                return $this->_m_isNative;
-            $this->_m_isNative = ($this->format() & 16777216) != 0;
-            return $this->_m_isNative;
+        protected $_m_isPrelit;
+        public function isPrelit() {
+            if ($this->_m_isPrelit !== null)
+                return $this->_m_isPrelit;
+            $this->_m_isPrelit = ($this->format() & 8) != 0;
+            return $this->_m_isPrelit;
         }
         protected $_m_format;
         protected $_m_numTriangles;
@@ -182,12 +196,10 @@ namespace RenderwareBinaryStream {
                     $this->_m_prelitColors[] = new \RenderwareBinaryStream\Rgba($this->_io, $this, $this->_root);
                 }
             }
-            if ( (($this->_parent()->isTextured()) || ($this->_parent()->isTextured2())) ) {
-                $this->_m_texCoords = [];
-                $n = $this->_parent()->numVertices();
-                for ($i = 0; $i < $n; $i++) {
-                    $this->_m_texCoords[] = new \RenderwareBinaryStream\TexCoord($this->_io, $this, $this->_root);
-                }
+            $this->_m_uvLayers = [];
+            $n = $this->_parent()->numUvLayers();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_uvLayers[] = new \RenderwareBinaryStream\UvLayer($this->_parent()->numVertices(), $this->_io, $this, $this->_root);
             }
             $this->_m_triangles = [];
             $n = $this->_parent()->numTriangles();
@@ -196,10 +208,10 @@ namespace RenderwareBinaryStream {
             }
         }
         protected $_m_prelitColors;
-        protected $_m_texCoords;
+        protected $_m_uvLayers;
         protected $_m_triangles;
         public function prelitColors() { return $this->_m_prelitColors; }
-        public function texCoords() { return $this->_m_texCoords; }
+        public function uvLayers() { return $this->_m_uvLayers; }
         public function triangles() { return $this->_m_triangles; }
     }
 }
@@ -560,7 +572,7 @@ namespace RenderwareBinaryStream {
 
 namespace RenderwareBinaryStream {
     class TexCoord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\UvLayer $_parent = null, \RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -573,6 +585,28 @@ namespace RenderwareBinaryStream {
         protected $_m_v;
         public function u() { return $this->_m_u; }
         public function v() { return $this->_m_v; }
+    }
+}
+
+namespace RenderwareBinaryStream {
+    class UvLayer extends \Kaitai\Struct\Struct {
+        public function __construct(int $numVertices, \Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_numVertices = $numVertices;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_texCoords = [];
+            $n = $this->numVertices();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_texCoords[] = new \RenderwareBinaryStream\TexCoord($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_texCoords;
+        protected $_m_numVertices;
+        public function texCoords() { return $this->_m_texCoords; }
+        public function numVertices() { return $this->_m_numVertices; }
     }
 }
 

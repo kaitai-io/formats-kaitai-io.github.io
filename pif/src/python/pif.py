@@ -16,11 +16,11 @@ class Pif(KaitaiStruct):
     See <https://github.com/gfcwfzkm/PIF-Image-Format> for more info.
     
     .. seealso::
-       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf
+       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf
     
     
     .. seealso::
-       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300
+       Source - https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300
     """
 
     class ImageType(Enum):
@@ -110,6 +110,14 @@ class Pif(KaitaiStruct):
                 raise kaitaistruct.ValidationNotAnyOfError(self.compression, self._io, u"/types/information_header/seq/6")
 
         @property
+        def len_color_table_entry(self):
+            if hasattr(self, '_m_len_color_table_entry'):
+                return self._m_len_color_table_entry
+
+            self._m_len_color_table_entry = (3 if self.image_type == Pif.ImageType.indexed_rgb888 else (2 if self.image_type == Pif.ImageType.indexed_rgb565 else (1 if self.image_type == Pif.ImageType.indexed_rgb332 else 0)))
+            return getattr(self, '_m_len_color_table_entry', None)
+
+        @property
         def len_color_table_full(self):
             if hasattr(self, '_m_len_color_table_full'):
                 return self._m_len_color_table_full
@@ -124,24 +132,6 @@ class Pif(KaitaiStruct):
 
             self._m_len_color_table_max = (self._root.file_header.ofs_image_data - self._root.file_header.ofs_image_data_min)
             return getattr(self, '_m_len_color_table_max', None)
-
-        @property
-        def num_color_table_entries(self):
-            if hasattr(self, '_m_num_color_table_entries'):
-                return self._m_num_color_table_entries
-
-            if self.uses_indexed_mode:
-                self._m_num_color_table_entries = self.len_color_table // self.len_color_table_entry
-
-            return getattr(self, '_m_num_color_table_entries', None)
-
-        @property
-        def len_color_table_entry(self):
-            if hasattr(self, '_m_len_color_table_entry'):
-                return self._m_len_color_table_entry
-
-            self._m_len_color_table_entry = (3 if self.image_type == Pif.ImageType.indexed_rgb888 else (2 if self.image_type == Pif.ImageType.indexed_rgb565 else (1 if self.image_type == Pif.ImageType.indexed_rgb332 else 0)))
-            return getattr(self, '_m_len_color_table_entry', None)
 
         @property
         def uses_indexed_mode(self):
@@ -161,7 +151,8 @@ class Pif(KaitaiStruct):
 
         def _read(self):
             self.entries = []
-            for i in range(self._root.info_header.num_color_table_entries):
+            i = 0
+            while not self._io.is_eof():
                 _on = self._root.info_header.image_type
                 if _on == Pif.ImageType.indexed_rgb888:
                     self.entries.append(self._io.read_bits_int_le(24))
@@ -169,6 +160,7 @@ class Pif(KaitaiStruct):
                     self.entries.append(self._io.read_bits_int_le(16))
                 elif _on == Pif.ImageType.indexed_rgb332:
                     self.entries.append(self._io.read_bits_int_le(8))
+                i += 1
 
 
 

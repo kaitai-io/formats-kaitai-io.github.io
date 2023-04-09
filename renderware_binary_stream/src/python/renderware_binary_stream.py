@@ -273,6 +273,14 @@ class RenderwareBinaryStream(KaitaiStruct):
 
 
         @property
+        def num_uv_layers_raw(self):
+            if hasattr(self, '_m_num_uv_layers_raw'):
+                return self._m_num_uv_layers_raw
+
+            self._m_num_uv_layers_raw = ((self.format & 16711680) >> 16)
+            return getattr(self, '_m_num_uv_layers_raw', None)
+
+        @property
         def is_textured(self):
             if hasattr(self, '_m_is_textured'):
                 return self._m_is_textured
@@ -281,12 +289,20 @@ class RenderwareBinaryStream(KaitaiStruct):
             return getattr(self, '_m_is_textured', None)
 
         @property
-        def is_prelit(self):
-            if hasattr(self, '_m_is_prelit'):
-                return self._m_is_prelit
+        def is_native(self):
+            if hasattr(self, '_m_is_native'):
+                return self._m_is_native
 
-            self._m_is_prelit = (self.format & 8) != 0
-            return getattr(self, '_m_is_prelit', None)
+            self._m_is_native = (self.format & 16777216) != 0
+            return getattr(self, '_m_is_native', None)
+
+        @property
+        def num_uv_layers(self):
+            if hasattr(self, '_m_num_uv_layers'):
+                return self._m_num_uv_layers
+
+            self._m_num_uv_layers = ((2 if self.is_textured2 else (1 if self.is_textured else 0)) if self.num_uv_layers_raw == 0 else self.num_uv_layers_raw)
+            return getattr(self, '_m_num_uv_layers', None)
 
         @property
         def is_textured2(self):
@@ -297,12 +313,12 @@ class RenderwareBinaryStream(KaitaiStruct):
             return getattr(self, '_m_is_textured2', None)
 
         @property
-        def is_native(self):
-            if hasattr(self, '_m_is_native'):
-                return self._m_is_native
+        def is_prelit(self):
+            if hasattr(self, '_m_is_prelit'):
+                return self._m_is_prelit
 
-            self._m_is_native = (self.format & 16777216) != 0
-            return getattr(self, '_m_is_native', None)
+            self._m_is_prelit = (self.format & 8) != 0
+            return getattr(self, '_m_is_prelit', None)
 
 
     class GeometryNonNative(KaitaiStruct):
@@ -319,11 +335,9 @@ class RenderwareBinaryStream(KaitaiStruct):
                     self.prelit_colors.append(RenderwareBinaryStream.Rgba(self._io, self, self._root))
 
 
-            if  ((self._parent.is_textured) or (self._parent.is_textured2)) :
-                self.tex_coords = []
-                for i in range(self._parent.num_vertices):
-                    self.tex_coords.append(RenderwareBinaryStream.TexCoord(self._io, self, self._root))
-
+            self.uv_layers = []
+            for i in range(self._parent.num_uv_layers):
+                self.uv_layers.append(RenderwareBinaryStream.UvLayer(self._parent.num_vertices, self._io, self, self._root))
 
             self.triangles = []
             for i in range(self._parent.num_triangles):
@@ -597,6 +611,21 @@ class RenderwareBinaryStream(KaitaiStruct):
         def _read(self):
             self.u = self._io.read_f4le()
             self.v = self._io.read_f4le()
+
+
+    class UvLayer(KaitaiStruct):
+        def __init__(self, num_vertices, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self.num_vertices = num_vertices
+            self._read()
+
+        def _read(self):
+            self.tex_coords = []
+            for i in range(self.num_vertices):
+                self.tex_coords.append(RenderwareBinaryStream.TexCoord(self._io, self, self._root))
+
 
 
     class StructTextureDictionary(KaitaiStruct):

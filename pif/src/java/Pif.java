@@ -16,8 +16,8 @@ import java.util.ArrayList;
  * applications.
  * 
  * See <https://github.com/gfcwfzkm/PIF-Image-Format> for more info.
- * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf">Source</a>
- * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/C%20Library/pifdec.c#L300">Source</a>
+ * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf">Source</a>
+ * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300">Source</a>
  */
 public class Pif extends KaitaiStruct {
     public static Pif fromFile(String fileName) throws IOException {
@@ -187,6 +187,14 @@ public class Pif extends KaitaiStruct {
                 throw new KaitaiStream.ValidationNotAnyOfError(compression(), _io(), "/types/information_header/seq/6");
             }
         }
+        private Byte lenColorTableEntry;
+        public Byte lenColorTableEntry() {
+            if (this.lenColorTableEntry != null)
+                return this.lenColorTableEntry;
+            byte _tmp = (byte) ((imageType() == Pif.ImageType.INDEXED_RGB888 ? 3 : (imageType() == Pif.ImageType.INDEXED_RGB565 ? 2 : (imageType() == Pif.ImageType.INDEXED_RGB332 ? 1 : 0))));
+            this.lenColorTableEntry = _tmp;
+            return this.lenColorTableEntry;
+        }
         private Integer lenColorTableFull;
         public Integer lenColorTableFull() {
             if (this.lenColorTableFull != null)
@@ -202,24 +210,6 @@ public class Pif extends KaitaiStruct {
             int _tmp = (int) ((_root().fileHeader().ofsImageData() - _root().fileHeader().ofsImageDataMin()));
             this.lenColorTableMax = _tmp;
             return this.lenColorTableMax;
-        }
-        private Integer numColorTableEntries;
-        public Integer numColorTableEntries() {
-            if (this.numColorTableEntries != null)
-                return this.numColorTableEntries;
-            if (usesIndexedMode()) {
-                int _tmp = (int) ((lenColorTable() / lenColorTableEntry()));
-                this.numColorTableEntries = _tmp;
-            }
-            return this.numColorTableEntries;
-        }
-        private Byte lenColorTableEntry;
-        public Byte lenColorTableEntry() {
-            if (this.lenColorTableEntry != null)
-                return this.lenColorTableEntry;
-            byte _tmp = (byte) ((imageType() == Pif.ImageType.INDEXED_RGB888 ? 3 : (imageType() == Pif.ImageType.INDEXED_RGB565 ? 2 : (imageType() == Pif.ImageType.INDEXED_RGB332 ? 1 : 0))));
-            this.lenColorTableEntry = _tmp;
-            return this.lenColorTableEntry;
         }
         private Boolean usesIndexedMode;
         public Boolean usesIndexedMode() {
@@ -241,7 +231,7 @@ public class Pif extends KaitaiStruct {
         public ImageType imageType() { return imageType; }
 
         /**
-         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
          * 
          * > Bits per Pixel: Bit size that each Pixel occupies. Bit size for an
          * > Indexed Image cannot go beyond 8 bits.
@@ -252,7 +242,7 @@ public class Pif extends KaitaiStruct {
         public long lenImageData() { return lenImageData; }
 
         /**
-         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/cc256d5/Specification/PIF%20Format%20Specification.pdf>:
+         * See <https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/Specification/PIF%20Format%20Specification.pdf>:
          * 
          * > Color Table Size: (...), only used in Indexed mode, otherwise zero.
          * ---
@@ -290,25 +280,29 @@ public class Pif extends KaitaiStruct {
         }
         private void _read() {
             this.entries = new ArrayList<Integer>();
-            for (int i = 0; i < _root().infoHeader().numColorTableEntries(); i++) {
-                {
-                    ImageType on = _root().infoHeader().imageType();
-                    if (on != null) {
-                        switch (_root().infoHeader().imageType()) {
-                        case INDEXED_RGB888: {
-                            this.entries.add((int) (this._io.readBitsIntLe(24)));
-                            break;
-                        }
-                        case INDEXED_RGB565: {
-                            this.entries.add((int) (this._io.readBitsIntLe(16)));
-                            break;
-                        }
-                        case INDEXED_RGB332: {
-                            this.entries.add((int) (this._io.readBitsIntLe(8)));
-                            break;
-                        }
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    {
+                        ImageType on = _root().infoHeader().imageType();
+                        if (on != null) {
+                            switch (_root().infoHeader().imageType()) {
+                            case INDEXED_RGB888: {
+                                this.entries.add((int) (this._io.readBitsIntLe(24)));
+                                break;
+                            }
+                            case INDEXED_RGB565: {
+                                this.entries.add((int) (this._io.readBitsIntLe(16)));
+                                break;
+                            }
+                            case INDEXED_RGB332: {
+                                this.entries.add((int) (this._io.readBitsIntLe(8)));
+                                break;
+                            }
+                            }
                         }
                     }
+                    i++;
                 }
             }
         }
